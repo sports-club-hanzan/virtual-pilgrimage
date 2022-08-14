@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1048377471641",
+    "project_id": "virtual-pilgrimage-dev",
+    "storage_bucket": "virtual-pilgrimage-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1048377471641:android:4d7d29f5f0acf83da1fe08",
+        "android_client_info": {
+          "package_name": "com.virtualpilgrimage.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1048377471641-u34l4d7f7b51btir914vqs6tff6cej5a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9lZh05BV9bwEAcOv-7M-zrewR4lkEkE8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1048377471641-u34l4d7f7b51btir914vqs6tff6cej5a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
