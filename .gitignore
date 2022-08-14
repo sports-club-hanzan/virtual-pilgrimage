@@ -51,3 +51,6 @@ app.*.map.json
 #===================
 .fvm/flutter_sdk
 **/android/app/google-servies.json
+## NOTE: 以下は将来的にiOS対応するときのために追加
+**/ios/GoogleService-Info.plist
+**/ios/Flutter/DartDefines.xcconfig
