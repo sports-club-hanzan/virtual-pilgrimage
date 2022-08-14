@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:virtualpilgrimage/gen/firebase_options_dev.dart' as dev;
@@ -7,6 +8,10 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   const flavor = String.fromEnvironment('FLAVOR', defaultValue: 'dev');
   await Firebase.initializeApp(options: getFirebaseOptions(flavor));
+  // FIXME: FirebaseAnalytics のテストのために記述しているので削除する
+  final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  await analytics
+      .logEvent(name: 'start', parameters: {'foo': 'bar', 'hoge': 'fuga'});
   runApp(const MyApp());
 }
 
