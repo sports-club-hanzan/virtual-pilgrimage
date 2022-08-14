@@ -1,4 +1,4 @@
-package com.techadeki.virtual_pilgrimage
+package com.virtualpilgrimage
 
 import io.flutter.embedding.android.FlutterActivity
 
