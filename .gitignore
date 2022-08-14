@@ -50,3 +50,4 @@ app.*.map.json
 # project settings
 #===================
 .fvm/flutter_sdk
+**/android/app/google-servies.json
