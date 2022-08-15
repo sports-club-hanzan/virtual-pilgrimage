@@ -11,5 +11,4 @@ class ColorStyle {
   static const Color text = white;
   static const Color primaryText = Color(0xff212121);
   static const Color lightGrey = Color(0xffb5b5b5);
-  // static const Color lightGrey = Color(0xffb005b5);
 }

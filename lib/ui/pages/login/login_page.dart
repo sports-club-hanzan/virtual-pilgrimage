@@ -26,7 +26,26 @@ class LoginBody extends StatelessWidget {
       return SafeArea(
         child: Column(
           children: [
+            // ref. https://zenn.dev/pressedkonbu/articles/copy-paste-text-form-field
             TextFormField(
+              decoration: InputDecoration(
+                hintText: 'ニックネーム or メールアドレス',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide(
+                    color: Theme.of(context).unselectedWidgetColor,
+                    width: 2.0,
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                  borderSide: BorderSide(
+                    color: Theme.of(context).primaryColor,
+                    width: 2.0,
+                  ),
+                ),
+                prefixIcon: const Icon(Icons.mail),
+              ),
               key: const Key('nicknameOrEmail'),
               autovalidateMode: AutovalidateMode.onUserInteraction,
               validator: (value) {
@@ -37,6 +56,7 @@ class LoginBody extends StatelessWidget {
               },
             ),
             TextFormField(
+              decoration: const InputDecoration(hintText: 'パスワード'),
               key: const Key('password'),
               autovalidateMode: AutovalidateMode.onUserInteraction,
               obscureText: true,
