@@ -1,3 +1,3 @@
 mixin FontStyle {
-  static const double mediumSize = 20.0;
+  static const double mediumSize = 16.0;
 }
