@@ -33,6 +33,7 @@ mixin _$VirtualPilgrimageUser {
       fromJson: _FirestoreTimestampConverter.timestampToDateTime,
       toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
   DateTime get birthDay => throw _privateConstructorUsedError;
+  String get email => throw _privateConstructorUsedError;
   String get userIconUrl => throw _privateConstructorUsedError;
   @JsonKey(
       fromJson: _UserStatusConverter.intToUserStatus,
@@ -57,6 +58,7 @@ abstract class $VirtualPilgrimageUserCopyWith<$Res> {
           Gender gender,
       @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
           DateTime birthDay,
+      String email,
       String userIconUrl,
       @JsonKey(fromJson: _UserStatusConverter.intToUserStatus, toJson: _UserStatusConverter.userStatusToInt)
           UserStatus userStatus});
@@ -77,6 +79,7 @@ class _$VirtualPilgrimageUserCopyWithImpl<$Res>
     Object? nickname = freezed,
     Object? gender = freezed,
     Object? birthDay = freezed,
+    Object? email = freezed,
     Object? userIconUrl = freezed,
     Object? userStatus = freezed,
   }) {
@@ -97,6 +100,10 @@ class _$VirtualPilgrimageUserCopyWithImpl<$Res>
           ? _value.birthDay
           : birthDay // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      email: email == freezed
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String,
       userIconUrl: userIconUrl == freezed
           ? _value.userIconUrl
           : userIconUrl // ignore: cast_nullable_to_non_nullable
@@ -123,6 +130,7 @@ abstract class _$$_VirtualPilgrimageUserCopyWith<$Res>
           Gender gender,
       @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
           DateTime birthDay,
+      String email,
       String userIconUrl,
       @JsonKey(fromJson: _UserStatusConverter.intToUserStatus, toJson: _UserStatusConverter.userStatusToInt)
           UserStatus userStatus});
@@ -146,6 +154,7 @@ class __$$_VirtualPilgrimageUserCopyWithImpl<$Res>
     Object? nickname = freezed,
     Object? gender = freezed,
     Object? birthDay = freezed,
+    Object? email = freezed,
     Object? userIconUrl = freezed,
     Object? userStatus = freezed,
   }) {
@@ -166,6 +175,10 @@ class __$$_VirtualPilgrimageUserCopyWithImpl<$Res>
           ? _value.birthDay
           : birthDay // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      email: email == freezed
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as String,
       userIconUrl: userIconUrl == freezed
           ? _value.userIconUrl
           : userIconUrl // ignore: cast_nullable_to_non_nullable
@@ -189,6 +202,7 @@ class _$_VirtualPilgrimageUser extends _VirtualPilgrimageUser {
           this.gender = Gender.unknown,
       @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
           required this.birthDay,
+      this.email = '',
       this.userIconUrl = '',
       @JsonKey(fromJson: _UserStatusConverter.intToUserStatus, toJson: _UserStatusConverter.userStatusToInt)
           this.userStatus = UserStatus.temporary})
@@ -217,6 +231,9 @@ class _$_VirtualPilgrimageUser extends _VirtualPilgrimageUser {
   final DateTime birthDay;
   @override
   @JsonKey()
+  final String email;
+  @override
+  @JsonKey()
   final String userIconUrl;
   @override
   @JsonKey(
@@ -226,7 +243,7 @@ class _$_VirtualPilgrimageUser extends _VirtualPilgrimageUser {
 
   @override
   String toString() {
-    return 'VirtualPilgrimageUser(id: $id, nickname: $nickname, gender: $gender, birthDay: $birthDay, userIconUrl: $userIconUrl, userStatus: $userStatus)';
+    return 'VirtualPilgrimageUser(id: $id, nickname: $nickname, gender: $gender, birthDay: $birthDay, email: $email, userIconUrl: $userIconUrl, userStatus: $userStatus)';
   }
 
   @override
@@ -238,6 +255,7 @@ class _$_VirtualPilgrimageUser extends _VirtualPilgrimageUser {
             const DeepCollectionEquality().equals(other.nickname, nickname) &&
             const DeepCollectionEquality().equals(other.gender, gender) &&
             const DeepCollectionEquality().equals(other.birthDay, birthDay) &&
+            const DeepCollectionEquality().equals(other.email, email) &&
             const DeepCollectionEquality()
                 .equals(other.userIconUrl, userIconUrl) &&
             const DeepCollectionEquality()
@@ -252,6 +270,7 @@ class _$_VirtualPilgrimageUser extends _VirtualPilgrimageUser {
       const DeepCollectionEquality().hash(nickname),
       const DeepCollectionEquality().hash(gender),
       const DeepCollectionEquality().hash(birthDay),
+      const DeepCollectionEquality().hash(email),
       const DeepCollectionEquality().hash(userIconUrl),
       const DeepCollectionEquality().hash(userStatus));
 
@@ -277,6 +296,7 @@ abstract class _VirtualPilgrimageUser extends VirtualPilgrimageUser {
           final Gender gender,
       @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
           required final DateTime birthDay,
+      final String email,
       final String userIconUrl,
       @JsonKey(fromJson: _UserStatusConverter.intToUserStatus, toJson: _UserStatusConverter.userStatusToInt)
           final UserStatus userStatus}) = _$_VirtualPilgrimageUser;
@@ -299,6 +319,8 @@ abstract class _VirtualPilgrimageUser extends VirtualPilgrimageUser {
       fromJson: _FirestoreTimestampConverter.timestampToDateTime,
       toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
   DateTime get birthDay;
+  @override
+  String get email;
   @override
   String get userIconUrl;
   @override

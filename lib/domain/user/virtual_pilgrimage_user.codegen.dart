@@ -30,6 +30,7 @@ extension VirtualPilgrimageUserPrivateFirestoreFieldKeys on String {
   static const nickname = 'nickname';
   static const gender = 'gender';
   static const birthDay = 'birthDay';
+  static const email = 'email';
   static const userIconUrl = 'userIconUrl';
 }
 
@@ -78,6 +79,8 @@ class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
       toJson: _FirestoreTimestampConverter.dateTimeToTimestamp,
     )
         required DateTime birthDay,
+    @Default('')
+        String email,
     @Default('')
         String userIconUrl,
     @Default(UserStatus.temporary)
