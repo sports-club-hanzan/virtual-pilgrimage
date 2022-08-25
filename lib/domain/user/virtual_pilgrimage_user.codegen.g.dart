@@ -16,6 +16,7 @@ _$_VirtualPilgrimageUser _$$_VirtualPilgrimageUserFromJson(
           : _GenderConverter.intToGender(json['gender'] as int),
       birthDay: _FirestoreTimestampConverter.timestampToDateTime(
           json['birthDay'] as Timestamp),
+      email: json['email'] as String? ?? '',
       userIconUrl: json['userIconUrl'] as String? ?? '',
       userStatus: json['userStatus'] == null
           ? UserStatus.temporary
@@ -30,6 +31,7 @@ Map<String, dynamic> _$$_VirtualPilgrimageUserToJson(
       'gender': _GenderConverter.genderToInt(instance.gender),
       'birthDay':
           _FirestoreTimestampConverter.dateTimeToTimestamp(instance.birthDay),
+      'email': instance.email,
       'userIconUrl': instance.userIconUrl,
       'userStatus': _UserStatusConverter.userStatusToInt(instance.userStatus),
     };
