@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:virtualpilgrimage/domain/auth/auth_repository.dart';
 import 'package:virtualpilgrimage/domain/auth/sign_in_exception.dart';
@@ -33,7 +35,7 @@ class EmailAndPasswordRepository extends AuthRepository {
           SignInExceptionStatus.firebaseException,
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       throw SignInException(
         'Firebase signin cause unknown error [exception][$e]',
         SignInExceptionStatus.unknownException,
@@ -42,8 +44,10 @@ class EmailAndPasswordRepository extends AuthRepository {
     return null;
   }
 
-  Future<UserCredential?> _signInWithCreateUser(
-      String email, String password) async {
+  FutureOr<UserCredential?> _signInWithCreateUser(
+    String email,
+    String password,
+  ) async {
     try {
       return FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
@@ -61,7 +65,7 @@ class EmailAndPasswordRepository extends AuthRepository {
           SignInExceptionStatus.firebaseException,
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       throw SignInException(
         'Firebase signin cause unknown error [exception][$e]',
         SignInExceptionStatus.unknownException,
