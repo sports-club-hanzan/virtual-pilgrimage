@@ -13,10 +13,10 @@ final _logger = Logger(
   ),
 );
 
-final loggerProider = Provider.autoDispose<Logger>(
+final loggerProider = Provider<Logger>(
   (_) => _logger,
 );
 
-final crashlyticsProvider = Provider.autoDispose<FirebaseCrashlytics>(
+final crashlyticsProvider = Provider<FirebaseCrashlytics>(
   (_) => FirebaseCrashlytics.instance,
 );
