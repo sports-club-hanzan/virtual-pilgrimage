@@ -4,6 +4,7 @@ enum SignInExceptionStatus {
   emailOrPasswordIsNull,
   firebaseException,
   unknownException,
+  platformException,
 }
 
 class SignInException implements Exception {
