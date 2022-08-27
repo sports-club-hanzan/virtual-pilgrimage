@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:virtualpilgrimage/domain/auth/auth_repository.dart';
-import 'package:virtualpilgrimage/domain/auth/sign_in_exception.dart';
+import 'package:virtualpilgrimage/domain/exception/sign_in_exception.dart';
 
 // ref. https://firebase.google.com/docs/auth/flutter/password-auth
 class EmailAndPasswordRepository extends AuthRepository {
@@ -26,6 +27,11 @@ class EmailAndPasswordRepository extends AuthRepository {
         email: email,
         password: password,
       );
+    } on PlatformException catch (e) {
+      throw SignInException(
+        'cause platform exception [code][${e.code}][message][${e.message}]',
+        SignInExceptionStatus.platformException,
+      );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         return _signInWithCreateUser(email, password);
@@ -35,6 +41,10 @@ class EmailAndPasswordRepository extends AuthRepository {
           SignInExceptionStatus.firebaseException,
         );
       }
+      throw SignInException(
+        'cause Fireabase exception when signIn [message][${e.message}][code][${e.code}]',
+        SignInExceptionStatus.firebaseException,
+      );
     } on Exception catch (e) {
       throw SignInException(
         'Firebase signin cause unknown error [exception][$e]',
