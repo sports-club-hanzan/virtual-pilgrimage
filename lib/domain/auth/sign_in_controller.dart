@@ -10,8 +10,8 @@ import 'package:virtualpilgrimage/domain/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/logger.dart';
 
-final signInController =
-    StateNotifierProvider.autoDispose<SignInController, SignInState>(
+final signInControllerProvider =
+    StateNotifierProvider<SignInController, SignInState>(
   (ref) => SignInController(
     ref.watch(emailAndPasswordAuthRepositoryProvider),
     ref.watch(googleAuthRepositoryProvider),
@@ -46,12 +46,12 @@ class SignInController extends StateNotifier<SignInState> {
           ),
         );
 
-  Future<SignInState> signInWithGoogle() async {
+  Future<void> signInWithGoogle() async {
     final credential = await _googleAuthRepository.signIn();
-    return _signInWithCredential(credential, _LoginMethod.google);
+    state = await _signInWithCredential(credential, _LoginMethod.google);
   }
 
-  Future<SignInState> signInWithEmailAndPassword(
+  Future<void> signInWithEmailAndPassword(
     String email,
     String password,
   ) async {
@@ -59,7 +59,18 @@ class SignInController extends StateNotifier<SignInState> {
       email: email,
       password: password,
     );
-    return _signInWithCredential(credential, _LoginMethod.emailAndPassword);
+    state = await _signInWithCredential(
+      credential,
+      _LoginMethod.emailAndPassword,
+    );
+  }
+
+  Future<void> logout() async {
+    // FIXME: firebase を直参照ではなく、もっといい方法を考える
+    await FirebaseAuth.instance.signOut();
+    state = const SignInState(
+      context: SignInStateContext.notSignedIn,
+    );
   }
 
   Future<SignInState> _signInWithCredential(
