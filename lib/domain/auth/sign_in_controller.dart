@@ -40,12 +40,9 @@ class SignInController extends StateNotifier<SignInState> {
     this._logger,
     this._crashlytics,
   ) : super(
-          SignInState(
+          const SignInState(
             context: SignInStateContext.notSignedIn,
             isLoading: true,
-            user: VirtualPilgrimageUser(
-              birthDay: DateTime.utc(1980, 1, 1),
-            ),
           ),
         );
 
