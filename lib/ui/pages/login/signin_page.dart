@@ -1,29 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:virtualpilgrimage/domain/auth/sign_in_controller.dart';
 import 'package:virtualpilgrimage/ui/style/color.dart';
 import 'package:virtualpilgrimage/ui/style/font.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
+final emailControllerStateProvider = StateProvider.autoDispose(
+  (_) => TextEditingController(text: ''),
+);
+
+final passwordControllerStateProvider = StateProvider.autoDispose(
+  (_) => TextEditingController(text: ''),
+);
+
+class SigninPage extends ConsumerWidget {
+  const SigninPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         // TODO: タイトルは変更
         title: const Text('virtual pilgrimage'),
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
       ),
-      body: const LoginBody(),
+      body: LoginBody(ref),
     );
   }
 }
 
 class LoginBody extends StatelessWidget {
-  const LoginBody({Key? key}) : super(key: key);
+  final WidgetRef ref;
+
+  const LoginBody(this.ref, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final notifier = ref.read(signInController.notifier);
+
+    final emailFormController = ref.watch(emailControllerStateProvider);
+    final passwordFormController = ref.watch(passwordControllerStateProvider);
+
     return Builder(builder: (context) {
       return Container(
         color: Theme.of(context).backgroundColor,
@@ -60,7 +77,10 @@ class LoginBody extends StatelessWidget {
                         width: 2.0,
                       ),
                     ),
-                    prefixIcon: const Icon(Icons.mail),
+                    prefixIcon: Icon(
+                      Icons.mail,
+                      color: Theme.of(context).primaryColor,
+                    ),
                   ),
                   key: const Key('nicknameOrEmail'),
                   autovalidateMode: AutovalidateMode.onUserInteraction,
@@ -70,6 +90,8 @@ class LoginBody extends StatelessWidget {
                     }
                     return null;
                   },
+                  controller: emailFormController,
+                  enabled: true,
                 ),
               ),
               Padding(
@@ -96,11 +118,16 @@ class LoginBody extends StatelessWidget {
                         width: 2.0,
                       ),
                     ),
-                    prefixIcon: const Icon(Icons.password),
+                    prefixIcon: Icon(
+                      Icons.password,
+                      color: Theme.of(context).primaryColor,
+                    ),
                   ),
                   key: const Key('password'),
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   obscureText: true,
+                  controller: passwordFormController,
+                  enabled: true,
                 ),
               ),
               // FIXME: PrimaryButton などのコンポーネントに切り出す
@@ -112,8 +139,11 @@ class LoginBody extends StatelessWidget {
                   bottom: 8.0,
                 ),
                 child: ElevatedButton(
-                  onPressed: () {
-                    print('TODO');
+                  onPressed: () async {
+                    await notifier.signInWithEmailAndPassword(
+                      emailFormController.text,
+                      passwordFormController.text,
+                    );
                   },
                   // ボタンを押したときの色
                   style: ElevatedButton.styleFrom(
@@ -159,7 +189,7 @@ class LoginBody extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    onPressed: () => print('TODO: Google Auth'),
+                    onPressed: () async => await notifier.signInWithGoogle(),
                   ),
                 ),
               )
