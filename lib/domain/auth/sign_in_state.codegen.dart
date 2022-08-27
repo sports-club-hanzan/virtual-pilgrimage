@@ -7,7 +7,7 @@ enum SignInStateContext {
   // サインインに成功している状態
   success,
   // サインインに成功しているが、初期設定が終わっていない
-  notInitialized,
+  temporary,
   // サインインに失敗
   failed,
   // サインインしていない

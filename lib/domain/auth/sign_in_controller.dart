@@ -3,11 +3,11 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:virtualpilgrimage/domain/auth/auth_repository.dart';
-import 'package:virtualpilgrimage/domain/auth/sign_in_exception.dart';
 import 'package:virtualpilgrimage/domain/auth/sign_in_state.codegen.dart';
+import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
+import 'package:virtualpilgrimage/domain/exception/sign_in_exception.dart';
 import 'package:virtualpilgrimage/domain/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
-import 'package:virtualpilgrimage/infrastructure/database_exception.dart';
 import 'package:virtualpilgrimage/logger.dart';
 
 final signInController =
@@ -104,10 +104,15 @@ class SignInController extends StateNotifier<SignInState> {
           userStatus: UserStatus.temporary,
         );
         await _userRepository.update(user);
-        context = SignInStateContext.notInitialized;
+        context = SignInStateContext.temporary;
       } else {
         user = gotUser;
-        context = SignInStateContext.success;
+        // 一次登録完了ステータスの場合はユーザ登録に遷移するため temporary
+        if (gotUser.userStatus == UserStatus.temporary) {
+          context = SignInStateContext.temporary;
+        } else {
+          context = SignInStateContext.success;
+        }
       }
     } on DatabaseException catch (e) {
       _logger.e(e.message, [e]);
