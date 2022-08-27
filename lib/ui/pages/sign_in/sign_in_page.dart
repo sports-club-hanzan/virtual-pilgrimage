@@ -13,8 +13,8 @@ final passwordControllerStateProvider = StateProvider.autoDispose(
   (_) => TextEditingController(text: ''),
 );
 
-class SigninPage extends ConsumerWidget {
-  const SigninPage({Key? key}) : super(key: key);
+class SignInPage extends ConsumerWidget {
+  const SignInPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,15 +24,15 @@ class SigninPage extends ConsumerWidget {
         title: const Text('virtual pilgrimage'),
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
       ),
-      body: LoginBody(ref),
+      body: SignInPageBody(ref),
     );
   }
 }
 
-class LoginBody extends StatelessWidget {
+class SignInPageBody extends StatelessWidget {
   final WidgetRef ref;
 
-  const LoginBody(this.ref, {Key? key}) : super(key: key);
+  const SignInPageBody(this.ref, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtualpilgrimage/domain/auth/sign_in_controller.dart';
 import 'package:virtualpilgrimage/domain/auth/sign_in_state.codegen.dart';
-import 'package:virtualpilgrimage/ui/pages/login/signin_page.dart';
+import 'package:virtualpilgrimage/ui/pages/login/sign_in_page.dart';
 import 'package:virtualpilgrimage/ui/style/theme.dart';
 
 class App extends ConsumerWidget {
@@ -22,14 +22,14 @@ class App extends ConsumerWidget {
             // },
             pageBuilder: (context, state) => MaterialPage<void>(
               key: state.pageKey,
-              child: SigninPage(key: state.pageKey),
+              child: SignInPage(key: state.pageKey),
             ),
           ),
           // ログイン
           GoRoute(
             path: '/signin',
             builder: (BuildContext context, GoRouterState state) {
-              return const SigninPage();
+              return const SignInPage();
             },
           )
         ],
