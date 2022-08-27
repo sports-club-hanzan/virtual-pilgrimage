@@ -1,0 +1,70 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:virtualpilgrimage/app.dart';
+import 'package:virtualpilgrimage/domain/auth/sign_in_controller.dart';
+
+class RegistrationPage extends ConsumerWidget {
+  const RegistrationPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(
+      appBar: AppBar(
+        // TODO: タイトルは変更
+        title: const Text('virtual pilgrimage'),
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+      ),
+      body: RegistrationPageBody(ref),
+    );
+  }
+}
+
+// TODO: ユーザ情報を編集するフォームに修正
+class RegistrationPageBody extends StatelessWidget {
+  final WidgetRef ref;
+
+  const RegistrationPageBody(this.ref, {Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final user = ref.read(signInControllerProvider).user!;
+    return Container(
+      color: Theme.of(context).backgroundColor,
+      child: Column(
+        children: [
+          Row(
+            children: [
+              const Text('id: '),
+              Text(user.id),
+            ],
+          ),
+          Row(
+            children: [
+              const Text('email: '),
+              Text(user.email),
+            ],
+          ),
+          Row(
+            children: [
+              const Text('nickname: '),
+              Text(user.nickname),
+            ],
+          ),
+          Row(
+            children: [
+              const Text('birthday: '),
+              Text(user.birthDay.toIso8601String()),
+            ],
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              await ref.read(signInControllerProvider.notifier).logout();
+              ref.read(routerProvider).go('/signin');
+            },
+            child: const Text('サインイン画面に戻る'),
+          )
+        ],
+      ),
+    );
+  }
+}
