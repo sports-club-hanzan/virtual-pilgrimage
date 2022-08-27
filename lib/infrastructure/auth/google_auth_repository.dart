@@ -1,18 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:virtualpilgrimage/domain/auth/auth_repository.dart';
-import 'package:virtualpilgrimage/domain/auth/sign_in_exception.dart';
+import 'package:virtualpilgrimage/domain/exception/sign_in_exception.dart';
 
 class GoogleAuthRepository extends AuthRepository {
   final FirebaseAuth _firebaseAuth;
+  final GoogleSignIn _googleSignIn;
 
-  GoogleAuthRepository(this._firebaseAuth);
+  GoogleAuthRepository(this._firebaseAuth, this._googleSignIn);
 
   @override
   Future<UserCredential?> signIn({String? email, String? password}) async {
     try {
       final GoogleSignInAccount? googleSigninAccount =
-          await GoogleSignIn(scopes: ['email']).signIn();
+          await _googleSignIn.signIn();
       if (googleSigninAccount != null) {
         final GoogleSignInAuthentication googleSignInAuthentication =
             await googleSigninAccount.authentication;
@@ -22,6 +24,11 @@ class GoogleAuthRepository extends AuthRepository {
         );
         return await _firebaseAuth.signInWithCredential(credential);
       }
+    } on PlatformException catch (e) {
+      throw SignInException(
+        'cause platform exception [code][${e.code}][message][${e.message}]',
+        SignInExceptionStatus.platformException,
+      );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'account-exists-with-differenct-credentials') {
         throw SignInException(
@@ -34,6 +41,10 @@ class GoogleAuthRepository extends AuthRepository {
           SignInExceptionStatus.firebaseException,
         );
       }
+      throw SignInException(
+        'cause Fireabase exception when signIn [message][${e.message}][code][${e.code}]',
+        SignInExceptionStatus.firebaseException,
+      );
     } catch (e) {
       throw SignInException(
         'Firebase signin cause unknown error [exception][$e]',
