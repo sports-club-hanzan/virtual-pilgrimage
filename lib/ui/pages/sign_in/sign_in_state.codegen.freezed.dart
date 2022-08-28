@@ -19,6 +19,8 @@ mixin _$SignInState {
   SignInStateContext get context => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
   Exception? get error => throw _privateConstructorUsedError;
+  FormModel get email => throw _privateConstructorUsedError;
+  FormModel get password => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SignInStateCopyWith<SignInState> get copyWith =>
@@ -30,7 +32,15 @@ abstract class $SignInStateCopyWith<$Res> {
   factory $SignInStateCopyWith(
           SignInState value, $Res Function(SignInState) then) =
       _$SignInStateCopyWithImpl<$Res>;
-  $Res call({SignInStateContext context, bool isLoading, Exception? error});
+  $Res call(
+      {SignInStateContext context,
+      bool isLoading,
+      Exception? error,
+      FormModel email,
+      FormModel password});
+
+  $FormModelCopyWith<$Res> get email;
+  $FormModelCopyWith<$Res> get password;
 }
 
 /// @nodoc
@@ -46,6 +56,8 @@ class _$SignInStateCopyWithImpl<$Res> implements $SignInStateCopyWith<$Res> {
     Object? context = freezed,
     Object? isLoading = freezed,
     Object? error = freezed,
+    Object? email = freezed,
+    Object? password = freezed,
   }) {
     return _then(_value.copyWith(
       context: context == freezed
@@ -60,7 +72,29 @@ class _$SignInStateCopyWithImpl<$Res> implements $SignInStateCopyWith<$Res> {
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
               as Exception?,
+      email: email == freezed
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as FormModel,
+      password: password == freezed
+          ? _value.password
+          : password // ignore: cast_nullable_to_non_nullable
+              as FormModel,
     ));
+  }
+
+  @override
+  $FormModelCopyWith<$Res> get email {
+    return $FormModelCopyWith<$Res>(_value.email, (value) {
+      return _then(_value.copyWith(email: value));
+    });
+  }
+
+  @override
+  $FormModelCopyWith<$Res> get password {
+    return $FormModelCopyWith<$Res>(_value.password, (value) {
+      return _then(_value.copyWith(password: value));
+    });
   }
 }
 
@@ -71,7 +105,17 @@ abstract class _$$_SignInStateCopyWith<$Res>
           _$_SignInState value, $Res Function(_$_SignInState) then) =
       __$$_SignInStateCopyWithImpl<$Res>;
   @override
-  $Res call({SignInStateContext context, bool isLoading, Exception? error});
+  $Res call(
+      {SignInStateContext context,
+      bool isLoading,
+      Exception? error,
+      FormModel email,
+      FormModel password});
+
+  @override
+  $FormModelCopyWith<$Res> get email;
+  @override
+  $FormModelCopyWith<$Res> get password;
 }
 
 /// @nodoc
@@ -89,6 +133,8 @@ class __$$_SignInStateCopyWithImpl<$Res> extends _$SignInStateCopyWithImpl<$Res>
     Object? context = freezed,
     Object? isLoading = freezed,
     Object? error = freezed,
+    Object? email = freezed,
+    Object? password = freezed,
   }) {
     return _then(_$_SignInState(
       context: context == freezed
@@ -103,6 +149,14 @@ class __$$_SignInStateCopyWithImpl<$Res> extends _$SignInStateCopyWithImpl<$Res>
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
               as Exception?,
+      email: email == freezed
+          ? _value.email
+          : email // ignore: cast_nullable_to_non_nullable
+              as FormModel,
+      password: password == freezed
+          ? _value.password
+          : password // ignore: cast_nullable_to_non_nullable
+              as FormModel,
     ));
   }
 }
@@ -113,7 +167,9 @@ class _$_SignInState extends _SignInState {
   const _$_SignInState(
       {this.context = SignInStateContext.failed,
       this.isLoading = false,
-      this.error})
+      this.error,
+      required this.email,
+      required this.password})
       : super._();
 
   @override
@@ -124,10 +180,14 @@ class _$_SignInState extends _SignInState {
   final bool isLoading;
   @override
   final Exception? error;
+  @override
+  final FormModel email;
+  @override
+  final FormModel password;
 
   @override
   String toString() {
-    return 'SignInState(context: $context, isLoading: $isLoading, error: $error)';
+    return 'SignInState(context: $context, isLoading: $isLoading, error: $error, email: $email, password: $password)';
   }
 
   @override
@@ -137,7 +197,9 @@ class _$_SignInState extends _SignInState {
             other is _$_SignInState &&
             const DeepCollectionEquality().equals(other.context, context) &&
             const DeepCollectionEquality().equals(other.isLoading, isLoading) &&
-            const DeepCollectionEquality().equals(other.error, error));
+            const DeepCollectionEquality().equals(other.error, error) &&
+            const DeepCollectionEquality().equals(other.email, email) &&
+            const DeepCollectionEquality().equals(other.password, password));
   }
 
   @override
@@ -145,7 +207,9 @@ class _$_SignInState extends _SignInState {
       runtimeType,
       const DeepCollectionEquality().hash(context),
       const DeepCollectionEquality().hash(isLoading),
-      const DeepCollectionEquality().hash(error));
+      const DeepCollectionEquality().hash(error),
+      const DeepCollectionEquality().hash(email),
+      const DeepCollectionEquality().hash(password));
 
   @JsonKey(ignore: true)
   @override
@@ -157,7 +221,9 @@ abstract class _SignInState extends SignInState {
   const factory _SignInState(
       {final SignInStateContext context,
       final bool isLoading,
-      final Exception? error}) = _$_SignInState;
+      final Exception? error,
+      required final FormModel email,
+      required final FormModel password}) = _$_SignInState;
   const _SignInState._() : super._();
 
   @override
@@ -166,6 +232,10 @@ abstract class _SignInState extends SignInState {
   bool get isLoading;
   @override
   Exception? get error;
+  @override
+  FormModel get email;
+  @override
+  FormModel get password;
   @override
   @JsonKey(ignore: true)
   _$$_SignInStateCopyWith<_$_SignInState> get copyWith =>
