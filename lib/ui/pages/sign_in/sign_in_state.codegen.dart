@@ -26,7 +26,7 @@ class SignInState with _$SignInState {
     required FormModel password,
   }) = _SignInState;
 
-  bool isValidAll() => email.isValid() && password.isValid();
+  bool isValidAll() => email.isValid && password.isValid;
 
   SignInState onSubmit() =>
       copyWith(email: email.onSubmit(), password: password.onSubmit());

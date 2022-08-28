@@ -8,7 +8,7 @@ typedef Validator = String? Function(String value);
 final emailExp = RegExp(
     r"^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$");
 
-final passwordExp = RegExp(r"^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])[a-zA-Z\d]{8,}$");
+final passwordExp = RegExp(r"^(?=.*\d)(?=.*[a-zA-Z])[a-zA-Z\d]{8,}$");
 
 String? emailValidator(String? value) {
   if (value == null || value.isEmpty) {
@@ -41,11 +41,12 @@ class FormModel with _$FormModel {
     required TextEditingController controller,
     required FocusNode focusNode,
     @Default(false) bool hasEdited,
+    @Default([]) List<String> externalErrors,
   }) = _FormModel;
 
   FormModel onChangeText() => this;
 
-  FormModel onFocusChange() => copyWith(hasEdited: true);
+  FormModel onFocusChange() => copyWith(hasEdited: true, externalErrors: []);
 
   FormModel onSubmit() {
     unfocus();
@@ -59,11 +60,29 @@ class FormModel with _$FormModel {
     focusNode.dispose();
   }
 
-  String? get errors {
-    return validator(controller.text);
+  late final isValid = _errors.isEmpty;
+  late final text = controller.text;
+  late final bool isDisplayedError = !focusNode.hasFocus && hasEdited;
+
+  String? get displayError {
+    if (!isDisplayedError) {
+      return null;
+    } else if (_errors.isEmpty) {
+      return null;
+    }
+    return _errors.join('\n');
   }
 
-  bool isValid() => errors == null;
+  List<String> get _errors {
+    final validationError = validator(controller.text);
+    return [
+      ...externalErrors,
+      if (validationError != null) validationError,
+    ];
+  }
+
+  FormModel addExternalError(String errorString) =>
+      copyWith(externalErrors: [...externalErrors, errorString]);
 
   static FormModel of(Validator validator, [String defaultText = '']) =>
       FormModel(
@@ -72,5 +91,3 @@ class FormModel with _$FormModel {
         focusNode: FocusNode(),
       );
 }
-
-final form = FormModel.of(emailValidator);

@@ -20,6 +20,7 @@ mixin _$FormModel {
   TextEditingController get controller => throw _privateConstructorUsedError;
   FocusNode get focusNode => throw _privateConstructorUsedError;
   bool get hasEdited => throw _privateConstructorUsedError;
+  List<String> get externalErrors => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $FormModelCopyWith<FormModel> get copyWith =>
@@ -34,7 +35,8 @@ abstract class $FormModelCopyWith<$Res> {
       {Validator validator,
       TextEditingController controller,
       FocusNode focusNode,
-      bool hasEdited});
+      bool hasEdited,
+      List<String> externalErrors});
 }
 
 /// @nodoc
@@ -51,6 +53,7 @@ class _$FormModelCopyWithImpl<$Res> implements $FormModelCopyWith<$Res> {
     Object? controller = freezed,
     Object? focusNode = freezed,
     Object? hasEdited = freezed,
+    Object? externalErrors = freezed,
   }) {
     return _then(_value.copyWith(
       validator: validator == freezed
@@ -69,6 +72,10 @@ class _$FormModelCopyWithImpl<$Res> implements $FormModelCopyWith<$Res> {
           ? _value.hasEdited
           : hasEdited // ignore: cast_nullable_to_non_nullable
               as bool,
+      externalErrors: externalErrors == freezed
+          ? _value.externalErrors
+          : externalErrors // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ));
   }
 }
@@ -83,7 +90,8 @@ abstract class _$$_FormModelCopyWith<$Res> implements $FormModelCopyWith<$Res> {
       {Validator validator,
       TextEditingController controller,
       FocusNode focusNode,
-      bool hasEdited});
+      bool hasEdited,
+      List<String> externalErrors});
 }
 
 /// @nodoc
@@ -102,6 +110,7 @@ class __$$_FormModelCopyWithImpl<$Res> extends _$FormModelCopyWithImpl<$Res>
     Object? controller = freezed,
     Object? focusNode = freezed,
     Object? hasEdited = freezed,
+    Object? externalErrors = freezed,
   }) {
     return _then(_$_FormModel(
       validator: validator == freezed
@@ -120,6 +129,10 @@ class __$$_FormModelCopyWithImpl<$Res> extends _$FormModelCopyWithImpl<$Res>
           ? _value.hasEdited
           : hasEdited // ignore: cast_nullable_to_non_nullable
               as bool,
+      externalErrors: externalErrors == freezed
+          ? _value._externalErrors
+          : externalErrors // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ));
   }
 }
@@ -131,8 +144,10 @@ class _$_FormModel extends _FormModel {
       {required this.validator,
       required this.controller,
       required this.focusNode,
-      this.hasEdited = false})
-      : super._();
+      this.hasEdited = false,
+      final List<String> externalErrors = const []})
+      : _externalErrors = externalErrors,
+        super._();
 
   @override
   final Validator validator;
@@ -143,10 +158,17 @@ class _$_FormModel extends _FormModel {
   @override
   @JsonKey()
   final bool hasEdited;
+  final List<String> _externalErrors;
+  @override
+  @JsonKey()
+  List<String> get externalErrors {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_externalErrors);
+  }
 
   @override
   String toString() {
-    return 'FormModel(validator: $validator, controller: $controller, focusNode: $focusNode, hasEdited: $hasEdited)';
+    return 'FormModel(validator: $validator, controller: $controller, focusNode: $focusNode, hasEdited: $hasEdited, externalErrors: $externalErrors)';
   }
 
   @override
@@ -159,7 +181,9 @@ class _$_FormModel extends _FormModel {
             const DeepCollectionEquality()
                 .equals(other.controller, controller) &&
             const DeepCollectionEquality().equals(other.focusNode, focusNode) &&
-            const DeepCollectionEquality().equals(other.hasEdited, hasEdited));
+            const DeepCollectionEquality().equals(other.hasEdited, hasEdited) &&
+            const DeepCollectionEquality()
+                .equals(other._externalErrors, _externalErrors));
   }
 
   @override
@@ -168,7 +192,8 @@ class _$_FormModel extends _FormModel {
       validator,
       const DeepCollectionEquality().hash(controller),
       const DeepCollectionEquality().hash(focusNode),
-      const DeepCollectionEquality().hash(hasEdited));
+      const DeepCollectionEquality().hash(hasEdited),
+      const DeepCollectionEquality().hash(_externalErrors));
 
   @JsonKey(ignore: true)
   @override
@@ -181,7 +206,8 @@ abstract class _FormModel extends FormModel {
       {required final Validator validator,
       required final TextEditingController controller,
       required final FocusNode focusNode,
-      final bool hasEdited}) = _$_FormModel;
+      final bool hasEdited,
+      final List<String> externalErrors}) = _$_FormModel;
   _FormModel._() : super._();
 
   @override
@@ -192,6 +218,8 @@ abstract class _FormModel extends FormModel {
   FocusNode get focusNode;
   @override
   bool get hasEdited;
+  @override
+  List<String> get externalErrors;
   @override
   @JsonKey(ignore: true)
   _$$_FormModelCopyWith<_$_FormModel> get copyWith =>
