@@ -132,7 +132,8 @@ class SignInInteractor extends SignInUsecase {
         reason: 'DatabaseException',
       );
 
-      rethrow;
+      throw SignInException(e.message ?? 'cause Firebase exception: $e',
+          SignInExceptionStatus.firebaseException);
     } on Exception catch (e) {
       final message =
           'get user or initialize user is error [uid][${credentialUser.uid}]';
