@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:virtualpilgrimage/model/form_model.codegen.dart';
+import 'package:virtualpilgrimage/ui/components/my_text_form_field.dart';
 import 'package:virtualpilgrimage/ui/pages/sign_in/sign_in_presenter.dart';
 import 'package:virtualpilgrimage/ui/style/color.dart';
 import 'package:virtualpilgrimage/ui/style/font.dart';
-
-final emailControllerStateProvider = StateProvider.autoDispose(
-  (_) => TextEditingController(text: ''),
-);
-
-final passwordControllerStateProvider = StateProvider.autoDispose(
-  (_) => TextEditingController(text: ''),
-);
 
 class SignInPage extends ConsumerWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -36,11 +30,8 @@ class SignInPageBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final notifier = ref.read(signInControllerProvider.notifier);
-    final state = ref.watch(signInControllerProvider);
-
-    final emailFormController = ref.watch(emailControllerStateProvider);
-    final passwordFormController = ref.watch(passwordControllerStateProvider);
+    final notifier = ref.read(signInPresenterProvider.notifier);
+    final state = ref.watch(signInPresenterProvider);
 
     return Builder(builder: (context) {
       return Container(
@@ -56,79 +47,33 @@ class SignInPageBody extends StatelessWidget {
                   left: 12.0,
                   bottom: 12.0,
                 ),
-                child: TextFormField(
-                  style: const TextStyle(
-                    fontSize: FontStyle.mediumSize,
-                  ),
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: ColorStyle.white,
-                    hintText: 'ニックネーム or メールアドレス',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(
-                        color: Theme.of(context).unselectedWidgetColor,
-                        width: 2.0,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(
-                        color: Theme.of(context).primaryColor,
-                        width: 2.0,
-                      ),
-                    ),
-                    prefixIcon: Icon(
+                child: _createTextFormField(
+                  state.email,
+                  notifier.onChangeEmail,
+                  _inputDecorationBuilder(
+                    context,
+                    "メールアドレス or ニックネーム",
+                    Icon(
                       Icons.mail,
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
-                  key: const Key('nicknameOrEmail'),
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'ニックネームかメールアドレスを入力してください';
-                    }
-                    return null;
-                  },
-                  controller: emailFormController,
-                  enabled: true,
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: TextFormField(
-                  style: const TextStyle(
-                    fontSize: FontStyle.mediumSize,
-                  ),
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: ColorStyle.white,
-                    hintText: 'パスワード',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(
-                        color: Theme.of(context).unselectedWidgetColor,
-                        width: 2.0,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(
-                        color: Theme.of(context).primaryColor,
-                        width: 2.0,
-                      ),
-                    ),
-                    prefixIcon: Icon(
+                child: _createTextFormField(
+                  state.password,
+                  notifier.onChangePassword,
+                  _inputDecorationBuilder(
+                    context,
+                    'パスワード',
+                    Icon(
                       Icons.password,
                       color: Theme.of(context).primaryColor,
                     ),
                   ),
-                  key: const Key('password'),
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  obscureText: true,
-                  controller: passwordFormController,
-                  enabled: true,
+                  true,
                 ),
               ),
               // FIXME: PrimaryButton などのコンポーネントに切り出す
@@ -141,10 +86,7 @@ class SignInPageBody extends StatelessWidget {
                 ),
                 child: ElevatedButton(
                   onPressed: () async {
-                    await notifier.signInWithEmailAndPassword(
-                      emailFormController.text,
-                      passwordFormController.text,
-                    );
+                    await notifier.signInWithEmailAndPassword();
                   },
                   // ボタンを押したときの色
                   style: ElevatedButton.styleFrom(
@@ -162,7 +104,7 @@ class SignInPageBody extends StatelessWidget {
                     padding: const EdgeInsets.all(10.0),
                   ),
                   child: const Text(
-                    "ログイン・サインイン",
+                    "サインイン・新規アカウント作成",
                     style: TextStyle(color: ColorStyle.text),
                   ),
                 ),
@@ -201,5 +143,43 @@ class SignInPageBody extends StatelessWidget {
         ),
       );
     });
+  }
+
+  Widget _createTextFormField(
+    FormModel formModel,
+    ValueChanged<FormModel> onChanged,
+    InputDecoration decoration, [
+    bool obsecureText = false,
+  ]) {
+    return MyTextFormField(
+      formModel: formModel,
+      onChanged: onChanged,
+      decoration: decoration,
+      obscureText: obsecureText,
+    );
+  }
+
+  InputDecoration _inputDecorationBuilder(
+      BuildContext context, String hintText, Icon icon) {
+    return InputDecoration(
+      filled: true,
+      fillColor: ColorStyle.white,
+      hintText: hintText,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide(
+          color: Theme.of(context).unselectedWidgetColor,
+          width: 2.0,
+        ),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide(
+          color: Theme.of(context).primaryColor,
+          width: 2.0,
+        ),
+      ),
+      prefixIcon: icon,
+    );
   }
 }

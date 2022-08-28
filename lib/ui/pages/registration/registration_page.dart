@@ -59,7 +59,7 @@ class RegistrationPageBody extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () async {
-              await ref.read(signInControllerProvider.notifier).logout();
+              await ref.read(signInPresenterProvider.notifier).logout();
               ref.read(routerProvider).go(RouterPath.signIn);
             },
             child: const Text('サインイン画面に戻る'),
