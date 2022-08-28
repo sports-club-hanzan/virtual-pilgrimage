@@ -18,11 +18,11 @@ class GoogleAuthRepository extends AuthRepository {
       if (googleSigninAccount != null) {
         final GoogleSignInAuthentication googleSignInAuthentication =
             await googleSigninAccount.authentication;
-        final credential = GoogleAuthProvider.credential(
+        final oAuthCredential = GoogleAuthProvider.credential(
           accessToken: googleSignInAuthentication.accessToken,
           idToken: googleSignInAuthentication.idToken,
         );
-        return await _firebaseAuth.signInWithCredential(credential);
+        return _firebaseAuth.signInWithCredential(oAuthCredential);
       }
     } on PlatformException catch (e) {
       throw SignInException(

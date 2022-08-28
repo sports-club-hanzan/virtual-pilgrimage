@@ -23,10 +23,11 @@ class EmailAndPasswordRepository extends AuthRepository {
     }
 
     try {
-      return _firebaseAuth.signInWithEmailAndPassword(
+      final credential = await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+      return credential;
     } on PlatformException catch (e) {
       throw SignInException(
         'cause platform exception [code][${e.code}][message][${e.message}]',
@@ -51,7 +52,6 @@ class EmailAndPasswordRepository extends AuthRepository {
         SignInExceptionStatus.unknownException,
       );
     }
-    return null;
   }
 
   FutureOr<UserCredential?> _signInWithCreateUser(
@@ -59,7 +59,7 @@ class EmailAndPasswordRepository extends AuthRepository {
     String password,
   ) async {
     try {
-      return FirebaseAuth.instance.createUserWithEmailAndPassword(
+      return _firebaseAuth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -75,12 +75,15 @@ class EmailAndPasswordRepository extends AuthRepository {
           SignInExceptionStatus.firebaseException,
         );
       }
+      throw SignInException(
+        'Firebase signin with create user cause unknown error',
+        SignInExceptionStatus.firebaseException,
+      );
     } on Exception catch (e) {
       throw SignInException(
         'Firebase signin cause unknown error [exception][$e]',
         SignInExceptionStatus.unknownException,
       );
     }
-    return null;
   }
 }
