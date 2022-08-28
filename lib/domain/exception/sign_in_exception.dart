@@ -3,6 +3,7 @@ enum SignInExceptionStatus {
   credentialUserIsNull,
   emailOrPasswordIsNull,
   firebaseException,
+  wrongPassword,
   unknownException,
   platformException,
 }
