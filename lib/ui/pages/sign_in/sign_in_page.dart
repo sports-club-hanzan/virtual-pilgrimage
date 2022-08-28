@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
-import 'package:virtualpilgrimage/domain/auth/sign_in_controller.dart';
-import 'package:virtualpilgrimage/domain/auth/sign_in_state.codegen.dart';
-import 'package:virtualpilgrimage/router.dart';
+import 'package:virtualpilgrimage/ui/pages/sign_in/sign_in_presenter.dart';
 import 'package:virtualpilgrimage/ui/style/color.dart';
 import 'package:virtualpilgrimage/ui/style/font.dart';
 
@@ -194,11 +192,6 @@ class SignInPageBody extends StatelessWidget {
                     ),
                     onPressed: () async {
                       await notifier.signInWithGoogle();
-
-                      if (!state.isLoading &&
-                          state.context == SignInStateContext.temporary) {
-                        ref.read(routerProvider).go(RouterPath.registration);
-                      }
                     },
                   ),
                 ),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:virtualpilgrimage/domain/auth/sign_in_controller.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/router.dart';
+import 'package:virtualpilgrimage/ui/pages/sign_in/sign_in_presenter.dart';
 
 class RegistrationPage extends ConsumerWidget {
   const RegistrationPage({Key? key}) : super(key: key);
