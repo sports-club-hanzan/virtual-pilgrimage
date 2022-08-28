@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtualpilgrimage/domain/auth/sign_in_controller.dart';
+import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/router.dart';
 
 class RegistrationPage extends ConsumerWidget {
@@ -27,7 +28,7 @@ class RegistrationPageBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.read(signInControllerProvider).user!;
+    final user = ref.read(userStateProvider)!;
     return Container(
       color: Theme.of(context).backgroundColor,
       child: Column(
