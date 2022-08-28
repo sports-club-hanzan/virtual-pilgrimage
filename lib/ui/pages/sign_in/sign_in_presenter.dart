@@ -60,10 +60,8 @@ class SignInPresenter extends StateNotifier<SignInState> {
     try {
       final user = await _signInUsecase.signInWithEmailAndPassword(
           state.email.text, state.password.text);
-      state = SignInState(
+      state = state.copyWith(
         context: _getSignInContext(user),
-        email: state.email,
-        password: state.password,
       );
       // userState を変更するとページが遷移するので最後に更新を実行
       _userState.state = user;
@@ -71,22 +69,35 @@ class SignInPresenter extends StateNotifier<SignInState> {
       switch (e.status) {
         case SignInExceptionStatus.credentialIsNull:
         case SignInExceptionStatus.credentialUserIsNull:
-          state.email.addExternalError("認証情報が空でした。認証に利用するメールアドレスを見直してください");
+          state = state.copyWith(
+              email: state.email
+                  .addExternalError("認証情報が空でした。認証に利用するメールアドレスを見直してください"));
           break;
         case SignInExceptionStatus.emailOrPasswordIsNull:
           // 設定しているもののvalidationで弾かれるため、ここには分岐しないはず
-          state.email.addExternalError("メールアドレス・ニックネームまたはパスワードを入力してください");
-          state.password.addExternalError("メールアドレス・ニックネームまたはパスワードを入力してください");
+          state = state.copyWith(
+            email:
+                state.email.addExternalError("メールアドレス・ニックネームまたはパスワードを入力してください"),
+            password: state.password
+                .addExternalError("メールアドレス・ニックネームまたはパスワードを入力してください"),
+          );
           break;
         case SignInExceptionStatus.firebaseException:
         case SignInExceptionStatus.unknownException:
-          state.email.addExternalError("サインイン時に想定外のエラーが発生しました");
+          state = state.copyWith(
+            email: state.email.addExternalError("サインイン時に想定外のエラーが発生しました"),
+          );
           break;
         case SignInExceptionStatus.platformException:
-          state.email.addExternalError("お使いの端末のバージョンではアプリを利用できない可能性があります");
+          state = state.copyWith(
+            email: state.email
+                .addExternalError("お使いの端末のバージョンではアプリを利用できない可能性があります"),
+          );
           break;
         case SignInExceptionStatus.wrongPassword:
-          state.password.addExternalError("パスワードが誤っています");
+          state = state.copyWith(
+            password: state.password.addExternalError("パスワードが誤っています"),
+          );
           break;
       }
       state = state.copyWith(
