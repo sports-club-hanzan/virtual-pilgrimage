@@ -1,10 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtualpilgrimage/domain/auth/sign_in_usecase.dart';
+import 'package:virtualpilgrimage/domain/exception/sign_in_exception.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/model/form_model.codegen.dart';
 import 'package:virtualpilgrimage/ui/pages/sign_in/sign_in_state.codegen.dart';
 
-final signInControllerProvider =
+final signInPresenterProvider =
     StateNotifierProvider.autoDispose<SignInPresenter, SignInState>(
   (ref) => SignInPresenter(
     ref,
@@ -43,21 +44,22 @@ class SignInPresenter extends StateNotifier<SignInState> {
       // userState を変更するとページが遷移するので最後に更新を実行
       _userState.state = user;
     } on Exception catch (e) {
-      state = SignInState(
+      state = state.copyWith(
         error: e,
-        email: state.email,
-        password: state.password,
       );
     }
   }
 
-  Future<void> signInWithEmailAndPassword(
-    String email,
-    String password,
-  ) async {
+  Future<void> signInWithEmailAndPassword() async {
     state = state.onSubmit();
+    // バリデーションエラーにかかっている場合はリクエストを送らない
+    if (!state.email.isValid || !state.password.isValid) {
+      return;
+    }
+
     try {
-      final user = await _signInUsecase.signInWithGoogle();
+      final user = await _signInUsecase.signInWithEmailAndPassword(
+          state.email.text, state.password.text);
       state = SignInState(
         context: _getSignInContext(user),
         email: state.email,
@@ -65,11 +67,34 @@ class SignInPresenter extends StateNotifier<SignInState> {
       );
       // userState を変更するとページが遷移するので最後に更新を実行
       _userState.state = user;
-    } on Exception catch (e) {
-      state = SignInState(
+    } on SignInException catch (e) {
+      switch (e.status) {
+        case SignInExceptionStatus.credentialIsNull:
+        case SignInExceptionStatus.credentialUserIsNull:
+          state.email.addExternalError("認証情報が空でした。認証に利用するメールアドレスを見直してください");
+          break;
+        case SignInExceptionStatus.emailOrPasswordIsNull:
+          // 設定しているもののvalidationで弾かれるため、ここには分岐しないはず
+          state.email.addExternalError("メールアドレス・ニックネームまたはパスワードを入力してください");
+          state.password.addExternalError("メールアドレス・ニックネームまたはパスワードを入力してください");
+          break;
+        case SignInExceptionStatus.firebaseException:
+        case SignInExceptionStatus.unknownException:
+          state.email.addExternalError("サインイン時に想定外のエラーが発生しました");
+          break;
+        case SignInExceptionStatus.platformException:
+          state.email.addExternalError("お使いの端末のバージョンではアプリを利用できない可能性があります");
+          break;
+        case SignInExceptionStatus.wrongPassword:
+          state.password.addExternalError("パスワードが誤っています");
+          break;
+      }
+      state = state.copyWith(
         error: e,
-        email: state.email,
-        password: state.password,
+      );
+    } on Exception catch (e) {
+      state = state.copyWith(
+        error: e,
       );
     }
   }
