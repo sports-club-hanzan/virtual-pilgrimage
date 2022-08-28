@@ -21,6 +21,8 @@ class SignInPresenter extends StateNotifier<SignInState> {
     this._ref,
   ) : super(SignInState(
           context: SignInStateContext.notSignedIn,
+          // MEMO: ニックネームでもログインできるようにしたかったが、
+          // Firebaseの制約で難しそうなので email validation を入れている
           email: FormModel.of(emailValidator),
           password: FormModel.of(passwordValidator),
         )) {
