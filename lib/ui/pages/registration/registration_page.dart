@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:virtualpilgrimage/app.dart';
 import 'package:virtualpilgrimage/domain/auth/sign_in_controller.dart';
+import 'package:virtualpilgrimage/router.dart';
 
 class RegistrationPage extends ConsumerWidget {
   const RegistrationPage({Key? key}) : super(key: key);
@@ -59,7 +59,7 @@ class RegistrationPageBody extends StatelessWidget {
           ElevatedButton(
             onPressed: () async {
               await ref.read(signInControllerProvider.notifier).logout();
-              ref.read(routerProvider).go('/signin');
+              ref.read(routerProvider).go(RouterPath.signIn);
             },
             child: const Text('サインイン画面に戻る'),
           )
