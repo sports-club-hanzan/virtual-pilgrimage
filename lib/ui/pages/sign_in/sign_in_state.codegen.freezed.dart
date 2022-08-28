@@ -18,7 +18,6 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$SignInState {
   SignInStateContext get context => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
-  VirtualPilgrimageUser? get user => throw _privateConstructorUsedError;
   Exception? get error => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -31,13 +30,7 @@ abstract class $SignInStateCopyWith<$Res> {
   factory $SignInStateCopyWith(
           SignInState value, $Res Function(SignInState) then) =
       _$SignInStateCopyWithImpl<$Res>;
-  $Res call(
-      {SignInStateContext context,
-      bool isLoading,
-      VirtualPilgrimageUser? user,
-      Exception? error});
-
-  $VirtualPilgrimageUserCopyWith<$Res>? get user;
+  $Res call({SignInStateContext context, bool isLoading, Exception? error});
 }
 
 /// @nodoc
@@ -52,7 +45,6 @@ class _$SignInStateCopyWithImpl<$Res> implements $SignInStateCopyWith<$Res> {
   $Res call({
     Object? context = freezed,
     Object? isLoading = freezed,
-    Object? user = freezed,
     Object? error = freezed,
   }) {
     return _then(_value.copyWith(
@@ -64,26 +56,11 @@ class _$SignInStateCopyWithImpl<$Res> implements $SignInStateCopyWith<$Res> {
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
-      user: user == freezed
-          ? _value.user
-          : user // ignore: cast_nullable_to_non_nullable
-              as VirtualPilgrimageUser?,
       error: error == freezed
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
               as Exception?,
     ));
-  }
-
-  @override
-  $VirtualPilgrimageUserCopyWith<$Res>? get user {
-    if (_value.user == null) {
-      return null;
-    }
-
-    return $VirtualPilgrimageUserCopyWith<$Res>(_value.user!, (value) {
-      return _then(_value.copyWith(user: value));
-    });
   }
 }
 
@@ -94,14 +71,7 @@ abstract class _$$_SignInStateCopyWith<$Res>
           _$_SignInState value, $Res Function(_$_SignInState) then) =
       __$$_SignInStateCopyWithImpl<$Res>;
   @override
-  $Res call(
-      {SignInStateContext context,
-      bool isLoading,
-      VirtualPilgrimageUser? user,
-      Exception? error});
-
-  @override
-  $VirtualPilgrimageUserCopyWith<$Res>? get user;
+  $Res call({SignInStateContext context, bool isLoading, Exception? error});
 }
 
 /// @nodoc
@@ -118,7 +88,6 @@ class __$$_SignInStateCopyWithImpl<$Res> extends _$SignInStateCopyWithImpl<$Res>
   $Res call({
     Object? context = freezed,
     Object? isLoading = freezed,
-    Object? user = freezed,
     Object? error = freezed,
   }) {
     return _then(_$_SignInState(
@@ -130,10 +99,6 @@ class __$$_SignInStateCopyWithImpl<$Res> extends _$SignInStateCopyWithImpl<$Res>
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
-      user: user == freezed
-          ? _value.user
-          : user // ignore: cast_nullable_to_non_nullable
-              as VirtualPilgrimageUser?,
       error: error == freezed
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
@@ -148,7 +113,6 @@ class _$_SignInState extends _SignInState {
   const _$_SignInState(
       {this.context = SignInStateContext.failed,
       this.isLoading = false,
-      this.user,
       this.error})
       : super._();
 
@@ -159,13 +123,11 @@ class _$_SignInState extends _SignInState {
   @JsonKey()
   final bool isLoading;
   @override
-  final VirtualPilgrimageUser? user;
-  @override
   final Exception? error;
 
   @override
   String toString() {
-    return 'SignInState(context: $context, isLoading: $isLoading, user: $user, error: $error)';
+    return 'SignInState(context: $context, isLoading: $isLoading, error: $error)';
   }
 
   @override
@@ -175,7 +137,6 @@ class _$_SignInState extends _SignInState {
             other is _$_SignInState &&
             const DeepCollectionEquality().equals(other.context, context) &&
             const DeepCollectionEquality().equals(other.isLoading, isLoading) &&
-            const DeepCollectionEquality().equals(other.user, user) &&
             const DeepCollectionEquality().equals(other.error, error));
   }
 
@@ -184,7 +145,6 @@ class _$_SignInState extends _SignInState {
       runtimeType,
       const DeepCollectionEquality().hash(context),
       const DeepCollectionEquality().hash(isLoading),
-      const DeepCollectionEquality().hash(user),
       const DeepCollectionEquality().hash(error));
 
   @JsonKey(ignore: true)
@@ -197,7 +157,6 @@ abstract class _SignInState extends SignInState {
   const factory _SignInState(
       {final SignInStateContext context,
       final bool isLoading,
-      final VirtualPilgrimageUser? user,
       final Exception? error}) = _$_SignInState;
   const _SignInState._() : super._();
 
@@ -205,8 +164,6 @@ abstract class _SignInState extends SignInState {
   SignInStateContext get context;
   @override
   bool get isLoading;
-  @override
-  VirtualPilgrimageUser? get user;
   @override
   Exception? get error;
   @override

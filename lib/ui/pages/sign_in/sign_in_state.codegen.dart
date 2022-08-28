@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 
 part 'sign_in_state.codegen.freezed.dart';
 
@@ -21,7 +20,6 @@ class SignInState with _$SignInState {
   const factory SignInState({
     @Default(SignInStateContext.failed) SignInStateContext context,
     @Default(false) bool isLoading,
-    VirtualPilgrimageUser? user,
     Exception? error,
   }) = _SignInState;
 }
