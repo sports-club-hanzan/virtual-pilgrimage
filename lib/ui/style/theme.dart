@@ -5,7 +5,7 @@ import 'color.dart';
 
 class AppTheme {
   static final theme = ThemeData(
-    unselectedWidgetColor: ColorStyle.grey,
+    unselectedWidgetColor: ColorStyle.white,
     focusColor: ColorStyle.primary,
     primaryColor: ColorStyle.primary,
     primaryColorDark: ColorStyle.primaryDark,
