@@ -12,7 +12,7 @@ class MyTextFormField extends StatefulWidget {
   // 必要に応じて追加
   // 以下が参考になる
   // ref. https://github.com/flutter/flutter/blob/master/packages/flutter/lib/src/material/text_form_field.dart
-  final InputDecoration? inputDecoration;
+  final InputDecoration decoration;
   final TextStyle? style;
   final bool obscureText;
 
@@ -20,7 +20,7 @@ class MyTextFormField extends StatefulWidget {
     Key? key,
     required this.formModel,
     required this.onChanged,
-    this.inputDecoration,
+    this.decoration = const InputDecoration(),
     this.style,
     this.obscureText = false,
   })  : textEditingController = formModel.controller,
@@ -54,7 +54,9 @@ class _MyTextFormFieldState extends State<MyTextFormField> {
     return TextFormField(
       controller: widget.textEditingController,
       focusNode: widget.focusNode,
-      decoration: widget.inputDecoration,
+      decoration: widget.decoration.copyWith(
+        errorText: widget.formModel.displayError,
+      ),
       style: widget.style,
       obscureText: widget.obscureText,
     );
