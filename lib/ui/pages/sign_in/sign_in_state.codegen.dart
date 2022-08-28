@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:virtualpilgrimage/model/form_model.codegen.dart';
 
 part 'sign_in_state.codegen.freezed.dart';
 
@@ -21,5 +22,12 @@ class SignInState with _$SignInState {
     @Default(SignInStateContext.failed) SignInStateContext context,
     @Default(false) bool isLoading,
     Exception? error,
+    required FormModel email,
+    required FormModel password,
   }) = _SignInState;
+
+  bool isValidAll() => email.isValid() && password.isValid();
+
+  SignInState onSubmit() =>
+      copyWith(email: email.onSubmit(), password: password.onSubmit());
 }

@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtualpilgrimage/domain/auth/sign_in_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
+import 'package:virtualpilgrimage/model/form_model.codegen.dart';
 import 'package:virtualpilgrimage/ui/pages/sign_in/sign_in_state.codegen.dart';
 
 final signInControllerProvider =
@@ -17,27 +18,35 @@ class SignInPresenter extends StateNotifier<SignInState> {
 
   SignInPresenter(
     this._ref,
-  ) : super(
-          const SignInState(
-            context: SignInStateContext.notSignedIn,
-            isLoading: true,
-          ),
-        ) {
+  ) : super(SignInState(
+          context: SignInStateContext.notSignedIn,
+          email: FormModel.of(emailValidator),
+          password: FormModel.of(passwordValidator),
+        )) {
     _signInUsecase = _ref.read(signInUsecaseProvider);
     _userState = _ref.watch(userStateProvider.state);
   }
+
+  void onChangeEmail(FormModel email) => state = state.copyWith(email: email);
+
+  void onChangePassword(FormModel password) =>
+      state = state.copyWith(password: password);
 
   Future<void> signInWithGoogle() async {
     try {
       final user = await _signInUsecase.signInWithGoogle();
       state = SignInState(
         context: _getSignInContext(user),
+        email: state.email,
+        password: state.password,
       );
       // userState を変更するとページが遷移するので最後に更新を実行
       _userState.state = user;
     } on Exception catch (e) {
       state = SignInState(
         error: e,
+        email: state.email,
+        password: state.password,
       );
     }
   }
@@ -46,16 +55,21 @@ class SignInPresenter extends StateNotifier<SignInState> {
     String email,
     String password,
   ) async {
+    state = state.onSubmit();
     try {
       final user = await _signInUsecase.signInWithGoogle();
       state = SignInState(
         context: _getSignInContext(user),
+        email: state.email,
+        password: state.password,
       );
       // userState を変更するとページが遷移するので最後に更新を実行
       _userState.state = user;
     } on Exception catch (e) {
       state = SignInState(
         error: e,
+        email: state.email,
+        password: state.password,
       );
     }
   }
