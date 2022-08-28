@@ -5,35 +5,39 @@ import 'package:virtualpilgrimage/domain/auth/sign_in_controller.dart';
 import 'package:virtualpilgrimage/domain/auth/sign_in_state.codegen.dart';
 import 'package:virtualpilgrimage/ui/pages/registration/registration_page.dart';
 import 'package:virtualpilgrimage/ui/pages/sign_in/sign_in_page.dart';
-import 'package:virtualpilgrimage/ui/style/theme.dart';
+
+extension RouterPath on String {
+  static const home = '/';
+  static const signIn = '/signin';
+  static const registration = '/registration';
+}
 
 // ref. https://zenn.dev/mkikuchi/articles/cc87c84e1404c4
-// TODO: router は別で定義して、App クラスの中身を main.dart に移す
 final Provider<GoRouter> routerProvider = Provider<GoRouter>((ref) => GoRouter(
       routes: <GoRoute>[
         // ルート
-        GoRoute(
-          path: '/',
-          // builder: (BuildContext context, GoRouterState state) {
-          //   return const Scaffold(
-          //     body: Text('home'),
-          //   );
-          // },
-          pageBuilder: (context, state) => MaterialPage<void>(
-            key: state.pageKey,
-            child: SignInPage(key: state.pageKey),
-          ),
-        ),
+        // GoRoute(
+        //   path: '/',
+        //   builder: (BuildContext context, GoRouterState state) {
+        //     return const Scaffold(
+        //       body: Text('home'),
+        //     );
+        //   },
+        //   pageBuilder: (context, state) => MaterialPage<void>(
+        //     key: state.pageKey,
+        //     child: SignInPage(key: state.pageKey),
+        //   ),
+        // ),
         // ログイン
         GoRoute(
-          path: '/signin',
+          path: RouterPath.signIn,
           builder: (BuildContext context, GoRouterState state) {
             return const SignInPage();
           },
         ),
         // ユーザ情報登録
         GoRoute(
-          path: '/registration',
+          path: RouterPath.registration,
           builder: (BuildContext context, GoRouterState state) {
             return const RegistrationPage();
           },
@@ -46,39 +50,19 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((ref) => GoRouter(
           case SignInStateContext.success:
             break;
           case SignInStateContext.temporary:
-            if (state.location != '/registration') {
-              return '/registration';
+            if (state.location != RouterPath.registration) {
+              return RouterPath.registration;
             }
             break;
           case SignInStateContext.failed:
           case SignInStateContext.notSignedIn:
-            if (state.location != '/signin') {
-              return '/signin';
+            if (state.location != RouterPath.signIn) {
+              return RouterPath.signIn;
             }
             break;
           default:
-            return '/signin';
         }
 
         return null;
       }),
     ));
-
-class App extends ConsumerWidget {
-  const App({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final router = ref.watch(routerProvider);
-
-    return MaterialApp.router(
-      routeInformationProvider: router.routeInformationProvider,
-      routeInformationParser: router.routeInformationParser,
-      routerDelegate: router.routerDelegate,
-      // TODO: タイトルはアプリ名に変更
-      title: 'Virtual Pilgrimage',
-      locale: const Locale('ja'),
-      theme: AppTheme.theme,
-    );
-  }
-}
