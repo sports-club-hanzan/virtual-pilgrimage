@@ -39,7 +39,7 @@ class EmailAndPasswordRepository extends AuthRepository {
       } else if (e.code == 'wrong-password') {
         throw SignInException(
           'Firebase exception because user set wrong password [message][${e.message}][email][${e.email}]',
-          SignInExceptionStatus.firebaseException,
+          SignInExceptionStatus.wrongPassword,
         );
       }
       throw SignInException(
