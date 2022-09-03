@@ -8,7 +8,9 @@ typedef Validator = String? Function(String value);
 final emailExp = RegExp(
     r"^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$");
 
-final passwordExp = RegExp(r"^(?=.*\d)(?=.*[a-zA-Z])[a-zA-Z\d]{8,}$");
+final passwordExp = RegExp(r"^(?=.*\d)(?=.*[a-zA-Z])[a-zA-Z\d]{8,32}$");
+
+final nicknameExp = RegExp(r"^(?=.*\d)(?=.*[a-zA-Z])[a-zA-Z\d]{6,16}$");
 
 String? emailValidator(String? value) {
   if (value == null || value.isEmpty) {
@@ -25,6 +27,16 @@ String? passwordValidator(String? value) {
     return '必須項目です';
   } else if (!passwordExp.hasMatch(value)) {
     return '半角英数字(大文字小文字)8文字以上で入力してください';
+  } else {
+    return null;
+  }
+}
+
+String? nicknameValidator(String? value) {
+  if (value == null || value.isEmpty) {
+    return '必須項目です';
+  } else if (!nicknameExp.hasMatch(value)) {
+    return '半角英数字(大文字小文字)6文字以上16文字以下で入力してください';
   } else {
     return null;
   }

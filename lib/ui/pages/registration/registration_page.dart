@@ -54,7 +54,7 @@ class RegistrationPageBody extends StatelessWidget {
                     onChanged: notifier.onChangedNickname,
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor: Theme.of(context).unselectedWidgetColor,
+                      fillColor: Colors.white,
                       labelText: 'ニックネーム',
                       labelStyle: TextStyle(
                         color: state.nickname.focusNode.hasFocus
@@ -67,8 +67,8 @@ class RegistrationPageBody extends StatelessWidget {
                       hintText: 'ニックネーム',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide(
-                          color: Theme.of(context).unselectedWidgetColor,
+                        borderSide: const BorderSide(
+                          color: ColorStyle.white,
                           width: 2.0,
                         ),
                       ),
