@@ -13,17 +13,14 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
 
   RegistrationPresenter(this._ref, VirtualPilgrimageUser? user)
       : super(RegistrationState(
-          // FIXME: nickname validator を入れる。文字数制限やアルファベットで記載する程度のvalidation
-          nickname:
-              FormModel.of((value) => null, user != null ? user.nickname : ''),
+          nickname: FormModel.of(nicknameValidator),
           gender: user != null ? user.gender : Gender.unknown,
           birthDay: user != null ? user.birthDay : DateTime.utc(1980),
         ));
 
   void initialize(String nickname, Gender gender, DateTime birthday) {
     state = RegistrationState(
-        // FIXME: nickname validator を入れる。文字数制限やアルファベットで記載する程度のvalidation
-        nickname: FormModel.of((value) => null, nickname),
+        nickname: FormModel.of(nicknameValidator, nickname),
         gender: gender,
         birthDay: birthday);
   }
