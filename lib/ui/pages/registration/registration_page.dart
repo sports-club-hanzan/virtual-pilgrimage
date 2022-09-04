@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/router.dart';
@@ -35,6 +36,7 @@ class RegistrationPageBody extends StatelessWidget {
     final user = ref.read(userStateProvider)!;
     final notifier = ref.read(registrationPresenterProvider.notifier);
     final state = ref.watch(registrationPresenterProvider);
+    print(user);
 
     return Container(
       color: Theme.of(context).backgroundColor,
@@ -92,6 +94,25 @@ class RegistrationPageBody extends StatelessWidget {
               radioButtonModel: state.gender,
               onChanged: notifier.onChangedGender,
               groupValue: state.gender.selectedValue,
+            ),
+            Column(
+              children: [
+                const Text('生年月日'),
+                TextButton(
+                    onPressed: () {
+                      DatePicker.showDatePicker(
+                        context,
+                        showTitleActions: true,
+                        minTime: DateTime(1950, 1, 1),
+                        maxTime: DateTime.now(),
+                        onChanged: (date) => print(date),
+                        onConfirm: (date) => print(date),
+                        locale: LocaleType.jp,
+                        currentTime: user.birthDay,
+                      );
+                    },
+                    child: Text(user.birthDay.toIso8601String(), style: TextStyle(color: Colors.black))),
+              ],
             ),
             ElevatedButton(
               onPressed: () async {

@@ -10,6 +10,7 @@ class AppTheme {
     primaryColor: ColorStyle.primary,
     primaryColorDark: ColorStyle.primaryDark,
     primaryColorLight: ColorStyle.primaryLight,
+    backgroundColor: ColorStyle.white,
     appBarTheme: const AppBarTheme(
       systemOverlayStyle: SystemUiOverlayStyle.dark,
       centerTitle: true,
