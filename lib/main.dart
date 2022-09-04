@@ -6,6 +6,7 @@ import 'package:virtualpilgrimage/gen/firebase_options_dev.dart' as dev;
 import 'package:virtualpilgrimage/gen/firebase_options_prod.dart' as prod;
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_auth_provider.dart';
 import 'package:virtualpilgrimage/router.dart';
+import 'package:virtualpilgrimage/ui/style/color.dart';
 import 'package:virtualpilgrimage/ui/style/theme.dart';
 
 import 'domain/user/user_repository.dart';
