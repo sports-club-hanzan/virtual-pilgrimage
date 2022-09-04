@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/router.dart';
+import 'package:virtualpilgrimage/ui/components/gender_radio_buttons.dart';
 import 'package:virtualpilgrimage/ui/components/my_text_form_field.dart';
 import 'package:virtualpilgrimage/ui/pages/registration/registration_presenter.dart';
 import 'package:virtualpilgrimage/ui/pages/sign_in/sign_in_presenter.dart';
@@ -87,23 +88,10 @@ class RegistrationPageBody extends StatelessWidget {
                 ],
               ),
             ),
-            Row(
-              children: [
-                const Text('email: '),
-                Text(user.email),
-              ],
-            ),
-            Row(
-              children: [
-                const Text('nickname: '),
-                Text(user.nickname),
-              ],
-            ),
-            Row(
-              children: [
-                const Text('birthday: '),
-                Text(user.birthDay.toIso8601String()),
-              ],
+            GenderRadioButtons(
+              radioButtonModel: state.gender,
+              onChanged: notifier.onChangedGender,
+              groupValue: state.gender.selectedValue,
             ),
             ElevatedButton(
               onPressed: () async {
