@@ -19,7 +19,7 @@ mixin _$RegistrationState {
   FormModel get nickname =>
       throw _privateConstructorUsedError; // FIXME: gender は dropdown, birthday は datepicker で設定するので
 // 必要であればFormを用意する
-  Gender get gender => throw _privateConstructorUsedError;
+  RadioButtonModel<Gender> get gender => throw _privateConstructorUsedError;
   DateTime get birthDay => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -32,9 +32,11 @@ abstract class $RegistrationStateCopyWith<$Res> {
   factory $RegistrationStateCopyWith(
           RegistrationState value, $Res Function(RegistrationState) then) =
       _$RegistrationStateCopyWithImpl<$Res>;
-  $Res call({FormModel nickname, Gender gender, DateTime birthDay});
+  $Res call(
+      {FormModel nickname, RadioButtonModel<Gender> gender, DateTime birthDay});
 
   $FormModelCopyWith<$Res> get nickname;
+  $RadioButtonModelCopyWith<Gender, $Res> get gender;
 }
 
 /// @nodoc
@@ -60,7 +62,7 @@ class _$RegistrationStateCopyWithImpl<$Res>
       gender: gender == freezed
           ? _value.gender
           : gender // ignore: cast_nullable_to_non_nullable
-              as Gender,
+              as RadioButtonModel<Gender>,
       birthDay: birthDay == freezed
           ? _value.birthDay
           : birthDay // ignore: cast_nullable_to_non_nullable
@@ -74,6 +76,13 @@ class _$RegistrationStateCopyWithImpl<$Res>
       return _then(_value.copyWith(nickname: value));
     });
   }
+
+  @override
+  $RadioButtonModelCopyWith<Gender, $Res> get gender {
+    return $RadioButtonModelCopyWith<Gender, $Res>(_value.gender, (value) {
+      return _then(_value.copyWith(gender: value));
+    });
+  }
 }
 
 /// @nodoc
@@ -83,10 +92,13 @@ abstract class _$$_RegistrationStateCopyWith<$Res>
           $Res Function(_$_RegistrationState) then) =
       __$$_RegistrationStateCopyWithImpl<$Res>;
   @override
-  $Res call({FormModel nickname, Gender gender, DateTime birthDay});
+  $Res call(
+      {FormModel nickname, RadioButtonModel<Gender> gender, DateTime birthDay});
 
   @override
   $FormModelCopyWith<$Res> get nickname;
+  @override
+  $RadioButtonModelCopyWith<Gender, $Res> get gender;
 }
 
 /// @nodoc
@@ -114,7 +126,7 @@ class __$$_RegistrationStateCopyWithImpl<$Res>
       gender: gender == freezed
           ? _value.gender
           : gender // ignore: cast_nullable_to_non_nullable
-              as Gender,
+              as RadioButtonModel<Gender>,
       birthDay: birthDay == freezed
           ? _value.birthDay
           : birthDay // ignore: cast_nullable_to_non_nullable
@@ -135,7 +147,7 @@ class _$_RegistrationState extends _RegistrationState {
 // FIXME: gender は dropdown, birthday は datepicker で設定するので
 // 必要であればFormを用意する
   @override
-  final Gender gender;
+  final RadioButtonModel<Gender> gender;
   @override
   final DateTime birthDay;
 
@@ -171,7 +183,7 @@ class _$_RegistrationState extends _RegistrationState {
 abstract class _RegistrationState extends RegistrationState {
   const factory _RegistrationState(
       {required final FormModel nickname,
-      required final Gender gender,
+      required final RadioButtonModel<Gender> gender,
       required final DateTime birthDay}) = _$_RegistrationState;
   const _RegistrationState._() : super._();
 
@@ -179,7 +191,7 @@ abstract class _RegistrationState extends RegistrationState {
   FormModel get nickname;
   @override // FIXME: gender は dropdown, birthday は datepicker で設定するので
 // 必要であればFormを用意する
-  Gender get gender;
+  RadioButtonModel<Gender> get gender;
   @override
   DateTime get birthDay;
   @override
