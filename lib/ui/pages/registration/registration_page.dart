@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/router.dart';
@@ -99,19 +98,9 @@ class RegistrationPageBody extends StatelessWidget {
               children: [
                 const Text('生年月日'),
                 TextButton(
-                    onPressed: () {
-                      DatePicker.showDatePicker(
-                        context,
-                        showTitleActions: true,
-                        minTime: DateTime(1950, 1, 1),
-                        maxTime: DateTime.now(),
-                        onChanged: (date) => print(date),
-                        onConfirm: (date) => print(date),
-                        locale: LocaleType.jp,
-                        currentTime: user.birthDay,
-                      );
-                    },
-                    child: Text(user.birthDay.toIso8601String(), style: TextStyle(color: Colors.black))),
+                    onPressed: () => notifier.onPressedDate(context),
+                    child: Text(state.birthDay.toIso8601String(),
+                        style: const TextStyle(color: Colors.black))),
               ],
             ),
             ElevatedButton(
