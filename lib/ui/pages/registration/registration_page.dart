@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/router.dart';
 import 'package:virtualpilgrimage/ui/components/gender_radio_buttons.dart';
@@ -99,7 +100,7 @@ class RegistrationPageBody extends StatelessWidget {
                 const Text('生年月日'),
                 TextButton(
                     onPressed: () => notifier.onPressedDate(context),
-                    child: Text(state.birthDay.toIso8601String(),
+                    child: Text(DateFormat('yyyy/MM/dd').format(state.birthDay),
                         style: const TextStyle(color: Colors.black))),
               ],
             ),
