@@ -16,7 +16,7 @@ class RadioButtonModel<T> with _$RadioButtonModel<T> {
 
   void unfocus() => focusNodes.map((e) => e.unfocus());
 
-  static RadioButtonModel<T> of<T>(List<String> titles, List<T> values) {
+  static RadioButtonModel<T> of<T>(List<String> titles, List<T> values, [T? selectedValue]) {
     if (titles.length != values.length) {
       throw ArgumentError(
           'length of titles and values must be same [titles][${titles.length}][values][${values.length}]');
@@ -29,7 +29,7 @@ class RadioButtonModel<T> with _$RadioButtonModel<T> {
       focusNodes: focusNodes,
       titles: titles,
       values: values,
-      selectedValue: values[0],
+      selectedValue: selectedValue ?? values[0],
     );
   }
 }
