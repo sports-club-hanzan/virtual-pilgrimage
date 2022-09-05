@@ -122,7 +122,7 @@ class SignInPresenter extends StateNotifier<SignInState> {
     switch (user.userStatus) {
       case UserStatus.temporary:
         return SignInStateContext.temporary;
-      case UserStatus.success:
+      case UserStatus.created:
         return SignInStateContext.success;
       case UserStatus.deleted:
         return SignInStateContext.failed;

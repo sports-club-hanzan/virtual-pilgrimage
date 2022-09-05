@@ -56,7 +56,7 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((ref) => GoRouter(
                 return RouterPath.registration;
               }
               break;
-            case UserStatus.success:
+            case UserStatus.created:
               // TODO: Handle this case.
               break;
             case UserStatus.deleted:
