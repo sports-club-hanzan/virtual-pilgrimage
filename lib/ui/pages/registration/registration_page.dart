@@ -33,10 +33,8 @@ class RegistrationPageBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.read(userStateProvider)!;
     final notifier = ref.read(registrationPresenterProvider.notifier);
     final state = ref.watch(registrationPresenterProvider);
-    print(user);
 
     return Container(
       color: Theme.of(context).backgroundColor,
@@ -103,6 +101,15 @@ class RegistrationPageBody extends StatelessWidget {
                     child: Text(DateFormat('yyyy/MM/dd').format(state.birthDay),
                         style: const TextStyle(color: Colors.black))),
               ],
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final result = await notifier.onPressedRegistration();
+                // TODO: ホームページに遷移
+                print(result);
+                print(ref.read(userStateProvider));
+              },
+              child: const Text('ユーザ情報登録'),
             ),
             ElevatedButton(
               onPressed: () async {
