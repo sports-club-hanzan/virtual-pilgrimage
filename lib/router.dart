@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
+import 'package:virtualpilgrimage/ui/pages/home/home_page.dart';
 import 'package:virtualpilgrimage/ui/pages/registration/registration_page.dart';
 import 'package:virtualpilgrimage/ui/pages/sign_in/sign_in_page.dart';
 
@@ -15,18 +16,14 @@ extension RouterPath on String {
 final Provider<GoRouter> routerProvider = Provider<GoRouter>((ref) => GoRouter(
       routes: <GoRoute>[
         // ルート
-        // GoRoute(
-        //   path: '/',
-        //   builder: (BuildContext context, GoRouterState state) {
-        //     return const Scaffold(
-        //       body: Text('home'),
-        //     );
-        //   },
-        //   pageBuilder: (context, state) => MaterialPage<void>(
-        //     key: state.pageKey,
-        //     child: SignInPage(key: state.pageKey),
-        //   ),
-        // ),
+        GoRoute(
+          path: RouterPath.home,
+          // TODO: builder vs pageBuilder でどちらが良いか検討する
+          pageBuilder: (context, state) => MaterialPage<void>(
+            key: state.pageKey,
+            child: HomePage(key: state.pageKey),
+          ),
+        ),
         // ログイン
         GoRoute(
           path: RouterPath.signIn,
@@ -57,6 +54,9 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((ref) => GoRouter(
               }
               break;
             case UserStatus.created:
+              if (state.location != RouterPath.home) {
+                return RouterPath.home;
+              }
               // TODO: Handle this case.
               break;
             case UserStatus.deleted:

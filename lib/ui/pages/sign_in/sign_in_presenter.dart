@@ -55,7 +55,7 @@ class SignInPresenter extends StateNotifier<SignInState> {
   Future<void> signInWithEmailAndPassword() async {
     state = state.onSubmit();
     // バリデーションエラーにかかっている場合はリクエストを送らない
-    if (!state.email.isValid || !state.password.isValid) {
+    if (!state.isValidAll()) {
       return;
     }
 
