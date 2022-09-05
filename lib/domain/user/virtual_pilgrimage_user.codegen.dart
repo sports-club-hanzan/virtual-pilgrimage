@@ -22,7 +22,7 @@ enum UserStatus {
   // 仮登録
   temporary,
   // 登録完了
-  success,
+  created,
   // 削除済み
   deleted
 }
