@@ -14,5 +14,7 @@ final userRepositoryProvider = Provider<UserRepositoryImpl>(
 abstract class UserRepository {
   Future<VirtualPilgrimageUser?> get(String userId);
 
+  Future<VirtualPilgrimageUser?> findWithNickname(String nickname);
+
   Future<void> update(VirtualPilgrimageUser user);
 }

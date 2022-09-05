@@ -64,4 +64,24 @@ class UserRepositoryImpl extends UserRepository {
       );
     }
   }
+
+  @override
+  Future<VirtualPilgrimageUser?> findWithNickname(String nickname) async {
+    final ref = _firestoreClient
+        .collection(FirestoreCollectionPath.users)
+        .where(
+          VirtualPilgrimageUserPrivateFirestoreFieldKeys.nickname,
+          isEqualTo: nickname,
+        )
+        .withConverter(
+          fromFirestore: (DocumentSnapshot<Map<String, dynamic>> snapshot, _) =>
+              VirtualPilgrimageUser.fromJson(snapshot.data()!),
+          toFirestore: (VirtualPilgrimageUser user, _) => user.toJson(),
+        );
+    final snapshot = await ref.get();
+    if (snapshot.size == 0) {
+      return null;
+    }
+    return snapshot.docs.first.data();
+  }
 }
