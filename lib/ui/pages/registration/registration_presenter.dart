@@ -60,23 +60,37 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
     );
   }
 
-  Future<RegistrationResult> onPressedRegistration() async {
-    final user = _ref.read(userStateProvider);
-    // TODO: result の出しわけに応じて画面の表示を変える
-    if (user != null) {
-      final updatedUser = user.copyWith(
-        nickname: state.nickname.text,
-        gender: state.gender.selectedValue,
-        birthDay: state.birthDay,
-        userStatus: UserStatus.created, // 作成済みステータスに変える
-      );
-      final result = await _usecase.execute(updatedUser);
-      // ユーザ登録に成功したらユーザの state を更新
-      if (result.status == RegistrationResultStatus.success) {
-        _ref.read(userStateProvider.state).state = updatedUser;
-      }
-      return result;
+  Future<void> onPressedRegistration() async {
+    state = state.onSubmit();
+    // バリデーションエラーにかかっている場合はリクエストを送らない
+    if (!state.nickname.isValid) {
+      return;
     }
-    return RegistrationResult(RegistrationResultStatus.fail);
+
+    final user = _ref.read(userStateProvider);
+    if (user == null) {
+      return;
+    }
+
+    final updatedUser = user.copyWith(
+      nickname: state.nickname.text,
+      gender: state.gender.selectedValue,
+      birthDay: state.birthDay,
+      userStatus: UserStatus.created, // 作成済みステータスに変える
+    );
+    final result = await _usecase.execute(updatedUser);
+    // TODO: result の出しわけに応じて画面の表示を変える
+    switch (result.status) {
+      // ユーザ登録に成功したらユーザの state を更新
+      case RegistrationResultStatus.success:
+        _ref.read(userStateProvider.state).state = updatedUser;
+        break;
+      case RegistrationResultStatus.alreadyExistSameNicknameUser:
+        state = state.copyWith(nickname: state.nickname.addExternalError("既に使われているため別のニックネームにしてください"));
+        break;
+      case RegistrationResultStatus.fail:
+        // TODO: Handle this case.
+        break;
+    }
   }
 }

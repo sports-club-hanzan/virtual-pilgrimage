@@ -26,7 +26,7 @@ String? passwordValidator(String? value) {
   if (value == null || value.isEmpty) {
     return '必須項目です';
   } else if (!passwordExp.hasMatch(value)) {
-    return '半角英数字(大文字小文字)8文字以上で入力してください';
+    return '半角英数字8文字以上で入力してください';
   } else {
     return null;
   }
@@ -36,7 +36,7 @@ String? nicknameValidator(String? value) {
   if (value == null || value.isEmpty) {
     return '必須項目です';
   } else if (!nicknameExp.hasMatch(value)) {
-    return '半角英数字(大文字小文字)6文字以上16文字以下で入力してください';
+    return '半角英数字6文字以上16文字以下で入力してください';
   } else {
     return null;
   }

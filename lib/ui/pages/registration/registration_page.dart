@@ -25,7 +25,7 @@ class RegistrationPage extends ConsumerWidget {
   }
 }
 
-// TODO: ユーザ情報を編集するフォームに修正
+// TODO: デザインを整える
 class RegistrationPageBody extends StatelessWidget {
   final WidgetRef ref;
 
@@ -49,14 +49,17 @@ class RegistrationPageBody extends StatelessWidget {
                 bottom: 12.0,
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const Text('ニックネーム'),
+                  const Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(10, 0, 0, 10)),
                   MyTextFormField(
                     formModel: state.nickname,
                     onChanged: notifier.onChangedNickname,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
-                      labelText: 'ニックネーム',
                       labelStyle: TextStyle(
                         color: state.nickname.focusNode.hasFocus
                             ? Theme.of(context).primaryColor
@@ -85,28 +88,32 @@ class RegistrationPageBody extends StatelessWidget {
                           color: Theme.of(context).primaryColor),
                     ),
                   ),
+                  const Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(10, 10, 0, 10)),
+                  const Text('性別'),
+                  const Padding(
+                      padding: EdgeInsetsDirectional.fromSTEB(10, 0, 0, 10)),
+                  GenderRadioButtons(
+                    radioButtonModel: state.gender,
+                    onChanged: notifier.onChangedGender,
+                    groupValue: state.gender.selectedValue,
+                  ),
+                  const Text('生年月日'),
+                  TextButton(
+                      onPressed: () => notifier.onPressedDate(context),
+                      child: Text(
+                        DateFormat('yyyy/MM/dd').format(state.birthDay),
+                        style: const TextStyle(color: Colors.black),
+                      ),
+                  ),
                 ],
               ),
             ),
-            GenderRadioButtons(
-              radioButtonModel: state.gender,
-              onChanged: notifier.onChangedGender,
-              groupValue: state.gender.selectedValue,
-            ),
-            Column(
-              children: [
-                const Text('生年月日'),
-                TextButton(
-                    onPressed: () => notifier.onPressedDate(context),
-                    child: Text(DateFormat('yyyy/MM/dd').format(state.birthDay),
-                        style: const TextStyle(color: Colors.black))),
-              ],
-            ),
             ElevatedButton(
               onPressed: () async {
-                final result = await notifier.onPressedRegistration();
+                await notifier.onPressedRegistration();
                 // TODO: ホームページに遷移
-                print(result);
+                print('user state');
                 print(ref.read(userStateProvider));
               },
               child: const Text('ユーザ情報登録'),
