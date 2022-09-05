@@ -11,9 +11,9 @@ class RegistrationState with _$RegistrationState {
 
   const factory RegistrationState({
     required FormModel nickname,
-    // FIXME: gender は dropdown, birthday は datepicker で設定するので
-    // 必要であればFormを用意する
     required RadioButtonModel<Gender> gender,
     required DateTime birthDay,
   }) = _RegistrationState;
+
+  RegistrationState onSubmit() => copyWith(nickname: nickname.onSubmit());
 }
