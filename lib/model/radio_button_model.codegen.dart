@@ -5,8 +5,6 @@ part 'radio_button_model.codegen.freezed.dart';
 
 @freezed
 class RadioButtonModel<T> with _$RadioButtonModel<T> {
-  RadioButtonModel._();
-
   factory RadioButtonModel({
     required List<FocusNode> focusNodes,
     required List<String> titles,
@@ -14,12 +12,19 @@ class RadioButtonModel<T> with _$RadioButtonModel<T> {
     required T selectedValue,
   }) = _RadioButtonModel<T>;
 
+  RadioButtonModel._();
+
   void unfocus() => focusNodes.map((e) => e.unfocus());
 
-  static RadioButtonModel<T> of<T>(List<String> titles, List<T> values, [T? selectedValue]) {
+  static RadioButtonModel<T> of<T>(
+    List<String> titles,
+    List<T> values, [
+    T? selectedValue,
+  ]) {
     if (titles.length != values.length) {
       throw ArgumentError(
-          'length of titles and values must be same [titles][${titles.length}][values][${values.length}]');
+        'length of titles and values must be same [titles][${titles.length}][values][${values.length}]',
+      );
     }
     final focusNodes = <FocusNode>[];
     for (int i = 0; i < titles.length; i++) {

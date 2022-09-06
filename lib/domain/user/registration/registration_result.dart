@@ -1,4 +1,3 @@
-
 enum RegistrationResultStatus {
   // 登録に成功
   success,
@@ -9,8 +8,8 @@ enum RegistrationResultStatus {
 }
 
 class RegistrationResult {
+  RegistrationResult(this.status, [this.error]);
+
   final RegistrationResultStatus status;
   final Exception? error;
-
-  RegistrationResult(this.status, [this.error]);
 }

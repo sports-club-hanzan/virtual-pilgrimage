@@ -14,24 +14,30 @@ final registrationPresenterProvider =
 );
 
 class RegistrationPresenter extends StateNotifier<RegistrationState> {
-  final Ref _ref;
-  late final UserRegistrationUsecase _usecase;
-
   RegistrationPresenter(this._ref, VirtualPilgrimageUser? user)
-      : super(RegistrationState(
-          nickname: FormModel.of(nicknameValidator, user?.nickname ?? ''),
-          gender: RadioButtonModel.of<Gender>(
-              ['未設定', '男性', '女性'], Gender.values, user?.gender),
-          birthDay: user != null ? user.birthDay : DateTime.utc(1980),
-        )) {
+      : super(
+          RegistrationState(
+            nickname: FormModel.of(nicknameValidator, user?.nickname ?? ''),
+            gender: RadioButtonModel.of<Gender>(
+              ['未設定', '男性', '女性'],
+              Gender.values,
+              user?.gender,
+            ),
+            birthDay: user != null ? user.birthDay : DateTime.utc(1980),
+          ),
+        ) {
     _usecase = _ref.read(userRegistrationUsecaseProvider);
   }
 
+  final Ref _ref;
+  late final UserRegistrationUsecase _usecase;
+
   void initialize(String nickname, DateTime birthday) {
     state = RegistrationState(
-        nickname: FormModel.of(nicknameValidator, nickname),
-        gender: RadioButtonModel.of<Gender>(['未設定', '男性', '女性'], Gender.values),
-        birthDay: birthday);
+      nickname: FormModel.of(nicknameValidator, nickname),
+      gender: RadioButtonModel.of<Gender>(['未設定', '男性', '女性'], Gender.values),
+      birthDay: birthday,
+    );
   }
 
   void onChangedNickname(FormModel nickname) {
@@ -79,17 +85,20 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
       userStatus: UserStatus.created, // 作成済みステータスに変える
     );
     final result = await _usecase.execute(updatedUser);
-    // TODO: result の出しわけに応じて画面の表示を変える
+    // TODO(s14t284): result の出しわけに応じて画面の表示を変える
     switch (result.status) {
       // ユーザ登録に成功したらユーザの state を更新
       case RegistrationResultStatus.success:
         _ref.read(userStateProvider.state).state = updatedUser;
         break;
       case RegistrationResultStatus.alreadyExistSameNicknameUser:
-        state = state.copyWith(nickname: state.nickname.addExternalError("既に使われているため別のニックネームにしてください"));
+        state = state.copyWith(
+          nickname:
+              state.nickname.addExternalError('既に使われているため別のニックネームにしてください'),
+        );
         break;
       case RegistrationResultStatus.fail:
-        // TODO: Handle this case.
+        // TODO(s14t284): Handle this case.
         break;
     }
   }

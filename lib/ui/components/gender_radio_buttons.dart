@@ -4,12 +4,12 @@ import 'package:virtualpilgrimage/ui/components/radio_buttons.dart';
 
 // ラジオボタンの定義に利用
 class GenderRadioButtons extends RadioButtons<Gender> {
-  GenderRadioButtons(
-      {Key? key,
-      required super.radioButtonModel,
-      required super.onChanged,
-      required super.groupValue})
-      : super(key: key);
+  GenderRadioButtons({
+    super.key,
+    required super.radioButtonModel,
+    required super.onChanged,
+    required super.groupValue,
+  });
 
   @override
   State<StatefulWidget> createState() => _GenderRadioButtonsState<Gender>();

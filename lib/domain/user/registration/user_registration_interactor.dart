@@ -7,12 +7,15 @@ import 'package:virtualpilgrimage/domain/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 
 class UserRegistrationInteractor extends UserRegistrationUsecase {
+  UserRegistrationInteractor(
+    this._userRepository,
+    this._logger,
+    this._crashlytics,
+  );
+
   final UserRepository _userRepository;
   final Logger _logger;
   final FirebaseCrashlytics _crashlytics;
-
-  UserRegistrationInteractor(
-      this._userRepository, this._logger, this._crashlytics);
 
   @override
   Future<RegistrationResult> execute(VirtualPilgrimageUser user) async {
@@ -22,23 +25,26 @@ class UserRegistrationInteractor extends UserRegistrationUsecase {
     try {
       if (await _userRepository.findWithNickname(user.nickname) != null) {
         return RegistrationResult(
-            RegistrationResultStatus.alreadyExistSameNicknameUser);
+          RegistrationResultStatus.alreadyExistSameNicknameUser,
+        );
       }
       _logger.i('register user: $user');
-      user = user.copyWith(userStatus: UserStatus.created);
-      await _userRepository.update(user);
+      await _userRepository
+          .update(user.copyWith(userStatus: UserStatus.created));
       status = RegistrationResultStatus.success;
     } on DatabaseException catch (e) {
       final message = 'registration user error [user][$user]';
       _logger.e(message, e);
-      _crashlytics.log(message);
-      _crashlytics.recordError(e, null);
+      await _crashlytics.log(message);
+      await _crashlytics.recordError(e, null);
       error = e;
     } on Exception catch (e) {
-      final message = 'unexpected error when registration user [user][$user][error][${e.toString()}]';
+      final message = 'unexpected error when registration user'
+          '[user][$user]'
+          '[error][${e.toString()}]';
       _logger.e(message, e);
-      _crashlytics.log(message);
-      _crashlytics.recordError(e, null);
+      await _crashlytics.log(message);
+      await _crashlytics.recordError(e, null);
       error = DatabaseException(
         message: message,
         cause: e,

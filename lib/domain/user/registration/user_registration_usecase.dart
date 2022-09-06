@@ -8,7 +8,7 @@ import 'package:virtualpilgrimage/logger.dart';
 final userRegistrationUsecaseProvider = Provider.autoDispose(
   (ref) => UserRegistrationInteractor(
     ref.read(userRepositoryProvider),
-    ref.read(loggerProider),
+    ref.read(loggerProvider),
     ref.read(crashlyticsProvider),
   ),
 );

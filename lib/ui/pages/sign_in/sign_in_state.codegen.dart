@@ -16,8 +16,6 @@ enum SignInStateContext {
 
 @freezed
 class SignInState with _$SignInState {
-  const SignInState._();
-
   const factory SignInState({
     @Default(SignInStateContext.failed) SignInStateContext context,
     @Default(false) bool isLoading,
@@ -25,6 +23,8 @@ class SignInState with _$SignInState {
     required FormModel email,
     required FormModel password,
   }) = _SignInState;
+
+  const SignInState._();
 
   bool isValidAll() => email.isValid && password.isValid;
 

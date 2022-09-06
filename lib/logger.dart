@@ -13,7 +13,7 @@ final _logger = Logger(
   ),
 );
 
-final loggerProider = Provider<Logger>(
+final loggerProvider = Provider<Logger>(
   (_) => _logger,
 );
 

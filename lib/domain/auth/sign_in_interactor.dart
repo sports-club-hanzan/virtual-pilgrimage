@@ -14,20 +14,21 @@ enum _LoginMethod {
 }
 
 class SignInInteractor extends SignInUsecase {
+  SignInInteractor(
+    this._emailAndPasswordAuthRepository,
+    this._googleAuthRepository,
+    this._userRepository,
+    this._logger,
+    this._crashlytics,
+    this._firebaseAuth,
+  );
+
   final AuthRepository _emailAndPasswordAuthRepository;
   final AuthRepository _googleAuthRepository;
   final UserRepository _userRepository;
   final Logger _logger;
   final FirebaseCrashlytics _crashlytics;
   final FirebaseAuth _firebaseAuth;
-
-  SignInInteractor(
-      this._emailAndPasswordAuthRepository,
-      this._googleAuthRepository,
-      this._userRepository,
-      this._logger,
-      this._crashlytics,
-      this._firebaseAuth);
 
   @override
   Future<VirtualPilgrimageUser> signInWithGoogle() async {
@@ -38,7 +39,7 @@ class SignInInteractor extends SignInUsecase {
       _logger.e(
         message,
       );
-      _crashlytics.log(message);
+      await _crashlytics.log(message);
       throw SignInException(
         message,
         SignInExceptionStatus.credentialIsNull,
@@ -46,8 +47,8 @@ class SignInInteractor extends SignInUsecase {
     }
     final credentialUser = credential.user!;
 
-    _crashlytics.setUserIdentifier(credentialUser.uid);
-    return await _signInWithCredentialUser(
+    await _crashlytics.setUserIdentifier(credentialUser.uid);
+    return _signInWithCredentialUser(
       credentialUser,
       _LoginMethod.google,
     );
@@ -68,7 +69,7 @@ class SignInInteractor extends SignInUsecase {
       _logger.e(
         message,
       );
-      _crashlytics.log(message);
+      await _crashlytics.log(message);
       throw SignInException(
         message,
         SignInExceptionStatus.credentialIsNull,
@@ -76,8 +77,8 @@ class SignInInteractor extends SignInUsecase {
     }
     final credentialUser = credential.user!;
 
-    _crashlytics.setUserIdentifier(credentialUser.uid);
-    return await _signInWithCredentialUser(
+    await _crashlytics.setUserIdentifier(credentialUser.uid);
+    return _signInWithCredentialUser(
       credentialUser,
       _LoginMethod.emailAndPassword,
     );
@@ -85,7 +86,7 @@ class SignInInteractor extends SignInUsecase {
 
   @override
   Future<void> logout() async {
-    // TODO: firebase を直参照ではなく、もっといい方法を考える
+    // TODO(s14t284): firebase を直参照ではなく、もっといい方法を考える
     await _firebaseAuth.signOut();
   }
 
@@ -93,23 +94,24 @@ class SignInInteractor extends SignInUsecase {
     User credentialUser,
     _LoginMethod loginMethod,
   ) async {
-    final signInMessage =
-        'signin with $loginMethod [userId][${credentialUser.uid}][email][${credentialUser.email ?? ''}]';
+    final signInMessage = 'signin with $loginMethod'
+        '[userId][${credentialUser.uid}]'
+        '[email][${credentialUser.email ?? ''}]';
     _logger.i(signInMessage);
-    _crashlytics.log(signInMessage);
+    await _crashlytics.log(signInMessage);
 
     // ユーザー情報を作成
     VirtualPilgrimageUser user;
     try {
-      VirtualPilgrimageUser? gotUser =
-          await _userRepository.get(credentialUser.uid);
+      final gotUser = await _userRepository.get(credentialUser.uid);
       // ユーザーがまだ作成されていない場合、デフォルト値を埋めてFirestoreに保存
       if (gotUser == null) {
         user = VirtualPilgrimageUser(
           id: credentialUser.uid,
           nickname: credentialUser.displayName ?? '',
           birthDay: DateTime.utc(1980, 1, 1),
-          email: credentialUser.email!, // email はどのログイン方法でも必ず存在するはず
+          email: credentialUser.email!,
+          // email はどのログイン方法でも必ず存在するはず
           userIconUrl: credentialUser.photoURL ?? '',
           userStatus: UserStatus.temporary,
         );
@@ -120,25 +122,27 @@ class SignInInteractor extends SignInUsecase {
     } on DatabaseException catch (e) {
       _logger.e(e.message, [e]);
       if (e.message != null) {
-        _crashlytics.log(e.message!);
+        await _crashlytics.log(e.message!);
       }
       final causeException = e.cause;
-      final StackTrace? stackTrace = causeException is FirebaseException
+      final stackTrace = causeException is FirebaseException
           ? causeException.stackTrace
           : null;
-      _crashlytics.recordError(
+      await _crashlytics.recordError(
         e,
         stackTrace,
         reason: 'DatabaseException',
       );
 
-      throw SignInException(e.message ?? 'cause Firebase exception: $e',
-          SignInExceptionStatus.firebaseException);
+      throw SignInException(
+        e.message ?? 'cause Firebase exception: $e',
+        SignInExceptionStatus.firebaseException,
+      );
     } on Exception catch (e) {
       final message =
           'get user or initialize user is error [uid][${credentialUser.uid}]';
       _logger.e(message, [e]);
-      _crashlytics.log(message);
+      await _crashlytics.log(message);
 
       throw SignInException(
         message,

@@ -60,7 +60,6 @@ class _FirestoreTimestampConverter {
 
 @freezed
 class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
-  const VirtualPilgrimageUser._();
 
   // ignore: invalid_annotation_target
   @JsonSerializable(explicitToJson: true)
@@ -93,10 +92,11 @@ class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
       toJson: _UserStatusConverter.userStatusToInt,
     )
         UserStatus userStatus,
-    // TODO: 以下の情報を含める
+    // TODO(s14t284): 以下の情報を含める
     // ヘルスケアから得られる歩数などの情報
     // 現在地のお遍路で巡っているお寺の情報
   }) = _VirtualPilgrimageUser;
+  const VirtualPilgrimageUser._();
 
   factory VirtualPilgrimageUser.fromJson(Map<String, dynamic> json) =>
       _$VirtualPilgrimageUserFromJson(json);

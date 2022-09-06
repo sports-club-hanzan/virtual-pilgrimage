@@ -6,10 +6,10 @@ import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.da
 import 'package:virtualpilgrimage/infrastructure/firebase/firestore_collection_path.dart';
 
 class UserRepositoryImpl extends UserRepository {
+  UserRepositoryImpl(this._firestoreClient, this._logger);
+
   final FirebaseFirestore _firestoreClient;
   final Logger _logger;
-
-  UserRepositoryImpl(this._firestoreClient, this._logger);
 
   @override
   Future<VirtualPilgrimageUser?> get(String userId) async {
@@ -48,7 +48,7 @@ class UserRepositoryImpl extends UserRepository {
   @override
   Future<void> update(VirtualPilgrimageUser user) async {
     try {
-      _firestoreClient
+      await _firestoreClient
           .collection(FirestoreCollectionPath.users)
           .doc(user.id)
           .set(user.toJson());
