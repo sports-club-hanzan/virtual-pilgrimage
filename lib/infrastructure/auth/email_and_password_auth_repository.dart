@@ -7,9 +7,9 @@ import 'package:virtualpilgrimage/domain/exception/sign_in_exception.dart';
 
 // ref. https://firebase.google.com/docs/auth/flutter/password-auth
 class EmailAndPasswordRepository extends AuthRepository {
-  final FirebaseAuth _firebaseAuth;
-
   EmailAndPasswordRepository(this._firebaseAuth);
+
+  final FirebaseAuth _firebaseAuth;
 
   @override
   Future<UserCredential?> signIn({String? email, String? password}) async {
@@ -38,12 +38,16 @@ class EmailAndPasswordRepository extends AuthRepository {
         return _signInWithCreateUser(email, password);
       } else if (e.code == 'wrong-password') {
         throw SignInException(
-          'Firebase exception because user set wrong password [message][${e.message}][email][${e.email}]',
+          'Firebase exception because user set wrong password'
+          '[message][${e.message}]'
+          '[email][${e.email}]',
           SignInExceptionStatus.wrongPassword,
         );
       }
       throw SignInException(
-        'cause Fireabase exception when signIn [message][${e.message}][code][${e.code}]',
+        'cause Firebase exception when signIn'
+        '[message][${e.message}]'
+        '[code][${e.code}]',
         SignInExceptionStatus.firebaseException,
       );
     } on Exception catch (e) {
@@ -66,7 +70,9 @@ class EmailAndPasswordRepository extends AuthRepository {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         throw SignInException(
-          'password setted with user is weak [message][${e.message}][email][${e.email}]',
+          'password set with user is weak'
+          '[message][${e.message}]'
+          '[email][${e.email}]',
           SignInExceptionStatus.firebaseException,
         );
       } else if (e.code == 'email-already-in-use') {

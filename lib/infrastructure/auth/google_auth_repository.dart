@@ -5,10 +5,10 @@ import 'package:virtualpilgrimage/domain/auth/auth_repository.dart';
 import 'package:virtualpilgrimage/domain/exception/sign_in_exception.dart';
 
 class GoogleAuthRepository extends AuthRepository {
+  GoogleAuthRepository(this._firebaseAuth, this._googleSignIn);
+
   final FirebaseAuth _firebaseAuth;
   final GoogleSignIn _googleSignIn;
-
-  GoogleAuthRepository(this._firebaseAuth, this._googleSignIn);
 
   @override
   Future<UserCredential?> signIn({String? email, String? password}) async {
@@ -45,7 +45,7 @@ class GoogleAuthRepository extends AuthRepository {
         'cause Fireabase exception when signIn [message][${e.message}][code][${e.code}]',
         SignInExceptionStatus.firebaseException,
       );
-    } catch (e) {
+    } on Exception catch (e) {
       throw SignInException(
         'Firebase signin cause unknown error [exception][$e]',
         SignInExceptionStatus.unknownException,

@@ -11,7 +11,7 @@ final signInUsecaseProvider = Provider.autoDispose<SignInUsecase>(
     ref.watch(emailAndPasswordAuthRepositoryProvider),
     ref.watch(googleAuthRepositoryProvider),
     ref.watch(userRepositoryProvider),
-    ref.watch(loggerProider),
+    ref.watch(loggerProvider),
     ref.watch(crashlyticsProvider),
     ref.watch(firebaseAuthProvider),
   ),
@@ -19,7 +19,11 @@ final signInUsecaseProvider = Provider.autoDispose<SignInUsecase>(
 
 abstract class SignInUsecase {
   Future<VirtualPilgrimageUser> signInWithGoogle();
+
   Future<VirtualPilgrimageUser> signInWithEmailAndPassword(
-      String email, String password);
+    String email,
+    String password,
+  );
+
   Future<void> logout();
 }

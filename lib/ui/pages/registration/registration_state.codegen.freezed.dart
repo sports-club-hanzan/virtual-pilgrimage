@@ -16,9 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$RegistrationState {
-  FormModel get nickname =>
-      throw _privateConstructorUsedError; // FIXME: gender は dropdown, birthday は datepicker で設定するので
-// 必要であればFormを用意する
+  FormModel get nickname => throw _privateConstructorUsedError;
   RadioButtonModel<Gender> get gender => throw _privateConstructorUsedError;
   DateTime get birthDay => throw _privateConstructorUsedError;
 
@@ -144,8 +142,6 @@ class _$_RegistrationState extends _RegistrationState {
 
   @override
   final FormModel nickname;
-// FIXME: gender は dropdown, birthday は datepicker で設定するので
-// 必要であればFormを用意する
   @override
   final RadioButtonModel<Gender> gender;
   @override
@@ -189,8 +185,7 @@ abstract class _RegistrationState extends RegistrationState {
 
   @override
   FormModel get nickname;
-  @override // FIXME: gender は dropdown, birthday は datepicker で設定するので
-// 必要であればFormを用意する
+  @override
   RadioButtonModel<Gender> get gender;
   @override
   DateTime get birthDay;

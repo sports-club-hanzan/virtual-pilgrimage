@@ -6,11 +6,12 @@ part 'form_model.codegen.freezed.dart';
 typedef Validator = String? Function(String value);
 
 final emailExp = RegExp(
-    r"^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$");
+  r"^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$",
+);
 
-final passwordExp = RegExp(r"^(?=.*\d)(?=.*[a-zA-Z])[a-zA-Z\d]{8,32}$");
+final passwordExp = RegExp(r'^(?=.*\d)(?=.*[a-zA-Z])[a-zA-Z\d]{8,32}$');
 
-final nicknameExp = RegExp(r"^(?=.*\d)(?=.*[a-zA-Z])[a-zA-Z\d]{6,16}$");
+final nicknameExp = RegExp(r'^(?=.*\d)(?=.*[a-zA-Z])[a-zA-Z\d]{6,16}$');
 
 String? emailValidator(String? value) {
   if (value == null || value.isEmpty) {
@@ -46,8 +47,6 @@ String? nicknameValidator(String? value) {
 // ref. https://github.com/torikatsupg/flutter_todo/blob/main/lib/model/form_model.dart
 @freezed
 class FormModel with _$FormModel {
-  FormModel._();
-
   factory FormModel({
     required Validator validator,
     required TextEditingController controller,
@@ -55,6 +54,8 @@ class FormModel with _$FormModel {
     @Default(false) bool hasEdited,
     @Default([]) List<String> externalErrors,
   }) = _FormModel;
+
+  FormModel._();
 
   FormModel onChangeText() => this;
 
@@ -96,6 +97,7 @@ class FormModel with _$FormModel {
   FormModel addExternalError(String errorString) =>
       copyWith(externalErrors: [...externalErrors, errorString]);
 
+  // ignore: prefer_constructors_over_static_methods
   static FormModel of(Validator validator, [String defaultText = '']) =>
       FormModel(
         validator: validator,

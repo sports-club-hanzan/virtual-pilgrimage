@@ -7,7 +7,7 @@ import 'package:virtualpilgrimage/logger.dart';
 final userRepositoryProvider = Provider<UserRepositoryImpl>(
   (ref) => UserRepositoryImpl(
     ref.read(firestoreProvider),
-    ref.read(loggerProider),
+    ref.read(loggerProvider),
   ),
 );
 

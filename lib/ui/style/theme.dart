@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'color.dart';
 
-class AppTheme {
+extension AppTheme on ThemeData {
   static final theme = ThemeData(
     unselectedWidgetColor: ColorStyle.grey,
     focusColor: ColorStyle.primary,
@@ -15,7 +15,7 @@ class AppTheme {
       systemOverlayStyle: SystemUiOverlayStyle.dark,
       centerTitle: true,
       backgroundColor: ColorStyle.white,
-      elevation: 0.0,
+      elevation: 0,
     ),
     // ダークモードにしても通常色にしてもバッテリーなどの表示に支障を与えないようにしている
     // ref. https://zenn.dev/sugitlab/articles/d49a056941d511
