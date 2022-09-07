@@ -30,7 +30,7 @@ class GoogleAuthRepository extends AuthRepository {
         SignInExceptionStatus.platformException,
       );
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'account-exists-with-differenct-credentials') {
+      if (e.code == 'account-exists-with-different-credentials') {
         throw SignInException(
           'Firebase Account exists with different [message][${e.message}][email][${e.email}]',
           SignInExceptionStatus.firebaseException,
@@ -42,7 +42,7 @@ class GoogleAuthRepository extends AuthRepository {
         );
       }
       throw SignInException(
-        'cause Fireabase exception when signIn [message][${e.message}][code][${e.code}]',
+        'cause Firebase exception when signIn [message][${e.message}][code][${e.code}]',
         SignInExceptionStatus.firebaseException,
       );
     } on Exception catch (e) {

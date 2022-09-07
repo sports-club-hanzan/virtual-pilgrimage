@@ -26,12 +26,26 @@ void main() {
   GoogleAuthRepository target =
       GoogleAuthRepository(mockFirebaseAuth, mockGoogleSignIn);
 
+  setUp(() {
+    mockFirebaseAuth = MockFirebaseAuth();
+    mockGoogleSignIn = MockGoogleSignIn();
+    mockGoogleSignInAccount = MockGoogleSignInAccount();
+    mockGoogleSignInAuthentication = MockGoogleSignInAuthentication();
+    mockUserCredential = MockUserCredential();
+    target = GoogleAuthRepository(mockFirebaseAuth, mockGoogleSignIn);
+  });
+
   group('signIn', () {
     group('正常系', () {
       test('サインインできる', () async {
         // given
-        defaultMock(mockFirebaseAuth, mockGoogleSignIn, mockGoogleSignInAccount,
-            mockGoogleSignInAuthentication, mockUserCredential);
+        defaultMock(
+          mockFirebaseAuth,
+          mockGoogleSignIn,
+          mockGoogleSignInAccount,
+          mockGoogleSignInAuthentication,
+          mockUserCredential,
+        );
 
         // when
         final actual = await target.signIn();
@@ -48,8 +62,13 @@ void main() {
     group('異常系', () {
       test('PlatformException が発生', () async {
         // given
-        defaultMock(mockFirebaseAuth, mockGoogleSignIn, mockGoogleSignInAccount,
-            mockGoogleSignInAuthentication, mockUserCredential);
+        defaultMock(
+          mockFirebaseAuth,
+          mockGoogleSignIn,
+          mockGoogleSignInAccount,
+          mockGoogleSignInAuthentication,
+          mockUserCredential,
+        );
         when(mockFirebaseAuth.signInWithCredential(any))
             .thenThrow(PlatformException(code: 'dummy', message: 'dummy'));
 
@@ -59,15 +78,22 @@ void main() {
       });
 
       group('FirebaseAuthException が発生', () {
-        defaultMock(mockFirebaseAuth, mockGoogleSignIn, mockGoogleSignInAccount,
-            mockGoogleSignInAuthentication, mockUserCredential);
-        test('code: account-exists-with-differenct-credentials', () async {
+        defaultMock(
+          mockFirebaseAuth,
+          mockGoogleSignIn,
+          mockGoogleSignInAccount,
+          mockGoogleSignInAuthentication,
+          mockUserCredential,
+        );
+        test('code: account-exists-with-different-credentials', () async {
           // given
           when(mockFirebaseAuth.signInWithCredential(any)).thenThrow(
-              FirebaseAuthException(
-                  code: 'account-exists-with-differenct-credentials',
-                  message: 'dummy',
-                  email: 'test@example.com'));
+            FirebaseAuthException(
+              code: 'account-exists-with-different-credentials',
+              message: 'dummy',
+              email: 'test@example.com',
+            ),
+          );
 
           // when
           expect(() => target.signIn(),
@@ -83,10 +109,12 @@ void main() {
               mockGoogleSignInAuthentication,
               mockUserCredential);
           when(mockFirebaseAuth.signInWithCredential(any)).thenThrow(
-              FirebaseAuthException(
-                  code: 'invalid-credential',
-                  message: 'dummy',
-                  email: 'test@example.com'));
+            FirebaseAuthException(
+              code: 'invalid-credential',
+              message: 'dummy',
+              email: 'test@example.com',
+            ),
+          );
 
           // when
           expect(() => target.signIn(),
@@ -102,26 +130,37 @@ void main() {
               mockGoogleSignInAuthentication,
               mockUserCredential);
           when(mockFirebaseAuth.signInWithCredential(any)).thenThrow(
-              FirebaseAuthException(
-                  code: 'unknown-code',
-                  message: 'dummy',
-                  email: 'test@example.com'));
+            FirebaseAuthException(
+              code: 'unknown-code',
+              message: 'dummy',
+              email: 'test@example.com',
+            ),
+          );
 
           // when
-          expect(() => target.signIn(),
-              throwsA(const TypeMatcher<SignInException>()));
+          expect(
+            () => target.signIn(),
+            throwsA(const TypeMatcher<SignInException>()),
+          );
         });
       });
 
       test('Firebase, Platform 以外の例外が発生', () async {
         // given
-        defaultMock(mockFirebaseAuth, mockGoogleSignIn, mockGoogleSignInAccount,
-            mockGoogleSignInAuthentication, mockUserCredential);
+        defaultMock(
+          mockFirebaseAuth,
+          mockGoogleSignIn,
+          mockGoogleSignInAccount,
+          mockGoogleSignInAuthentication,
+          mockUserCredential,
+        );
         when(mockFirebaseAuth.signInWithCredential(any)).thenThrow(Exception());
 
         // when
-        expect(() => target.signIn(),
-            throwsA(const TypeMatcher<SignInException>()));
+        expect(
+          () => target.signIn(),
+          throwsA(const TypeMatcher<SignInException>()),
+        );
       });
     });
   });
