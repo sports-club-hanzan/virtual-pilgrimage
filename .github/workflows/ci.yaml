@@ -13,7 +13,7 @@ jobs:
       - name: Initialize
         uses: ./.github/actions/setup
       - name: Run UnitTest with Coverage
-        run: flutter test --no-test-assets --coverage --coverage-patah=~/coverage/lcov.info
+        run: flutter test --no-test-assets --coverage --coverage-path=~/coverage/lcov.info
       - name: Record Coverage
         uses: codecov/codecov-action@v3
         with:

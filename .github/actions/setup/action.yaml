@@ -12,11 +12,23 @@ runs:
         distribution: 'adopt'
 
     - name: Setup Flutter
-      uses: subosito/flutter-action@v1
+      uses: subosito/flutter-action@v2
       with:
         flutter-version: '3.0.5'
         channel: 'stable'
         cache: true
+
+    - name: Cache pubspec dependencies
+      uses: actions/cache@v2
+      with:
+        path: |
+          ${{ env.FLUTTER_HOME }}/.pub-cache
+          **/.packages
+          **/.flutter-plugins
+          **/.flutter-plugins-dependencies
+        key: ${{ runner.os }}-build-pubspec-${{ hashFiles('**/pubspec.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-build-pubspec-
 
     - name: Get Dependencies
       run: flutter pub get
