@@ -73,8 +73,10 @@ void main() {
             .thenThrow(PlatformException(code: 'dummy', message: 'dummy'));
 
         // when
-        expect(() => target.signIn(),
-            throwsA(const TypeMatcher<SignInException>()));
+        expect(
+          () => target.signIn(),
+          throwsA(const TypeMatcher<SignInException>()),
+        );
       });
 
       group('FirebaseAuthException が発生', () {
@@ -96,18 +98,21 @@ void main() {
           );
 
           // when
-          expect(() => target.signIn(),
-              throwsA(const TypeMatcher<SignInException>()));
+          expect(
+            () => target.signIn(),
+            throwsA(const TypeMatcher<SignInException>()),
+          );
         });
 
         test('code: invalid-credential', () async {
           // given
           defaultMock(
-              mockFirebaseAuth,
-              mockGoogleSignIn,
-              mockGoogleSignInAccount,
-              mockGoogleSignInAuthentication,
-              mockUserCredential);
+            mockFirebaseAuth,
+            mockGoogleSignIn,
+            mockGoogleSignInAccount,
+            mockGoogleSignInAuthentication,
+            mockUserCredential,
+          );
           when(mockFirebaseAuth.signInWithCredential(any)).thenThrow(
             FirebaseAuthException(
               code: 'invalid-credential',
@@ -117,18 +122,21 @@ void main() {
           );
 
           // when
-          expect(() => target.signIn(),
-              throwsA(const TypeMatcher<SignInException>()));
+          expect(
+            () => target.signIn(),
+            throwsA(const TypeMatcher<SignInException>()),
+          );
         });
 
         test('不明なcode', () async {
           // given
           defaultMock(
-              mockFirebaseAuth,
-              mockGoogleSignIn,
-              mockGoogleSignInAccount,
-              mockGoogleSignInAuthentication,
-              mockUserCredential);
+            mockFirebaseAuth,
+            mockGoogleSignIn,
+            mockGoogleSignInAccount,
+            mockGoogleSignInAuthentication,
+            mockUserCredential,
+          );
           when(mockFirebaseAuth.signInWithCredential(any)).thenThrow(
             FirebaseAuthException(
               code: 'unknown-code',

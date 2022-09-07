@@ -104,6 +104,17 @@ class SignInPresenter extends StateNotifier<SignInState> {
             password: state.password.addExternalError('パスワードが誤っています'),
           );
           break;
+        case SignInExceptionStatus.weakPassword:
+          // バリデーション側で弾いているため、ここには遷移しないはず
+          state = state.copyWith(
+            password: state.password.addExternalError('半角英数字8文字以上で入力してください'),
+          );
+          break;
+        case SignInExceptionStatus.alreadyUsedEmail:
+          state = state.copyWith(
+            email: state.password.addExternalError('そのメールアドレスは既に利用されています'),
+          );
+          break;
       }
       state = state.copyWith(
         error: e,
