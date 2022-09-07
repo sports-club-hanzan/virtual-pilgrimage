@@ -73,12 +73,12 @@ class EmailAndPasswordRepository extends AuthRepository {
           'password set with user is weak'
           '[message][${e.message}]'
           '[email][${e.email}]',
-          SignInExceptionStatus.firebaseException,
+          SignInExceptionStatus.weakPassword,
         );
       } else if (e.code == 'email-already-in-use') {
         throw SignInException(
           'email already in use [message][${e.message}][email][${e.email}]',
-          SignInExceptionStatus.firebaseException,
+          SignInExceptionStatus.alreadyUsedEmail,
         );
       }
       throw SignInException(

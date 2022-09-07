@@ -12,19 +12,29 @@ import 'email_and_password_auth_repository_test.mocks.dart';
 void main() {
   MockFirebaseAuth mockFirebaseAuth = MockFirebaseAuth();
   MockUserCredential mockUserCredential = MockUserCredential();
-  EmailAndPasswordRepository target =
-      EmailAndPasswordRepository(mockFirebaseAuth);
+  EmailAndPasswordRepository target = EmailAndPasswordRepository(
+    mockFirebaseAuth,
+  );
 
   const email = 'test@example.com';
   const password = 'Passw0rd123';
+
+  setUp(() {
+    mockFirebaseAuth = MockFirebaseAuth();
+    mockUserCredential = MockUserCredential();
+    target = EmailAndPasswordRepository(mockFirebaseAuth);
+  });
 
   group('signIn', () {
     group('正常系', () {
       test('サインインできる', () async {
         // given
-        when(mockFirebaseAuth.signInWithEmailAndPassword(
-                email: email, password: password))
-            .thenAnswer((_) => Future.value(mockUserCredential));
+        when(
+          mockFirebaseAuth.signInWithEmailAndPassword(
+            email: email,
+            password: password,
+          ),
+        ).thenAnswer((_) => Future.value(mockUserCredential));
 
         // when
         final actual = await target.signIn(email: email, password: password);
@@ -32,22 +42,30 @@ void main() {
         // then
         expect(actual, mockUserCredential);
         // テスト側で引数を検証できないので any で呼び出しのみを確認
-        verify(mockFirebaseAuth.signInWithEmailAndPassword(
-                email: email, password: password))
-            .called(1);
+        verify(
+          mockFirebaseAuth.signInWithEmailAndPassword(
+            email: email,
+            password: password,
+          ),
+        ).called(1);
       });
     });
 
     group('異常系', () {
       test('email が null', () async {
         // given
-        when(mockFirebaseAuth.signInWithEmailAndPassword(
-                email: email, password: password))
-            .thenAnswer((_) => Future.value(mockUserCredential));
+        when(
+          mockFirebaseAuth.signInWithEmailAndPassword(
+            email: email,
+            password: password,
+          ),
+        ).thenAnswer((_) => Future.value(mockUserCredential));
 
         // when
-        expect(() => target.signIn(password: password),
-            throwsA(const TypeMatcher<SignInException>()));
+        expect(
+          () => target.signIn(password: password),
+          throwsA(const TypeMatcher<SignInException>()),
+        );
       });
       test('password が null', () async {
         // given
@@ -55,74 +73,179 @@ void main() {
             .thenAnswer((_) => Future.value(mockUserCredential));
 
         // when
-        expect(() => target.signIn(password: password),
-            throwsA(const TypeMatcher<SignInException>()));
+        expect(
+          () => target.signIn(password: password),
+          throwsA(const TypeMatcher<SignInException>()),
+        );
       });
 
       test('PlatformException が発生', () async {
         // given
-        when(mockFirebaseAuth.signInWithEmailAndPassword(
-                email: email, password: password))
-            .thenThrow(PlatformException(code: 'dummy', message: 'dummy'));
+        when(
+          mockFirebaseAuth.signInWithEmailAndPassword(
+            email: email,
+            password: password,
+          ),
+        ).thenThrow(PlatformException(code: 'dummy', message: 'dummy'));
 
         // when
-        expect(() => target.signIn(email: email, password: password),
-            throwsA(const TypeMatcher<SignInException>()));
+        expect(
+          () => target.signIn(email: email, password: password),
+          throwsA(const TypeMatcher<SignInException>()),
+        );
       });
 
       group('FirebaseAuthException が発生', () {
-        test('code: user-not-found', () async {
-          // given
-          when(mockFirebaseAuth.signInWithEmailAndPassword(
-                  email: email, password: password))
-              .thenThrow(FirebaseAuthException(
-                  code: 'user-not-found',
-                  message: 'dummy',
-                  email: 'test@example.com'));
+        group('code: user-not-found', () {
+          test('ユーザを作成できる', () async {
+            // given
+            when(
+              mockFirebaseAuth.signInWithEmailAndPassword(
+                email: email,
+                password: password,
+              ),
+            ).thenThrow(
+              FirebaseAuthException(
+                code: 'user-not-found',
+                message: 'dummy',
+                email: 'test@example.com',
+              ),
+            );
+            // user-not-found の場合、ユーザが存在しないのでユーザを作成しようとする
+            when(
+              mockFirebaseAuth.createUserWithEmailAndPassword(
+                email: email,
+                password: password,
+              ),
+            ).thenAnswer((_) => Future.value(mockUserCredential));
 
-          // when
-          expect(() => target.signIn(email: email, password: password),
-              throwsA(const TypeMatcher<SignInException>()));
+            // when
+            final actual =
+                await target.signIn(email: email, password: password);
+
+            // then
+            expect(actual, mockUserCredential);
+            // テスト側で引数を検証できないので any で呼び出しのみを確認
+            verify(
+              mockFirebaseAuth.signInWithEmailAndPassword(
+                email: email,
+                password: password,
+              ),
+            ).called(1);
+            verify(
+              mockFirebaseAuth.createUserWithEmailAndPassword(
+                email: email,
+                password: password,
+              ),
+            ).called(1);
+          });
+
+          group('ユーザを作成時に例外が発生', () {
+            final codes = [
+              'weak-password',
+              'email-already-in-use',
+              'dummy',
+            ];
+
+            for (final code in codes) {
+              test('code: $code', () async {
+                // given
+                when(
+                  mockFirebaseAuth.signInWithEmailAndPassword(
+                    email: email,
+                    password: password,
+                  ),
+                ).thenThrow(
+                  FirebaseAuthException(
+                    code: 'user-not-found',
+                    message: 'dummy',
+                    email: 'test@example.com',
+                  ),
+                );
+                // user-not-found の場合、ユーザが存在しないのでユーザを作成しようとする
+                // ユーザ作成時に例外が発生
+                when(
+                  mockFirebaseAuth.createUserWithEmailAndPassword(
+                    email: email,
+                    password: password,
+                  ),
+                ).thenThrow(
+                  FirebaseAuthException(
+                    code: code,
+                    message: 'dummy',
+                    email: 'test@example.com',
+                  ),
+                );
+
+                // when
+                expect(
+                  () => target.signIn(email: email, password: password),
+                  throwsA(const TypeMatcher<SignInException>()),
+                );
+              });
+            }
+          });
         });
 
         test('code: wrong-password', () async {
           // given
-          when(mockFirebaseAuth.signInWithEmailAndPassword(
-                  email: email, password: password))
-              .thenThrow(FirebaseAuthException(
-                  code: 'wrong-password',
-                  message: 'dummy',
-                  email: 'test@example.com'));
+          when(
+            mockFirebaseAuth.signInWithEmailAndPassword(
+              email: email,
+              password: password,
+            ),
+          ).thenThrow(
+            FirebaseAuthException(
+              code: 'wrong-password',
+              message: 'dummy',
+              email: 'test@example.com',
+            ),
+          );
 
           // when
-          expect(() => target.signIn(email: email, password: password),
-              throwsA(const TypeMatcher<SignInException>()));
+          expect(
+            () => target.signIn(email: email, password: password),
+            throwsA(const TypeMatcher<SignInException>()),
+          );
         });
 
         test('不明なcode', () async {
           // given
-          when(mockFirebaseAuth.signInWithEmailAndPassword(
-                  email: email, password: password))
-              .thenThrow(FirebaseAuthException(
-                  code: 'unknown-code',
-                  message: 'dummy',
-                  email: 'test@example.com'));
+          when(
+            mockFirebaseAuth.signInWithEmailAndPassword(
+              email: email,
+              password: password,
+            ),
+          ).thenThrow(
+            FirebaseAuthException(
+              code: 'unknown-code',
+              message: 'dummy',
+              email: 'test@example.com',
+            ),
+          );
 
           // when
-          expect(() => target.signIn(email: email, password: password),
-              throwsA(const TypeMatcher<SignInException>()));
+          expect(
+            () => target.signIn(email: email, password: password),
+            throwsA(const TypeMatcher<SignInException>()),
+          );
         });
       });
 
       test('Firebase, Platform 以外の例外が発生', () async {
         // given
-        when(mockFirebaseAuth.signInWithEmailAndPassword(
-                email: email, password: password))
-            .thenThrow(Exception());
+        when(
+          mockFirebaseAuth.signInWithEmailAndPassword(
+            email: email,
+            password: password,
+          ),
+        ).thenThrow(Exception());
 
         // when
-        expect(() => target.signIn(email: email, password: password),
-            throwsA(const TypeMatcher<SignInException>()));
+        expect(
+          () => target.signIn(email: email, password: password),
+          throwsA(const TypeMatcher<SignInException>()),
+        );
       });
     });
   });
