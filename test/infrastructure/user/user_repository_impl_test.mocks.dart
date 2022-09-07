@@ -13,7 +13,6 @@ import 'package:firebase_auth/firebase_auth.dart' as _i6;
 import 'package:firebase_auth_platform_interface/firebase_auth_platform_interface.dart'
     as _i5;
 import 'package:firebase_core/firebase_core.dart' as _i2;
-import 'package:logger/src/logger.dart' as _i9;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -227,49 +226,6 @@ class MockFirebaseFirestore extends _i1.Mock implements _i4.FirebaseFirestore {
       Invocation.method(#waitForPendingWrites, []),
       returnValue: _i7.Future<void>.value(),
       returnValueForMissingStub: _i7.Future<void>.value()) as _i7.Future<void>);
-}
-
-/// A class which mocks [Logger].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockLogger extends _i1.Mock implements _i9.Logger {
-  MockLogger() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
-  void v(dynamic message, [dynamic error, StackTrace? stackTrace]) =>
-      super.noSuchMethod(Invocation.method(#v, [message, error, stackTrace]),
-          returnValueForMissingStub: null);
-  @override
-  void d(dynamic message, [dynamic error, StackTrace? stackTrace]) =>
-      super.noSuchMethod(Invocation.method(#d, [message, error, stackTrace]),
-          returnValueForMissingStub: null);
-  @override
-  void i(dynamic message, [dynamic error, StackTrace? stackTrace]) =>
-      super.noSuchMethod(Invocation.method(#i, [message, error, stackTrace]),
-          returnValueForMissingStub: null);
-  @override
-  void w(dynamic message, [dynamic error, StackTrace? stackTrace]) =>
-      super.noSuchMethod(Invocation.method(#w, [message, error, stackTrace]),
-          returnValueForMissingStub: null);
-  @override
-  void e(dynamic message, [dynamic error, StackTrace? stackTrace]) =>
-      super.noSuchMethod(Invocation.method(#e, [message, error, stackTrace]),
-          returnValueForMissingStub: null);
-  @override
-  void wtf(dynamic message, [dynamic error, StackTrace? stackTrace]) =>
-      super.noSuchMethod(Invocation.method(#wtf, [message, error, stackTrace]),
-          returnValueForMissingStub: null);
-  @override
-  void log(_i9.Level? level, dynamic message,
-          [dynamic error, StackTrace? stackTrace]) =>
-      super.noSuchMethod(
-          Invocation.method(#log, [level, message, error, stackTrace]),
-          returnValueForMissingStub: null);
-  @override
-  void close() => super.noSuchMethod(Invocation.method(#close, []),
-      returnValueForMissingStub: null);
 }
 
 /// A class which mocks [FirebaseAuth].

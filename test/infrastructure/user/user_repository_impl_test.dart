@@ -4,34 +4,36 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:logger/logger.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/user/user_repository_impl.dart';
 
 import 'user_repository_impl_test.mocks.dart';
 
 @GenerateMocks([
   FirebaseFirestore,
-  Logger,
   FirebaseAuth,
   DocumentSnapshot,
   CollectionReference,
   DocumentReference
 ])
 void main() {
-  MockFirebaseFirestore mockFirebaseFirestore = MockFirebaseFirestore();
-  MockLogger mockLogger = MockLogger();
-  UserRepositoryImpl target;
+  final logger = Logger();
 
-  MockDocumentSnapshot<Map<String, dynamic>> mockDocumentSnapshot =
+  MockFirebaseFirestore mockFirebaseFirestore = MockFirebaseFirestore();
+  UserRepositoryImpl target = UserRepositoryImpl(mockFirebaseFirestore, logger);
+
+  MockDocumentSnapshot<VirtualPilgrimageUser> mockDocumentSnapshot =
       MockDocumentSnapshot();
-  MockCollectionReference mockCollectionReference = MockCollectionReference();
-  MockDocumentReference mockDocumentReference = MockDocumentReference();
+  MockCollectionReference<Map<String, dynamic>> mockCollectionReference =
+      MockCollectionReference();
+  MockDocumentReference<VirtualPilgrimageUser> mockDocumentReference =
+      MockDocumentReference();
 
   setUp(() {
     mockFirebaseFirestore = MockFirebaseFirestore();
-    mockLogger = MockLogger();
     target = UserRepositoryImpl(
       mockFirebaseFirestore,
-      mockLogger,
+      logger,
     );
 
     mockDocumentSnapshot = MockDocumentSnapshot();
@@ -42,25 +44,59 @@ void main() {
   group('get', () {
     const userId = 'dummy';
     test('正常系', () async {
-      defaultMock(
+      // given
+      final expected = defaultUser(userId);
+      defaultGetMock(
         mockFirebaseFirestore,
         mockDocumentSnapshot,
         mockCollectionReference,
         mockDocumentReference,
-        userId,
+        expected,
       );
+
+      // when
+      final actual = await target.get(userId);
+
+      // then
+      expect(actual, expected);
     });
   });
 }
 
-void defaultMock(
+void defaultGetMock(
   MockFirebaseFirestore mockFirebaseFirestore,
-  MockDocumentSnapshot<Map<String, dynamic>> mockDocumentSnapshot,
-  MockCollectionReference mockCollectionReference,
-  MockDocumentReference mockDocumentReference,
-  String userId,
+  MockDocumentSnapshot<VirtualPilgrimageUser> mockDocumentSnapshot,
+  MockCollectionReference<Map<String, dynamic>> mockCollectionReference,
+  MockDocumentReference<VirtualPilgrimageUser> mockDocumentReference,
+  VirtualPilgrimageUser user,
 ) {
-  // TODO(s14t284): モックを整えてテストを書く
-  when(mockFirebaseFirestore.collection(any).doc(any).get())
-      .thenAnswer((_) => Future.value(mockDocumentSnapshot));
+  // withConverter の mock のために利用
+  final MockDocumentReference<Map<String, dynamic>>
+      mockDocumentReferenceForConverter = MockDocumentReference();
+
+  when(mockDocumentSnapshot.data()).thenReturn(user);
+  when(mockDocumentSnapshot.exists).thenReturn(true);
+  when(mockDocumentReference.get()).thenAnswer(
+    (_) => Future.value(mockDocumentSnapshot),
+  );
+  when(
+    mockDocumentReferenceForConverter.withConverter<VirtualPilgrimageUser>(
+      fromFirestore: anyNamed('fromFirestore'),
+      toFirestore: anyNamed('toFirestore'),
+    ),
+  ).thenReturn(mockDocumentReference);
+  when(mockCollectionReference.doc(user.id))
+      .thenReturn(mockDocumentReferenceForConverter);
+  when(mockFirebaseFirestore.collection('users'))
+      .thenReturn(mockCollectionReference);
+}
+
+VirtualPilgrimageUser defaultUser([String userId = 'dummyId']) {
+  return VirtualPilgrimageUser(
+    id: userId,
+    nickname: 'dummyName',
+    email: 'test@example.com',
+    birthDay: DateTime.utc(2000),
+    userStatus: UserStatus.created,
+  );
 }

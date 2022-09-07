@@ -18,7 +18,7 @@ class UserRepositoryImpl extends UserRepository {
       final ref = _firestoreClient
           .collection(FirestoreCollectionPath.users)
           .doc(userId)
-          .withConverter(
+          .withConverter<VirtualPilgrimageUser>(
             fromFirestore:
                 (DocumentSnapshot<Map<String, dynamic>> snapshot, _) =>
                     VirtualPilgrimageUser.fromJson(snapshot.data()!),
