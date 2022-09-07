@@ -38,6 +38,35 @@ class SignInPageBody extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
+
+                // ref. https://zenn.dev/pressedkonbu/articles/copy-paste-text-form-field
+                  _createTextFormField(
+                    state.email,
+                    notifier.onChangeEmail,
+                    _inputDecorationBuilder(
+                      context,
+                      'メールアドレス or ニックネーム',
+                      Icon(
+                        Icons.mail,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  _createTextFormField(
+                    state.password,
+                    notifier.onChangePassword,
+                    _inputDecorationBuilder(
+                      context,
+                      'パスワード',
+                      Icon(
+                        Icons.password,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                    true,
+                  ),
+                  SizedBox(height: 30),
                   ElevatedButton(
                     onPressed: () async {
                       await notifier.signInWithEmailAndPassword();
@@ -61,38 +90,11 @@ class SignInPageBody extends StatelessWidget {
                       width: MediaQuery.of(context).size.width,
                       alignment: Alignment.center,
                       child: Text(
-                        'アカウント作成',
+                        'サインイン',
                         style: TextStyle(color: ColorStyle.text),
                       )
                     ),
-                  ),ElevatedButton(
-                        onPressed: () async {
-                          await notifier.signInWithEmailAndPassword();
-                        },
-                        // ボタンを押したときの色
-                        style: ElevatedButton.styleFrom(
-                          primary: Theme.of(context).primaryColor,
-                          onPrimary: Theme.of(context).primaryColorDark,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          textStyle: const TextStyle(
-                            fontSize: FontStyle.mediumSize,
-                            // TODO(s14t284): custom font を導入
-                            // ref. https://zenn.dev/susatthi/articles/20220419-143426-flutter-custom-fonts
-                            // fontFamily: ""
-                          ),
-                          padding: const EdgeInsets.all(10),
-                        ),
-                        child: Container(
-                            width: MediaQuery.of(context).size.width,
-                            alignment: Alignment.center,
-                            child: Text(
-                              'ログイン',
-                              style: TextStyle(color: ColorStyle.text),
-                            )
-                        ),
-                      )
+                  ),
                 /*
                 const Padding(
                   padding: EdgeInsets.all(16),

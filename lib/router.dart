@@ -5,10 +5,12 @@ import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.da
 import 'package:virtualpilgrimage/ui/pages/home/home_page.dart';
 import 'package:virtualpilgrimage/ui/pages/registration/registration_page.dart';
 import 'package:virtualpilgrimage/ui/pages/sign_in/sign_in_page.dart';
+import 'package:virtualpilgrimage/ui/pages/welcome/welcome_page.dart';
 
 extension RouterPath on String {
   static const home = '/';
-  static const signIn = '/signin';
+  static const welcome = '/welcome';
+  static const signIn = '/signIn';
   static const registration = '/registration';
 }
 
@@ -25,6 +27,11 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>(
           child: HomePage(key: state.pageKey),
         ),
       ),
+      GoRoute(
+          path: RouterPath.welcome,
+          builder: (BuildContext context, GoRouterState state) {
+        return const WelcomePage();
+      }),
       // ログイン
       GoRoute(
         path: RouterPath.signIn,
@@ -44,8 +51,8 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>(
       // サインイン状態によって遷移先を変える
       final userState = ref.watch(userStateProvider);
       if (userState == null) {
-        if (state.location != RouterPath.signIn) {
-          return RouterPath.signIn;
+        if (state.location != RouterPath.welcome) {
+          return RouterPath.welcome;
         }
       } else {
         switch (userState.userStatus) {
