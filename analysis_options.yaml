@@ -96,7 +96,6 @@ analyzer:
     strict-raw-types: true
   exclude:
     - lib/gen/**
-    - test/**/*.dart
     - lib/**/*.codegen.g.dart
     - lib/**/*.codegen.freezed.dart
     - pubspec*
