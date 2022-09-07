@@ -89,6 +89,13 @@ void main() {
         );
         test('code: account-exists-with-different-credentials', () async {
           // given
+          defaultMock(
+            mockFirebaseAuth,
+            mockGoogleSignIn,
+            mockGoogleSignInAccount,
+            mockGoogleSignInAuthentication,
+            mockUserCredential,
+          );
           when(mockFirebaseAuth.signInWithCredential(any)).thenThrow(
             FirebaseAuthException(
               code: 'account-exists-with-different-credentials',
