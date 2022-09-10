@@ -6,8 +6,8 @@ import 'package:virtualpilgrimage/domain/auth/auth_repository.dart';
 import 'package:virtualpilgrimage/domain/exception/sign_in_exception.dart';
 
 // ref. https://firebase.google.com/docs/auth/flutter/password-auth
-class EmailAndPasswordRepository extends AuthRepository {
-  EmailAndPasswordRepository(this._firebaseAuth);
+class EmailAndPasswordAuthRepository extends AuthRepository {
+  EmailAndPasswordAuthRepository(this._firebaseAuth);
 
   final FirebaseAuth _firebaseAuth;
 

@@ -12,7 +12,7 @@ import 'email_and_password_auth_repository_test.mocks.dart';
 void main() {
   MockFirebaseAuth mockFirebaseAuth = MockFirebaseAuth();
   MockUserCredential mockUserCredential = MockUserCredential();
-  EmailAndPasswordRepository target = EmailAndPasswordRepository(
+  EmailAndPasswordAuthRepository target = EmailAndPasswordAuthRepository(
     mockFirebaseAuth,
   );
 
@@ -22,7 +22,7 @@ void main() {
   setUp(() {
     mockFirebaseAuth = MockFirebaseAuth();
     mockUserCredential = MockUserCredential();
-    target = EmailAndPasswordRepository(mockFirebaseAuth);
+    target = EmailAndPasswordAuthRepository(mockFirebaseAuth);
   });
 
   group('signIn', () {
