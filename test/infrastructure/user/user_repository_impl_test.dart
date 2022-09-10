@@ -2,44 +2,27 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logger/logger.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/user/user_repository_impl.dart';
 
+import '../../helper/mock.mocks.dart';
 import '../../helper/mock_query_document_snapshot.dart';
-import 'user_repository_impl_test.mocks.dart';
 
-@GenerateMocks(
-  [
-    FirebaseFirestore,
-    FirebaseAuth,
-    DocumentSnapshot,
-    CollectionReference,
-    DocumentReference,
-    Query,
-    QuerySnapshot,
-  ],
-)
 void main() {
   final logger = Logger(level: Level.error);
 
   MockFirebaseFirestore mockFirebaseFirestore = MockFirebaseFirestore();
   UserRepositoryImpl target = UserRepositoryImpl(mockFirebaseFirestore, logger);
 
-  MockDocumentSnapshot<VirtualPilgrimageUser> mockDocumentSnapshot =
-      MockDocumentSnapshot();
-  MockCollectionReference<Map<String, dynamic>> mockCollectionReference =
-      MockCollectionReference();
-  MockDocumentReference<VirtualPilgrimageUser> mockUserDocumentReference =
-      MockDocumentReference();
-  MockDocumentReference<Map<String, dynamic>> mockMapDocumentReference =
-      MockDocumentReference();
+  MockDocumentSnapshot<VirtualPilgrimageUser> mockDocumentSnapshot = MockDocumentSnapshot();
+  MockCollectionReference<Map<String, dynamic>> mockCollectionReference = MockCollectionReference();
+  MockDocumentReference<VirtualPilgrimageUser> mockUserDocumentReference = MockDocumentReference();
+  MockDocumentReference<Map<String, dynamic>> mockMapDocumentReference = MockDocumentReference();
   MockQuery<Map<String, dynamic>> mockQuery = MockQuery();
   MockQuery<VirtualPilgrimageUser> mockQueryDomainUser = MockQuery();
-  MockQuerySnapshot<VirtualPilgrimageUser> mockQuerySnapshot =
-      MockQuerySnapshot();
+  MockQuerySnapshot<VirtualPilgrimageUser> mockQuerySnapshot = MockQuerySnapshot();
 
   setUp(() {
     mockFirebaseFirestore = MockFirebaseFirestore();
@@ -109,8 +92,7 @@ void main() {
       for (final param in params.entries) {
         test('${param.key} が発生', () async {
           // given
-          when(mockFirebaseFirestore.collection('users'))
-              .thenThrow(param.value);
+          when(mockFirebaseFirestore.collection('users')).thenThrow(param.value);
 
           // when
           // repository 側で DatabaseException に変換していることを確認
@@ -154,8 +136,7 @@ void main() {
       for (final param in params.entries) {
         test('${param.key} が発生', () async {
           // given
-          when(mockFirebaseFirestore.collection('users'))
-              .thenThrow(param.value);
+          when(mockFirebaseFirestore.collection('users')).thenThrow(param.value);
 
           // when
           // repository 側で DatabaseException に変換していることを確認
@@ -236,10 +217,8 @@ void defaultGetMock(
       toFirestore: anyNamed('toFirestore'),
     ),
   ).thenReturn(mockUserDocumentReference);
-  when(mockCollectionReference.doc(user.id))
-      .thenReturn(mockMapDocumentReference);
-  when(mockFirebaseFirestore.collection('users'))
-      .thenReturn(mockCollectionReference);
+  when(mockCollectionReference.doc(user.id)).thenReturn(mockMapDocumentReference);
+  when(mockFirebaseFirestore.collection('users')).thenReturn(mockCollectionReference);
 }
 
 /// collectionへのデータ更新のモック
@@ -249,12 +228,9 @@ void defaultUpdateMock(
   MockDocumentReference<Map<String, dynamic>> mockMapDocumentReference,
   VirtualPilgrimageUser user,
 ) {
-  when(mockFirebaseFirestore.collection('users'))
-      .thenReturn(mockCollectionReference);
-  when(mockCollectionReference.doc(user.id))
-      .thenReturn(mockMapDocumentReference);
-  when(mockMapDocumentReference.set(user.toJson()))
-      .thenAnswer((_) => Future.value());
+  when(mockFirebaseFirestore.collection('users')).thenReturn(mockCollectionReference);
+  when(mockCollectionReference.doc(user.id)).thenReturn(mockMapDocumentReference);
+  when(mockMapDocumentReference.set(user.toJson())).thenAnswer((_) => Future.value());
 }
 
 /// collectionからのニックネーム指定時のデータ取得のモック
@@ -267,8 +243,7 @@ void defaultFindWithNicknameMock(
   List<VirtualPilgrimageUser> users,
   String nickname,
 ) {
-  final mockQueryDocumentSnapshots =
-      users.map(MockQueryDocumentSnapshot.new).toList();
+  final mockQueryDocumentSnapshots = users.map(MockQueryDocumentSnapshot.new).toList();
   when(mockQuerySnapshot.docs).thenReturn(mockQueryDocumentSnapshots);
   when(mockQuerySnapshot.size).thenReturn(users.length);
   when(mockQueryAfterConverted.get()).thenAnswer(
@@ -280,10 +255,8 @@ void defaultFindWithNicknameMock(
       toFirestore: anyNamed('toFirestore'),
     ),
   ).thenReturn(mockQueryAfterConverted);
-  when(mockCollectionReference.where('nickname', isEqualTo: nickname))
-      .thenReturn(mockQuery);
-  when(mockFirebaseFirestore.collection('users'))
-      .thenReturn(mockCollectionReference);
+  when(mockCollectionReference.where('nickname', isEqualTo: nickname)).thenReturn(mockQuery);
+  when(mockFirebaseFirestore.collection('users')).thenReturn(mockCollectionReference);
 }
 
 VirtualPilgrimageUser defaultUser([

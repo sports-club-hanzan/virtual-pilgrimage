@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logger/logger.dart';
 import 'package:mockito/annotations.dart';
@@ -12,16 +11,13 @@ import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.da
 import 'package:virtualpilgrimage/infrastructure/auth/email_and_password_auth_repository.dart';
 import 'package:virtualpilgrimage/infrastructure/auth/google_auth_repository.dart';
 
+import '../../helper/mock.mocks.dart';
 import 'sign_in_interactor_test.mocks.dart';
 
 @GenerateMocks([
   EmailAndPasswordAuthRepository,
   GoogleAuthRepository,
   UserRepository,
-  FirebaseCrashlytics,
-  FirebaseAuth,
-  UserCredential,
-  User,
 ])
 void main() {
   MockEmailAndPasswordAuthRepository mockEmailAndPasswordAuthRepository =
