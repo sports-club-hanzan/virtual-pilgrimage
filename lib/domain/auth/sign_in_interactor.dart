@@ -143,6 +143,11 @@ class SignInInteractor extends SignInUsecase {
           'get user or initialize user is error [uid][${credentialUser.uid}]';
       _logger.e(message, [e]);
       await _crashlytics.log(message);
+      await _crashlytics.recordError(
+        e,
+        null,
+        reason: 'Exception',
+      );
 
       throw SignInException(
         message,
