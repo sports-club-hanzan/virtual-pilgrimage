@@ -1,14 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:virtualpilgrimage/domain/exception/sign_in_exception.dart';
 import 'package:virtualpilgrimage/infrastructure/auth/email_and_password_auth_repository.dart';
 
-import 'email_and_password_auth_repository_test.mocks.dart';
+import '../../helper/mock.mocks.dart';
 
-@GenerateMocks([FirebaseAuth, UserCredential])
 void main() {
   MockFirebaseAuth mockFirebaseAuth = MockFirebaseAuth();
   MockUserCredential mockUserCredential = MockUserCredential();
@@ -120,8 +118,7 @@ void main() {
             ).thenAnswer((_) => Future.value(mockUserCredential));
 
             // when
-            final actual =
-                await target.signIn(email: email, password: password);
+            final actual = await target.signIn(email: email, password: password);
 
             // then
             expect(actual, mockUserCredential);

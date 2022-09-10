@@ -7,15 +7,9 @@ import 'package:mockito/mockito.dart';
 import 'package:virtualpilgrimage/domain/exception/sign_in_exception.dart';
 import 'package:virtualpilgrimage/infrastructure/auth/google_auth_repository.dart';
 
-import 'google_auth_repository_test.mocks.dart';
+import '../../helper/mock.mocks.dart';
 
-@GenerateMocks([
-  FirebaseAuth,
-  GoogleSignIn,
-  GoogleSignInAccount,
-  GoogleSignInAuthentication,
-  UserCredential,
-])
+
 void main() {
   MockFirebaseAuth mockFirebaseAuth = MockFirebaseAuth();
   MockGoogleSignIn mockGoogleSignIn = MockGoogleSignIn();

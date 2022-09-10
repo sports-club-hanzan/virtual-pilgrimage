@@ -2,8 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 // ignore: subtype_of_sealed_class
 /// Firestore の QueryDocumentSnapshot はmock化できなかったので自前で用意したmock用のクラス
-class MockQueryDocumentSnapshot<T extends Object?>
-    implements QueryDocumentSnapshot<T> {
+class MockQueryDocumentSnapshot<T extends Object?> implements QueryDocumentSnapshot<T> {
   MockQueryDocumentSnapshot(this._t);
 
   late DocumentSnapshot<T> snapshot;
