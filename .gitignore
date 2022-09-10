@@ -54,3 +54,5 @@ app.*.map.json
 ## NOTE: 以下は将来的にiOS対応するときのために追加
 **/ios/GoogleService-Info.plist
 **/ios/Flutter/DartDefines.xcconfig
+
+coverage/lcov.info
