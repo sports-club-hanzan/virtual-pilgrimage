@@ -10,7 +10,7 @@ final _googleSignInProvider = Provider(
 );
 
 final emailAndPasswordAuthRepositoryProvider = Provider(
-  (ref) => EmailAndPasswordRepository(ref.watch(firebaseAuthProvider)),
+  (ref) => EmailAndPasswordAuthRepository(ref.watch(firebaseAuthProvider)),
 );
 
 final googleAuthRepositoryProvider = Provider(

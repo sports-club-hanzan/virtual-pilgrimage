@@ -16,6 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$RadioButtonModel<T> {
+// TODO(s14t284): focusNode がラジオボタンにおいて複数必要なのか調べる
   List<FocusNode> get focusNodes => throw _privateConstructorUsedError;
   List<String> get titles => throw _privateConstructorUsedError;
   List<T> get values => throw _privateConstructorUsedError;
@@ -141,7 +142,9 @@ class _$_RadioButtonModel<T> extends _RadioButtonModel<T> {
         _values = values,
         super._();
 
+// TODO(s14t284): focusNode がラジオボタンにおいて複数必要なのか調べる
   final List<FocusNode> _focusNodes;
+// TODO(s14t284): focusNode がラジオボタンにおいて複数必要なのか調べる
   @override
   List<FocusNode> get focusNodes {
     // ignore: implicit_dynamic_type
@@ -206,7 +209,7 @@ abstract class _RadioButtonModel<T> extends RadioButtonModel<T> {
       required final T selectedValue}) = _$_RadioButtonModel<T>;
   _RadioButtonModel._() : super._();
 
-  @override
+  @override // TODO(s14t284): focusNode がラジオボタンにおいて複数必要なのか調べる
   List<FocusNode> get focusNodes;
   @override
   List<String> get titles;
