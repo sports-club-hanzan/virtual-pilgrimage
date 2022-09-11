@@ -42,19 +42,25 @@ void main() {
 
   group('get', () {
     const userId = 'dummy';
+    final expected = defaultUser(userId);
+    setUp(() {
+      when(mockDocumentSnapshot.data()).thenReturn(expected);
+      when(mockDocumentSnapshot.exists).thenReturn(true);
+      when(mockUserDocumentReference.get()).thenAnswer(
+        (_) => Future.value(mockDocumentSnapshot),
+      );
+      when(
+        mockMapDocumentReference.withConverter<VirtualPilgrimageUser>(
+          fromFirestore: anyNamed('fromFirestore'),
+          toFirestore: anyNamed('toFirestore'),
+        ),
+      ).thenReturn(mockUserDocumentReference);
+      when(mockCollectionReference.doc(userId)).thenReturn(mockMapDocumentReference);
+      when(mockFirebaseFirestore.collection('users')).thenReturn(mockCollectionReference);
+    });
+
     group('正常系', () {
       test('ユーザ情報が取得できる', () async {
-        // given
-        final expected = defaultUser(userId);
-        defaultGetMock(
-          mockFirebaseFirestore,
-          mockDocumentSnapshot,
-          mockCollectionReference,
-          mockUserDocumentReference,
-          mockMapDocumentReference,
-          expected,
-        );
-
         // when
         final actual = await target.get(userId);
 
@@ -65,14 +71,6 @@ void main() {
 
       test('指定したIDのユーザが存在しない', () async {
         // given
-        defaultGetMock(
-          mockFirebaseFirestore,
-          mockDocumentSnapshot,
-          mockCollectionReference,
-          mockUserDocumentReference,
-          mockMapDocumentReference,
-          defaultUser(userId),
-        );
         when(mockDocumentSnapshot.exists).thenReturn(false);
 
         // when
@@ -108,16 +106,14 @@ void main() {
 
   group('update', () {
     final user = defaultUser();
+    setUp(() {
+      when(mockFirebaseFirestore.collection('users')).thenReturn(mockCollectionReference);
+      when(mockCollectionReference.doc(user.id)).thenReturn(mockMapDocumentReference);
+      when(mockMapDocumentReference.set(user.toJson())).thenAnswer((_) => Future.value());
+    });
+
     group('正常系', () {
       test('ユーザ情報が更新・作成できる', () async {
-        // given
-        defaultUpdateMock(
-          mockFirebaseFirestore,
-          mockCollectionReference,
-          mockMapDocumentReference,
-          user,
-        );
-
         // when
         await target.update(user);
 
@@ -157,18 +153,24 @@ void main() {
     ];
 
     group('正常系', () {
-      test('指定したニックネームのユーザが取得できる', () async {
-        // given
-        defaultFindWithNicknameMock(
-          mockFirebaseFirestore,
-          mockCollectionReference,
-          mockQuery,
-          mockQueryDomainUser,
-          mockQuerySnapshot,
-          users,
-          'user1',
+      final mockQueryDocumentSnapshots = users.map(MockQueryDocumentSnapshot.new).toList();
+      setUp(() {
+        when(mockQuerySnapshot.docs).thenReturn(mockQueryDocumentSnapshots);
+        when(mockQuerySnapshot.size).thenReturn(users.length);
+        when(mockQueryDomainUser.get()).thenAnswer(
+          (_) => Future.value(mockQuerySnapshot),
         );
+        when(
+          mockQuery.withConverter<VirtualPilgrimageUser>(
+            fromFirestore: anyNamed('fromFirestore'),
+            toFirestore: anyNamed('toFirestore'),
+          ),
+        ).thenReturn(mockQueryDomainUser);
+        when(mockCollectionReference.where('nickname', isEqualTo: anyNamed('isEqualTo'))).thenReturn(mockQuery);
+        when(mockFirebaseFirestore.collection('users')).thenReturn(mockCollectionReference);
+      });
 
+      test('指定したニックネームのユーザが取得できる', () async {
         // when
         final actual = await target.findWithNickname('user1');
 
@@ -177,15 +179,19 @@ void main() {
       });
       test('指定したニックネームのユーザが存在しない', () async {
         // given
-        defaultFindWithNicknameMock(
-          mockFirebaseFirestore,
-          mockCollectionReference,
-          mockQuery,
-          mockQueryDomainUser,
-          mockQuerySnapshot,
-          [],
-          'user1',
+        when(mockQuerySnapshot.docs).thenReturn([]);
+        when(mockQuerySnapshot.size).thenReturn(0);
+        when(mockQueryDomainUser.get()).thenAnswer(
+              (_) => Future.value(mockQuerySnapshot),
         );
+        when(
+          mockQuery.withConverter<VirtualPilgrimageUser>(
+            fromFirestore: anyNamed('fromFirestore'),
+            toFirestore: anyNamed('toFirestore'),
+          ),
+        ).thenReturn(mockQueryDomainUser);
+        when(mockCollectionReference.where('nickname', isEqualTo: 'name1')).thenReturn(mockQuery);
+        when(mockFirebaseFirestore.collection('users')).thenReturn(mockCollectionReference);
 
         // when
         final actual = await target.findWithNickname('user1');
@@ -195,68 +201,6 @@ void main() {
       });
     });
   });
-}
-
-/// collectionからのデータ取得のモック
-void defaultGetMock(
-  MockFirebaseFirestore mockFirebaseFirestore,
-  MockDocumentSnapshot<VirtualPilgrimageUser> mockDocumentSnapshot,
-  MockCollectionReference<Map<String, dynamic>> mockCollectionReference,
-  MockDocumentReference<VirtualPilgrimageUser> mockUserDocumentReference,
-  MockDocumentReference<Map<String, dynamic>> mockMapDocumentReference,
-  VirtualPilgrimageUser user,
-) {
-  when(mockDocumentSnapshot.data()).thenReturn(user);
-  when(mockDocumentSnapshot.exists).thenReturn(true);
-  when(mockUserDocumentReference.get()).thenAnswer(
-    (_) => Future.value(mockDocumentSnapshot),
-  );
-  when(
-    mockMapDocumentReference.withConverter<VirtualPilgrimageUser>(
-      fromFirestore: anyNamed('fromFirestore'),
-      toFirestore: anyNamed('toFirestore'),
-    ),
-  ).thenReturn(mockUserDocumentReference);
-  when(mockCollectionReference.doc(user.id)).thenReturn(mockMapDocumentReference);
-  when(mockFirebaseFirestore.collection('users')).thenReturn(mockCollectionReference);
-}
-
-/// collectionへのデータ更新のモック
-void defaultUpdateMock(
-  MockFirebaseFirestore mockFirebaseFirestore,
-  MockCollectionReference<Map<String, dynamic>> mockCollectionReference,
-  MockDocumentReference<Map<String, dynamic>> mockMapDocumentReference,
-  VirtualPilgrimageUser user,
-) {
-  when(mockFirebaseFirestore.collection('users')).thenReturn(mockCollectionReference);
-  when(mockCollectionReference.doc(user.id)).thenReturn(mockMapDocumentReference);
-  when(mockMapDocumentReference.set(user.toJson())).thenAnswer((_) => Future.value());
-}
-
-/// collectionからのニックネーム指定時のデータ取得のモック
-void defaultFindWithNicknameMock(
-  MockFirebaseFirestore mockFirebaseFirestore,
-  MockCollectionReference<Map<String, dynamic>> mockCollectionReference,
-  MockQuery<Map<String, dynamic>> mockQuery,
-  MockQuery<VirtualPilgrimageUser> mockQueryAfterConverted,
-  MockQuerySnapshot<VirtualPilgrimageUser> mockQuerySnapshot,
-  List<VirtualPilgrimageUser> users,
-  String nickname,
-) {
-  final mockQueryDocumentSnapshots = users.map(MockQueryDocumentSnapshot.new).toList();
-  when(mockQuerySnapshot.docs).thenReturn(mockQueryDocumentSnapshots);
-  when(mockQuerySnapshot.size).thenReturn(users.length);
-  when(mockQueryAfterConverted.get()).thenAnswer(
-    (_) => Future.value(mockQuerySnapshot),
-  );
-  when(
-    mockQuery.withConverter<VirtualPilgrimageUser>(
-      fromFirestore: anyNamed('fromFirestore'),
-      toFirestore: anyNamed('toFirestore'),
-    ),
-  ).thenReturn(mockQueryAfterConverted);
-  when(mockCollectionReference.where('nickname', isEqualTo: nickname)).thenReturn(mockQuery);
-  when(mockFirebaseFirestore.collection('users')).thenReturn(mockCollectionReference);
 }
 
 VirtualPilgrimageUser defaultUser([
