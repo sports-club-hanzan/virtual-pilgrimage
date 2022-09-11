@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:virtualpilgrimage/analytics.dart';
 import 'package:virtualpilgrimage/domain/user/registration/registration_result.dart';
 import 'package:virtualpilgrimage/domain/user/registration/user_registration_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
@@ -27,10 +30,12 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
           ),
         ) {
     _usecase = _ref.read(userRegistrationUsecaseProvider);
+    _analytics = _ref.read(analyticsProvider);
   }
 
   final Ref _ref;
   late final UserRegistrationUsecase _usecase;
+  late final Analytics _analytics;
 
   void initialize(String nickname, DateTime birthday) {
     state = RegistrationState(
@@ -67,9 +72,27 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
   }
 
   Future<void> onPressedRegistration() async {
+    final defaultParams = {
+      'nickname': state.nickname.text,
+      'gender': state.gender.selectedValue.name,
+      'birthday': state.birthDay.toIso8601String(),
+    };
+    await _analytics.logEvent(
+      eventName: AnalyticsEvent.pressedRegistration,
+      parameters: defaultParams,
+    );
     state = state.onSubmit();
     // バリデーションエラーにかかっている場合はリクエストを送らない
     if (!state.nickname.isValid) {
+      unawaited(
+        _analytics.logEvent(
+          eventName: AnalyticsEvent.registrationFailed,
+          parameters: {
+            ...defaultParams,
+            'nicknameValidationError': state.nickname.displayError,
+          },
+        ),
+      );
       return;
     }
 
@@ -93,12 +116,28 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
         break;
       case RegistrationResultStatus.alreadyExistSameNicknameUser:
         state = state.copyWith(
-          nickname:
-              state.nickname.addExternalError('既に使われているため別のニックネームにしてください'),
+          nickname: state.nickname.addExternalError('既に使われているため別のニックネームにしてください'),
+        );
+        unawaited(
+          _analytics.logEvent(
+            eventName: AnalyticsEvent.registrationFailed,
+            parameters: {
+              ...defaultParams,
+              'status': result.status.name,
+            },
+          ),
         );
         break;
       case RegistrationResultStatus.fail:
-        // TODO(s14t284): Handle this case.
+        unawaited(
+          _analytics.logEvent(
+            eventName: AnalyticsEvent.registrationFailed,
+            parameters: {
+              ...defaultParams,
+              'status': result.status.name,
+            },
+          ),
+        );
         break;
     }
   }
