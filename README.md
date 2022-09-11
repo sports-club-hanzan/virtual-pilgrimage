@@ -1,16 +1,13 @@
 # virtual_pilgrimage
+[![codecov](https://codecov.io/gh/s14t284/virtual-pilgrimage/branch/main/graph/badge.svg?token=9ZNLJWR9D9)](https://codecov.io/gh/s14t284/virtual-pilgrimage)
 
-A new Flutter project.
+仮想的に四国八十八ヶ所お遍路を体験することができる歩数系アプリ
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+[環境構築](https://frost-cairnsmore-bf3.notion.site/96eb3929bdac4510a68d2647f67762e7) を参照
 
-A few resources to get you started if this is your first Flutter project:
+## References
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- [Architecture](https://github.com/s14t284/virtual-pilgrimage/wiki/Architecture)
+- [Text Policy](https://github.com/s14t284/virtual-pilgrimage/wiki/Test-Policy)
