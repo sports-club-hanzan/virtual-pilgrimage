@@ -32,7 +32,8 @@ class HomePageBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userState = _ref.watch(userStateProvider);
-    late GoogleMapController _mapController;
+    // ignore: unused_local_variable
+    late GoogleMapController mapController;
     const initialCameraPosition = CameraPosition(
       target: LatLng(34.1597388, 134.4675072),
       zoom: 10,
@@ -109,7 +110,7 @@ class HomePageBody extends StatelessWidget {
                 initialCameraPosition: initialCameraPosition,
                 markers: markers,
                 onMapCreated: (GoogleMapController controller) {
-                  _mapController = controller;
+                  mapController = controller;
                 },
               ),
             ),
