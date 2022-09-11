@@ -12,4 +12,16 @@ class RegistrationResult {
 
   final RegistrationResultStatus status;
   final Exception? error;
+
+  @override
+  bool operator ==(Object other) {
+    return other is RegistrationResult && other.status == status && other.error == error;
+  }
+
+  @override
+  int get hashCode => status.hashCode + error.hashCode;
+
+  @override
+  String toString() =>
+    'RegistrationResult(status: ${status.name} error: $error)';
 }
