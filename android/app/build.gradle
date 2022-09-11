@@ -28,7 +28,6 @@ apply plugin: 'com.google.firebase.crashlytics'
 // END: FlutterFire Configuration
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
-apply plugin: 'kotlin-android-extensions'
 
 // flavor による参照先の変更
 def dartEnvironmentVariables = [:];
