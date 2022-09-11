@@ -25,15 +25,15 @@ void main() {
 
   group('signIn', () {
     group('正常系', () {
-      test('サインインできる', () async {
-        // given
+      setUp(() {
         when(
           mockFirebaseAuth.signInWithEmailAndPassword(
             email: email,
             password: password,
           ),
         ).thenAnswer((_) => Future.value(mockUserCredential));
-
+      });
+      test('サインインできる', () async {
         // when
         final actual = await target.signIn(email: email, password: password);
 
@@ -51,14 +51,6 @@ void main() {
 
     group('異常系', () {
       test('email が null', () async {
-        // given
-        when(
-          mockFirebaseAuth.signInWithEmailAndPassword(
-            email: email,
-            password: password,
-          ),
-        ).thenAnswer((_) => Future.value(mockUserCredential));
-
         // when
         expect(
           () => target.signIn(password: password),

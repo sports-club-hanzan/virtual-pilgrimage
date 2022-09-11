@@ -61,17 +61,18 @@ void main() {
   });
 
   group('signInWithGoogle', () {
+    setUp(() {
+      when(mockUser.uid).thenReturn(userId);
+      when(mockUser.email).thenReturn('test@example.com');
+      when(mockUser.displayName).thenReturn('dummyName');
+      when(mockUser.photoURL).thenReturn('http://example.com');
+      when(mockUserCredential.user).thenReturn(mockUser);
+      when(mockGoogleAuthRepository.signIn()).thenAnswer((_) => Future.value(mockUserCredential));
+      defaultMockSignInWithCredentialUser(mockUserRepository, mockFirebaseCrashlytics, userId);
+    });
     group('正常系', () {
       test('ユーザが既に存在し、サインインできる', () async {
         // given
-        defaultMockSignInWithGoogle(
-          mockGoogleAuthRepository,
-          mockUserRepository,
-          mockFirebaseCrashlytics,
-          userId,
-          mockUserCredential,
-          mockUser,
-        );
         final expected = defaultUser(id: userId);
 
         // when
@@ -87,14 +88,6 @@ void main() {
 
       test('ユーザが存在しないため、作成してサインインできる', () async {
         // given
-        defaultMockSignInWithGoogle(
-          mockGoogleAuthRepository,
-          mockUserRepository,
-          mockFirebaseCrashlytics,
-          userId,
-          mockUserCredential,
-          mockUser,
-        );
         when(mockUserRepository.get(userId)).thenAnswer((_) => Future.value(null));
 
         final expected = defaultUser(id: userId).copyWith(
@@ -118,14 +111,6 @@ void main() {
     group('異常系', () {
       test('Credential が空', () async {
         // given
-        defaultMockSignInWithGoogle(
-          mockGoogleAuthRepository,
-          mockUserRepository,
-          mockFirebaseCrashlytics,
-          userId,
-          mockUserCredential,
-          mockUser,
-        );
         when(mockGoogleAuthRepository.signIn()).thenAnswer((_) => Future.value(null));
 
         // when, then
@@ -139,14 +124,6 @@ void main() {
 
       test('ユーザ情報取得時に例外', () async {
         // given
-        defaultMockSignInWithGoogle(
-          mockGoogleAuthRepository,
-          mockUserRepository,
-          mockFirebaseCrashlytics,
-          userId,
-          mockUserCredential,
-          mockUser,
-        );
         when(mockUserRepository.get(userId)).thenThrow(const DatabaseException(message: 'dummy'));
 
         // when, then
@@ -161,14 +138,6 @@ void main() {
 
       test('ユーザ情報更新時に例外', () async {
         // given
-        defaultMockSignInWithGoogle(
-          mockGoogleAuthRepository,
-          mockUserRepository,
-          mockFirebaseCrashlytics,
-          userId,
-          mockUserCredential,
-          mockUser,
-        );
         when(mockUserRepository.get(userId)).thenAnswer((_) => Future.value(null));
 
         when(mockUserRepository.update(any)).thenThrow(
@@ -190,14 +159,6 @@ void main() {
 
       test('ユーザ情報更新時に未知の例外', () async {
         // given
-        defaultMockSignInWithGoogle(
-          mockGoogleAuthRepository,
-          mockUserRepository,
-          mockFirebaseCrashlytics,
-          userId,
-          mockUserCredential,
-          mockUser,
-        );
         when(mockUserRepository.get(userId)).thenAnswer((_) => Future.value(null));
 
         /// 条件網羅のため、DatabaseException ではなく、Exception にしている
@@ -304,23 +265,6 @@ void defaultMockSignInWithCredentialUser(
   when(mockFirebaseCrashlytics.recordError(any, any, reason: 'Exception'))
       .thenAnswer((_) => Future.value());
   when(mockFirebaseCrashlytics.setUserIdentifier(any)).thenAnswer((_) => Future.value());
-}
-
-void defaultMockSignInWithGoogle(
-  MockGoogleAuthRepository mockGoogleAuthRepository,
-  MockUserRepository mockUserRepository,
-  MockFirebaseCrashlytics mockFirebaseCrashlytics,
-  String userId,
-  MockUserCredential mockUserCredential,
-  MockUser mockUser,
-) {
-  when(mockUser.uid).thenReturn(userId);
-  when(mockUser.email).thenReturn('test@example.com');
-  when(mockUser.displayName).thenReturn('dummyName');
-  when(mockUser.photoURL).thenReturn('http://example.com');
-  when(mockUserCredential.user).thenReturn(mockUser);
-  when(mockGoogleAuthRepository.signIn()).thenAnswer((_) => Future.value(mockUserCredential));
-  defaultMockSignInWithCredentialUser(mockUserRepository, mockFirebaseCrashlytics, userId);
 }
 
 void defaultMockSignInWithEmailAndPassword(
