@@ -3,13 +3,14 @@ import 'package:virtualpilgrimage/domain/user/registration/registration_result.d
 import 'package:virtualpilgrimage/domain/user/registration/user_registration_interactor.dart';
 import 'package:virtualpilgrimage/domain/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
+import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/logger.dart';
 
 final userRegistrationUsecaseProvider = Provider.autoDispose(
   (ref) => UserRegistrationInteractor(
     ref.read(userRepositoryProvider),
     ref.read(loggerProvider),
-    ref.read(crashlyticsProvider),
+    ref.read(firebaseCrashlyticsProvider),
   ),
 );
 

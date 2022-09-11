@@ -5,18 +5,18 @@ import 'package:virtualpilgrimage/infrastructure/auth/email_and_password_auth_re
 import 'package:virtualpilgrimage/infrastructure/auth/google_auth_repository.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_auth_provider.dart';
 
-final _googleSignInProvider = Provider(
+final googleSignInProvider = Provider(
   (_) => GoogleSignIn(),
 );
 
-final emailAndPasswordAuthRepositoryProvider = Provider(
+final emailAndPasswordAuthRepositoryProvider = Provider<AuthRepository>(
   (ref) => EmailAndPasswordAuthRepository(ref.watch(firebaseAuthProvider)),
 );
 
-final googleAuthRepositoryProvider = Provider(
+final googleAuthRepositoryProvider = Provider<AuthRepository>(
   (ref) => GoogleAuthRepository(
     ref.watch(firebaseAuthProvider),
-    ref.read(_googleSignInProvider),
+    ref.read(googleSignInProvider),
   ),
 );
 

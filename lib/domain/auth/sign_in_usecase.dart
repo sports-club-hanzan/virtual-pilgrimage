@@ -4,7 +4,9 @@ import 'package:virtualpilgrimage/domain/auth/sign_in_interactor.dart';
 import 'package:virtualpilgrimage/domain/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_auth_provider.dart';
+import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/logger.dart';
+
 
 final signInUsecaseProvider = Provider.autoDispose<SignInUsecase>(
   (ref) => SignInInteractor(
@@ -12,7 +14,7 @@ final signInUsecaseProvider = Provider.autoDispose<SignInUsecase>(
     ref.watch(googleAuthRepositoryProvider),
     ref.watch(userRepositoryProvider),
     ref.watch(loggerProvider),
-    ref.watch(crashlyticsProvider),
+    ref.watch(firebaseCrashlyticsProvider),
     ref.watch(firebaseAuthProvider),
   ),
 );
