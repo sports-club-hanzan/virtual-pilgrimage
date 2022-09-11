@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/router.dart';
@@ -31,11 +32,24 @@ class HomePageBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userState = _ref.watch(userStateProvider);
+    late GoogleMapController _mapController;
+    const initialCameraPosition = CameraPosition(
+      target: LatLng(34.1597388, 134.4675072),
+      zoom: 10,
+    );
+    final markers = {
+      const Marker(
+        markerId: MarkerId('霊峰寺'),
+        position: LatLng(34.1597388, 134.4675072),
+        infoWindow: InfoWindow(title: '霊峰寺', snippet: '1箇所目'),
+      )
+    };
 
     return ColoredBox(
       color: Theme.of(context).backgroundColor,
       child: SafeArea(
-        child: Column(
+        // TODO(s14t284): お試しで Google Map を表示しているだけであるため、必要に応じて修正する
+        child: ListView(
           children: [
             const Text(
               'ホームページ',
@@ -82,7 +96,23 @@ class HomePageBody extends StatelessWidget {
                 _ref.read(routerProvider).go(RouterPath.signIn);
               },
               child: const Text('サインイン画面に戻る'),
-            )
+            ),
+            const Padding(
+              padding: EdgeInsetsDirectional.all(16),
+            ),
+            SizedBox(
+              height: 350,
+              child: GoogleMap(
+                myLocationEnabled: true,
+                myLocationButtonEnabled: false,
+                mapType: MapType.normal,
+                initialCameraPosition: initialCameraPosition,
+                markers: markers,
+                onMapCreated: (GoogleMapController controller) {
+                  _mapController = controller;
+                },
+              ),
+            ),
           ],
         ),
       ),
