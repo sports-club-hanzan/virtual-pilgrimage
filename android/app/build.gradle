@@ -28,6 +28,7 @@ apply plugin: 'com.google.firebase.crashlytics'
 // END: FlutterFire Configuration
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+apply plugin: 'kotlin-android-extensions'
 
 // flavor による参照先の変更
 def dartEnvironmentVariables = [:];
@@ -73,8 +74,9 @@ android {
 
     defaultConfig {
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
-        // https://firebase.google.com/docs/android/setup?hl=ja#register-app
-        minSdkVersion 19
+        // ref. https://firebase.google.com/docs/android/setup?hl=ja#register-app => minSdkVersion: 19
+        // ref. https://pub.dev/packages/google_maps_flutter => minSdkVersion: 20
+        minSdkVersion 20
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -86,6 +88,11 @@ android {
             (dartEnvironmentVariables.FLAVOR == 'prod' ? '' : ".${dartEnvironmentVariables.FLAVOR}")
         // firebase関連のライブラリを使うことによる64k問題の回避のための設定
         multiDexEnabled true
+
+        manifestPlaceholders += [
+                // Google Map API の鍵情報を読み込むための設定
+                GOOGLE_MAP_API_KEY: dartEnvironmentVariables.ANDROID_GOOGLE_MAP_API_KEY,
+        ]
     }
 
     buildTypes {
