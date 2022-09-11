@@ -1,7 +1,9 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
+import 'package:virtualpilgrimage/infrastructure/firebase/firebase_analytics_provider.dart';
 import 'package:virtualpilgrimage/ui/pages/home/home_page.dart';
 import 'package:virtualpilgrimage/ui/pages/registration/registration_page.dart';
 import 'package:virtualpilgrimage/ui/pages/sign_in/sign_in_page.dart';
@@ -15,6 +17,10 @@ extension RouterPath on String {
 // ref. https://zenn.dev/mkikuchi/articles/cc87c84e1404c4
 final Provider<GoRouter> routerProvider = Provider<GoRouter>(
   (ref) => GoRouter(
+    observers: [
+      // Firebase Analytics に view の遷移を伝える
+      FirebaseAnalyticsObserver(analytics: ref.read(firebaseAnalyticsProvider)),
+    ],
     routes: <GoRoute>[
       // ルート
       GoRoute(
