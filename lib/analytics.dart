@@ -33,7 +33,7 @@ class Analytics {
       return Future.value();
     }
 
-    return _analytics.logEvent(name: 'name', parameters: parameters);
+    return _analytics.logEvent(name: eventName, parameters: parameters);
   }
 
   Future<void> setCurrentScreen({required String screenName}) async {
