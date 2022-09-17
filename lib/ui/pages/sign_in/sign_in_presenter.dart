@@ -47,7 +47,7 @@ class SignInPresenter extends StateNotifier<SignInState> {
         email: state.email,
         password: state.password,
       );
-      unawaited(_analytics.setUserProperties(name: user.email, value: user.toString()));
+      unawaited(_analytics.setUserProperties(name: user.nickname, value: user.toString()));
       // userState を変更するとページが遷移するので最後に更新を実行
       _userState.state = user;
     } on Exception catch (e) {
