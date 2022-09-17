@@ -75,7 +75,8 @@ android {
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
         // ref. https://firebase.google.com/docs/android/setup?hl=ja#register-app => minSdkVersion: 19
         // ref. https://pub.dev/packages/google_maps_flutter => minSdkVersion: 20
-        minSdkVersion 20
+        // ref. https://twitter.com/_mono/status/1509452309398695936
+        minSdkVersion 21
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

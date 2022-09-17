@@ -72,8 +72,7 @@ dev_dependencies:
   freezed: ^2.1.0+1
   mockito: ^5.3.0
 
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
+  flutter_launcher_icons: ^0.10.0
 
 # The following section is specific to Flutter packages.
 flutter:
@@ -113,3 +112,10 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+flutter_icons:
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  image_path: 'assets/images/icon512.png'
+#  adaptive_icon_background: '#ffffff'
+  adaptive_icon_foreground: 'assets/images/icon256_adaptive.png'
