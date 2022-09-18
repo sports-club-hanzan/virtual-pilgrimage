@@ -1,6 +1,8 @@
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 part 'virtual_pilgrimage_user.codegen.freezed.dart';
 part 'virtual_pilgrimage_user.codegen.g.dart';
@@ -58,6 +60,11 @@ class _FirestoreTimestampConverter {
       timestamp.toDate();
 }
 
+class _BitmapConverter {
+  static BitmapDescriptor stringToBitmap(String string) =>
+      BitmapDescriptor.fromBytes(Uint8List.fromList(string.codeUnits));
+}
+
 @freezed
 class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
 
@@ -83,8 +90,15 @@ class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
         required DateTime birthDay,
     @Default('')
         String email,
-    @Default('')
+    @Default('https://maps.google.com/mapfiles/kml/shapes/info-i_maps.png')
         String userIconUrl,
+    @JsonKey(
+      defaultValue: null,
+      nullable: true,
+      fromJson: _BitmapConverter.stringToBitmap,
+    )
+    @Default(BitmapDescriptor.defaultMarker)
+        BitmapDescriptor userIcon,
     @Default(UserStatus.temporary)
     // ignore: invalid_annotation_target
     @JsonKey(
@@ -95,6 +109,8 @@ class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
     // TODO(s14t284): 以下の情報を含める
     // ヘルスケアから得られる歩数などの情報
     // 現在地のお遍路で巡っているお寺の情報
+    @Default('0')
+        String walkCount,
   }) = _VirtualPilgrimageUser;
   const VirtualPilgrimageUser._();
 

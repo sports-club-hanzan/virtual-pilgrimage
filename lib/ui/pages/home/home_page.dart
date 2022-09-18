@@ -43,6 +43,17 @@ class HomePageBody extends StatelessWidget {
         markerId: MarkerId('霊峰寺'),
         position: LatLng(34.1597388, 134.4675072),
         infoWindow: InfoWindow(title: '霊峰寺', snippet: '1箇所目'),
+      ),
+      const Marker(
+        markerId: MarkerId('極楽寺'),
+        position: LatLng(34.15565, 134.490347),
+        infoWindow: InfoWindow(title: '極楽寺', snippet: '2箇所目'),
+      ),
+      Marker(
+        markerId: const MarkerId('ユーザ'),
+        position: const LatLng(34.10, 134.467),
+        icon: userState!.userIcon,
+        infoWindow: InfoWindow(title: '現在: ${userState.walkCount}歩'),
       )
     };
 
@@ -62,7 +73,7 @@ class HomePageBody extends StatelessWidget {
             Column(
               children: [
                 Text(
-                  'nickname: ${userState!.nickname}',
+                  'nickname: ${userState.nickname}',
                   style: const TextStyle(
                     fontSize: 24,
                     color: ColorStyle.grey,

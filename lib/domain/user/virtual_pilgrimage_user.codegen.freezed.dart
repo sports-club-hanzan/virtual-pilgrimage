@@ -36,9 +36,18 @@ mixin _$VirtualPilgrimageUser {
   String get email => throw _privateConstructorUsedError;
   String get userIconUrl => throw _privateConstructorUsedError;
   @JsonKey(
+      defaultValue: null,
+      nullable: true,
+      fromJson: _BitmapConverter.stringToBitmap)
+  BitmapDescriptor get userIcon => throw _privateConstructorUsedError;
+  @JsonKey(
       fromJson: _UserStatusConverter.intToUserStatus,
       toJson: _UserStatusConverter.userStatusToInt)
-  UserStatus get userStatus => throw _privateConstructorUsedError;
+  UserStatus get userStatus =>
+      throw _privateConstructorUsedError; // TODO(s14t284): 以下の情報を含める
+// ヘルスケアから得られる歩数などの情報
+// 現在地のお遍路で巡っているお寺の情報
+  String get walkCount => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -60,8 +69,11 @@ abstract class $VirtualPilgrimageUserCopyWith<$Res> {
           DateTime birthDay,
       String email,
       String userIconUrl,
+      @JsonKey(defaultValue: null, nullable: true, fromJson: _BitmapConverter.stringToBitmap)
+          BitmapDescriptor userIcon,
       @JsonKey(fromJson: _UserStatusConverter.intToUserStatus, toJson: _UserStatusConverter.userStatusToInt)
-          UserStatus userStatus});
+          UserStatus userStatus,
+      String walkCount});
 }
 
 /// @nodoc
@@ -81,7 +93,9 @@ class _$VirtualPilgrimageUserCopyWithImpl<$Res>
     Object? birthDay = freezed,
     Object? email = freezed,
     Object? userIconUrl = freezed,
+    Object? userIcon = freezed,
     Object? userStatus = freezed,
+    Object? walkCount = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed
@@ -108,10 +122,18 @@ class _$VirtualPilgrimageUserCopyWithImpl<$Res>
           ? _value.userIconUrl
           : userIconUrl // ignore: cast_nullable_to_non_nullable
               as String,
+      userIcon: userIcon == freezed
+          ? _value.userIcon
+          : userIcon // ignore: cast_nullable_to_non_nullable
+              as BitmapDescriptor,
       userStatus: userStatus == freezed
           ? _value.userStatus
           : userStatus // ignore: cast_nullable_to_non_nullable
               as UserStatus,
+      walkCount: walkCount == freezed
+          ? _value.walkCount
+          : walkCount // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -132,8 +154,11 @@ abstract class _$$_VirtualPilgrimageUserCopyWith<$Res>
           DateTime birthDay,
       String email,
       String userIconUrl,
+      @JsonKey(defaultValue: null, nullable: true, fromJson: _BitmapConverter.stringToBitmap)
+          BitmapDescriptor userIcon,
       @JsonKey(fromJson: _UserStatusConverter.intToUserStatus, toJson: _UserStatusConverter.userStatusToInt)
-          UserStatus userStatus});
+          UserStatus userStatus,
+      String walkCount});
 }
 
 /// @nodoc
@@ -156,7 +181,9 @@ class __$$_VirtualPilgrimageUserCopyWithImpl<$Res>
     Object? birthDay = freezed,
     Object? email = freezed,
     Object? userIconUrl = freezed,
+    Object? userIcon = freezed,
     Object? userStatus = freezed,
+    Object? walkCount = freezed,
   }) {
     return _then(_$_VirtualPilgrimageUser(
       id: id == freezed
@@ -183,10 +210,18 @@ class __$$_VirtualPilgrimageUserCopyWithImpl<$Res>
           ? _value.userIconUrl
           : userIconUrl // ignore: cast_nullable_to_non_nullable
               as String,
+      userIcon: userIcon == freezed
+          ? _value.userIcon
+          : userIcon // ignore: cast_nullable_to_non_nullable
+              as BitmapDescriptor,
       userStatus: userStatus == freezed
           ? _value.userStatus
           : userStatus // ignore: cast_nullable_to_non_nullable
               as UserStatus,
+      walkCount: walkCount == freezed
+          ? _value.walkCount
+          : walkCount // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -203,9 +238,12 @@ class _$_VirtualPilgrimageUser extends _VirtualPilgrimageUser {
       @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
           required this.birthDay,
       this.email = '',
-      this.userIconUrl = '',
+      this.userIconUrl = 'https://maps.google.com/mapfiles/kml/shapes/info-i_maps.png',
+      @JsonKey(defaultValue: null, nullable: true, fromJson: _BitmapConverter.stringToBitmap)
+          this.userIcon = BitmapDescriptor.defaultMarker,
       @JsonKey(fromJson: _UserStatusConverter.intToUserStatus, toJson: _UserStatusConverter.userStatusToInt)
-          this.userStatus = UserStatus.temporary})
+          this.userStatus = UserStatus.temporary,
+      this.walkCount = '0'})
       : super._();
 
   factory _$_VirtualPilgrimageUser.fromJson(Map<String, dynamic> json) =>
@@ -237,13 +275,25 @@ class _$_VirtualPilgrimageUser extends _VirtualPilgrimageUser {
   final String userIconUrl;
   @override
   @JsonKey(
+      defaultValue: null,
+      nullable: true,
+      fromJson: _BitmapConverter.stringToBitmap)
+  final BitmapDescriptor userIcon;
+  @override
+  @JsonKey(
       fromJson: _UserStatusConverter.intToUserStatus,
       toJson: _UserStatusConverter.userStatusToInt)
   final UserStatus userStatus;
+// TODO(s14t284): 以下の情報を含める
+// ヘルスケアから得られる歩数などの情報
+// 現在地のお遍路で巡っているお寺の情報
+  @override
+  @JsonKey()
+  final String walkCount;
 
   @override
   String toString() {
-    return 'VirtualPilgrimageUser(id: $id, nickname: $nickname, gender: $gender, birthDay: $birthDay, email: $email, userIconUrl: $userIconUrl, userStatus: $userStatus)';
+    return 'VirtualPilgrimageUser(id: $id, nickname: $nickname, gender: $gender, birthDay: $birthDay, email: $email, userIconUrl: $userIconUrl, userIcon: $userIcon, userStatus: $userStatus, walkCount: $walkCount)';
   }
 
   @override
@@ -258,8 +308,10 @@ class _$_VirtualPilgrimageUser extends _VirtualPilgrimageUser {
             const DeepCollectionEquality().equals(other.email, email) &&
             const DeepCollectionEquality()
                 .equals(other.userIconUrl, userIconUrl) &&
+            const DeepCollectionEquality().equals(other.userIcon, userIcon) &&
             const DeepCollectionEquality()
-                .equals(other.userStatus, userStatus));
+                .equals(other.userStatus, userStatus) &&
+            const DeepCollectionEquality().equals(other.walkCount, walkCount));
   }
 
   @JsonKey(ignore: true)
@@ -272,7 +324,9 @@ class _$_VirtualPilgrimageUser extends _VirtualPilgrimageUser {
       const DeepCollectionEquality().hash(birthDay),
       const DeepCollectionEquality().hash(email),
       const DeepCollectionEquality().hash(userIconUrl),
-      const DeepCollectionEquality().hash(userStatus));
+      const DeepCollectionEquality().hash(userIcon),
+      const DeepCollectionEquality().hash(userStatus),
+      const DeepCollectionEquality().hash(walkCount));
 
   @JsonKey(ignore: true)
   @override
@@ -298,8 +352,11 @@ abstract class _VirtualPilgrimageUser extends VirtualPilgrimageUser {
           required final DateTime birthDay,
       final String email,
       final String userIconUrl,
+      @JsonKey(defaultValue: null, nullable: true, fromJson: _BitmapConverter.stringToBitmap)
+          final BitmapDescriptor userIcon,
       @JsonKey(fromJson: _UserStatusConverter.intToUserStatus, toJson: _UserStatusConverter.userStatusToInt)
-          final UserStatus userStatus}) = _$_VirtualPilgrimageUser;
+          final UserStatus userStatus,
+      final String walkCount}) = _$_VirtualPilgrimageUser;
   const _VirtualPilgrimageUser._() : super._();
 
   factory _VirtualPilgrimageUser.fromJson(Map<String, dynamic> json) =
@@ -325,9 +382,19 @@ abstract class _VirtualPilgrimageUser extends VirtualPilgrimageUser {
   String get userIconUrl;
   @override
   @JsonKey(
+      defaultValue: null,
+      nullable: true,
+      fromJson: _BitmapConverter.stringToBitmap)
+  BitmapDescriptor get userIcon;
+  @override
+  @JsonKey(
       fromJson: _UserStatusConverter.intToUserStatus,
       toJson: _UserStatusConverter.userStatusToInt)
   UserStatus get userStatus;
+  @override // TODO(s14t284): 以下の情報を含める
+// ヘルスケアから得られる歩数などの情報
+// 現在地のお遍路で巡っているお寺の情報
+  String get walkCount;
   @override
   @JsonKey(ignore: true)
   _$$_VirtualPilgrimageUserCopyWith<_$_VirtualPilgrimageUser> get copyWith =>
