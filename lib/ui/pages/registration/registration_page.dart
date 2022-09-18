@@ -15,8 +15,7 @@ class RegistrationPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        // TODO(s14t284): タイトルは変更
-        title: const Text('virtual pilgrimage'),
+        title: const Text('巡礼ウォーク'),
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
       ),
       body: RegistrationPageBody(ref),
