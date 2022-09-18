@@ -1,0 +1,41 @@
+# firestore のスキーマ構造
+## ユーザ情報
+users:
+  documentId: string # Firebase Authentication によって得られるuid
+  nickname: string # default値：google アカウントの名前
+  email: string # emailアドレス(認証に利用 or google アカウントのメールアドレス)
+  gender: int # 性別
+  birthDay: timestamp # 誕生日
+  userIconUrl: string # ユーザのアイコン画像 default値：google アカウントの ID
+  userStatus: int # ユーザの状態 0：仮登録、1：登録完了、2：削除済み
+  # 以下は iOS, Android の Health 情報から取得する歩数情報
+  stepsOfYesterday: int # 昨日の歩数。ランキングで利用
+  distanceOfYesterday: int # 昨日の歩行距離
+  stepsPerWeek: int # 昨日までの1週間の歩数。ランキングで利用
+  distancePerWeek: int # 昨日までの1週間の歩行距離
+  stepsPerMonth: int # 昨日までの1ヶ月の歩数。ランキングで利用
+  distancePerMonth: int # 昨日までの1ヶ月の歩行距離
+  burnedCuloriesOfYesterday: int # 昨日消費したカロリー
+  # 以下はお遍路に関する情報
+  temple: ref<temples> # temples/:id
+  lap: int # 何周目か
+
+## お遍路の情報
+temples:
+  documentId: int # お寺のID。お遍路の順路の番号を振る
+  templeName: string（お寺の名前）
+  prefecture: string # お寺の所在地の県
+  address: string # 住所
+  images: [string] # お寺の画像のURl一覧
+  geoPoint:  # お寺の緯度・経度
+    geohash: string
+    geopoint: [double]
+  # そのほかお寺に必要な情報（TODO）
+
+## ランキング情報
+rankings:
+  documentId: string # daily, weekly, monthly のいずれか
+  rank: int # 順位
+  userId: string # uidで表現されたユーザID
+  nickname: string # ニックネーム
+  userIconUrl: string

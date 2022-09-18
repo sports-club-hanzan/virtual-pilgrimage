@@ -1,0 +1,40 @@
+rules_version = '2';
+service cloud.firestore {
+    match /databases/{database}/documents {
+
+        // 認証しているか
+        function isAnyAuthenticated() {
+            return request.auth != null;
+        }
+
+        // 認証しているIDとユーザのuidが等しいか
+        function isUserAuthenticated(userId) {
+            return isAnyAuthenticated() && userId == request.auth.uid;
+        }
+
+        // あるキーが含まれているか
+        function isContainKeyInResourceData(key) {
+            return key in request.resource.data;
+        }
+
+        // メールアドレスのバリデーション
+        // ref. https://firebase.google.com/docs/reference/security/database/regex
+        function isEmail(email) {
+            return email.matches('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.([a-zA-Z0-9.-]+\\.)*[a-zA-Z]{2,4}$')
+        }
+
+        match /users/{userId} {
+            allow create: if isUserAuthenticated(userId)
+                && (!isContainKeyInResourceData('nickname') || (request.resource.data.nickname is string && 6 <= request.resource.data.nickname.size() && request.resource.data.nickname.size() <= 16))
+                && (isContainKeyInResourceData('email') && request.resource.data.email is string && isEmail(request.resource.data.email))
+                && (isContainKeyInResourceData('gender') && request.resource.data.gender is int && 0 <= request.resource.data.gender && request.resource.data.gender <= 3)
+                ;
+            allow update: if isUserAuthenticated(userId);
+            allow get: if true;
+        }
+
+        match /users/{document=**} {
+            allow list: if true;
+        }
+    }
+}
