@@ -1,4 +1,6 @@
 # firestore のスキーマ構造
+## このyamlは利用されていないが、firestore 内のテーブル構造を把握するためにこのファイルに現行の設計を記述している
+
 ## ユーザ情報
 users:
   documentId: string # Firebase Authentication によって得られるuid

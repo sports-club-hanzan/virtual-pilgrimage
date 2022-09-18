@@ -35,8 +35,10 @@ $ npm install
 
 ### 機能追加をしたい場合
 
+- 必要に応じて `schema.yaml` に追加を想定しているデータ構造を追記する
 - `firestore.rules` または `storage.rules` にルールを記述
 - `tests/**.test.ts` にルールのテストをできるだけ網羅的に書く
+- `npm test` でテストがパスするようにする
 - PR を出す
 
 __TODO: github actions で CI/CD を構築して機能追加の Firebase の反映を自動化する__
