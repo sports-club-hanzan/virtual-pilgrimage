@@ -3,17 +3,19 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i3;
+import 'dart:async' as _i4;
 
-import 'package:firebase_auth/firebase_auth.dart' as _i4;
+import 'package:firebase_auth/firebase_auth.dart' as _i5;
+import 'package:google_maps_flutter/google_maps_flutter.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:virtualpilgrimage/domain/user/user_repository.dart' as _i6;
+import 'package:virtualpilgrimage/domain/user/user_icon_repository.dart' as _i7;
+import 'package:virtualpilgrimage/domain/user/user_repository.dart' as _i8;
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart'
-    as _i7;
+    as _i9;
 import 'package:virtualpilgrimage/infrastructure/auth/email_and_password_auth_repository.dart'
-    as _i2;
+    as _i3;
 import 'package:virtualpilgrimage/infrastructure/auth/google_auth_repository.dart'
-    as _i5;
+    as _i6;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -26,64 +28,88 @@ import 'package:virtualpilgrimage/infrastructure/auth/google_auth_repository.dar
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
+class _FakeBitmapDescriptor_0 extends _i1.SmartFake
+    implements _i2.BitmapDescriptor {
+  _FakeBitmapDescriptor_0(Object parent, Invocation parentInvocation)
+      : super(parent, parentInvocation);
+}
+
 /// A class which mocks [EmailAndPasswordAuthRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockEmailAndPasswordAuthRepository extends _i1.Mock
-    implements _i2.EmailAndPasswordAuthRepository {
+    implements _i3.EmailAndPasswordAuthRepository {
   MockEmailAndPasswordAuthRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.Future<_i4.UserCredential?> signIn({String? email, String? password}) =>
+  _i4.Future<_i5.UserCredential?> signIn({String? email, String? password}) =>
       (super.noSuchMethod(
           Invocation.method(#signIn, [], {#email: email, #password: password}),
           returnValue:
-              _i3.Future<_i4.UserCredential?>.value()) as _i3
-          .Future<_i4.UserCredential?>);
+              _i4.Future<_i5.UserCredential?>.value()) as _i4
+          .Future<_i5.UserCredential?>);
 }
 
 /// A class which mocks [GoogleAuthRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockGoogleAuthRepository extends _i1.Mock
-    implements _i5.GoogleAuthRepository {
+    implements _i6.GoogleAuthRepository {
   MockGoogleAuthRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.Future<_i4.UserCredential?> signIn({String? email, String? password}) =>
+  _i4.Future<_i5.UserCredential?> signIn({String? email, String? password}) =>
       (super.noSuchMethod(
           Invocation.method(#signIn, [], {#email: email, #password: password}),
           returnValue:
-              _i3.Future<_i4.UserCredential?>.value()) as _i3
-          .Future<_i4.UserCredential?>);
+              _i4.Future<_i5.UserCredential?>.value()) as _i4
+          .Future<_i5.UserCredential?>);
+}
+
+/// A class which mocks [UserIconRepository].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockUserIconRepository extends _i1.Mock
+    implements _i7.UserIconRepository {
+  MockUserIconRepository() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i4.Future<_i2.BitmapDescriptor> loadIconImage(String? url) =>
+      (super.noSuchMethod(Invocation.method(#loadIconImage, [url]),
+              returnValue: _i4.Future<_i2.BitmapDescriptor>.value(
+                  _FakeBitmapDescriptor_0(
+                      this, Invocation.method(#loadIconImage, [url]))))
+          as _i4.Future<_i2.BitmapDescriptor>);
 }
 
 /// A class which mocks [UserRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockUserRepository extends _i1.Mock implements _i6.UserRepository {
+class MockUserRepository extends _i1.Mock implements _i8.UserRepository {
   MockUserRepository() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.Future<_i7.VirtualPilgrimageUser?> get(String? userId) =>
+  _i4.Future<_i9.VirtualPilgrimageUser?> get(String? userId) =>
       (super.noSuchMethod(Invocation.method(#get, [userId]),
-              returnValue: _i3.Future<_i7.VirtualPilgrimageUser?>.value())
-          as _i3.Future<_i7.VirtualPilgrimageUser?>);
+              returnValue: _i4.Future<_i9.VirtualPilgrimageUser?>.value())
+          as _i4.Future<_i9.VirtualPilgrimageUser?>);
   @override
-  _i3.Future<_i7.VirtualPilgrimageUser?> findWithNickname(String? nickname) =>
+  _i4.Future<_i9.VirtualPilgrimageUser?> findWithNickname(String? nickname) =>
       (super.noSuchMethod(Invocation.method(#findWithNickname, [nickname]),
-              returnValue: _i3.Future<_i7.VirtualPilgrimageUser?>.value())
-          as _i3.Future<_i7.VirtualPilgrimageUser?>);
+              returnValue: _i4.Future<_i9.VirtualPilgrimageUser?>.value())
+          as _i4.Future<_i9.VirtualPilgrimageUser?>);
   @override
-  _i3.Future<void> update(_i7.VirtualPilgrimageUser? user) =>
+  _i4.Future<void> update(_i9.VirtualPilgrimageUser? user) =>
       (super.noSuchMethod(Invocation.method(#update, [user]),
-              returnValue: _i3.Future<void>.value(),
-              returnValueForMissingStub: _i3.Future<void>.value())
-          as _i3.Future<void>);
+              returnValue: _i4.Future<void>.value(),
+              returnValueForMissingStub: _i4.Future<void>.value())
+          as _i4.Future<void>);
 }
