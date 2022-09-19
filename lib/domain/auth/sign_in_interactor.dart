@@ -3,6 +3,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:logger/logger.dart';
 import 'package:virtualpilgrimage/domain/auth/auth_repository.dart';
 import 'package:virtualpilgrimage/domain/auth/sign_in_usecase.dart';
+import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
 import 'package:virtualpilgrimage/domain/exception/sign_in_exception.dart';
 import 'package:virtualpilgrimage/domain/user/user_repository.dart';
@@ -106,14 +107,18 @@ class SignInInteractor extends SignInUsecase {
       final gotUser = await _userRepository.get(credentialUser.uid);
       // ユーザーがまだ作成されていない場合、デフォルト値を埋めてFirestoreに保存
       if (gotUser == null) {
+        final now = CustomizableDateTime.current;
         user = VirtualPilgrimageUser(
           id: credentialUser.uid,
-          nickname: credentialUser.displayName ?? '',
+          // nickname はユーザ登録フォームで入力するので空の値を指定
+          nickname: '',
           birthDay: DateTime.utc(1980, 1, 1),
           email: credentialUser.email!,
           // email はどのログイン方法でも必ず存在するはず
           userIconUrl: credentialUser.photoURL ?? '',
           userStatus: UserStatus.temporary,
+          createdAt: now,
+          updatedAt: now,
         );
         await _userRepository.update(user);
       } else {

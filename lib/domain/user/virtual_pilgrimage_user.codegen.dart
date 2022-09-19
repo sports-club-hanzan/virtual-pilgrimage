@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:virtualpilgrimage/domain/user/health/health_info.codegen.dart';
 
 part 'virtual_pilgrimage_user.codegen.freezed.dart';
 part 'virtual_pilgrimage_user.codegen.g.dart';
@@ -35,6 +36,7 @@ extension VirtualPilgrimageUserPrivateFirestoreFieldKeys on String {
   static const birthDay = 'birthDay';
   static const email = 'email';
   static const userIconUrl = 'userIconUrl';
+  static const userStatus = 'userStatus';
 }
 
 // Gender <-> int の相互変換用クラス
@@ -61,21 +63,18 @@ class _FirestoreTimestampConverter {
 @freezed
 class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
 
-  // ignore: invalid_annotation_target
   @JsonSerializable(explicitToJson: true)
   const factory VirtualPilgrimageUser({
     @Default('')
         String id,
     @Default('')
         String nickname,
-    // ignore: invalid_annotation_target
     @JsonKey(
       fromJson: _GenderConverter.intToGender,
       toJson: _GenderConverter.genderToInt,
     )
     @Default(Gender.unknown)
         Gender gender,
-    // ignore: invalid_annotation_target
     @JsonKey(
       fromJson: _FirestoreTimestampConverter.timestampToDateTime,
       toJson: _FirestoreTimestampConverter.dateTimeToTimestamp,
@@ -86,14 +85,23 @@ class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
     @Default('')
         String userIconUrl,
     @Default(UserStatus.temporary)
-    // ignore: invalid_annotation_target
     @JsonKey(
       fromJson: _UserStatusConverter.intToUserStatus,
       toJson: _UserStatusConverter.userStatusToInt,
     )
         UserStatus userStatus,
+    @JsonKey(
+      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
+      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp,
+    )
+      required DateTime createdAt,
+    @JsonKey(
+      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
+      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp,
+    )
+      required DateTime updatedAt,
+    HealthInfo? health,
     // TODO(s14t284): 以下の情報を含める
-    // ヘルスケアから得られる歩数などの情報
     // 現在地のお遍路で巡っているお寺の情報
   }) = _VirtualPilgrimageUser;
   const VirtualPilgrimageUser._();

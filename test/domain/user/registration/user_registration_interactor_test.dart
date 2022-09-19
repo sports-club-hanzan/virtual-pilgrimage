@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:logger/logger.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
 import 'package:virtualpilgrimage/domain/user/registration/registration_result.dart';
 import 'package:virtualpilgrimage/domain/user/registration/user_registration_interactor.dart';
@@ -40,6 +41,8 @@ void main() {
         nickname: nickname,
         birthDay: DateTime.utc(2000),
         userStatus: UserStatus.temporary,
+        createdAt: CustomizableDateTime.current,
+        updatedAt: CustomizableDateTime.current,
       );
       setUp(() {
         when(mockFirebaseCrashlytics.log(any)).thenAnswer((_) => Future.value());

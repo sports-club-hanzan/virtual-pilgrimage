@@ -5,6 +5,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:virtualpilgrimage/domain/auth/sign_in_interactor.dart';
 import 'package:virtualpilgrimage/domain/auth/sign_in_usecase.dart';
+import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
 import 'package:virtualpilgrimage/domain/exception/sign_in_exception.dart';
 import 'package:virtualpilgrimage/domain/user/user_repository.dart';
@@ -63,6 +64,8 @@ void main() {
   });
 
   group('SignInInteractor', () {
+    CustomizableDateTime.customTime = DateTime.now();
+    
     test('DI', () {
       final container = mockedProviderContainer();
       final usecase = container.read(signInUsecaseProvider);
@@ -100,6 +103,7 @@ void main() {
           when(mockUserRepository.get(userId)).thenAnswer((_) => Future.value(null));
 
           final expected = defaultUser(id: userId).copyWith(
+            nickname: '',
             birthDay: DateTime.utc(1980, 1, 1),
             userIconUrl: 'http://example.com',
             userStatus: UserStatus.temporary,
@@ -305,5 +309,7 @@ VirtualPilgrimageUser defaultUser({String id = 'dummyId'}) {
     email: 'test@example.com',
     userIconUrl: '',
     userStatus: UserStatus.created,
+    createdAt: CustomizableDateTime.current,
+    updatedAt: CustomizableDateTime.current,
   );
 }

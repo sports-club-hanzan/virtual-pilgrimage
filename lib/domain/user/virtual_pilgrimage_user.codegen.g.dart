@@ -21,6 +21,13 @@ _$_VirtualPilgrimageUser _$$_VirtualPilgrimageUserFromJson(
       userStatus: json['userStatus'] == null
           ? UserStatus.temporary
           : _UserStatusConverter.intToUserStatus(json['userStatus'] as int),
+      createdAt: _FirestoreTimestampConverter.timestampToDateTime(
+          json['createdAt'] as Timestamp),
+      updatedAt: _FirestoreTimestampConverter.timestampToDateTime(
+          json['updatedAt'] as Timestamp),
+      health: json['health'] == null
+          ? null
+          : HealthInfo.fromJson(json['health'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$_VirtualPilgrimageUserToJson(
@@ -34,4 +41,9 @@ Map<String, dynamic> _$$_VirtualPilgrimageUserToJson(
       'email': instance.email,
       'userIconUrl': instance.userIconUrl,
       'userStatus': _UserStatusConverter.userStatusToInt(instance.userStatus),
+      'createdAt':
+          _FirestoreTimestampConverter.dateTimeToTimestamp(instance.createdAt),
+      'updatedAt':
+          _FirestoreTimestampConverter.dateTimeToTimestamp(instance.updatedAt),
+      'health': instance.health?.toJson(),
     };
