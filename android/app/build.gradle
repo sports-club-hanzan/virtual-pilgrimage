@@ -55,8 +55,7 @@ tasks.whenTaskAdded { task ->
 
 android {
     // https://firebase.google.com/docs/android/setup?hl=ja#register-app => 31
-    // https://pub.dev/packages/permission_handler => 33
-    compileSdkVersion 33
+    compileSdkVersion 31
     ndkVersion flutter.ndkVersion
 
     compileOptions {

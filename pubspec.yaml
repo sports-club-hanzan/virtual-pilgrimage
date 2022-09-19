@@ -57,8 +57,9 @@ dependencies:
       url: https://github.com/Realank/flutter_datetime_picker.git
       ref: master
   google_maps_flutter: ^2.2.0
+  # health
   health: ^4.1.1
-  permission_handler: ^10.0.0
+  permission_handler: ^9.2.0 # Firebaseと同じSDKをターゲットにできるよう最新ではないバージョンを利用
 
 dev_dependencies:
   flutter_test:
