@@ -30,15 +30,19 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 // flavor による参照先の変更
-def dartEnvironmentVariables = [:];
+// gradle 単体で実行するときに落ちないよう空文字列で初期化
+def dartEnvironmentVariables = [
+        FLAVOR                    : '',
+        ANDROID_GOOGLE_MAP_API_KEY: '',
+]
 if (project.hasProperty('dart-defines')) {
     // カンマ区切りかつBase64でエンコードされている dart-defines をデコードして変数に格納します。
     dartEnvironmentVariables = dartEnvironmentVariables + project.property('dart-defines')
-        .split(',')
-        .collectEntries { entry ->
-            def pair = new String(entry.decodeBase64(), 'UTF-8').split('=')
-            [(pair.first()): pair.last()]
-        }
+            .split(',')
+            .collectEntries { entry ->
+                def pair = new String(entry.decodeBase64(), 'UTF-8').split('=')
+                [(pair.first()): pair.last()]
+            }
 }
 
 // google-services.json を選択するためのタスク
@@ -85,7 +89,7 @@ android {
             applicationIdSuffix ".${dartEnvironmentVariables.FLAVOR}"
         }
         resValue "string", "app_name", "com.virtualpilgrimage" +
-            (dartEnvironmentVariables.FLAVOR == 'prod' ? '' : ".${dartEnvironmentVariables.FLAVOR}")
+                (dartEnvironmentVariables.FLAVOR == 'prod' ? '' : ".${dartEnvironmentVariables.FLAVOR}")
         // firebase関連のライブラリを使うことによる64k問題の回避のための設定
         multiDexEnabled true
 
