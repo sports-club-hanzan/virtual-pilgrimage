@@ -23,8 +23,8 @@ users:
       distance: int # 昨日までの1週間の歩行距離
       burnedCalorie: int # 昨日までの1週間で消費したカロリー
     month: Map<string, int>
-      stepsPerMonth: int # 昨日までの1ヶ月の歩数。ランキングで利用
-      distancePerMonth: int # 昨日までの1ヶ月の歩行距離
+      steps: int # 昨日までの1ヶ月の歩数。ランキングで利用
+      distance: int # 昨日までの1ヶ月の歩行距離
       burnedCalorie: int # 昨日までの1ヶ月で消費したカロリー
     updatedAt: timestamp # 更新時刻
     totalSteps: int # アプリを利用し始めてからの合計歩数
