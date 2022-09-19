@@ -3,21 +3,21 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:mockito/annotations.dart';
-import 'package:virtualpilgrimage/domain/network/http_client_repository.dart';
+import 'package:virtualpilgrimage/domain/user/user_icon_repository.dart';
 import '../../helper/provider_container.dart';
 
 @GenerateMocks([http.Client])
 void main() {
-  late HttpClientRepository target;
+  late UserIconRepository target;
 
   setUp(() {
-    target = HttpClientRepository();
+    target = UserIconRepository();
   });
 
-  group('HttpClientRepository', () {
+  group('UserIconRepository', () {
     test('DI', () {
       final container = mockedProviderContainer();
-      final repository = container.read(httpClientRepositoryProvider);
+      final repository = container.read(userIconRepositoryProvider);
       expect(repository, isNotNull);
     });
 

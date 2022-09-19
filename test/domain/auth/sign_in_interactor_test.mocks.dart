@@ -8,8 +8,7 @@ import 'dart:async' as _i4;
 import 'package:firebase_auth/firebase_auth.dart' as _i5;
 import 'package:google_maps_flutter/google_maps_flutter.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:virtualpilgrimage/domain/network/http_client_repository.dart'
-    as _i7;
+import 'package:virtualpilgrimage/domain/user/user_icon_repository.dart' as _i7;
 import 'package:virtualpilgrimage/domain/user/user_repository.dart' as _i8;
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart'
     as _i9;
@@ -71,12 +70,12 @@ class MockGoogleAuthRepository extends _i1.Mock
           .Future<_i5.UserCredential?>);
 }
 
-/// A class which mocks [HttpClientRepository].
+/// A class which mocks [UserIconRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockHttpClientRepository extends _i1.Mock
-    implements _i7.HttpClientRepository {
-  MockHttpClientRepository() {
+class MockUserIconRepository extends _i1.Mock
+    implements _i7.UserIconRepository {
+  MockUserIconRepository() {
     _i1.throwOnMissingStub(this);
   }
 

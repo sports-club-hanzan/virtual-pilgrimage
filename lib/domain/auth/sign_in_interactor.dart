@@ -6,7 +6,7 @@ import 'package:virtualpilgrimage/domain/auth/auth_repository.dart';
 import 'package:virtualpilgrimage/domain/auth/sign_in_usecase.dart';
 import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
 import 'package:virtualpilgrimage/domain/exception/sign_in_exception.dart';
-import 'package:virtualpilgrimage/domain/network/http_client_repository.dart';
+import 'package:virtualpilgrimage/domain/user/user_icon_repository.dart';
 import 'package:virtualpilgrimage/domain/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 
@@ -20,7 +20,7 @@ class SignInInteractor extends SignInUsecase {
     this._emailAndPasswordAuthRepository,
     this._googleAuthRepository,
     this._userRepository,
-    this._httpClientRepository,
+    this._userIconRepository,
     this._logger,
     this._crashlytics,
     this._firebaseAuth,
@@ -29,7 +29,7 @@ class SignInInteractor extends SignInUsecase {
   final AuthRepository _emailAndPasswordAuthRepository;
   final AuthRepository _googleAuthRepository;
   final UserRepository _userRepository;
-  final HttpClientRepository _httpClientRepository;
+  final UserIconRepository _userIconRepository;
   final Logger _logger;
   final FirebaseCrashlytics _crashlytics;
   final FirebaseAuth _firebaseAuth;
@@ -124,7 +124,7 @@ class SignInInteractor extends SignInUsecase {
         user = gotUser;
       }
       if (user.userIconUrl.isNotEmpty) {
-        final BitmapDescriptor image = await _httpClientRepository.loadIconImage(user.userIconUrl);
+        final BitmapDescriptor image = await _userIconRepository.loadIconImage(user.userIconUrl);
         user = user.copyWith(
           userIcon: image,
         );
