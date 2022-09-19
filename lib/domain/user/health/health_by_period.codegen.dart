@@ -13,8 +13,11 @@ extension HealthByPeriodFieldKeys on String {
 class HealthByPeriod with _$HealthByPeriod {
   @JsonSerializable()
   const factory HealthByPeriod({
+    // 歩数
     required int steps,
+    // 距離[m]
     required int distance,
+    // 消費カロリー[kcal]
     required int burnedCalorie,
   }) = _HealthByPeriod;
 

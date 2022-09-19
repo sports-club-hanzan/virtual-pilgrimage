@@ -28,15 +28,20 @@ class _FirestoreTimestampConverter {
 class HealthInfo with _$HealthInfo {
   @JsonSerializable(explicitToJson: true)
   const factory HealthInfo({
+    // 昨日のヘルスケア情報
     required HealthByPeriod yesterday,
+    // 昨日から一週間前までのヘルスケア情報
     required HealthByPeriod week,
+    // 昨日から一ヶ月前までのヘルスケア情報
     required HealthByPeriod month,
     @JsonKey(
       fromJson: _FirestoreTimestampConverter.timestampToDateTime,
       toJson: _FirestoreTimestampConverter.dateTimeToTimestamp,
     )
         required DateTime updatedAt,
+    // 総歩数
     required int totalSteps,
+    // 総歩行距離[m]
     required int totalDistance,
   }) = _HealthInfo;
 
