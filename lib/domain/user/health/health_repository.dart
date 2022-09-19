@@ -15,5 +15,9 @@ final healthRepositoryProvider = Provider<HealthRepository>(
 );
 
 abstract class HealthRepository {
-  Future<void> getHealthInfo(DateTime now);
+  /// 歩数、歩行距離といったヘルスケア情報を各OSの仕組みから取得
+  ///
+  /// [targetDateTime] ヘルスケア情報を取得する起点となる時間
+  /// [createdAt] ユーザの作成時刻。アプリケーションに登録されてからの情報を取得するために利用
+  Future<void> getHealthInfo({required DateTime targetDateTime, required DateTime createdAt});
 }

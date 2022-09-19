@@ -21,6 +21,7 @@ import 'package:flutter/foundation.dart' as _i14;
 import 'package:google_sign_in/google_sign_in.dart' as _i5;
 import 'package:google_sign_in_platform_interface/google_sign_in_platform_interface.dart'
     as _i9;
+import 'package:health/health.dart' as _i15;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -2110,4 +2111,92 @@ class MockFirebaseCrashlytics extends _i1.Mock
               returnValue: _i8.Future<void>.value(),
               returnValueForMissingStub: _i8.Future<void>.value())
           as _i8.Future<void>);
+}
+
+/// A class which mocks [HealthFactory].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockHealthFactory extends _i1.Mock implements _i15.HealthFactory {
+  MockHealthFactory() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  bool isDataTypeAvailable(_i15.HealthDataType? dataType) =>
+      (super.noSuchMethod(Invocation.method(#isDataTypeAvailable, [dataType]),
+          returnValue: false) as bool);
+  @override
+  _i8.Future<bool> requestAuthorization(List<_i15.HealthDataType>? types,
+          {List<_i15.HealthDataAccess>? permissions}) =>
+      (super.noSuchMethod(
+          Invocation.method(
+              #requestAuthorization, [types], {#permissions: permissions}),
+          returnValue: _i8.Future<bool>.value(false)) as _i8.Future<bool>);
+  @override
+  _i8.Future<bool> writeHealthData(double? value, _i15.HealthDataType? type,
+          DateTime? startTime, DateTime? endTime,
+          {_i15.HealthDataUnit? unit}) =>
+      (super.noSuchMethod(
+          Invocation.method(#writeHealthData, [value, type, startTime, endTime],
+              {#unit: unit}),
+          returnValue: _i8.Future<bool>.value(false)) as _i8.Future<bool>);
+  @override
+  _i8.Future<bool> writeAudiogram(
+          List<double>? frequencies,
+          List<double>? leftEarSensitivities,
+          List<double>? rightEarSensitivities,
+          DateTime? startTime,
+          DateTime? endTime,
+          {Map<String, dynamic>? metadata}) =>
+      (super.noSuchMethod(
+          Invocation.method(#writeAudiogram, [
+            frequencies,
+            leftEarSensitivities,
+            rightEarSensitivities,
+            startTime,
+            endTime
+          ], {
+            #metadata: metadata
+          }),
+          returnValue: _i8.Future<bool>.value(false)) as _i8.Future<bool>);
+  @override
+  _i8.Future<List<_i15.HealthDataPoint>> getHealthDataFromTypes(
+          DateTime? startTime,
+          DateTime? endTime,
+          List<_i15.HealthDataType>? types) =>
+      (super.noSuchMethod(
+              Invocation.method(
+                  #getHealthDataFromTypes, [startTime, endTime, types]),
+              returnValue: _i8.Future<List<_i15.HealthDataPoint>>.value(
+                  <_i15.HealthDataPoint>[]))
+          as _i8.Future<List<_i15.HealthDataPoint>>);
+  @override
+  _i8.Future<int?> getTotalStepsInInterval(
+          DateTime? startTime, DateTime? endTime) =>
+      (super.noSuchMethod(
+          Invocation.method(#getTotalStepsInInterval, [startTime, endTime]),
+          returnValue: _i8.Future<int?>.value()) as _i8.Future<int?>);
+  @override
+  _i8.Future<bool> writeWorkoutData(
+          _i15.HealthWorkoutActivityType? activityType,
+          DateTime? start,
+          DateTime? end,
+          {int? totalEnergyBurned,
+          _i15.HealthDataUnit? totalEnergyBurnedUnit =
+              _i15.HealthDataUnit.KILOCALORIE,
+          int? totalDistance,
+          _i15.HealthDataUnit? totalDistanceUnit =
+              _i15.HealthDataUnit.METER}) =>
+      (super.noSuchMethod(
+          Invocation.method(#writeWorkoutData, [
+            activityType,
+            start,
+            end
+          ], {
+            #totalEnergyBurned: totalEnergyBurned,
+            #totalEnergyBurnedUnit: totalEnergyBurnedUnit,
+            #totalDistance: totalDistance,
+            #totalDistanceUnit: totalDistanceUnit
+          }),
+          returnValue: _i8.Future<bool>.value(false)) as _i8.Future<bool>);
 }
