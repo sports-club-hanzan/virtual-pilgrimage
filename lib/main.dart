@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
@@ -7,13 +10,19 @@ import 'package:virtualpilgrimage/gen/firebase_options_prod.dart' as prod;
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_auth_provider.dart';
 import 'package:virtualpilgrimage/router.dart';
 import 'package:virtualpilgrimage/ui/style/theme.dart';
+import 'package:workmanager/workmanager.dart';
 
+import 'domain/background_task_service.dart';
 import 'domain/user/user_repository.dart';
 
 Future<void> main() async {
+  // MEMO: WidgetsFlutterBinding, workmanager は先頭でこの順で呼び出す必要がある
   WidgetsFlutterBinding.ensureInitialized();
+  await Workmanager().initialize(callbackDispatcher, isInDebugMode: kDebugMode);
+  await BackgroundTaskService.registRecordStepAndDistance();
+
   const flavor = String.fromEnvironment('FLAVOR', defaultValue: 'dev');
-  await Firebase.initializeApp(options: _getFirebaseOptions(flavor));
+  await Firebase.initializeApp(options: getFirebaseOptions(flavor));
   runApp(const ProviderScope(child: _App()));
 }
 
@@ -47,7 +56,7 @@ class _App extends ConsumerWidget {
   }
 }
 
-FirebaseOptions _getFirebaseOptions(String flavor) {
+FirebaseOptions getFirebaseOptions(String flavor) {
   switch (flavor) {
     case 'dev':
       return dev.DefaultFirebaseOptions.currentPlatform;

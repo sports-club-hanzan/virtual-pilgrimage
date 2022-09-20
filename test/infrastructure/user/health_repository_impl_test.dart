@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:health/health.dart';
 import 'package:logger/logger.dart';
@@ -21,6 +23,16 @@ void main() {
   setUp(() {
     mockHealthFactory = MockHealthFactory();
     target = HealthRepositoryImpl(mockHealthFactory, logger);
+    final map = HealthByPeriod(steps: 1, distance: 1, burnedCalorie: 1).toJson();
+    final str = map.toString().replaceAll('{', '{"').replaceAll(':', '":').replaceAll(', ', ', "');
+    final decoded = json.decode(str);
+    print(str);
+    print(map);
+    print(decoded);
+    final health2 = HealthByPeriod.fromJson(map);
+    final health = HealthByPeriod.fromJson(decoded);
+    print(health);
+    print(health2);
   });
 
   group('HealthRepositoryImpl', () {

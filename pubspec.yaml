@@ -60,6 +60,10 @@ dependencies:
   # health
   health: ^4.1.1
   permission_handler: ^9.2.0 # Firebaseと同じSDKをターゲットにできるよう最新ではないバージョンを利用
+  pedometer: ^3.0.0
+  workmanager: ^0.5.0
+  shared_preferences: ^2.0.15
+
 
 dev_dependencies:
   flutter_test:

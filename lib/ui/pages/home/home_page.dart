@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:pedometer/pedometer.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:virtualpilgrimage/domain/background_task_service.dart';
+import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
+import 'package:virtualpilgrimage/domain/user/health/health_by_period.codegen.dart';
+import 'package:virtualpilgrimage/domain/user/health/health_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
+import 'package:virtualpilgrimage/infrastructure/user/step_stream_repository.dart';
 import 'package:virtualpilgrimage/router.dart';
 import 'package:virtualpilgrimage/ui/pages/sign_in/sign_in_presenter.dart';
 import 'package:virtualpilgrimage/ui/style/color.dart';
@@ -32,6 +39,30 @@ class HomePageBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userState = _ref.watch(userStateProvider);
+    final healthRepository = _ref.read(healthRepositoryProvider);
+    final now = CustomizableDateTime.current;
+    healthRepository.getHealthInfo(targetDateTime: now, createdAt: userState!.createdAt);
+    final stepStream = _ref.watch(stepStreamProvider);
+    stepStream.when(
+        data: (d) async {
+          // FIXME: 距離やカロリーの算出は年齢によって変わるはず.
+          // カロリーは求められないかもしれない
+          final health = HealthByPeriod(
+            steps: d.steps,
+            distance: (d.steps * 0.8).ceil(),
+            burnedCalorie: (d.steps * 0.033).ceil(),
+          );
+          final prefs = await SharedPreferences.getInstance();
+          print(health.toJson().toString());
+          prefs.setString(BackgroundTaskName.recordStepAndDistance, health.toJson().toString());
+        },
+        error: (e, s) async {
+          print('error $e');
+          print('stacktrace $s');
+          final prefs = await SharedPreferences.getInstance();
+          prefs.setString(BackgroundTaskName.recordStepAndDistance, '{"error": "string"}');
+        },
+        loading: () {});
     // ignore: unused_local_variable
     late GoogleMapController mapController;
     const initialCameraPosition = CameraPosition(
@@ -89,6 +120,17 @@ class HomePageBody extends StatelessWidget {
                     color: ColorStyle.grey,
                   ),
                 ),
+                StreamBuilder(
+                    stream: _ref.watch(stepStreamProvider.stream),
+                    builder: (BuildContext context, AsyncSnapshot<StepCount> snapShot) {
+                      return Text(
+                        snapShot.hasData ? snapShot.data!.steps.toString() : '0',
+                        style: const TextStyle(
+                          fontSize: 24,
+                          color: ColorStyle.grey,
+                        ),
+                      );
+                    })
               ],
             ),
             ElevatedButton(
