@@ -40,6 +40,9 @@ extension VirtualPilgrimageUserPrivateFirestoreFieldKeys on String {
   static const email = 'email';
   static const userIconUrl = 'userIconUrl';
   static const userStatus = 'userStatus';
+  static const createdAt = 'createdAt';
+  static const updatedAt = 'updatedAt';
+  static const health = 'health';
 }
 
 // Gender <-> int の相互変換用クラス
@@ -73,51 +76,57 @@ class _BitmapConverter {
 class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
   @JsonSerializable(explicitToJson: true)
   const factory VirtualPilgrimageUser({
+    // ユーザID。Firebase Authentication によって自動生成
     @Default('')
         String id,
+    // ニックネーム
     @Default('')
         String nickname,
-    @JsonKey(
-      fromJson: _GenderConverter.intToGender,
-      toJson: _GenderConverter.genderToInt,
-    )
+    // 性別
+    @JsonKey(fromJson: _GenderConverter.intToGender, toJson: _GenderConverter.genderToInt)
     @Default(Gender.unknown)
         Gender gender,
+    // 誕生日
     @JsonKey(
       fromJson: _FirestoreTimestampConverter.timestampToDateTime,
       toJson: _FirestoreTimestampConverter.dateTimeToTimestamp,
     )
         required DateTime birthDay,
+    // メールアドレス
     @Default('')
         String email,
+    // ユーザアイコンのURL
     @Default('https://maps.google.com/mapfiles/kml/shapes/info-i_maps.png')
         String userIconUrl,
     @Default(UserStatus.temporary)
+    // ユーザの登録状態
     @JsonKey(
       fromJson: _UserStatusConverter.intToUserStatus,
       toJson: _UserStatusConverter.userStatusToInt,
     )
         UserStatus userStatus,
+    // ユーザの作成日
     @JsonKey(
       fromJson: _FirestoreTimestampConverter.timestampToDateTime,
       toJson: _FirestoreTimestampConverter.dateTimeToTimestamp,
     )
         required DateTime createdAt,
+    // ユーザの更新日
     @JsonKey(
       fromJson: _FirestoreTimestampConverter.timestampToDateTime,
       toJson: _FirestoreTimestampConverter.dateTimeToTimestamp,
     )
         required DateTime updatedAt,
+    // ヘルスケア情報。歩数や移動距離など
     HealthInfo? health,
     // TODO(s14t284): 以下の情報を含める
     // 現在地のお遍路で巡っているお寺の情報
 
     // 以下は json に変換した時に含めないパラメータ
     // DB で管理されずアプリ上で値がセットされる
-    @JsonKey(
-      ignore: true,
-      fromJson: _BitmapConverter.stringToBitmap,
-    )
+
+    // ユーザアイコン。ログイン時に userIconUrl から GoogleMap に描画できる形式に変換される
+    @JsonKey(ignore: true, fromJson: _BitmapConverter.stringToBitmap)
     @Default(BitmapDescriptor.defaultMarker)
         BitmapDescriptor userIcon,
   }) = _VirtualPilgrimageUser;
