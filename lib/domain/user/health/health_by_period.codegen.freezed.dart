@@ -20,8 +20,9 @@ HealthByPeriod _$HealthByPeriodFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$HealthByPeriod {
-  int get steps => throw _privateConstructorUsedError;
-  int get distance => throw _privateConstructorUsedError;
+// 歩数
+  int get steps => throw _privateConstructorUsedError; // 距離[m]
+  int get distance => throw _privateConstructorUsedError; // 消費カロリー[kcal]
   int get burnedCalorie => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -127,10 +128,13 @@ class _$_HealthByPeriod extends _HealthByPeriod {
   factory _$_HealthByPeriod.fromJson(Map<String, dynamic> json) =>
       _$$_HealthByPeriodFromJson(json);
 
+// 歩数
   @override
   final int steps;
+// 距離[m]
   @override
   final int distance;
+// 消費カロリー[kcal]
   @override
   final int burnedCalorie;
 
@@ -181,11 +185,11 @@ abstract class _HealthByPeriod extends HealthByPeriod {
   factory _HealthByPeriod.fromJson(Map<String, dynamic> json) =
       _$_HealthByPeriod.fromJson;
 
-  @override
+  @override // 歩数
   int get steps;
-  @override
+  @override // 距離[m]
   int get distance;
-  @override
+  @override // 消費カロリー[kcal]
   int get burnedCalorie;
   @override
   @JsonKey(ignore: true)

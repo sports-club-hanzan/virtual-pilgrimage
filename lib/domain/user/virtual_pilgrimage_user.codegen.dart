@@ -1,6 +1,9 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_info.codegen.dart';
 
 part 'virtual_pilgrimage_user.codegen.freezed.dart';
@@ -60,6 +63,11 @@ class _FirestoreTimestampConverter {
       timestamp.toDate();
 }
 
+class _BitmapConverter {
+  static BitmapDescriptor stringToBitmap(String string) =>
+      BitmapDescriptor.fromBytes(Uint8List.fromList(string.codeUnits));
+}
+
 @freezed
 class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
 
@@ -82,8 +90,15 @@ class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
         required DateTime birthDay,
     @Default('')
         String email,
-    @Default('')
+    @Default('https://maps.google.com/mapfiles/kml/shapes/info-i_maps.png')
         String userIconUrl,
+    @JsonKey(
+      defaultValue: null,
+      nullable: true,
+      fromJson: _BitmapConverter.stringToBitmap,
+    )
+    @Default(BitmapDescriptor.defaultMarker)
+        BitmapDescriptor userIcon,
     @Default(UserStatus.temporary)
     @JsonKey(
       fromJson: _UserStatusConverter.intToUserStatus,

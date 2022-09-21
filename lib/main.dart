@@ -39,8 +39,7 @@ class _App extends ConsumerWidget {
       routeInformationProvider: router.routeInformationProvider,
       routeInformationParser: router.routeInformationParser,
       routerDelegate: router.routerDelegate,
-      // TODO(s14t284): タイトルはアプリ名に変更
-      title: 'Virtual Pilgrimage',
+      title: '巡礼ウォーク',
       locale: const Locale('ja'),
       theme: AppTheme.theme,
     );

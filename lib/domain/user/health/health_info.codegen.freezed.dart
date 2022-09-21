@@ -20,14 +20,17 @@ HealthInfo _$HealthInfoFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$HealthInfo {
-  HealthByPeriod get yesterday => throw _privateConstructorUsedError;
-  HealthByPeriod get week => throw _privateConstructorUsedError;
+// 昨日のヘルスケア情報
+  HealthByPeriod get yesterday =>
+      throw _privateConstructorUsedError; // 昨日から一週間前までのヘルスケア情報
+  HealthByPeriod get week =>
+      throw _privateConstructorUsedError; // 昨日から一ヶ月前までのヘルスケア情報
   HealthByPeriod get month => throw _privateConstructorUsedError;
   @JsonKey(
       fromJson: _FirestoreTimestampConverter.timestampToDateTime,
       toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
-  DateTime get updatedAt => throw _privateConstructorUsedError;
-  int get totalSteps => throw _privateConstructorUsedError;
+  DateTime get updatedAt => throw _privateConstructorUsedError; // 総歩数
+  int get totalSteps => throw _privateConstructorUsedError; // 総歩行距離[m]
   int get totalDistance => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -211,10 +214,13 @@ class _$_HealthInfo extends _HealthInfo {
   factory _$_HealthInfo.fromJson(Map<String, dynamic> json) =>
       _$$_HealthInfoFromJson(json);
 
+// 昨日のヘルスケア情報
   @override
   final HealthByPeriod yesterday;
+// 昨日から一週間前までのヘルスケア情報
   @override
   final HealthByPeriod week;
+// 昨日から一ヶ月前までのヘルスケア情報
   @override
   final HealthByPeriod month;
   @override
@@ -222,8 +228,10 @@ class _$_HealthInfo extends _HealthInfo {
       fromJson: _FirestoreTimestampConverter.timestampToDateTime,
       toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
   final DateTime updatedAt;
+// 総歩数
   @override
   final int totalSteps;
+// 総歩行距離[m]
   @override
   final int totalDistance;
 
@@ -285,20 +293,20 @@ abstract class _HealthInfo extends HealthInfo {
   factory _HealthInfo.fromJson(Map<String, dynamic> json) =
       _$_HealthInfo.fromJson;
 
-  @override
+  @override // 昨日のヘルスケア情報
   HealthByPeriod get yesterday;
-  @override
+  @override // 昨日から一週間前までのヘルスケア情報
   HealthByPeriod get week;
-  @override
+  @override // 昨日から一ヶ月前までのヘルスケア情報
   HealthByPeriod get month;
   @override
   @JsonKey(
       fromJson: _FirestoreTimestampConverter.timestampToDateTime,
       toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
   DateTime get updatedAt;
-  @override
+  @override // 総歩数
   int get totalSteps;
-  @override
+  @override // 総歩行距離[m]
   int get totalDistance;
   @override
   @JsonKey(ignore: true)
