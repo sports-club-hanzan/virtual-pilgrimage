@@ -8,9 +8,8 @@ class DatabaseException implements Exception {
   });
 
   final String message;
-
   final Exception? cause;
 
   @override
-  String toString() => 'GetHealthException: [message][$message][cause][${cause.toString()}]';
+  String toString() => 'DatabaseException: [message][$message][cause][${cause?.toString()}]';
 }

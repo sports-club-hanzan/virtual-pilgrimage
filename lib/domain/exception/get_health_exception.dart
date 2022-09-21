@@ -12,5 +12,6 @@ class GetHealthException implements Exception {
   final Exception? cause;
 
   @override
-  String toString() => 'GetHealthException: [message][$message][status][$status]';
+  String toString() =>
+      'GetHealthException: [message][$message][status][$status][cause][${cause.toString()}]';
 }
