@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:virtualpilgrimage/analytics.dart';
 import 'package:virtualpilgrimage/domain/user/health/update_health_result.dart';
 import 'package:virtualpilgrimage/domain/user/health/update_health_usecase.dart';
@@ -43,6 +44,16 @@ class HomePresenter extends StateNotifier<HomeState> {
       await _crashlytics.recordError(ArgumentError(reason), null, reason: reason);
       _crashlytics.crash();
       return;
+    }
+
+    // ヘルスケア情報取得の権限が付与されていない場合、許可を得るダイアログを開く
+    // TODO(s14t284): ヘルスケア情報を取得するダイアログで許可を押す旨をUIに表示した方が良いか検討
+    if ((await Permission.activityRecognition.request()).isDenied) {
+      await _crashlytics.recordError(
+        'now allowed to get health information [userId][${user.id}]',
+        null,
+      );
+      await openAppSettings();
     }
 
     final result = await _updateHealthUsecase.execute(user);
