@@ -54,5 +54,7 @@ app.*.map.json
 ## NOTE: 以下は将来的にiOS対応するときのために追加
 **/ios/GoogleService-Info.plist
 **/ios/Flutter/DartDefines.xcconfig
-
+# テストのために生成されるmockファイルは頻繁に変更されるためgitの監視下に含めない
+# ref. https://github.com/dart-lang/mockito/blob/master/.gitignore#L12-L13
+**/*.mocks.dart
 coverage/lcov.info
