@@ -45,22 +45,23 @@ extension VirtualPilgrimageUserPrivateFirestoreFieldKeys on String {
 // Gender <-> int の相互変換用クラス
 class _GenderConverter {
   static Gender intToGender(int num) => Gender.values[num];
+
   static int genderToInt(Gender gender) => gender.index;
 }
 
 // UserStatus <-> int の相互変換用クラス
 class _UserStatusConverter {
   static UserStatus intToUserStatus(int num) => UserStatus.values[num];
+
   static int userStatusToInt(UserStatus userStatus) => userStatus.index;
 }
 
 // DateTime <-> Timestamp の相互変換用クラス
 // 共通化したいが、ここで定義しないと自動生成ファイル側で import エラーが発生する
 class _FirestoreTimestampConverter {
-  static Timestamp dateTimeToTimestamp(DateTime dateTime) =>
-      Timestamp.fromDate(dateTime);
-  static DateTime timestampToDateTime(Timestamp timestamp) =>
-      timestamp.toDate();
+  static Timestamp dateTimeToTimestamp(DateTime dateTime) => Timestamp.fromDate(dateTime);
+
+  static DateTime timestampToDateTime(Timestamp timestamp) => timestamp.toDate();
 }
 
 class _BitmapConverter {
@@ -70,7 +71,6 @@ class _BitmapConverter {
 
 @freezed
 class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
-
   @JsonSerializable(explicitToJson: true)
   const factory VirtualPilgrimageUser({
     @Default('')
@@ -92,13 +92,6 @@ class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
         String email,
     @Default('https://maps.google.com/mapfiles/kml/shapes/info-i_maps.png')
         String userIconUrl,
-    @JsonKey(
-      defaultValue: null,
-      nullable: true,
-      fromJson: _BitmapConverter.stringToBitmap,
-    )
-    @Default(BitmapDescriptor.defaultMarker)
-        BitmapDescriptor userIcon,
     @Default(UserStatus.temporary)
     @JsonKey(
       fromJson: _UserStatusConverter.intToUserStatus,
@@ -109,16 +102,26 @@ class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
       fromJson: _FirestoreTimestampConverter.timestampToDateTime,
       toJson: _FirestoreTimestampConverter.dateTimeToTimestamp,
     )
-      required DateTime createdAt,
+        required DateTime createdAt,
     @JsonKey(
       fromJson: _FirestoreTimestampConverter.timestampToDateTime,
       toJson: _FirestoreTimestampConverter.dateTimeToTimestamp,
     )
-      required DateTime updatedAt,
+        required DateTime updatedAt,
     HealthInfo? health,
     // TODO(s14t284): 以下の情報を含める
     // 現在地のお遍路で巡っているお寺の情報
+
+    // 以下は json に変換した時に含めないパラメータ
+    // DB で管理されずアプリ上で値がセットされる
+    @JsonKey(
+      ignore: true,
+      fromJson: _BitmapConverter.stringToBitmap,
+    )
+    @Default(BitmapDescriptor.defaultMarker)
+        BitmapDescriptor userIcon,
   }) = _VirtualPilgrimageUser;
+
   const VirtualPilgrimageUser._();
 
   factory VirtualPilgrimageUser.fromJson(Map<String, dynamic> json) =>
