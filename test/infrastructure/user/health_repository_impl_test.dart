@@ -8,9 +8,11 @@ import 'package:mockito/mockito.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_by_period.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_info.codegen.dart';
+import 'package:virtualpilgrimage/domain/user/health/health_repository.dart';
 import 'package:virtualpilgrimage/infrastructure/user/health_repository_impl.dart';
 
 import '../../helper/mock.mocks.dart';
+import '../../helper/provider_container.dart';
 
 const defaultDeviceId = 'dummyDeviceId';
 const defaultSourceId = 'dummySourceId';
@@ -71,6 +73,13 @@ void main() {
         ]),
       );
     });
+
+    test('DI', () {
+      final container = mockedProviderContainer();
+      final repository = container.read(healthRepositoryProvider);
+      expect(repository, isNotNull);
+    });
+
     group('正常系', () {
       CustomizableDateTime.customTime = DateTime(2022, 9, 19, 11, 0);
       test('ヘルスケア情報を取得できる', () async {
