@@ -67,10 +67,6 @@ void main() {
           );
         });
         test('password が null', () async {
-          // given
-          when(mockFirebaseAuth.signInWithEmailAndPassword(email: email))
-              .thenAnswer((_) => Future.value(mockUserCredential));
-
           // when
           expect(
             () => target.signIn(password: password),

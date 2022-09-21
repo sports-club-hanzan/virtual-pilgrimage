@@ -55,7 +55,12 @@ void main() {
         await analytics.logEvent(eventName: eventName, parameters: parameters);
 
         // then
-        verifyNever(mockFirebaseAnalytics.logEvent(name: anyNamed('name'), parameters: anyNamed('parameters'))).called(0);
+        verifyNever(
+          mockFirebaseAnalytics.logEvent(
+            name: anyNamed('name'),
+            parameters: anyNamed('parameters'),
+          ),
+        ).called(0);
       });
     });
 
@@ -95,13 +100,14 @@ void main() {
       test('正常系: value に値が設定されない場合', () async {
         // given
         const name = 'dummyName';
-        when(mockFirebaseAnalytics.setUserProperty(name: name)).thenAnswer((_) => Future.value());
+        when(mockFirebaseAnalytics.setUserProperty(name: name, value: null))
+            .thenAnswer((_) => Future.value());
 
         // when
         await analytics.setUserProperties(name: name);
 
         // then
-        verify(mockFirebaseAnalytics.setUserProperty(name: name)).called(1);
+        verify(mockFirebaseAnalytics.setUserProperty(name: name, value: null)).called(1);
       });
     });
   });
