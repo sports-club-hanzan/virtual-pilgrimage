@@ -8,6 +8,7 @@ on:
     types: [opened, synchronize]
 
 jobs:
+  # ユニットテストを実行
   unittest:
     runs-on: ubuntu-latest
     steps:
@@ -26,6 +27,7 @@ jobs:
           file: ~/coverage/lcov.info
           flags: unittests
 
+  # linter による静的解析を実行
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -33,6 +35,8 @@ jobs:
         uses: actions/checkout@v3
       - name: Initialize
         uses: ./.github/actions/setup
+      - name: Run Code Generation For Creating Mock
+        run: flutter pub run build_runner build --delete-conflicting-outputs
       - name: Run Lint
         run: flutter analyze
 
@@ -45,6 +49,6 @@ jobs:
       - name: Initialize
         uses: ./.github/actions/setup
       - name: Run Code Generation
-        run: flutter pub run build_runner build --delete-conflicting-outputs
+        run: flutter pub run build_runner build
       - name: Check diff
         run: git diff --quiet --exit-code
