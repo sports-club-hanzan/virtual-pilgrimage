@@ -42,7 +42,7 @@ class HealthRepositoryImpl implements HealthRepository {
     if (!requested) {
       const message = 'get health information error because don\'t have health permission';
       _logger.e(message);
-      throw GetHealthException(message, GetHealthExceptionStatus.notAuthorized);
+      throw GetHealthException(message: message, status: GetHealthExceptionStatus.notAuthorized);
     }
 
     // createdAt より前の時刻は使わないように補正をかけるメソッドを定義
@@ -89,9 +89,17 @@ class HealthRepositoryImpl implements HealthRepository {
       _logger.d(health);
       return health;
     } on HealthException catch (e) {
-      throw GetHealthException(e.cause, GetHealthExceptionStatus.unknown);
+      throw GetHealthException(
+        message: e.cause,
+        status: GetHealthExceptionStatus.unknown,
+        cause: e,
+      );
     } on Exception catch (e) {
-      throw GetHealthException(e.toString(), GetHealthExceptionStatus.unknown);
+      throw GetHealthException(
+        message: 'cause unknown error when update health info',
+        status: GetHealthExceptionStatus.unknown,
+        cause: e,
+      );
     }
   }
 

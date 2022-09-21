@@ -13,8 +13,7 @@ class GoogleAuthRepository extends AuthRepository {
   @override
   Future<UserCredential?> signIn({String? email, String? password}) async {
     try {
-      final GoogleSignInAccount? googleSigninAccount =
-          await _googleSignIn.signIn();
+      final GoogleSignInAccount? googleSigninAccount = await _googleSignIn.signIn();
       if (googleSigninAccount != null) {
         final GoogleSignInAuthentication googleSignInAuthentication =
             await googleSigninAccount.authentication;
@@ -26,29 +25,36 @@ class GoogleAuthRepository extends AuthRepository {
       }
     } on PlatformException catch (e) {
       throw SignInException(
-        'cause platform exception [code][${e.code}][message][${e.message}]',
-        SignInExceptionStatus.platformException,
+        message: 'cause platform exception [code][${e.code}][message][${e.message}]',
+        status: SignInExceptionStatus.platformException,
+        cause: e,
       );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'account-exists-with-different-credentials') {
         throw SignInException(
-          'Firebase Account exists with different [message][${e.message}][email][${e.email}]',
-          SignInExceptionStatus.firebaseException,
+          message:
+              'Firebase Account exists with different [message][${e.message}][email][${e.email}]',
+          status: SignInExceptionStatus.firebaseException,
+          cause: e,
         );
       } else if (e.code == 'invalid-credential') {
         throw SignInException(
-          'Firebase signin is invalid credential [message][${e.message}][email][${e.email}]',
-          SignInExceptionStatus.firebaseException,
+          message:
+              'Firebase signin is invalid credential [message][${e.message}][email][${e.email}]',
+          status: SignInExceptionStatus.firebaseException,
+          cause: e,
         );
       }
       throw SignInException(
-        'cause Firebase exception when signIn [message][${e.message}][code][${e.code}]',
-        SignInExceptionStatus.firebaseException,
+        message: 'cause Firebase exception when signIn [message][${e.message}][code][${e.code}]',
+        status: SignInExceptionStatus.firebaseException,
+        cause: e,
       );
     } on Exception catch (e) {
       throw SignInException(
-        'Firebase signin cause unknown error [exception][$e]',
-        SignInExceptionStatus.unknownException,
+        message: 'Firebase signin cause unknown error [exception][$e]',
+        status: SignInExceptionStatus.unknownException,
+        cause: e,
       );
     }
     return null;

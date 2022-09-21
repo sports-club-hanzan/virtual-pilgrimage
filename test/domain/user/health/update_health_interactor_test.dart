@@ -98,7 +98,9 @@ void main() {
             targetDateTime: anyNamed('targetDateTime'),
             createdAt: anyNamed('createdAt'),
           ),
-        ).thenThrow(GetHealthException('dummy', GetHealthExceptionStatus.notAuthorized));
+        ).thenThrow(
+          GetHealthException(message: 'dummy', status: GetHealthExceptionStatus.notAuthorized),
+        );
 
         // when
         final actual = await target.execute(user);

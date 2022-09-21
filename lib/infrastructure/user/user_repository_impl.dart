@@ -19,9 +19,8 @@ class UserRepositoryImpl extends UserRepository {
           .collection(FirestoreCollectionPath.users)
           .doc(userId)
           .withConverter<VirtualPilgrimageUser>(
-            fromFirestore:
-                (DocumentSnapshot<Map<String, dynamic>> snapshot, _) =>
-                    VirtualPilgrimageUser.fromJson(snapshot.data()!),
+            fromFirestore: (DocumentSnapshot<Map<String, dynamic>> snapshot, _) =>
+                VirtualPilgrimageUser.fromJson(snapshot.data()!),
             toFirestore: (VirtualPilgrimageUser user, _) => user.toJson(),
           );
       final userSnapshot = await ref.get();
@@ -33,8 +32,7 @@ class UserRepositoryImpl extends UserRepository {
       return null;
     } on FirebaseException catch (e) {
       throw DatabaseException(
-        message:
-            'cause Firestore error [code][${e.code}][message][${e.message}]',
+        message: 'cause Firestore error [code][${e.code}][message][${e.message}]',
         cause: e,
       );
     } on Exception catch (e) {

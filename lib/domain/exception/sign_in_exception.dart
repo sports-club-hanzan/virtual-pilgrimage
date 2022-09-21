@@ -11,8 +11,16 @@ enum SignInExceptionStatus {
 }
 
 class SignInException implements Exception {
-  SignInException(this.cause, this.status);
+  SignInException({
+    required this.message,
+    required this.status,
+    this.cause,
+  });
 
-  String cause;
-  SignInExceptionStatus status;
+  final String message;
+  final SignInExceptionStatus status;
+  final Exception? cause;
+
+  @override
+  String toString() => 'SignInException: [cause][$message][status][$status]';
 }

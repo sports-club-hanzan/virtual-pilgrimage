@@ -46,8 +46,8 @@ class SignInInteractor extends SignInUsecase {
       );
       await _crashlytics.log(message);
       throw SignInException(
-        message,
-        SignInExceptionStatus.credentialIsNull,
+        message: message,
+        status: SignInExceptionStatus.credentialIsNull,
       );
     }
     final credentialUser = credential.user!;
@@ -76,8 +76,8 @@ class SignInInteractor extends SignInUsecase {
       );
       await _crashlytics.log(message);
       throw SignInException(
-        message,
-        SignInExceptionStatus.credentialIsNull,
+        message: message,
+        status: SignInExceptionStatus.credentialIsNull,
       );
     }
     final credentialUser = credential.user!;
@@ -136,13 +136,9 @@ class SignInInteractor extends SignInUsecase {
       }
     } on DatabaseException catch (e) {
       _logger.e(e.message, [e]);
-      if (e.message != null) {
-        await _crashlytics.log(e.message!);
-      }
+      await _crashlytics.log(e.message);
       final causeException = e.cause;
-      final stackTrace = causeException is FirebaseException
-          ? causeException.stackTrace
-          : null;
+      final stackTrace = causeException is FirebaseException ? causeException.stackTrace : null;
       await _crashlytics.recordError(
         e,
         stackTrace,
@@ -150,12 +146,12 @@ class SignInInteractor extends SignInUsecase {
       );
 
       throw SignInException(
-        e.message ?? 'cause Firebase exception: $e',
-        SignInExceptionStatus.firebaseException,
+        message: e.message,
+        status: SignInExceptionStatus.firebaseException,
+        cause: e,
       );
     } on Exception catch (e) {
-      final message =
-          'get user or initialize user is error [uid][${credentialUser.uid}]';
+      final message = 'get user or initialize user is error [uid][${credentialUser.uid}]';
       _logger.e(message, [e]);
       await _crashlytics.log(message);
       await _crashlytics.recordError(
@@ -165,8 +161,9 @@ class SignInInteractor extends SignInUsecase {
       );
 
       throw SignInException(
-        message,
-        SignInExceptionStatus.unknownException,
+        message: message,
+        status: SignInExceptionStatus.unknownException,
+        cause: e,
       );
     }
 

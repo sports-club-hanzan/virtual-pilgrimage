@@ -1,8 +1,16 @@
 enum GetHealthExceptionStatus { notAuthorized, unknown }
 
 class GetHealthException implements Exception {
-  GetHealthException(this.cause, this.status);
+  GetHealthException({
+    required this.message,
+    required this.status,
+    this.cause,
+  });
 
-  String cause;
-  GetHealthExceptionStatus status;
+  final String message;
+  final GetHealthExceptionStatus status;
+  final Exception? cause;
+
+  @override
+  String toString() => 'GetHealthException: [message][$message][status][$status]';
 }

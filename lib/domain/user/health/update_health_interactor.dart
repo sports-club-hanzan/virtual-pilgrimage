@@ -34,15 +34,14 @@ class UpdateHealthInteractor implements UpdateHealthUsecase {
       );
       await _userRepository.update(user.copyWith(health: health));
     } on GetHealthException catch (e) {
-      final message =
-          'get user health information error [user][$user][cause][${e.cause}][status][${e.status}]';
+      final message = 'get user health information error [user][$user][error][$e]';
       _logger.e(message);
       await _crashlytics.log(message);
       await _crashlytics.recordError(e, null);
       status = UpdateHealthStatus.getHealthError;
       error = e;
     } on DatabaseException catch (e) {
-      final message = 'update user health information error [user][$user]';
+      final message = 'update user health information error [user][$user][error][$e]';
       _logger.e(message, e);
       await _crashlytics.log(message);
       await _crashlytics.recordError(e, null);

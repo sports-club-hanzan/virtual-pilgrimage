@@ -7,7 +7,7 @@ import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.da
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/logger.dart';
 
-final updateHealthUsecaseProvider = Provider.autoDispose(
+final updateHealthUsecaseProvider = Provider.autoDispose<UpdateHealthUsecase>(
   (ref) => UpdateHealthInteractor(
     ref.read(healthRepositoryProvider),
     ref.read(userRepositoryProvider),
