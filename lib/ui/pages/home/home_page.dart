@@ -52,7 +52,7 @@ class HomePageBody extends StatelessWidget {
         markerId: const MarkerId('ユーザ'),
         position: const LatLng(34.10, 134.467),
         icon: userState!.userIcon,
-        infoWindow: InfoWindow(title: '現在: ${userState.walkCount}歩'),
+        infoWindow: InfoWindow(title: '現在: ${userState.health?.totalSteps ?? 0}歩'),
       )
     };
 
