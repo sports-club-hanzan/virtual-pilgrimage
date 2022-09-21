@@ -16,8 +16,6 @@ jobs:
         uses: actions/checkout@v3
       - name: Initialize
         uses: ./.github/actions/setup
-      - name: Run Code Generation For Creating Mock
-        run: flutter pub run build_runner build --delete-conflicting-outputs
       - name: Run UnitTest with Coverage
         run: flutter test --no-test-assets --coverage --coverage-path=~/coverage/lcov.info
       - name: Record Coverage
@@ -35,8 +33,6 @@ jobs:
         uses: actions/checkout@v3
       - name: Initialize
         uses: ./.github/actions/setup
-      - name: Run Code Generation For Creating Mock
-        run: flutter pub run build_runner build --delete-conflicting-outputs
       - name: Run Lint
         run: flutter analyze
 
@@ -48,7 +44,5 @@ jobs:
         uses: actions/checkout@v3
       - name: Initialize
         uses: ./.github/actions/setup
-      - name: Run Code Generation
-        run: flutter pub run build_runner build
       - name: Check diff
         run: git diff --quiet --exit-code
