@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:health/health.dart';
+import 'package:virtualpilgrimage/domain/user/health/health_info.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/user/health_repository_impl.dart';
 import 'package:virtualpilgrimage/logger.dart';
 
@@ -19,5 +20,5 @@ abstract class HealthRepository {
   ///
   /// [targetDateTime] ヘルスケア情報を取得する起点となる時間
   /// [createdAt] ユーザの作成時刻。アプリケーションに登録されてからの情報を取得するために利用
-  Future<void> getHealthInfo({required DateTime targetDateTime, required DateTime createdAt});
+  Future<HealthInfo> getHealthInfo({required DateTime targetDateTime, required DateTime createdAt});
 }
