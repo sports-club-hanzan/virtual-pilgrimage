@@ -1,11 +1,8 @@
-enum HealthExceptionStatus {
-  notAuthorized,
-  unknown
-}
+enum GetHealthExceptionStatus { notAuthorized, unknown }
 
 class GetHealthException implements Exception {
   GetHealthException(this.cause, this.status);
 
   String cause;
-  HealthExceptionStatus status;
+  GetHealthExceptionStatus status;
 }

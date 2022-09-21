@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:health/health.dart';
 import 'package:logger/logger.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
@@ -12,18 +13,21 @@ class HealthRepositoryImpl implements HealthRepository {
   final HealthFactory _healthFactory;
   final Logger _logger;
 
-  /// 利用するHealth情報のタイプ
-  final _types = [
-    HealthDataType.STEPS,
-    HealthDataType.DISTANCE_DELTA,
-    HealthDataType.ACTIVE_ENERGY_BURNED,
-    // 以下は iOS で利用
-    // TODO(s14t284): iOS と Android で取得する types を変更する
-    // HealthDataType.DISTANCE_WALKING_RUNNING,
-  ];
+  // 利用するHealth情報のタイプ
+  final _healthTypes = {
+    'android': [
+      HealthDataType.STEPS,
+      HealthDataType.DISTANCE_DELTA,
+      HealthDataType.ACTIVE_ENERGY_BURNED,
+    ],
+    'ios': [
+      HealthDataType.STEPS,
+      HealthDataType.DISTANCE_WALKING_RUNNING,
+      HealthDataType.ACTIVE_ENERGY_BURNED,
+    ]
+  };
 
   /// 歩数、歩行距離といったヘルスケア情報を各OSの仕組みから取得
-  ///
   ///
   /// [targetDateTime] ヘルスケア情報を取得する起点となる時間
   /// [createdAt] ユーザの作成時刻。アプリケーションに登録されてからの情報を取得するために利用
@@ -32,69 +36,81 @@ class HealthRepositoryImpl implements HealthRepository {
     required DateTime targetDateTime,
     required DateTime createdAt,
   }) async {
+    final types = _healthTypes[defaultTargetPlatform.name.toLowerCase()]!;
     // Health 情報を取得できるか権限チェック
-    final requested = await _healthFactory.requestAuthorization(_types);
+    final requested = await _healthFactory.requestAuthorization(types);
     if (!requested) {
       const message = 'get health information error because don\'t have health permission';
       _logger.e(message);
-      throw GetHealthException(message, HealthExceptionStatus.notAuthorized);
+      throw GetHealthException(message, GetHealthExceptionStatus.notAuthorized);
     }
 
     // createdAt より前の時刻は使わないように補正をかけるメソッドを定義
     // アプリを登録した時点をヘルスケア情報の集計起点とする
     DateTime fixDt(DateTime dt) => dt.compareTo(createdAt) == 1 ? dt : createdAt;
 
-    // 昨日1日、過去一週間、過去一ヶ月間、過去全ての3パターンでヘルスケア情報を取得
-    final toDate = _lastTime(targetDateTime.subtract(const Duration(days: 1)));
-    // 昨日
-    final healthOfYesterday = await _getHealthData(
-      DateTime(toDate.year, toDate.month, toDate.day),
-      toDate,
-    );
-    // 一週間, 一ヶ月, 全体の集計結果はユーザを作成して24時間後に有効になる
-    // 作成して24時間未満の場合、計測中という扱いにする
-    // 最大で24時間以上経過しないと集計ロジックの都合上、昨日の歩数 > 一週間,一ヶ月,totalの歩数 となるため
-    // この処理が必要となる
-    List<HealthDataPoint> healthOfWeek = [];
-    List<HealthDataPoint> healthOfMonth = [];
-    List<HealthDataPoint> healthOfTotal = [];
-    if (targetDateTime.difference(createdAt).compareTo(const Duration(days: 1)) == 1) {
-      // 一週間
-      final fromLastWeek =
-          toDate.subtract(const Duration(days: 7)).add(const Duration(microseconds: 1));
-      healthOfWeek = await _getHealthData(fixDt(fromLastWeek), toDate);
-      // 一ヶ月
-      final fromLastMonth = _getPrevMonth(toDate).add(const Duration(microseconds: 1));
-      healthOfMonth = await _getHealthData(fixDt(fromLastMonth), toDate);
-      // 過去全て
-      healthOfTotal = await _getHealthData(createdAt, toDate);
-    }
+    try {
+      // 昨日1日、過去一週間、過去一ヶ月間、過去全ての3パターンでヘルスケア情報を取得
+      final toDate = _lastTime(targetDateTime.subtract(const Duration(days: 1)));
+      // 昨日
+      final healthOfYesterday = await _getHealthData(
+        DateTime(toDate.year, toDate.month, toDate.day),
+        toDate,
+        types,
+      );
+      // 一週間, 一ヶ月, 全体の集計結果はユーザを作成して24時間後に有効になる
+      // 作成して24時間未満の場合、計測中という扱いにする
+      // 最大で24時間以上経過しないと集計ロジックの都合上、昨日の歩数 > 一週間,一ヶ月,totalの歩数 となるため
+      // この処理が必要となる
+      List<HealthDataPoint> healthOfWeek = [];
+      List<HealthDataPoint> healthOfMonth = [];
+      List<HealthDataPoint> healthOfTotal = [];
+      if (targetDateTime.difference(createdAt).compareTo(const Duration(days: 1)) == 1) {
+        // 一週間
+        final fromLastWeek =
+            toDate.subtract(const Duration(days: 7)).add(const Duration(microseconds: 1));
+        healthOfWeek = await _getHealthData(fixDt(fromLastWeek), toDate, types);
+        // 一ヶ月
+        final fromLastMonth = _getPrevMonth(toDate).add(const Duration(microseconds: 1));
+        healthOfMonth = await _getHealthData(fixDt(fromLastMonth), toDate, types);
+        // 過去全て
+        healthOfTotal = await _getHealthData(createdAt, toDate, types);
+      }
 
-    final totalHealth = _aggregateHealthInfo(healthOfTotal);
-    final health = HealthInfo(
-      yesterday: _aggregateHealthInfo(healthOfYesterday),
-      week: _aggregateHealthInfo(healthOfWeek),
-      month: _aggregateHealthInfo(healthOfMonth),
-      updatedAt: CustomizableDateTime.current,
-      totalSteps: totalHealth.steps,
-      totalDistance: totalHealth.distance,
-    );
-    _logger.d(health);
-    return health;
+      final totalHealth = _aggregateHealthInfo(healthOfTotal);
+      final health = HealthInfo(
+        yesterday: _aggregateHealthInfo(healthOfYesterday),
+        week: _aggregateHealthInfo(healthOfWeek),
+        month: _aggregateHealthInfo(healthOfMonth),
+        updatedAt: CustomizableDateTime.current,
+        totalSteps: totalHealth.steps,
+        totalDistance: totalHealth.distance,
+      );
+      _logger.d(health);
+      return health;
+    } on HealthException catch (e) {
+      throw GetHealthException(e.cause, GetHealthExceptionStatus.unknown);
+    } on Exception catch (e) {
+      throw GetHealthException(e.toString(), GetHealthExceptionStatus.unknown);
+    }
   }
 
   /// 各OSごとの仕組みでヘルスケア情報を取得
   ///
   /// [from] 取得範囲の開始地点
   /// [to] 取得範囲の終了地点
-  Future<List<HealthDataPoint>> _getHealthData(DateTime from, DateTime to) async {
+  Future<List<HealthDataPoint>> _getHealthData(
+    DateTime from,
+    DateTime to,
+    List<HealthDataType> types,
+  ) async {
     DateTime trueFrom = from;
     DateTime trueTo = to;
     if (trueFrom.compareTo(trueTo) != -1) {
       trueFrom = to;
       trueTo = from;
     }
-    final healthData = await _healthFactory.getHealthDataFromTypes(trueFrom, trueTo, _types);
+    final healthData = await _healthFactory.getHealthDataFromTypes(trueFrom, trueTo, types);
     return HealthFactory.removeDuplicates(healthData);
   }
 
@@ -120,7 +136,6 @@ class HealthRepositoryImpl implements HealthRepository {
         // ref.  https://pub.dev/packages/health
         case HealthDataType.DISTANCE_DELTA:
         case HealthDataType.DISTANCE_WALKING_RUNNING:
-          // case HealthDataType.DISTANCE_WALKING_RUNNING:
           distance += val;
           break;
         // 消費カロリー[kcal]
