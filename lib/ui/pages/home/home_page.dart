@@ -4,6 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/router.dart';
+import 'package:virtualpilgrimage/ui/pages/home/home_presenter.dart';
 import 'package:virtualpilgrimage/ui/pages/sign_in/sign_in_presenter.dart';
 import 'package:virtualpilgrimage/ui/style/color.dart';
 
@@ -31,6 +32,10 @@ class HomePageBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userState = _ref.watch(userStateProvider);
+    // FIXME: unused な変数じゃなくなったらコメントを削除
+    // MEMO: 現在はunusedな変数だが、ここで呼び出すことで初期化処理が走り、歩数の記録を行う
+    // ignore: unused_local_variable
+    final notifier = _ref.read(homeProvider.notifier);
     // ignore: unused_local_variable
     late GoogleMapController mapController;
     const initialCameraPosition = CameraPosition(

@@ -15,10 +15,11 @@ extension AnalyticsEvent on String {
   static const logout = 'logout';
   static const pressedRegistration = 'pressed_registration';
   static const registrationFailed = 'registration_failed';
+  static const initializeHomePageAndGetHealth = 'initialize_home_page_and_get_health';
 }
 
 final analyticsProvider = Provider<Analytics>(
-      (ref) => Analytics(ref.read(firebaseAnalyticsProvider), ref.read(loggerProvider)),
+  (ref) => Analytics(ref.read(firebaseAnalyticsProvider), ref.read(loggerProvider)),
 );
 
 class Analytics {
@@ -29,7 +30,9 @@ class Analytics {
 
   Future<void> logEvent({required String eventName, Map<String, dynamic>? parameters}) async {
     if (eventName.length > 40) {
-      _logger.w('firebase analytics log name must be 40 or less. [eventName][$eventName][parameters][$parameters]');
+      _logger.w(
+        'firebase analytics log name must be 40 or less. [eventName][$eventName][parameters][$parameters]',
+      );
       return Future.value();
     }
 
