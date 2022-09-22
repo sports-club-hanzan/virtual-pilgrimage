@@ -47,7 +47,7 @@ class SignInPresenter extends StateNotifier<SignInState> {
         email: state.email,
         password: state.password,
       );
-      unawaited(_analytics.setUserProperties(name: user.nickname, value: user.toString()));
+      unawaited(_analytics.setUserProperties(user: user));
       // userState を変更するとページが遷移するので最後に更新を実行
       _userState.state = user;
     } on Exception catch (e) {
@@ -93,7 +93,7 @@ class SignInPresenter extends StateNotifier<SignInState> {
       state = state.copyWith(
         context: _getSignInContext(user),
       );
-      unawaited(_analytics.setUserProperties(name: user.email, value: user.toString()));
+      unawaited(_analytics.setUserProperties(user: user));
       // userState を変更するとページが遷移するので最後に更新を実行
       _userState.state = user;
     } on SignInException catch (e) {
@@ -165,7 +165,6 @@ class SignInPresenter extends StateNotifier<SignInState> {
   Future<void> logout() async {
     await _analytics.logEvent(eventName: AnalyticsEvent.logout);
     await _signInUsecase.logout();
-    unawaited(_analytics.setUserProperties(name: 'not_logged_in'));
     _ref.watch(userStateProvider.state).state = null;
   }
 

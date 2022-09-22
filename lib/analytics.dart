@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
+import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_analytics_provider.dart';
 import 'package:virtualpilgrimage/logger.dart';
 
@@ -18,7 +19,7 @@ extension AnalyticsEvent on String {
 }
 
 final analyticsProvider = Provider<Analytics>(
-      (ref) => Analytics(ref.read(firebaseAnalyticsProvider), ref.read(loggerProvider)),
+  (ref) => Analytics(ref.read(firebaseAnalyticsProvider), ref.read(loggerProvider)),
 );
 
 class Analytics {
@@ -27,9 +28,14 @@ class Analytics {
   final FirebaseAnalytics _analytics;
   final Logger _logger;
 
-  Future<void> logEvent({required String eventName, Map<String, dynamic>? parameters}) async {
+  Future<void> logEvent({
+    required String eventName,
+    Map<String, dynamic>? parameters,
+  }) async {
     if (eventName.length > 40) {
-      _logger.w('firebase analytics log name must be 40 or less. [eventName][$eventName][parameters][$parameters]');
+      _logger.w(
+        'firebase analytics log name must be 40 or less. [eventName][$eventName][parameters][$parameters]',
+      );
       return Future.value();
     }
 
@@ -41,7 +47,14 @@ class Analytics {
     await _analytics.setCurrentScreen(screenName: screenName);
   }
 
-  Future<void> setUserProperties({required String name, String? value}) async {
-    unawaited(_analytics.setUserProperty(name: name, value: value));
+  Future<void> setUserProperties({required VirtualPilgrimageUser user}) async {
+    final map = {
+      VirtualPilgrimageUserPrivateFirestoreFieldKeys.id: user.id,
+      VirtualPilgrimageUserPrivateFirestoreFieldKeys.nickname: user.nickname,
+      VirtualPilgrimageUserPrivateFirestoreFieldKeys.gender: user.gender.name,
+    };
+    for (final entry in map.entries) {
+      unawaited(_analytics.setUserProperty(name: entry.key, value: entry.value));
+    }
   }
 }
