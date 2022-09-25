@@ -20,10 +20,7 @@ final homeProvider = StateNotifierProvider.autoDispose<HomePresenter, HomeState>
 );
 
 class HomePresenter extends StateNotifier<HomeState> {
-  HomePresenter(this._ref)
-      : super(
-          const HomeState(),
-        ) {
+  HomePresenter(this._ref) : super(HomeState.initialize()) {
     _updateHealthUsecase = _ref.read(updateHealthUsecaseProvider);
     _directionPolylineRepository = _ref.read(directionPolylineRepositoryPresenter);
     _analytics = _ref.read(analyticsProvider);
@@ -62,6 +59,15 @@ class HomePresenter extends StateNotifier<HomeState> {
       await openAppSettings();
     }
 
+    // 以下は処理順は重要ではないため、非同期に並列で処理して UI への反映を早める
+    try {
+      await Future.wait(<Future<void>>[getHealth(user), updatePolyline(), setUserMarker(user)]);
+    } on Exception catch (e) {
+      unawaited(_crashlytics.recordError(e, null));
+    }
+  }
+
+  Future<void> getHealth(VirtualPilgrimageUser user) async {
     final result = await _updateHealthUsecase.execute(user);
     if (result.status != UpdateHealthStatus.success) {
       await _crashlytics.recordError(
@@ -70,25 +76,42 @@ class HomePresenter extends StateNotifier<HomeState> {
         reason: 'failed to record health information [status][${result.status}]',
       );
     }
+  }
 
+  /// map 上で2点間の距離を可視化するための経路を取得するメソッド
+  /// FIXME: 利用する地点が固定値になっているため機能追加に合わせて修正する
+  Future<void> updatePolyline() async {
     // 現在地点から適当なお寺への経路の可視化
-    await _directionPolylineRepository
-        .getPolylines(
+    final latlngs = await _directionPolylineRepository.getPolylines(
       origin: const LatLng(34.15944444, 134.503),
       destination: const LatLng(34.10, 134.467),
-    )
-        .then(
-      (value) {
-        final polylines = {
-          Polyline(
-            polylineId: const PolylineId('id'),
-            points: value,
-            color: Colors.pinkAccent,
-            width: 5,
-          )
-        };
-        state = state.copyWith(polylines: polylines);
-      },
     );
+    final polylines = {
+      Polyline(
+        polylineId: const PolylineId('id'),
+        points: latlngs,
+        color: Colors.pinkAccent,
+        width: 5,
+      )
+    };
+    state = state.setGoogleMap(state.googleMap.copyWith(polylines: polylines));
   }
+
+  /// ユーザ情報を利用して GoogleMap 上に描画するユーザ情報のマーカーを追加
+  Future<void> setUserMarker(VirtualPilgrimageUser user) async {
+    final markers = {
+      ...state.googleMap.markers,
+      Marker(
+        markerId: MarkerId(user.nickname),
+        position: const LatLng(34.10, 134.467), // FIXME: 適当に固定値を入れているだけであるため修正する
+        icon: user.userIcon,
+        infoWindow: InfoWindow(title: '現在: ${user.health?.totalSteps ?? 0}歩'),
+      )
+    };
+    state = state.setGoogleMap(state.googleMap.copyWith(markers: markers));
+  }
+
+  /// GoogleMap の描画が完了した時に呼ばれる
+  /// [controller] GoogleMap の描画に使われるインスタンス
+  void onMapCreated(GoogleMapController controller) => state.onGoogleMapCreated(controller);
 }
