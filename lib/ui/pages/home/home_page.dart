@@ -120,7 +120,7 @@ class HomePageBody extends StatelessWidget {
             SizedBox(
               height: 350,
               child: GoogleMap(
-                myLocationEnabled: true,
+                myLocationEnabled: false,
                 myLocationButtonEnabled: false,
                 mapType: MapType.normal,
                 initialCameraPosition: initialCameraPosition,
