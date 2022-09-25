@@ -15,12 +15,19 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
-mixin _$HomeState {}
+mixin _$HomeState {
+  Set<Polyline> get polylines => throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $HomeStateCopyWith<HomeState> get copyWith =>
+      throw _privateConstructorUsedError;
+}
 
 /// @nodoc
 abstract class $HomeStateCopyWith<$Res> {
   factory $HomeStateCopyWith(HomeState value, $Res Function(HomeState) then) =
       _$HomeStateCopyWithImpl<$Res>;
+  $Res call({Set<Polyline> polylines});
 }
 
 /// @nodoc
@@ -30,13 +37,27 @@ class _$HomeStateCopyWithImpl<$Res> implements $HomeStateCopyWith<$Res> {
   final HomeState _value;
   // ignore: unused_field
   final $Res Function(HomeState) _then;
+
+  @override
+  $Res call({
+    Object? polylines = freezed,
+  }) {
+    return _then(_value.copyWith(
+      polylines: polylines == freezed
+          ? _value.polylines
+          : polylines // ignore: cast_nullable_to_non_nullable
+              as Set<Polyline>,
+    ));
+  }
 }
 
 /// @nodoc
-abstract class _$$_HomeStateCopyWith<$Res> {
+abstract class _$$_HomeStateCopyWith<$Res> implements $HomeStateCopyWith<$Res> {
   factory _$$_HomeStateCopyWith(
           _$_HomeState value, $Res Function(_$_HomeState) then) =
       __$$_HomeStateCopyWithImpl<$Res>;
+  @override
+  $Res call({Set<Polyline> polylines});
 }
 
 /// @nodoc
@@ -48,29 +69,67 @@ class __$$_HomeStateCopyWithImpl<$Res> extends _$HomeStateCopyWithImpl<$Res>
 
   @override
   _$_HomeState get _value => super._value as _$_HomeState;
+
+  @override
+  $Res call({
+    Object? polylines = freezed,
+  }) {
+    return _then(_$_HomeState(
+      polylines: polylines == freezed
+          ? _value._polylines
+          : polylines // ignore: cast_nullable_to_non_nullable
+              as Set<Polyline>,
+    ));
+  }
 }
 
 /// @nodoc
 
 class _$_HomeState extends _HomeState {
-  const _$_HomeState() : super._();
+  const _$_HomeState({final Set<Polyline> polylines = const {}})
+      : _polylines = polylines,
+        super._();
+
+  final Set<Polyline> _polylines;
+  @override
+  @JsonKey()
+  Set<Polyline> get polylines {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableSetView(_polylines);
+  }
 
   @override
   String toString() {
-    return 'HomeState()';
+    return 'HomeState(polylines: $polylines)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_HomeState);
+        (other.runtimeType == runtimeType &&
+            other is _$_HomeState &&
+            const DeepCollectionEquality()
+                .equals(other._polylines, _polylines));
   }
 
   @override
-  int get hashCode => runtimeType.hashCode;
+  int get hashCode =>
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(_polylines));
+
+  @JsonKey(ignore: true)
+  @override
+  _$$_HomeStateCopyWith<_$_HomeState> get copyWith =>
+      __$$_HomeStateCopyWithImpl<_$_HomeState>(this, _$identity);
 }
 
 abstract class _HomeState extends HomeState {
-  const factory _HomeState() = _$_HomeState;
+  const factory _HomeState({final Set<Polyline> polylines}) = _$_HomeState;
   const _HomeState._() : super._();
+
+  @override
+  Set<Polyline> get polylines;
+  @override
+  @JsonKey(ignore: true)
+  _$$_HomeStateCopyWith<_$_HomeState> get copyWith =>
+      throw _privateConstructorUsedError;
 }

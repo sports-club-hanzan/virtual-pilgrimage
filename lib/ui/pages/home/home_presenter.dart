@@ -1,13 +1,16 @@
 import 'dart:async';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:virtualpilgrimage/analytics.dart';
 import 'package:virtualpilgrimage/domain/user/health/update_health_result.dart';
 import 'package:virtualpilgrimage/domain/user/health/update_health_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
+import 'package:virtualpilgrimage/infrastructure/pilgrimage/direction_polyline_repository_impl.dart';
 
 import 'home_state.codegen.dart';
 
@@ -21,6 +24,7 @@ class HomePresenter extends StateNotifier<HomeState> {
           const HomeState(),
         ) {
     _updateHealthUsecase = _ref.read(updateHealthUsecaseProvider);
+    _directionPolylineRepository = _ref.read(directionPolylineRepositoryPresenter);
     _analytics = _ref.read(analyticsProvider);
     _crashlytics = _ref.read(firebaseCrashlyticsProvider);
     initialize();
@@ -28,6 +32,7 @@ class HomePresenter extends StateNotifier<HomeState> {
 
   final Ref _ref;
   late final UpdateHealthUsecase _updateHealthUsecase;
+  late final DirectionPolylineRepositoryImpl _directionPolylineRepository;
   late final Analytics _analytics;
   late final FirebaseCrashlytics _crashlytics;
 
@@ -64,5 +69,22 @@ class HomePresenter extends StateNotifier<HomeState> {
         reason: 'failed to record health information [status][${result.status}]',
       );
     }
+
+    // 現在地点から適当なお寺への経路の可視化
+    await _directionPolylineRepository
+        .getPolyline(const LatLng(34.15944444, 134.503), const LatLng(34.10, 134.467))
+        .then(
+      (value) {
+        final polylines = {
+          Polyline(
+            polylineId: const PolylineId('id'),
+            points: value,
+            color: Colors.pinkAccent,
+            width: 5,
+          )
+        };
+        state = state.copyWith(polylines: polylines);
+      },
+    );
   }
 }

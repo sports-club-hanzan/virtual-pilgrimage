@@ -32,6 +32,7 @@ class HomePageBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userState = _ref.watch(userStateProvider);
+    final state = _ref.watch(homeProvider);
     // FIXME: unused な変数じゃなくなったらコメントを削除
     // MEMO: 現在はunusedな変数だが、ここで呼び出すことで初期化処理が走り、歩数の記録を行う
     // ignore: unused_local_variable
@@ -44,8 +45,8 @@ class HomePageBody extends StatelessWidget {
     );
     final markers = {
       const Marker(
-        markerId: MarkerId('霊峰寺'),
-        position: LatLng(34.1597388, 134.4675072),
+        markerId: MarkerId('霊山寺'),
+        position: LatLng(34.15944444, 134.503),
         infoWindow: InfoWindow(title: '霊峰寺', snippet: '1箇所目'),
       ),
       const Marker(
@@ -124,6 +125,7 @@ class HomePageBody extends StatelessWidget {
                 mapType: MapType.normal,
                 initialCameraPosition: initialCameraPosition,
                 markers: markers,
+                polylines: state.polylines,
                 onMapCreated: (GoogleMapController controller) {
                   mapController = controller;
                 },
