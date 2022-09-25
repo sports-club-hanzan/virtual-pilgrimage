@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:virtualpilgrimage/analytics.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/gen/firebase_options_dev.dart' as dev;
 import 'package:virtualpilgrimage/gen/firebase_options_prod.dart' as prod;
@@ -24,15 +25,18 @@ class _App extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
     final firebaseAuth = ref.watch(firebaseAuthProvider);
+    final analytics = ref.read(analyticsProvider);
     final userState = ref.watch(userStateProvider.state);
 
     // Firebaseへのログインがキャッシュされていれば
     // Firestoreからユーザ情報を詰める
     if (firebaseAuth.currentUser != null && userState.state == null) {
-      ref
-          .read(userRepositoryProvider)
-          .get(firebaseAuth.currentUser!.uid)
-          .then((value) => userState.state = value);
+      ref.read(userRepositoryProvider).get(firebaseAuth.currentUser!.uid).then((value) {
+        userState.state = value;
+        if (value != null) {
+          analytics.setUserProperties(user: value);
+        }
+      });
     }
 
     return MaterialApp.router(
