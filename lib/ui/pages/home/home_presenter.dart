@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:virtualpilgrimage/analytics.dart';
+import 'package:virtualpilgrimage/domain/pilgrimage/direction_polyline_repository.dart';
 import 'package:virtualpilgrimage/domain/user/health/update_health_result.dart';
 import 'package:virtualpilgrimage/domain/user/health/update_health_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
@@ -72,7 +73,10 @@ class HomePresenter extends StateNotifier<HomeState> {
 
     // 現在地点から適当なお寺への経路の可視化
     await _directionPolylineRepository
-        .getPolyline(const LatLng(34.15944444, 134.503), const LatLng(34.10, 134.467))
+        .getPolylines(
+      origin: const LatLng(34.15944444, 134.503),
+      destination: const LatLng(34.10, 134.467),
+    )
         .then(
       (value) {
         final polylines = {
