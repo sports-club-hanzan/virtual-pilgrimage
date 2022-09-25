@@ -2,24 +2,15 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_polyline_algorithm/google_polyline_algorithm.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
-import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
+import 'package:virtualpilgrimage/domain/pilgrimage/direction_polyline_repository.dart';
 import 'package:virtualpilgrimage/infrastructure/pilgrimage/direction_polyline_response.codegen.dart';
-import 'package:virtualpilgrimage/logger.dart';
 
-final directionPolylineRepositoryPresenter = Provider(
-  (ref) => DirectionPolylineRepositoryImpl(
-    ref.read(loggerProvider),
-    ref.read(firebaseCrashlyticsProvider),
-  ),
-);
-
-// Map上で2点間の最適な経路を取得するリポジトリ
-class DirectionPolylineRepositoryImpl {
+// Map上で2点間の最適な経路を取得するリポジトリの実装
+class DirectionPolylineRepositoryImpl implements DirectionPolylineRepository {
   DirectionPolylineRepositoryImpl(this._logger, this._crashlytics);
 
   final Logger _logger;
@@ -35,8 +26,12 @@ class DirectionPolylineRepositoryImpl {
 
   final _apiKey = const String.fromEnvironment('DIRECTION_KEY');
 
-  // 2つ
-  Future<List<LatLng>> getPolyline(LatLng origin, LatLng destination) async {
+  /// 2点間の経路を導出して返す
+  ///
+  /// [origin] スタート地点
+  /// [destination] ゴール地点
+  @override
+  Future<List<LatLng>> getPolylines({required LatLng origin, required LatLng destination}) async {
     // TODO(s14t284): 同じレスポンスが得られるhttp通信を毎回実行するのは重いので必要に応じてキャッシュで経路を保存しておくか検討する
 
     final params = {
