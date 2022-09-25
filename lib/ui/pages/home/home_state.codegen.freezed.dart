@@ -16,7 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$HomeState {
-  Set<Polyline> get polylines => throw _privateConstructorUsedError;
+  GoogleMapModel get googleMap => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $HomeStateCopyWith<HomeState> get copyWith =>
@@ -27,7 +27,9 @@ mixin _$HomeState {
 abstract class $HomeStateCopyWith<$Res> {
   factory $HomeStateCopyWith(HomeState value, $Res Function(HomeState) then) =
       _$HomeStateCopyWithImpl<$Res>;
-  $Res call({Set<Polyline> polylines});
+  $Res call({GoogleMapModel googleMap});
+
+  $GoogleMapModelCopyWith<$Res> get googleMap;
 }
 
 /// @nodoc
@@ -40,14 +42,21 @@ class _$HomeStateCopyWithImpl<$Res> implements $HomeStateCopyWith<$Res> {
 
   @override
   $Res call({
-    Object? polylines = freezed,
+    Object? googleMap = freezed,
   }) {
     return _then(_value.copyWith(
-      polylines: polylines == freezed
-          ? _value.polylines
-          : polylines // ignore: cast_nullable_to_non_nullable
-              as Set<Polyline>,
+      googleMap: googleMap == freezed
+          ? _value.googleMap
+          : googleMap // ignore: cast_nullable_to_non_nullable
+              as GoogleMapModel,
     ));
+  }
+
+  @override
+  $GoogleMapModelCopyWith<$Res> get googleMap {
+    return $GoogleMapModelCopyWith<$Res>(_value.googleMap, (value) {
+      return _then(_value.copyWith(googleMap: value));
+    });
   }
 }
 
@@ -57,7 +66,10 @@ abstract class _$$_HomeStateCopyWith<$Res> implements $HomeStateCopyWith<$Res> {
           _$_HomeState value, $Res Function(_$_HomeState) then) =
       __$$_HomeStateCopyWithImpl<$Res>;
   @override
-  $Res call({Set<Polyline> polylines});
+  $Res call({GoogleMapModel googleMap});
+
+  @override
+  $GoogleMapModelCopyWith<$Res> get googleMap;
 }
 
 /// @nodoc
@@ -72,13 +84,13 @@ class __$$_HomeStateCopyWithImpl<$Res> extends _$HomeStateCopyWithImpl<$Res>
 
   @override
   $Res call({
-    Object? polylines = freezed,
+    Object? googleMap = freezed,
   }) {
     return _then(_$_HomeState(
-      polylines: polylines == freezed
-          ? _value._polylines
-          : polylines // ignore: cast_nullable_to_non_nullable
-              as Set<Polyline>,
+      googleMap: googleMap == freezed
+          ? _value.googleMap
+          : googleMap // ignore: cast_nullable_to_non_nullable
+              as GoogleMapModel,
     ));
   }
 }
@@ -86,21 +98,14 @@ class __$$_HomeStateCopyWithImpl<$Res> extends _$HomeStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_HomeState extends _HomeState {
-  const _$_HomeState({final Set<Polyline> polylines = const {}})
-      : _polylines = polylines,
-        super._();
+  const _$_HomeState({required this.googleMap}) : super._();
 
-  final Set<Polyline> _polylines;
   @override
-  @JsonKey()
-  Set<Polyline> get polylines {
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableSetView(_polylines);
-  }
+  final GoogleMapModel googleMap;
 
   @override
   String toString() {
-    return 'HomeState(polylines: $polylines)';
+    return 'HomeState(googleMap: $googleMap)';
   }
 
   @override
@@ -108,13 +113,12 @@ class _$_HomeState extends _HomeState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_HomeState &&
-            const DeepCollectionEquality()
-                .equals(other._polylines, _polylines));
+            const DeepCollectionEquality().equals(other.googleMap, googleMap));
   }
 
   @override
   int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(_polylines));
+      Object.hash(runtimeType, const DeepCollectionEquality().hash(googleMap));
 
   @JsonKey(ignore: true)
   @override
@@ -123,11 +127,12 @@ class _$_HomeState extends _HomeState {
 }
 
 abstract class _HomeState extends HomeState {
-  const factory _HomeState({final Set<Polyline> polylines}) = _$_HomeState;
+  const factory _HomeState({required final GoogleMapModel googleMap}) =
+      _$_HomeState;
   const _HomeState._() : super._();
 
   @override
-  Set<Polyline> get polylines;
+  GoogleMapModel get googleMap;
   @override
   @JsonKey(ignore: true)
   _$$_HomeStateCopyWith<_$_HomeState> get copyWith =>
