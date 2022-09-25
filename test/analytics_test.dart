@@ -2,6 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:logger/logger.dart';
 import 'package:mockito/mockito.dart';
 import 'package:virtualpilgrimage/analytics.dart';
+import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
+import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 
 import 'helper/mock.mocks.dart';
 import 'helper/provider_container.dart';
@@ -83,31 +85,43 @@ void main() {
     });
 
     group('setUserProperties', () {
-      test('正常系: value に値が設定される場合', () async {
+      test('正常系', () async {
         // given
-        const name = 'dummyName';
-        const value = 'User(name=dummyName, email=test@example.com)';
-        when(mockFirebaseAnalytics.setUserProperty(name: name, value: value))
-            .thenAnswer((_) => Future.value());
+        final user = VirtualPilgrimageUser(
+          id: 'dummyId',
+          nickname: 'dummyName',
+          gender: Gender.woman,
+          birthDay: DateTime(1990),
+          createdAt: CustomizableDateTime.current,
+          updatedAt: CustomizableDateTime.current,
+        );
+        when(
+          mockFirebaseAnalytics.setUserProperty(
+            name: 'id',
+            value: 'dummyId',
+          ),
+        ).thenAnswer((_) => Future.value());
+        when(
+          mockFirebaseAnalytics.setUserProperty(
+            name: 'nickname',
+            value: 'dummyName',
+          ),
+        ).thenAnswer((_) => Future.value());
+        when(
+          mockFirebaseAnalytics.setUserProperty(
+            name: 'gender',
+            value: 'woman',
+          ),
+        ).thenAnswer((_) => Future.value());
 
         // when
-        await analytics.setUserProperties(name: name, value: value);
+        await analytics.setUserProperties(user: user);
 
         // then
-        verify(mockFirebaseAnalytics.setUserProperty(name: name, value: value)).called(1);
-      });
-
-      test('正常系: value に値が設定されない場合', () async {
-        // given
-        const name = 'dummyName';
-        when(mockFirebaseAnalytics.setUserProperty(name: name, value: null))
-            .thenAnswer((_) => Future.value());
-
-        // when
-        await analytics.setUserProperties(name: name);
-
-        // then
-        verify(mockFirebaseAnalytics.setUserProperty(name: name, value: null)).called(1);
+        verify(mockFirebaseAnalytics.setUserProperty(name: 'id', value: 'dummyId')).called(1);
+        verify(mockFirebaseAnalytics.setUserProperty(name: 'nickname', value: 'dummyName'))
+            .called(1);
+        verify(mockFirebaseAnalytics.setUserProperty(name: 'gender', value: 'woman')).called(1);
       });
     });
   });
