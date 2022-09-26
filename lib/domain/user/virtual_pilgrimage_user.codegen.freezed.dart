@@ -21,33 +21,40 @@ VirtualPilgrimageUser _$VirtualPilgrimageUserFromJson(
 
 /// @nodoc
 mixin _$VirtualPilgrimageUser {
-  String get id => throw _privateConstructorUsedError;
-  String get nickname =>
-      throw _privateConstructorUsedError; // ignore: invalid_annotation_target
+// ユーザID。Firebase Authentication によって自動生成
+  String get id => throw _privateConstructorUsedError; // ニックネーム
+  String get nickname => throw _privateConstructorUsedError; // 性別
   @JsonKey(
       fromJson: _GenderConverter.intToGender,
       toJson: _GenderConverter.genderToInt)
-  Gender get gender =>
-      throw _privateConstructorUsedError; // ignore: invalid_annotation_target
+  Gender get gender => throw _privateConstructorUsedError; // 誕生日
   @JsonKey(
       fromJson: _FirestoreTimestampConverter.timestampToDateTime,
       toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
-  DateTime get birthDay => throw _privateConstructorUsedError;
-  String get email => throw _privateConstructorUsedError;
+  DateTime get birthDay => throw _privateConstructorUsedError; // メールアドレス
+  String get email => throw _privateConstructorUsedError; // ユーザアイコンのURL
   String get userIconUrl => throw _privateConstructorUsedError;
-  @JsonKey(
-      defaultValue: null,
-      nullable: true,
-      fromJson: _BitmapConverter.stringToBitmap)
-  BitmapDescriptor get userIcon => throw _privateConstructorUsedError;
   @JsonKey(
       fromJson: _UserStatusConverter.intToUserStatus,
       toJson: _UserStatusConverter.userStatusToInt)
-  UserStatus get userStatus =>
+  UserStatus get userStatus => throw _privateConstructorUsedError; // ユーザの作成日
+  @JsonKey(
+      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
+      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+  DateTime get createdAt => throw _privateConstructorUsedError; // ユーザの更新日
+  @JsonKey(
+      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
+      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+  DateTime get updatedAt =>
+      throw _privateConstructorUsedError; // ヘルスケア情報。歩数や移動距離など
+  HealthInfo? get health =>
       throw _privateConstructorUsedError; // TODO(s14t284): 以下の情報を含める
-// ヘルスケアから得られる歩数などの情報
 // 現在地のお遍路で巡っているお寺の情報
-  String get walkCount => throw _privateConstructorUsedError;
+// 以下は json に変換した時に含めないパラメータ
+// DB で管理されずアプリ上で値がセットされる
+// ユーザアイコン。ログイン時に userIconUrl から GoogleMap に描画できる形式に変換される
+  @JsonKey(ignore: true, fromJson: _BitmapConverter.stringToBitmap)
+  BitmapDescriptor get userIcon => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -69,11 +76,17 @@ abstract class $VirtualPilgrimageUserCopyWith<$Res> {
           DateTime birthDay,
       String email,
       String userIconUrl,
-      @JsonKey(defaultValue: null, nullable: true, fromJson: _BitmapConverter.stringToBitmap)
-          BitmapDescriptor userIcon,
       @JsonKey(fromJson: _UserStatusConverter.intToUserStatus, toJson: _UserStatusConverter.userStatusToInt)
           UserStatus userStatus,
-      String walkCount});
+      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+          DateTime createdAt,
+      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+          DateTime updatedAt,
+      HealthInfo? health,
+      @JsonKey(ignore: true, fromJson: _BitmapConverter.stringToBitmap)
+          BitmapDescriptor userIcon});
+
+  $HealthInfoCopyWith<$Res>? get health;
 }
 
 /// @nodoc
@@ -93,9 +106,11 @@ class _$VirtualPilgrimageUserCopyWithImpl<$Res>
     Object? birthDay = freezed,
     Object? email = freezed,
     Object? userIconUrl = freezed,
-    Object? userIcon = freezed,
     Object? userStatus = freezed,
-    Object? walkCount = freezed,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
+    Object? health = freezed,
+    Object? userIcon = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed
@@ -122,19 +137,38 @@ class _$VirtualPilgrimageUserCopyWithImpl<$Res>
           ? _value.userIconUrl
           : userIconUrl // ignore: cast_nullable_to_non_nullable
               as String,
-      userIcon: userIcon == freezed
-          ? _value.userIcon
-          : userIcon // ignore: cast_nullable_to_non_nullable
-              as BitmapDescriptor,
       userStatus: userStatus == freezed
           ? _value.userStatus
           : userStatus // ignore: cast_nullable_to_non_nullable
               as UserStatus,
-      walkCount: walkCount == freezed
-          ? _value.walkCount
-          : walkCount // ignore: cast_nullable_to_non_nullable
-              as String,
+      createdAt: createdAt == freezed
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      updatedAt: updatedAt == freezed
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      health: health == freezed
+          ? _value.health
+          : health // ignore: cast_nullable_to_non_nullable
+              as HealthInfo?,
+      userIcon: userIcon == freezed
+          ? _value.userIcon
+          : userIcon // ignore: cast_nullable_to_non_nullable
+              as BitmapDescriptor,
     ));
+  }
+
+  @override
+  $HealthInfoCopyWith<$Res>? get health {
+    if (_value.health == null) {
+      return null;
+    }
+
+    return $HealthInfoCopyWith<$Res>(_value.health!, (value) {
+      return _then(_value.copyWith(health: value));
+    });
   }
 }
 
@@ -154,11 +188,18 @@ abstract class _$$_VirtualPilgrimageUserCopyWith<$Res>
           DateTime birthDay,
       String email,
       String userIconUrl,
-      @JsonKey(defaultValue: null, nullable: true, fromJson: _BitmapConverter.stringToBitmap)
-          BitmapDescriptor userIcon,
       @JsonKey(fromJson: _UserStatusConverter.intToUserStatus, toJson: _UserStatusConverter.userStatusToInt)
           UserStatus userStatus,
-      String walkCount});
+      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+          DateTime createdAt,
+      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+          DateTime updatedAt,
+      HealthInfo? health,
+      @JsonKey(ignore: true, fromJson: _BitmapConverter.stringToBitmap)
+          BitmapDescriptor userIcon});
+
+  @override
+  $HealthInfoCopyWith<$Res>? get health;
 }
 
 /// @nodoc
@@ -181,9 +222,11 @@ class __$$_VirtualPilgrimageUserCopyWithImpl<$Res>
     Object? birthDay = freezed,
     Object? email = freezed,
     Object? userIconUrl = freezed,
-    Object? userIcon = freezed,
     Object? userStatus = freezed,
-    Object? walkCount = freezed,
+    Object? createdAt = freezed,
+    Object? updatedAt = freezed,
+    Object? health = freezed,
+    Object? userIcon = freezed,
   }) {
     return _then(_$_VirtualPilgrimageUser(
       id: id == freezed
@@ -210,18 +253,26 @@ class __$$_VirtualPilgrimageUserCopyWithImpl<$Res>
           ? _value.userIconUrl
           : userIconUrl // ignore: cast_nullable_to_non_nullable
               as String,
-      userIcon: userIcon == freezed
-          ? _value.userIcon
-          : userIcon // ignore: cast_nullable_to_non_nullable
-              as BitmapDescriptor,
       userStatus: userStatus == freezed
           ? _value.userStatus
           : userStatus // ignore: cast_nullable_to_non_nullable
               as UserStatus,
-      walkCount: walkCount == freezed
-          ? _value.walkCount
-          : walkCount // ignore: cast_nullable_to_non_nullable
-              as String,
+      createdAt: createdAt == freezed
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      updatedAt: updatedAt == freezed
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      health: health == freezed
+          ? _value.health
+          : health // ignore: cast_nullable_to_non_nullable
+              as HealthInfo?,
+      userIcon: userIcon == freezed
+          ? _value.userIcon
+          : userIcon // ignore: cast_nullable_to_non_nullable
+              as BitmapDescriptor,
     ));
   }
 }
@@ -239,61 +290,80 @@ class _$_VirtualPilgrimageUser extends _VirtualPilgrimageUser {
           required this.birthDay,
       this.email = '',
       this.userIconUrl = 'https://maps.google.com/mapfiles/kml/shapes/info-i_maps.png',
-      @JsonKey(defaultValue: null, nullable: true, fromJson: _BitmapConverter.stringToBitmap)
-          this.userIcon = BitmapDescriptor.defaultMarker,
       @JsonKey(fromJson: _UserStatusConverter.intToUserStatus, toJson: _UserStatusConverter.userStatusToInt)
           this.userStatus = UserStatus.temporary,
-      this.walkCount = '0'})
+      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+          required this.createdAt,
+      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+          required this.updatedAt,
+      this.health,
+      @JsonKey(ignore: true, fromJson: _BitmapConverter.stringToBitmap)
+          this.userIcon = BitmapDescriptor.defaultMarker})
       : super._();
 
   factory _$_VirtualPilgrimageUser.fromJson(Map<String, dynamic> json) =>
       _$$_VirtualPilgrimageUserFromJson(json);
 
+// ユーザID。Firebase Authentication によって自動生成
   @override
   @JsonKey()
   final String id;
+// ニックネーム
   @override
   @JsonKey()
   final String nickname;
-// ignore: invalid_annotation_target
+// 性別
   @override
   @JsonKey(
       fromJson: _GenderConverter.intToGender,
       toJson: _GenderConverter.genderToInt)
   final Gender gender;
-// ignore: invalid_annotation_target
+// 誕生日
   @override
   @JsonKey(
       fromJson: _FirestoreTimestampConverter.timestampToDateTime,
       toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
   final DateTime birthDay;
+// メールアドレス
   @override
   @JsonKey()
   final String email;
+// ユーザアイコンのURL
   @override
   @JsonKey()
   final String userIconUrl;
   @override
   @JsonKey(
-      defaultValue: null,
-      nullable: true,
-      fromJson: _BitmapConverter.stringToBitmap)
-  final BitmapDescriptor userIcon;
-  @override
-  @JsonKey(
       fromJson: _UserStatusConverter.intToUserStatus,
       toJson: _UserStatusConverter.userStatusToInt)
   final UserStatus userStatus;
-// TODO(s14t284): 以下の情報を含める
-// ヘルスケアから得られる歩数などの情報
-// 現在地のお遍路で巡っているお寺の情報
+// ユーザの作成日
   @override
-  @JsonKey()
-  final String walkCount;
+  @JsonKey(
+      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
+      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+  final DateTime createdAt;
+// ユーザの更新日
+  @override
+  @JsonKey(
+      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
+      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+  final DateTime updatedAt;
+// ヘルスケア情報。歩数や移動距離など
+  @override
+  final HealthInfo? health;
+// TODO(s14t284): 以下の情報を含める
+// 現在地のお遍路で巡っているお寺の情報
+// 以下は json に変換した時に含めないパラメータ
+// DB で管理されずアプリ上で値がセットされる
+// ユーザアイコン。ログイン時に userIconUrl から GoogleMap に描画できる形式に変換される
+  @override
+  @JsonKey(ignore: true, fromJson: _BitmapConverter.stringToBitmap)
+  final BitmapDescriptor userIcon;
 
   @override
   String toString() {
-    return 'VirtualPilgrimageUser(id: $id, nickname: $nickname, gender: $gender, birthDay: $birthDay, email: $email, userIconUrl: $userIconUrl, userIcon: $userIcon, userStatus: $userStatus, walkCount: $walkCount)';
+    return 'VirtualPilgrimageUser(id: $id, nickname: $nickname, gender: $gender, birthDay: $birthDay, email: $email, userIconUrl: $userIconUrl, userStatus: $userStatus, createdAt: $createdAt, updatedAt: $updatedAt, health: $health, userIcon: $userIcon)';
   }
 
   @override
@@ -308,10 +378,12 @@ class _$_VirtualPilgrimageUser extends _VirtualPilgrimageUser {
             const DeepCollectionEquality().equals(other.email, email) &&
             const DeepCollectionEquality()
                 .equals(other.userIconUrl, userIconUrl) &&
-            const DeepCollectionEquality().equals(other.userIcon, userIcon) &&
             const DeepCollectionEquality()
                 .equals(other.userStatus, userStatus) &&
-            const DeepCollectionEquality().equals(other.walkCount, walkCount));
+            const DeepCollectionEquality().equals(other.createdAt, createdAt) &&
+            const DeepCollectionEquality().equals(other.updatedAt, updatedAt) &&
+            const DeepCollectionEquality().equals(other.health, health) &&
+            const DeepCollectionEquality().equals(other.userIcon, userIcon));
   }
 
   @JsonKey(ignore: true)
@@ -324,9 +396,11 @@ class _$_VirtualPilgrimageUser extends _VirtualPilgrimageUser {
       const DeepCollectionEquality().hash(birthDay),
       const DeepCollectionEquality().hash(email),
       const DeepCollectionEquality().hash(userIconUrl),
-      const DeepCollectionEquality().hash(userIcon),
       const DeepCollectionEquality().hash(userStatus),
-      const DeepCollectionEquality().hash(walkCount));
+      const DeepCollectionEquality().hash(createdAt),
+      const DeepCollectionEquality().hash(updatedAt),
+      const DeepCollectionEquality().hash(health),
+      const DeepCollectionEquality().hash(userIcon));
 
   @JsonKey(ignore: true)
   @override
@@ -352,49 +426,62 @@ abstract class _VirtualPilgrimageUser extends VirtualPilgrimageUser {
           required final DateTime birthDay,
       final String email,
       final String userIconUrl,
-      @JsonKey(defaultValue: null, nullable: true, fromJson: _BitmapConverter.stringToBitmap)
-          final BitmapDescriptor userIcon,
       @JsonKey(fromJson: _UserStatusConverter.intToUserStatus, toJson: _UserStatusConverter.userStatusToInt)
           final UserStatus userStatus,
-      final String walkCount}) = _$_VirtualPilgrimageUser;
+      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+          required final DateTime createdAt,
+      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+          required final DateTime updatedAt,
+      final HealthInfo? health,
+      @JsonKey(ignore: true, fromJson: _BitmapConverter.stringToBitmap)
+          final BitmapDescriptor userIcon}) = _$_VirtualPilgrimageUser;
   const _VirtualPilgrimageUser._() : super._();
 
   factory _VirtualPilgrimageUser.fromJson(Map<String, dynamic> json) =
       _$_VirtualPilgrimageUser.fromJson;
 
-  @override
+  @override // ユーザID。Firebase Authentication によって自動生成
   String get id;
-  @override
+  @override // ニックネーム
   String get nickname;
-  @override // ignore: invalid_annotation_target
+  @override // 性別
   @JsonKey(
       fromJson: _GenderConverter.intToGender,
       toJson: _GenderConverter.genderToInt)
   Gender get gender;
-  @override // ignore: invalid_annotation_target
+  @override // 誕生日
   @JsonKey(
       fromJson: _FirestoreTimestampConverter.timestampToDateTime,
       toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
   DateTime get birthDay;
-  @override
+  @override // メールアドレス
   String get email;
-  @override
+  @override // ユーザアイコンのURL
   String get userIconUrl;
-  @override
-  @JsonKey(
-      defaultValue: null,
-      nullable: true,
-      fromJson: _BitmapConverter.stringToBitmap)
-  BitmapDescriptor get userIcon;
   @override
   @JsonKey(
       fromJson: _UserStatusConverter.intToUserStatus,
       toJson: _UserStatusConverter.userStatusToInt)
   UserStatus get userStatus;
+  @override // ユーザの作成日
+  @JsonKey(
+      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
+      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+  DateTime get createdAt;
+  @override // ユーザの更新日
+  @JsonKey(
+      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
+      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+  DateTime get updatedAt;
+  @override // ヘルスケア情報。歩数や移動距離など
+  HealthInfo? get health;
   @override // TODO(s14t284): 以下の情報を含める
-// ヘルスケアから得られる歩数などの情報
 // 現在地のお遍路で巡っているお寺の情報
-  String get walkCount;
+// 以下は json に変換した時に含めないパラメータ
+// DB で管理されずアプリ上で値がセットされる
+// ユーザアイコン。ログイン時に userIconUrl から GoogleMap に描画できる形式に変換される
+  @JsonKey(ignore: true, fromJson: _BitmapConverter.stringToBitmap)
+  BitmapDescriptor get userIcon;
   @override
   @JsonKey(ignore: true)
   _$$_VirtualPilgrimageUserCopyWith<_$_VirtualPilgrimageUser> get copyWith =>

@@ -16,6 +16,7 @@ extension AnalyticsEvent on String {
   static const logout = 'logout';
   static const pressedRegistration = 'pressed_registration';
   static const registrationFailed = 'registration_failed';
+  static const initializeHomePageAndGetHealth = 'initialize_home_page_and_get_health';
 }
 
 final analyticsProvider = Provider<Analytics>(

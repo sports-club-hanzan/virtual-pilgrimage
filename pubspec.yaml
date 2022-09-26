@@ -50,6 +50,7 @@ dependencies:
   json_serializable: ^6.3.1
   json_annotation: ^4.6.0
   intl: ^0.17.0
+  http: ^0.13.5
   # ui
   flutter_datetime_picker:
     # pub.dev からダウンロードできるバージョンだと warn ログが出るので最新バージョンを利用
@@ -57,7 +58,9 @@ dependencies:
       url: https://github.com/Realank/flutter_datetime_picker.git
       ref: master
   google_maps_flutter: ^2.2.0
-  http: ^0.13.5
+  # health
+  health: ^4.1.1
+  permission_handler: ^9.2.0 # Firebaseと同じSDKをターゲットにできるよう最新ではないバージョンを利用
 
 dev_dependencies:
   flutter_test:

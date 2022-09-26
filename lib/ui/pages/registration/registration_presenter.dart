@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtualpilgrimage/analytics.dart';
+import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/user/registration/registration_result.dart';
 import 'package:virtualpilgrimage/domain/user/registration/user_registration_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
@@ -63,8 +64,8 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
     DatePicker.showDatePicker(
       context,
       showTitleActions: true,
-      minTime: DateTime(DateTime.now().year - 100, 1, 1),
-      maxTime: DateTime.now(),
+      minTime: DateTime(CustomizableDateTime.current.year - 100, 1, 1),
+      maxTime: CustomizableDateTime.current,
       onConfirm: (date) => state = state.copyWith(birthDay: date),
       locale: LocaleType.jp,
       currentTime: state.birthDay,
@@ -116,7 +117,8 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
         break;
       case RegistrationResultStatus.alreadyExistSameNicknameUser:
         state = state.copyWith(
-          nickname: state.nickname.addExternalError('既に使われているため別のニックネームにしてください'),
+          nickname:
+              state.nickname.addExternalError('既に使われているため別のニックネームにしてください'),
         );
         unawaited(
           _analytics.logEvent(

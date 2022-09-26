@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:logger/logger.dart';
 import 'package:mockito/mockito.dart';
 import 'package:virtualpilgrimage/analytics.dart';
+import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 
 import 'helper/mock.mocks.dart';
@@ -91,6 +92,8 @@ void main() {
           nickname: 'dummyName',
           gender: Gender.woman,
           birthDay: DateTime(1990),
+          createdAt: CustomizableDateTime.current,
+          updatedAt: CustomizableDateTime.current,
         );
         when(
           mockFirebaseAnalytics.setUserProperty(

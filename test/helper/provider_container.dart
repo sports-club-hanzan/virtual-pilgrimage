@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtualpilgrimage/domain/auth/auth_repository.dart';
+import 'package:virtualpilgrimage/domain/user/health/health_repository.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_analytics_provider.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_auth_provider.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
@@ -16,6 +17,8 @@ final defaultOverrides = <Override>[
   firebaseAnalyticsProvider.overrideWithValue(MockFirebaseAnalytics()),
   // google signIn
   googleSignInProvider.overrideWithValue(MockGoogleSignIn()),
+  // health
+  healthFactoryProvider.overrideWithValue(MockHealthFactory()),
 ];
 
 ProviderContainer mockedProviderContainer({List<Override>? overrides}) => ProviderContainer(

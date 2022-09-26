@@ -17,8 +17,8 @@ class EmailAndPasswordAuthRepository extends AuthRepository {
     // email, password が必要なので、null だったら例外
     if (email == null || password == null) {
       throw SignInException(
-        'email or password are null [email][$email][password][$password]',
-        SignInExceptionStatus.emailOrPasswordIsNull,
+        message: 'email or password are null [email][$email][password][$password]',
+        status: SignInExceptionStatus.emailOrPasswordIsNull,
       );
     }
 
@@ -30,30 +30,34 @@ class EmailAndPasswordAuthRepository extends AuthRepository {
       return credential;
     } on PlatformException catch (e) {
       throw SignInException(
-        'cause platform exception [code][${e.code}][message][${e.message}]',
-        SignInExceptionStatus.platformException,
+        message: 'cause platform exception [code][${e.code}][message][${e.message}]',
+        status: SignInExceptionStatus.platformException,
+        cause: e,
       );
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         return _signInWithCreateUser(email, password);
       } else if (e.code == 'wrong-password') {
         throw SignInException(
-          'Firebase exception because user set wrong password'
-          '[message][${e.message}]'
-          '[email][${e.email}]',
-          SignInExceptionStatus.wrongPassword,
+          message: 'Firebase exception because user set wrong password'
+              '[message][${e.message}]'
+              '[email][${e.email}]',
+          status: SignInExceptionStatus.wrongPassword,
+          cause: e,
         );
       }
       throw SignInException(
-        'cause Firebase exception when signIn'
-        '[message][${e.message}]'
-        '[code][${e.code}]',
-        SignInExceptionStatus.firebaseException,
+        message: 'cause Firebase exception when signIn'
+            '[message][${e.message}]'
+            '[code][${e.code}]',
+        status: SignInExceptionStatus.firebaseException,
+        cause: e,
       );
     } on Exception catch (e) {
       throw SignInException(
-        'Firebase signin cause unknown error [exception][$e]',
-        SignInExceptionStatus.unknownException,
+        message: 'Firebase signin cause unknown error [exception][$e]',
+        status: SignInExceptionStatus.unknownException,
+        cause: e,
       );
     }
   }
@@ -70,25 +74,29 @@ class EmailAndPasswordAuthRepository extends AuthRepository {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         throw SignInException(
-          'password set with user is weak'
-          '[message][${e.message}]'
-          '[email][${e.email}]',
-          SignInExceptionStatus.weakPassword,
+          message: 'password set with user is weak'
+              '[message][${e.message}]'
+              '[email][${e.email}]',
+          status: SignInExceptionStatus.weakPassword,
+          cause: e,
         );
       } else if (e.code == 'email-already-in-use') {
         throw SignInException(
-          'email already in use [message][${e.message}][email][${e.email}]',
-          SignInExceptionStatus.alreadyUsedEmail,
+          message: 'email already in use [message][${e.message}][email][${e.email}]',
+          status: SignInExceptionStatus.alreadyUsedEmail,
+          cause: e,
         );
       }
       throw SignInException(
-        'Firebase signin with create user cause unknown error',
-        SignInExceptionStatus.firebaseException,
+        message: 'Firebase signin with create user cause unknown error',
+        status: SignInExceptionStatus.firebaseException,
+        cause: e,
       );
     } on Exception catch (e) {
       throw SignInException(
-        'Firebase signin cause unknown error [exception][$e]',
-        SignInExceptionStatus.unknownException,
+        message: 'Firebase signin cause unknown error [exception][$e]',
+        status: SignInExceptionStatus.unknownException,
+        cause: e,
       );
     }
   }

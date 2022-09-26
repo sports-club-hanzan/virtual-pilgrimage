@@ -19,13 +19,16 @@ _$_VirtualPilgrimageUser _$$_VirtualPilgrimageUserFromJson(
       email: json['email'] as String? ?? '',
       userIconUrl: json['userIconUrl'] as String? ??
           'https://maps.google.com/mapfiles/kml/shapes/info-i_maps.png',
-      userIcon: json['userIcon'] == null
-          ? BitmapDescriptor.defaultMarker
-          : _BitmapConverter.stringToBitmap(json['userIcon'] as String),
       userStatus: json['userStatus'] == null
           ? UserStatus.temporary
           : _UserStatusConverter.intToUserStatus(json['userStatus'] as int),
-      walkCount: json['walkCount'] as String? ?? '0',
+      createdAt: _FirestoreTimestampConverter.timestampToDateTime(
+          json['createdAt'] as Timestamp),
+      updatedAt: _FirestoreTimestampConverter.timestampToDateTime(
+          json['updatedAt'] as Timestamp),
+      health: json['health'] == null
+          ? null
+          : HealthInfo.fromJson(json['health'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$_VirtualPilgrimageUserToJson(
@@ -38,7 +41,10 @@ Map<String, dynamic> _$$_VirtualPilgrimageUserToJson(
           _FirestoreTimestampConverter.dateTimeToTimestamp(instance.birthDay),
       'email': instance.email,
       'userIconUrl': instance.userIconUrl,
-      'userIcon': instance.userIcon.toJson(),
       'userStatus': _UserStatusConverter.userStatusToInt(instance.userStatus),
-      'walkCount': instance.walkCount,
+      'createdAt':
+          _FirestoreTimestampConverter.dateTimeToTimestamp(instance.createdAt),
+      'updatedAt':
+          _FirestoreTimestampConverter.dateTimeToTimestamp(instance.updatedAt),
+      'health': instance.health?.toJson(),
     };

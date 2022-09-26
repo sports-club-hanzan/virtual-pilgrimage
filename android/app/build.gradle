@@ -58,7 +58,7 @@ tasks.whenTaskAdded { task ->
 }
 
 android {
-    // https://firebase.google.com/docs/android/setup?hl=ja#register-app
+    // https://firebase.google.com/docs/android/setup?hl=ja#register-app => 31
     compileSdkVersion 31
     ndkVersion flutter.ndkVersion
 
