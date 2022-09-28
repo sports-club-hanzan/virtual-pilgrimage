@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_info.codegen.dart';
+import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen.dart';
 
 part 'virtual_pilgrimage_user.codegen.freezed.dart';
 part 'virtual_pilgrimage_user.codegen.g.dart';
@@ -129,6 +130,7 @@ class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
     @JsonKey(ignore: true, fromJson: _BitmapConverter.stringToBitmap)
     @Default(BitmapDescriptor.defaultMarker)
         BitmapDescriptor userIcon,
+    PilgrimageInfo? pilgrimage,
   }) = _VirtualPilgrimageUser;
 
   const VirtualPilgrimageUser._();
