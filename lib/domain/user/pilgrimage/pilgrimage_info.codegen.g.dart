@@ -8,9 +8,9 @@ part of 'pilgrimage_info.codegen.dart';
 
 _$_PilgrimageInfo _$$_PilgrimageInfoFromJson(Map<String, dynamic> json) =>
     _$_PilgrimageInfo(
-      id: json['id'] as String? ?? '',
-      nowPilgrimageId: json['nowPilgrimageId'] as String? ?? '1',
-      lap: json['lap'] as String? ?? '',
+      id: json['id'] as int,
+      nowPilgrimageId: json['nowPilgrimageId'] as int,
+      lap: json['lap'] as int,
     );
 
 Map<String, dynamic> _$$_PilgrimageInfoToJson(_$_PilgrimageInfo instance) =>

@@ -86,7 +86,7 @@ class HomePageBody extends StatelessWidget {
             ElevatedButton(
               onPressed: () async {
                 final pilgrimage = _ref.watch(pilgrimageRepositoryProvider);
-                final url = await pilgrimage.getTempleImageUrl(userState?.pilgrimage?.nowPilgrimageId ?? '1', '1.jpg');
+                final url = await pilgrimage.getTempleImageUrl(userState?.pilgrimage?.nowPilgrimageId.toString() ?? '1', '1.jpg');
                 await showDialog<void>(
                   context: context,
                   builder: (BuildContext context) {
