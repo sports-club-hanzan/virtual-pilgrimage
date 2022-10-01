@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:logger/logger.dart';
 import 'package:mockito/mockito.dart';
 import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_repository.dart';
+import 'package:virtualpilgrimage/infrastructure/user/pilgrimage_repository_impl.dart';
 
 import '../../../helper/mock.mocks.dart';
 import '../../../helper/provider_container.dart';
@@ -15,7 +16,7 @@ void main() {
   setUp(() {
     mockFirebaseStorage = MockFirebaseStorage();
     mockReference = MockReference();
-    target = PilgrimageRepository(
+    target = PilgrimageRepositoryImpl(
       mockFirebaseStorage,
       logger,
     );

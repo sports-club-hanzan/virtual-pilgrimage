@@ -20,9 +20,9 @@ PilgrimageInfo _$PilgrimageInfoFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$PilgrimageInfo {
-  String get id => throw _privateConstructorUsedError;
-  String get nowPilgrimageId => throw _privateConstructorUsedError;
-  String get lap => throw _privateConstructorUsedError;
+  int get id => throw _privateConstructorUsedError;
+  int get nowPilgrimageId => throw _privateConstructorUsedError;
+  int get lap => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -35,7 +35,7 @@ abstract class $PilgrimageInfoCopyWith<$Res> {
   factory $PilgrimageInfoCopyWith(
           PilgrimageInfo value, $Res Function(PilgrimageInfo) then) =
       _$PilgrimageInfoCopyWithImpl<$Res>;
-  $Res call({String id, String nowPilgrimageId, String lap});
+  $Res call({int id, int nowPilgrimageId, int lap});
 }
 
 /// @nodoc
@@ -57,15 +57,15 @@ class _$PilgrimageInfoCopyWithImpl<$Res>
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       nowPilgrimageId: nowPilgrimageId == freezed
           ? _value.nowPilgrimageId
           : nowPilgrimageId // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       lap: lap == freezed
           ? _value.lap
           : lap // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
     ));
   }
 }
@@ -77,7 +77,7 @@ abstract class _$$_PilgrimageInfoCopyWith<$Res>
           _$_PilgrimageInfo value, $Res Function(_$_PilgrimageInfo) then) =
       __$$_PilgrimageInfoCopyWithImpl<$Res>;
   @override
-  $Res call({String id, String nowPilgrimageId, String lap});
+  $Res call({int id, int nowPilgrimageId, int lap});
 }
 
 /// @nodoc
@@ -101,15 +101,15 @@ class __$$_PilgrimageInfoCopyWithImpl<$Res>
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       nowPilgrimageId: nowPilgrimageId == freezed
           ? _value.nowPilgrimageId
           : nowPilgrimageId // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       lap: lap == freezed
           ? _value.lap
           : lap // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
     ));
   }
 }
@@ -119,21 +119,18 @@ class __$$_PilgrimageInfoCopyWithImpl<$Res>
 @JsonSerializable(explicitToJson: true)
 class _$_PilgrimageInfo extends _PilgrimageInfo {
   const _$_PilgrimageInfo(
-      {this.id = '', this.nowPilgrimageId = '1', this.lap = ''})
+      {required this.id, required this.nowPilgrimageId, required this.lap})
       : super._();
 
   factory _$_PilgrimageInfo.fromJson(Map<String, dynamic> json) =>
       _$$_PilgrimageInfoFromJson(json);
 
   @override
-  @JsonKey()
-  final String id;
+  final int id;
   @override
-  @JsonKey()
-  final String nowPilgrimageId;
+  final int nowPilgrimageId;
   @override
-  @JsonKey()
-  final String lap;
+  final int lap;
 
   @override
   String toString() {
@@ -174,20 +171,20 @@ class _$_PilgrimageInfo extends _PilgrimageInfo {
 
 abstract class _PilgrimageInfo extends PilgrimageInfo {
   const factory _PilgrimageInfo(
-      {final String id,
-      final String nowPilgrimageId,
-      final String lap}) = _$_PilgrimageInfo;
+      {required final int id,
+      required final int nowPilgrimageId,
+      required final int lap}) = _$_PilgrimageInfo;
   const _PilgrimageInfo._() : super._();
 
   factory _PilgrimageInfo.fromJson(Map<String, dynamic> json) =
       _$_PilgrimageInfo.fromJson;
 
   @override
-  String get id;
+  int get id;
   @override
-  String get nowPilgrimageId;
+  int get nowPilgrimageId;
   @override
-  String get lap;
+  int get lap;
   @override
   @JsonKey(ignore: true)
   _$$_PilgrimageInfoCopyWith<_$_PilgrimageInfo> get copyWith =>
