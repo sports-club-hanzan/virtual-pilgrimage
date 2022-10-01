@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:virtualpilgrimage/router.dart';
 import 'package:virtualpilgrimage/ui/components/gender_radio_buttons.dart';
+import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
 import 'package:virtualpilgrimage/ui/components/my_text_form_field.dart';
 import 'package:virtualpilgrimage/ui/pages/registration/registration_presenter.dart';
 import 'package:virtualpilgrimage/ui/pages/sign_in/sign_in_presenter.dart';
@@ -14,10 +15,7 @@ class RegistrationPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('巡礼ウォーク'),
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-      ),
+      appBar: const MyAppBar(),
       body: RegistrationPageBody(ref),
     );
   }
@@ -55,9 +53,8 @@ class RegistrationPageBody extends StatelessWidget {
                     color: state.nickname.focusNode.hasFocus
                         ? Theme.of(context).primaryColor
                         : ColorStyle.text,
-                    fontWeight: state.nickname.focusNode.hasFocus
-                        ? FontWeight.bold
-                        : FontWeight.normal,
+                    fontWeight:
+                        state.nickname.focusNode.hasFocus ? FontWeight.bold : FontWeight.normal,
                   ),
                   hintText: 'ニックネーム',
                   border: OutlineInputBorder(
@@ -106,11 +103,11 @@ class RegistrationPageBody extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(
-                top: 32,
-                right: 12,
-                left: 12,
-                bottom: 12,
-              ),
+                  top: 32,
+                  right: 12,
+                  left: 12,
+                  bottom: 12,
+                ),
                 child: Column(),
               ),
               ElevatedButton(
