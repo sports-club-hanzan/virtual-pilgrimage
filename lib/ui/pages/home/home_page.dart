@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/router.dart';
 import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
@@ -82,6 +83,31 @@ class HomePageBody extends StatelessWidget {
             ),
             const Padding(
               padding: EdgeInsetsDirectional.all(16),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final pilgrimage = _ref.watch(pilgrimageRepositoryProvider);
+                final url = await pilgrimage.getTempleImageUrl(
+                  userState?.pilgrimage?.nowPilgrimageId.toString() ?? '1',
+                  '1.jpg',
+                );
+                await showDialog<void>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('付近のお寺情報'),
+                      content: Image.network(url),
+                      actions: <Widget>[
+                        ElevatedButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('閉じる'),
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              child: const Text('お寺の情報を表示する'),
             ),
             GoogleMapView(_ref),
           ],
