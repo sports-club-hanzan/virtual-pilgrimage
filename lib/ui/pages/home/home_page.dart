@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:virtualpilgrimage/domain/temple/temple_repository.dart';
 import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/router.dart';
@@ -87,11 +88,13 @@ class HomePageBody extends StatelessWidget {
               onPressed: () async {
                 final pilgrimage = _ref.watch(pilgrimageRepositoryProvider);
                 final url = await pilgrimage.getTempleImageUrl(userState?.pilgrimage?.nowPilgrimageId.toString() ?? '1', '1.jpg');
+                final temple = _ref.watch(templeRepositoryProvider);
+                final templeInfo = await temple.getTempleInfo(1);
                 await showDialog<void>(
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: const Text('付近のお寺情報'),
+                      title: Text(templeInfo.prefecture),
                       content: Image.network(url),
                       actions: <Widget>[
                         ElevatedButton(
