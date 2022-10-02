@@ -59,6 +59,7 @@ dependencies:
       ref: master
   google_maps_flutter: ^2.2.0
   google_polyline_algorithm: ^3.1.0
+  flutter_toggle_tab: ^1.2.0
   # health
   health: ^4.1.1
   permission_handler: ^9.2.0 # Firebaseと同じSDKをターゲットにできるよう最新ではないバージョンを利用
