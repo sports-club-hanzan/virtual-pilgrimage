@@ -81,6 +81,19 @@ class HomePageBody extends StatelessWidget {
               },
               child: const Text('サインイン画面に戻る'),
             ),
+            ElevatedButton(
+              onPressed: () async {
+                _ref.read(routerProvider).pushNamed(
+                  RouterPath.profile,
+                  queryParams: {
+                    'userId': userState?.id ?? '',
+                    'canEdit': 'true',
+                    'previousPagePath': RouterPath.home,
+                  },
+                );
+              },
+              child: const Text('プロフィールページ'),
+            ),
             const Padding(
               padding: EdgeInsetsDirectional.all(16),
             ),
