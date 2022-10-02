@@ -53,9 +53,10 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>(
           final canEdit = state.queryParams['canEdit'];
           final previousPage = state.queryParams['previousPagePath'];
           return ProfilePage(
-              userId: userId,
-              canEdit: canEdit == 'true',
-              previousPagePath: previousPage ?? RouterPath.home);
+            userId: userId,
+            canEdit: canEdit == 'true',
+            previousPagePath: previousPage ?? RouterPath.home,
+          );
         },
       ),
     ],
