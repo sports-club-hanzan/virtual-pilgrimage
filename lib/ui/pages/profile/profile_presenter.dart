@@ -1,9 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/ui/pages/profile/profile_state.codegen.dart';
 
-final profileProvider = FutureProvider.family<VirtualPilgrimageUser?, String>((ref, userId) async {
+final profileUserProvider =
+    FutureProvider.family<VirtualPilgrimageUser?, String>((ref, userId) async {
   // ログイン状態でしか呼ばれないため、nullable を想定していない
   final loginUser = ref.read(userStateProvider)!;
   // ログインユーザ自身を指定していた場合はそのまま返す
@@ -14,7 +16,7 @@ final profileProvider = FutureProvider.family<VirtualPilgrimageUser?, String>((r
   return ref.read(userRepositoryProvider).get(userId);
 });
 
-final profilePresenter = StateNotifierProvider.autoDispose<ProfilePresenter, ProfileState>(
+final profileProvider = StateNotifierProvider.autoDispose<ProfilePresenter, ProfileState>(
   (ref) => ProfilePresenter(),
 );
 
@@ -22,7 +24,7 @@ class ProfilePresenter extends StateNotifier<ProfileState> {
   ProfilePresenter() : super(ProfileState(selectedTabIndex: 0));
 
   final _selectedTabs = ['昨日', '週間', '月間'];
-  final _genderString = ['性別未設定', '男性', '女性'];
+  final _genderString = ['', '男性', '女性'];
 
   List<String> tabLabels() => _selectedTabs;
 
@@ -50,7 +52,7 @@ class ProfilePresenter extends StateNotifier<ProfileState> {
   /// floor((20221001 - 19501201)/10000) = floor(719800 / 10000) = floor(71.98) = 71
   /// FIXME: 流用するならば domain service にロジックを移す
   int _calcAge(DateTime birthday) {
-    final today = DateTime.now();
+    final today = CustomizableDateTime.current;
     final todayYYYYMMDD = today.year * 10000 + today.month * 100 + today.day;
     final birthdayYYYYMDD = birthday.year * 10000 + birthday.month * 100 + birthday.day;
     return ((todayYYYYMMDD - birthdayYYYYMDD) / 10000).floor();

@@ -30,7 +30,7 @@ class ProfilePage extends ConsumerWidget {
       ref.read(routerProvider).go(RouterPath.signIn);
     }
 
-    final user = ref.watch(profileProvider(userId));
+    final user = ref.watch(profileUserProvider(userId));
     return Scaffold(
       appBar: const MyAppBar(),
       body: SafeArea(
@@ -68,7 +68,7 @@ class _ProfilePageBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final notifier = ref.read(profilePresenter.notifier);
+    final notifier = ref.read(profileProvider.notifier);
     return ListView(
       children: [
         const SizedBox(
@@ -116,8 +116,8 @@ class _ProfilePageBody extends StatelessWidget {
       );
 
   Widget _buildProfile(BuildContext context, VirtualPilgrimageUser user) {
-    final notifier = ref.read(profilePresenter.notifier);
-    final state = ref.watch(profilePresenter);
+    final notifier = ref.read(profileProvider.notifier);
+    final state = ref.watch(profileProvider);
     final health = user.health;
     final List<List<ProfileHealthCard>> healthCards = [];
     if (health != null) {
