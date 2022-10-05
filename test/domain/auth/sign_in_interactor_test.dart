@@ -72,7 +72,7 @@ void main() {
 
   group('SignInInteractor', () {
     CustomizableDateTime.customTime = DateTime.now();
-    
+
     test('DI', () {
       final container = mockedProviderContainer();
       final usecase = container.read(signInUsecaseProvider);
@@ -86,7 +86,8 @@ void main() {
         when(mockUser.displayName).thenReturn('dummyName');
         when(mockUser.photoURL).thenReturn('http://example.com');
         when(mockUserCredential.user).thenReturn(mockUser);
-        when(mockUserIconRepository.loadIconImage('')).thenAnswer((_) async => Future.value(BitmapDescriptor.defaultMarker));
+        when(mockUserIconRepository.loadIconImage(''))
+            .thenAnswer((_) async => Future.value(BitmapDescriptor.defaultMarker));
         when(mockGoogleAuthRepository.signIn()).thenAnswer((_) => Future.value(mockUserCredential));
         defaultMockSignInWithCredentialUser(mockUserRepository, mockFirebaseCrashlytics, userId);
       });
@@ -110,7 +111,8 @@ void main() {
         test('ユーザが存在しないため、作成してサインインできる', () async {
           // given
           when(mockUserRepository.get(userId)).thenAnswer((_) => Future.value(null));
-          when(mockUserIconRepository.loadIconImage('http://example.com')).thenAnswer((_) async => Future.value(BitmapDescriptor.defaultMarker));
+          when(mockUserIconRepository.loadIconImage('http://example.com'))
+              .thenAnswer((_) async => Future.value(BitmapDescriptor.defaultMarker));
 
           final expected = defaultUser(id: userId).copyWith(
             nickname: '',
@@ -207,7 +209,8 @@ void main() {
       const password = 'Passw0rd123';
       group('正常系', () {
         setUp(() {
-          when(mockUserIconRepository.loadIconImage('')).thenAnswer((_) async => Future.value(BitmapDescriptor.defaultMarker));
+          when(mockUserIconRepository.loadIconImage(''))
+              .thenAnswer((_) async => Future.value(BitmapDescriptor.defaultMarker));
         });
 
         test('ユーザが既に存在し、サインインできる', () async {
@@ -269,7 +272,7 @@ void main() {
     group('logout', () {
       test('正常系', () async {
         // given
-        when(mockFirebaseAuth.signOut()).thenAnswer((realInvocation) => Future.value());
+        when(mockFirebaseAuth.signOut()).thenAnswer((_) => Future.value());
 
         // when
         await target.logout();
@@ -313,7 +316,7 @@ void defaultMockSignInWithEmailAndPassword(
   when(mockUser.photoURL).thenReturn('http://example.com');
   when(mockUserCredential.user).thenReturn(mockUser);
   when(mockEmailAndPasswordAuthRepository.signIn(email: email, password: password))
-      .thenAnswer((realInvocation) => Future.value(mockUserCredential));
+      .thenAnswer((_) => Future.value(mockUserCredential));
   defaultMockSignInWithCredentialUser(mockUserRepository, mockFirebaseCrashlytics, userId);
 }
 
