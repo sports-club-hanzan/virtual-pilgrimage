@@ -26,12 +26,14 @@ class SignInPresenter extends StateNotifier<SignInState> {
         ) {
     _signInUsecase = _ref.read(signInUsecaseProvider);
     _userState = _ref.watch(userStateProvider.state);
+    _loginState = _ref.watch(loginStateProvider.state);
     _analytics = _ref.read(analyticsProvider);
   }
 
   final Ref _ref;
   late final SignInUsecase _signInUsecase;
   late final StateController<VirtualPilgrimageUser?> _userState;
+  late final StateController<UserStatus?> _loginState;
   late final Analytics _analytics;
 
   void onChangeEmail(FormModel email) => state = state.copyWith(email: email);
@@ -48,8 +50,7 @@ class SignInPresenter extends StateNotifier<SignInState> {
         password: state.password,
       );
       unawaited(_analytics.setUserProperties(user: user));
-      // userState を変更するとページが遷移するので最後に更新を実行
-      _userState.state = user;
+      _updateState(user, user.userStatus);
     } on Exception catch (e) {
       state = state.copyWith(
         error: e,
@@ -94,8 +95,7 @@ class SignInPresenter extends StateNotifier<SignInState> {
         context: _getSignInContext(user),
       );
       unawaited(_analytics.setUserProperties(user: user));
-      // userState を変更するとページが遷移するので最後に更新を実行
-      _userState.state = user;
+      _updateState(user, user.userStatus);
     } on SignInException catch (e) {
       switch (e.status) {
         case SignInExceptionStatus.credentialIsNull:
@@ -165,7 +165,7 @@ class SignInPresenter extends StateNotifier<SignInState> {
   Future<void> logout() async {
     await _analytics.logEvent(eventName: AnalyticsEvent.logout);
     await _signInUsecase.logout();
-    _ref.watch(userStateProvider.state).state = null;
+    _updateState(null, null);
   }
 
   SignInStateContext _getSignInContext(VirtualPilgrimageUser user) {
@@ -177,5 +177,11 @@ class SignInPresenter extends StateNotifier<SignInState> {
       case UserStatus.deleted:
         return SignInStateContext.failed;
     }
+  }
+
+  void _updateState(VirtualPilgrimageUser? user, UserStatus? loginStatus) {
+    _userState.state = user;
+    // loginState を変更するとページが遷移するので更新順を後ろにしている
+    _loginState.state = loginStatus;
   }
 }
