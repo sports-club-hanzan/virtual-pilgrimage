@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,12 +28,19 @@ import 'package:mockito/annotations.dart';
   Query,
   QuerySnapshot,
 
+  /// Firebase Storage
+  FirebaseStorage,
+  UploadTask,
+  TaskSnapshot,
+
   /// Others
   FirebaseAnalytics,
   FirebaseCrashlytics,
-  FirebaseStorage,
 
   // ヘルスケア
   HealthFactory,
+
+  // Others
+  File,
 ])
 void main() {}
