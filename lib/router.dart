@@ -63,13 +63,13 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>(
     redirect: (state) {
       ref.read(loggerProvider).d(state.location);
       // サインイン状態によって遷移先を変える
-      final userState = ref.watch(userStateProvider);
-      if (userState == null) {
+      final loginState = ref.watch(loginStateProvider);
+      if (loginState == null) {
         if (state.location != RouterPath.signIn) {
           return RouterPath.signIn;
         }
       } else {
-        switch (userState.userStatus) {
+        switch (loginState) {
           // ユーザが作成済みの時
           // 基本的にはここにページ遷移を記載する
           case UserStatus.created:
