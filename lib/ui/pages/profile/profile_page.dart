@@ -98,6 +98,7 @@ class _ProfilePageBody extends StatelessWidget {
         ),
 
         /// ユーザの基礎情報
+        // TODO(s14t284): お遍路の進捗状況も表示する
         _buildProfile(context, user),
       ],
     );
