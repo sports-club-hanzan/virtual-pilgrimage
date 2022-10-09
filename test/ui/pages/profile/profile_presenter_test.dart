@@ -113,7 +113,6 @@ void main() {
     group('updateProfileImage', () {
       test('正常系', () async {
         // FIXME: 必要に応じてテストを書く
-        await target.updateProfileImage();
       });
     });
   });
