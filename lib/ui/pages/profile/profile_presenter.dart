@@ -1,5 +1,12 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:virtualpilgrimage/analytics.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
+import 'package:virtualpilgrimage/domain/user/profile/update_user_profile_image_usecase.dart';
+import 'package:virtualpilgrimage/domain/user/user_icon_repository.dart';
 import 'package:virtualpilgrimage/domain/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/ui/pages/profile/profile_state.codegen.dart';
@@ -7,7 +14,7 @@ import 'package:virtualpilgrimage/ui/pages/profile/profile_state.codegen.dart';
 final profileUserProvider =
     FutureProvider.family<VirtualPilgrimageUser?, String>((ref, userId) async {
   // ログイン状態でしか呼ばれないため、nullable を想定していない
-  final loginUser = ref.read(userStateProvider)!;
+  final loginUser = ref.watch(userStateProvider)!;
   // ログインユーザ自身を指定していた場合はそのまま返す
   if (loginUser.id == userId) {
     return loginUser;
@@ -16,12 +23,20 @@ final profileUserProvider =
   return ref.read(userRepositoryProvider).get(userId);
 });
 
-final profileProvider = StateNotifierProvider.autoDispose<ProfilePresenter, ProfileState>(
-  (ref) => ProfilePresenter(),
-);
+final profileProvider =
+    StateNotifierProvider.autoDispose<ProfilePresenter, ProfileState>(ProfilePresenter.new);
 
 class ProfilePresenter extends StateNotifier<ProfileState> {
-  ProfilePresenter() : super(ProfileState(selectedTabIndex: 0));
+  ProfilePresenter(this._ref) : super(ProfileState(selectedTabIndex: 0)) {
+    _updateUserProfileImageInteractor = _ref.read(updateUserProfileImageUsecaseProvider);
+    _userIconRepository = _ref.read(userIconRepositoryProvider);
+    _analytics = _ref.read(analyticsProvider);
+  }
+
+  final Ref _ref;
+  late final UpdateUserProfileImageUsecase _updateUserProfileImageInteractor;
+  late final UserIconRepository _userIconRepository;
+  late final Analytics _analytics;
 
   final _selectedTabs = ['昨日', '週間', '月間'];
   final _genderString = ['', '男性', '女性'];
@@ -60,6 +75,27 @@ class ProfilePresenter extends StateNotifier<ProfileState> {
 
   /// プロフィール画像を更新する
   Future<void> updateProfileImage() async {
-    // TODO(s14t284): cloud storage に画像をアップロードし、firestore のプロフィール画像URLを更新する処理を実装
+    unawaited(_analytics.logEvent(eventName: AnalyticsEvent.pressedUploadImage));
+    final loginUser = _ref.watch(userStateProvider)!;
+
+    // カメラロールから画像を選択させる
+    final picker = ImagePicker();
+    final image =
+        await picker.pickImage(source: ImageSource.gallery, maxHeight: 128, maxWidth: 128);
+    // 空だったら更新しない
+    // FIXME: ユーザに画像が保存できなかった旨のpopupを見せたい
+    if (image == null) {
+      return;
+    }
+
+    final updatedUser = await _updateUserProfileImageInteractor.execute(
+      user: loginUser,
+      imageFile: File(image.path),
+    );
+    // GoogleMap 上で表示する userIcon も更新してstateを更新
+    final bitmap = await _userIconRepository.loadIconImage(updatedUser.userIconUrl);
+    _ref.read(userStateProvider.state).state = updatedUser.copyWith(
+      userIcon: bitmap,
+    );
   }
 }

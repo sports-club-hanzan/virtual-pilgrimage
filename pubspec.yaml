@@ -51,6 +51,7 @@ dependencies:
   json_annotation: ^4.6.0
   intl: ^0.17.0
   http: ^0.13.5
+  image_picker: ^0.8.5+3
   # ui
   flutter_datetime_picker:
     # pub.dev からダウンロードできるバージョンだと warn ログが出るので最新バージョンを利用
