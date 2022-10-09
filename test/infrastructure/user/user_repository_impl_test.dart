@@ -163,7 +163,10 @@ void main() {
       ];
 
       group('正常系', () {
-        final mockQueryDocumentSnapshots = users.map(MockQueryDocumentSnapshot.new).toList();
+        final mockQueryDocumentSnapshots = [
+          MockQueryDocumentSnapshot<VirtualPilgrimageUser>(users[0], MockDocumentReference()),
+          MockQueryDocumentSnapshot<VirtualPilgrimageUser>(users[1], MockDocumentReference()),
+        ];
         setUp(() {
           when(mockQuerySnapshot.docs).thenReturn(mockQueryDocumentSnapshots);
           when(mockQuerySnapshot.size).thenReturn(users.length);
