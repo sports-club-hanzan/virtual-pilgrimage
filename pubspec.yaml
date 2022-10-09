@@ -63,6 +63,7 @@ dependencies:
   health: ^4.1.1
   permission_handler: ^9.2.0 # Firebaseと同じSDKをターゲットにできるよう最新ではないバージョンを利用
   firebase_storage: ^10.3.8
+  maps_toolkit: ^2.0.1
 
 dev_dependencies:
   flutter_test:

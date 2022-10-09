@@ -4,9 +4,11 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:maps_toolkit/maps_toolkit.dart' as maps;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:virtualpilgrimage/analytics.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/direction_polyline_repository.dart';
+import 'package:virtualpilgrimage/domain/temple/temple_repository.dart';
 import 'package:virtualpilgrimage/domain/user/health/update_health_result.dart';
 import 'package:virtualpilgrimage/domain/user/health/update_health_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
@@ -61,7 +63,8 @@ class HomePresenter extends StateNotifier<HomeState> {
 
     // 以下は処理順は重要ではないため、非同期に並列で処理して UI への反映を早める
     try {
-      await Future.wait(<Future<void>>[getHealth(user), updatePolyline(), setUserMarker(user)]);
+      await Future.wait(<Future<void>>[getHealth(user), updatePolyline(user)]);
+      await setUserMarker(user);
     } on Exception catch (e) {
       unawaited(_crashlytics.recordError(e, null));
     }
@@ -80,38 +83,67 @@ class HomePresenter extends StateNotifier<HomeState> {
 
   /// map 上で2点間の距離を可視化するための経路を取得するメソッド
   /// FIXME: 利用する地点が固定値になっているため機能追加に合わせて修正する
-  Future<void> updatePolyline() async {
+  Future<void> updatePolyline(VirtualPilgrimageUser user) async {
     // 現在地点から適当なお寺への経路の可視化
-    final latlngs = await _directionPolylineRepository.getPolylines(
-      origin: const LatLng(34.15944444, 134.503),
-      destination: const LatLng(34.10, 134.467),
+    final originTempleInfo = await _ref.read(templeRepositoryProvider).getTempleInfo(user.pilgrimage!.nowPilgrimageId);
+    final destTempleInfo = await _ref.read(templeRepositoryProvider).getTempleInfo(user.pilgrimage!.nowPilgrimageId + 1);
+
+    final lines = await _directionPolylineRepository.getPolylines(
+      origin: LatLng(originTempleInfo.geoPoint.latitude, originTempleInfo.geoPoint.longitude),
+      destination: LatLng(destTempleInfo.geoPoint.latitude, destTempleInfo.geoPoint.longitude),
     );
     final polylines = {
       Polyline(
         polylineId: const PolylineId('id'),
-        points: latlngs,
+        points: lines,
         color: Colors.pinkAccent,
         width: 5,
       )
     };
-    state = state.setGoogleMap(state.googleMap.copyWith(polylines: polylines));
+    state = state.copyWith(polylines: polylines);
   }
 
   /// ユーザ情報を利用して GoogleMap 上に描画するユーザ情報のマーカーを追加
   Future<void> setUserMarker(VirtualPilgrimageUser user) async {
+    final templeInfo = await _ref.read(templeRepositoryProvider).getTempleInfo(user.pilgrimage!.nowPilgrimageId);
+    final steps = (user.health?.totalSteps ?? 0) - templeInfo.totalSteps;
+
+    final position = computePositionFromSteps(
+        state.polylines.first.points,
+        steps,
+    );
     final markers = {
-      ...state.googleMap.markers,
+      ...state.markers,
       Marker(
         markerId: MarkerId(user.nickname),
-        position: const LatLng(34.10, 134.467), // FIXME: 適当に固定値を入れているだけであるため修正する
+        position: position,
         icon: user.userIcon,
         infoWindow: InfoWindow(title: '現在: ${user.health?.totalSteps ?? 0}歩'),
       )
     };
-    state = state.setGoogleMap(state.googleMap.copyWith(markers: markers));
+
+    state = state.copyWith(markers: markers);
   }
 
   /// GoogleMap の描画が完了した時に呼ばれる
   /// [controller] GoogleMap の描画に使われるインスタンス
   void onMapCreated(GoogleMapController controller) => state.onGoogleMapCreated(controller);
+
+  LatLng computePositionFromSteps(List<LatLng> latlngs, num steps) {
+    const num rate = 3.0;
+
+    num meter = steps * rate;
+    for(int i = 0; i < latlngs.length - 1; i++) {
+      final from = maps.LatLng(latlngs[i].latitude, latlngs[i].longitude);
+      final to = maps.LatLng(latlngs[i+1].latitude, latlngs[i+1].longitude);
+      final num distance = maps.SphericalUtil.computeDistanceBetween(from, to);
+      if (meter < distance) {
+        final latlng = maps.SphericalUtil.interpolate(from, to, meter / distance);
+        return LatLng(latlng.latitude, latlng.longitude);
+      } else {
+        meter = meter - distance;
+      }
+    }
+    return latlngs.last;
+  }
 }
