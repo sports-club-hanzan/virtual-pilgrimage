@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
+import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/ui/pages/profile/profile_presenter.dart';
@@ -25,6 +26,7 @@ void main() {
       birthDay: CustomizableDateTime.current,
       createdAt: CustomizableDateTime.current,
       updatedAt: CustomizableDateTime.current,
+      pilgrimage: const PilgrimageInfo(id: id),
     );
     userRepository = FakeUserRepository(user);
   });
@@ -36,6 +38,7 @@ void main() {
       birthDay: CustomizableDateTime.current,
       createdAt: CustomizableDateTime.current,
       updatedAt: CustomizableDateTime.current,
+      pilgrimage: const PilgrimageInfo(id: 'dummyLoginUserId'),
     );
     setUp(() {
       container = mockedProviderContainer(
@@ -60,6 +63,7 @@ void main() {
         birthDay: CustomizableDateTime.current,
         createdAt: CustomizableDateTime.current,
         updatedAt: CustomizableDateTime.current,
+        pilgrimage: const PilgrimageInfo(id: 'dummyId'),
       );
 
       final actualLoading = container.read(profileUserProvider('dummyId'));

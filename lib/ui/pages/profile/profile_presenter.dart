@@ -38,7 +38,7 @@ class ProfilePresenter extends StateNotifier<ProfileState> {
   late final UserIconRepository _userIconRepository;
   late final Analytics _analytics;
 
-  final _selectedTabs = ['昨日', '週間', '月間'];
+  final _selectedTabs = ['今日', '昨日', '週間', '月間'];
   final _genderString = ['', '男性', '女性'];
 
   List<String> tabLabels() => _selectedTabs;

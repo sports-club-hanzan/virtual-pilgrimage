@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
+import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/profile/update_user_profile_image_interactor.dart';
 import 'package:virtualpilgrimage/domain/user/profile/update_user_profile_image_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/profile/user_profile_image_repository.dart';
@@ -44,6 +45,7 @@ void main() {
           birthDay: DateTime(1990, 1, 1),
           createdAt: DateTime(2022, 10, 10),
           updatedAt: DateTime(2022, 10, 10),
+          pilgrimage: const PilgrimageInfo(id: 'dummyId'),
         );
         final expected = user.copyWith(
           userIconUrl: 'https://dummy.png',
