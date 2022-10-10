@@ -114,11 +114,11 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
       // ユーザ登録に成功したらユーザの state を更新
       case RegistrationResultStatus.success:
         _ref.read(userStateProvider.state).state = updatedUser;
+        _ref.read(loginStateProvider.state).state = updatedUser.userStatus;
         break;
       case RegistrationResultStatus.alreadyExistSameNicknameUser:
         state = state.copyWith(
-          nickname:
-              state.nickname.addExternalError('既に使われているため別のニックネームにしてください'),
+          nickname: state.nickname.addExternalError('既に使われているため別のニックネームにしてください'),
         );
         unawaited(
           _analytics.logEvent(

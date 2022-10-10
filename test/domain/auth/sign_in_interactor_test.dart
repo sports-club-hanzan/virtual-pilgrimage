@@ -273,7 +273,7 @@ void main() {
     group('logout', () {
       test('正常系', () async {
         // given
-        when(mockFirebaseAuth.signOut()).thenAnswer((realInvocation) => Future.value());
+        when(mockFirebaseAuth.signOut()).thenAnswer((_) => Future.value());
 
         // when
         await target.logout();
@@ -317,7 +317,7 @@ void defaultMockSignInWithEmailAndPassword(
   when(mockUser.photoURL).thenReturn('http://example.com');
   when(mockUserCredential.user).thenReturn(mockUser);
   when(mockEmailAndPasswordAuthRepository.signIn(email: email, password: password))
-      .thenAnswer((realInvocation) => Future.value(mockUserCredential));
+      .thenAnswer((_) => Future.value(mockUserCredential));
   defaultMockSignInWithCredentialUser(mockUserRepository, mockFirebaseCrashlytics, userId);
 }
 

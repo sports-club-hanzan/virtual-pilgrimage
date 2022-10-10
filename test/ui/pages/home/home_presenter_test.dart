@@ -11,7 +11,7 @@ void main() {
     target = container.read(homeProvider.notifier);
   });
 
-  group('RegistrationPresenter', () {
+  group('HomePresenter', () {
     test('DI', () {
       expect(target, isNotNull);
     });

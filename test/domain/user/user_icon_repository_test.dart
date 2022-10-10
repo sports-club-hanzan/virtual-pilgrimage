@@ -2,11 +2,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
-import 'package:mockito/annotations.dart';
 import 'package:virtualpilgrimage/domain/user/user_icon_repository.dart';
+
 import '../../helper/provider_container.dart';
 
-@GenerateMocks([http.Client])
 void main() {
   late UserIconRepository target;
 
@@ -26,8 +25,8 @@ void main() {
 
       group('正常系', () {
         setUp(() {
-          MockClient((_) async =>
-            http.Response('assets', 200),
+          MockClient(
+            (_) async => http.Response('assets', 200),
           );
         });
         test('画像が取得できる', () async {
