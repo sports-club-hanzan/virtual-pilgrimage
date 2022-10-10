@@ -28,6 +28,7 @@ class _App extends ConsumerWidget {
     final firebaseAuth = ref.watch(firebaseAuthProvider);
     final analytics = ref.read(analyticsProvider);
     final userState = ref.watch(userStateProvider.state);
+    final loginState = ref.watch(loginStateProvider.state);
     final userIconRepository = ref.read(userIconRepositoryProvider);
 
     // Firebaseへのログインがキャッシュされていれば
@@ -40,6 +41,7 @@ class _App extends ConsumerWidget {
           userIconRepository.loadIconImage(value.userIconUrl).then((bitmap) {
             value = value!.copyWith(userIcon: bitmap);
             userState.state = value;
+            loginState.state = value!.userStatus;
           });
         }
       });

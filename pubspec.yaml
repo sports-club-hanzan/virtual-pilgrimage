@@ -51,6 +51,7 @@ dependencies:
   json_annotation: ^4.6.0
   intl: ^0.17.0
   http: ^0.13.5
+  image_picker: ^0.8.5+3
   # ui
   flutter_datetime_picker:
     # pub.dev からダウンロードできるバージョンだと warn ログが出るので最新バージョンを利用
@@ -59,6 +60,7 @@ dependencies:
       ref: master
   google_maps_flutter: ^2.2.0
   google_polyline_algorithm: ^3.1.0
+  flutter_toggle_tab: ^1.2.0
   # health
   health: ^4.1.1
   permission_handler: ^9.2.0 # Firebaseと同じSDKをターゲットにできるよう最新ではないバージョンを利用

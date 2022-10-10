@@ -3,8 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 
 final userIconRepositoryProvider = Provider<UserIconRepository>(
-    (ref) => UserIconRepository(
-    ),
+  (ref) => UserIconRepository(),
 );
 
 class UserIconRepository {

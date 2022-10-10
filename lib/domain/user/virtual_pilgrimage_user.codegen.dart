@@ -10,7 +10,12 @@ import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen
 part 'virtual_pilgrimage_user.codegen.freezed.dart';
 part 'virtual_pilgrimage_user.codegen.g.dart';
 
+// ログインしているユーザの状態
 final userStateProvider = StateProvider<VirtualPilgrimageUser?>((_) => null);
+
+// ユーザのログインステータス
+// ログインステータスによって遷移できるページが変わってくるので、その遷移の為に利用
+final loginStateProvider = StateProvider<UserStatus?>((_) => null);
 
 // 性別
 enum Gender {

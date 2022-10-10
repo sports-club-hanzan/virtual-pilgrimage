@@ -63,6 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1048377471641',
     projectId: 'virtual-pilgrimage-dev',
     storageBucket: 'virtual-pilgrimage-dev.appspot.com',
+    androidClientId: '1048377471641-22unossovpppcj49td2k23h0muqhnkcp.apps.googleusercontent.com',
     iosClientId: '1048377471641-pn7ok6oelgf88e9fi803skt5ofhnqp5c.apps.googleusercontent.com',
     iosBundleId: 'com.virtualpilgrimage.dev',
   );

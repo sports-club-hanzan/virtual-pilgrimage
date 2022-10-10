@@ -5,6 +5,7 @@ import 'package:virtualpilgrimage/domain/temple/temple_repository.dart';
 import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/router.dart';
+import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
 import 'package:virtualpilgrimage/ui/pages/home/components/google_map_view.dart';
 import 'package:virtualpilgrimage/ui/pages/sign_in/sign_in_presenter.dart';
 import 'package:virtualpilgrimage/ui/style/color.dart';
@@ -15,10 +16,7 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('巡礼ウォーク'),
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-      ),
+      appBar: const MyAppBar(),
       body: HomePageBody(ref),
     );
   }
@@ -86,8 +84,27 @@ class HomePageBody extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () async {
+                _ref.read(routerProvider).pushNamed(
+                  RouterPath.profile,
+                  queryParams: {
+                    'userId': userState?.id ?? '',
+                    'canEdit': 'true',
+                    'previousPagePath': RouterPath.home,
+                  },
+                );
+              },
+              child: const Text('プロフィールページ'),
+            ),
+            const Padding(
+              padding: EdgeInsetsDirectional.all(16),
+            ),
+            ElevatedButton(
+              onPressed: () async {
                 final pilgrimage = _ref.watch(pilgrimageRepositoryProvider);
-                final url = await pilgrimage.getTempleImageUrl(userState?.pilgrimage?.nowPilgrimageId.toString() ?? '1', '1.jpg');
+                final url = await pilgrimage.getTempleImageUrl(
+                  userState?.pilgrimage?.nowPilgrimageId.toString() ?? '1',
+                  '1.jpg',
+                );
                 final temple = _ref.watch(templeRepositoryProvider);
                 final templeInfo = await temple.getTempleInfo(1);
                 await showDialog<void>(
@@ -107,9 +124,6 @@ class HomePageBody extends StatelessWidget {
                 );
               },
               child: const Text('お寺の情報を表示する'),
-            ),
-            const Padding(
-              padding: EdgeInsetsDirectional.all(16),
             ),
             GoogleMapView(_ref),
           ],
