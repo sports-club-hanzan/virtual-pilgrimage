@@ -8,6 +8,7 @@ part of 'health_info.codegen.dart';
 
 _$_HealthInfo _$$_HealthInfoFromJson(Map<String, dynamic> json) =>
     _$_HealthInfo(
+      today: HealthByPeriod.fromJson(json['today'] as Map<String, dynamic>),
       yesterday:
           HealthByPeriod.fromJson(json['yesterday'] as Map<String, dynamic>),
       week: HealthByPeriod.fromJson(json['week'] as Map<String, dynamic>),
@@ -20,6 +21,7 @@ _$_HealthInfo _$$_HealthInfoFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$_HealthInfoToJson(_$_HealthInfo instance) =>
     <String, dynamic>{
+      'today': instance.today.toJson(),
       'yesterday': instance.yesterday.toJson(),
       'week': instance.week.toJson(),
       'month': instance.month.toJson(),

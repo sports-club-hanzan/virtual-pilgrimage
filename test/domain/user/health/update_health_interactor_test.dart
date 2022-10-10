@@ -44,6 +44,7 @@ void main() {
   group('UpdateHealthInteractor', () {
     final user = defaultUser();
     final health = HealthInfo(
+      today: defaultHealthByPeriod(steps: 10, distance: 10, burnedCalorie: 10),
       yesterday: defaultHealthByPeriod(steps: 100, distance: 100, burnedCalorie: 100),
       week: defaultHealthByPeriod(steps: 1000, distance: 1000, burnedCalorie: 1000),
       month: defaultHealthByPeriod(steps: 1000, distance: 10000, burnedCalorie: 10000),
@@ -180,6 +181,7 @@ VirtualPilgrimageUser defaultUser() {
     createdAt: CustomizableDateTime.current.subtract(const Duration(days: 14)),
     updatedAt: CustomizableDateTime.current.subtract(const Duration(days: 10)),
     health: HealthInfo(
+      today: defaultHealthByPeriod(),
       yesterday: defaultHealthByPeriod(),
       week: defaultHealthByPeriod(),
       month: defaultHealthByPeriod(),
