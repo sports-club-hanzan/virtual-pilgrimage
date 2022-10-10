@@ -12,6 +12,7 @@ import 'package:virtualpilgrimage/domain/user/health/health_repository.dart';
 import 'package:virtualpilgrimage/domain/user/health/update_health_interactor.dart';
 import 'package:virtualpilgrimage/domain/user/health/update_health_result.dart';
 import 'package:virtualpilgrimage/domain/user/health/update_health_usecase.dart';
+import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 
@@ -186,6 +187,7 @@ VirtualPilgrimageUser defaultUser() {
       totalDistance: 0,
       updatedAt: CustomizableDateTime.current,
     ),
+    pilgrimage: const PilgrimageInfo(id: 'dummyId'),
   );
 }
 

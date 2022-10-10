@@ -3,6 +3,7 @@ import 'package:logger/logger.dart';
 import 'package:mockito/mockito.dart';
 import 'package:virtualpilgrimage/analytics.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
+import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 
 import 'helper/mock.mocks.dart';
@@ -94,6 +95,7 @@ void main() {
           birthDay: DateTime(1990),
           createdAt: CustomizableDateTime.current,
           updatedAt: CustomizableDateTime.current,
+          pilgrimage: const PilgrimageInfo(id: 'dummyId'),
         );
         when(
           mockFirebaseAnalytics.setUserProperty(

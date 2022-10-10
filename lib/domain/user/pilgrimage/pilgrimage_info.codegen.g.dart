@@ -8,9 +8,10 @@ part of 'pilgrimage_info.codegen.dart';
 
 _$_PilgrimageInfo _$$_PilgrimageInfoFromJson(Map<String, dynamic> json) =>
     _$_PilgrimageInfo(
-      id: json['id'] as int,
-      nowPilgrimageId: json['nowPilgrimageId'] as int,
-      lap: json['lap'] as int,
+      id: json['id'] as String,
+      nowPilgrimageId: json['nowPilgrimageId'] as int? ?? 1,
+      lap: json['lap'] as int? ?? 1,
+      movingDistance: (json['movingDistance'] as num?)?.toDouble() ?? 0,
     );
 
 Map<String, dynamic> _$$_PilgrimageInfoToJson(_$_PilgrimageInfo instance) =>
@@ -18,4 +19,5 @@ Map<String, dynamic> _$$_PilgrimageInfoToJson(_$_PilgrimageInfo instance) =>
       'id': instance.id,
       'nowPilgrimageId': instance.nowPilgrimageId,
       'lap': instance.lap,
+      'movingDistance': instance.movingDistance,
     };

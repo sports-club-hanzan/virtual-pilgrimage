@@ -9,6 +9,7 @@ import 'package:virtualpilgrimage/domain/auth/sign_in_usecase.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
 import 'package:virtualpilgrimage/domain/exception/sign_in_exception.dart';
+import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/user_icon_repository.dart';
 import 'package:virtualpilgrimage/domain/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
@@ -72,7 +73,7 @@ void main() {
 
   group('SignInInteractor', () {
     CustomizableDateTime.customTime = DateTime.now();
-    
+
     test('DI', () {
       final container = mockedProviderContainer();
       final usecase = container.read(signInUsecaseProvider);
@@ -86,7 +87,8 @@ void main() {
         when(mockUser.displayName).thenReturn('dummyName');
         when(mockUser.photoURL).thenReturn('http://example.com');
         when(mockUserCredential.user).thenReturn(mockUser);
-        when(mockUserIconRepository.loadIconImage('')).thenAnswer((_) async => Future.value(BitmapDescriptor.defaultMarker));
+        when(mockUserIconRepository.loadIconImage(''))
+            .thenAnswer((_) async => Future.value(BitmapDescriptor.defaultMarker));
         when(mockGoogleAuthRepository.signIn()).thenAnswer((_) => Future.value(mockUserCredential));
         defaultMockSignInWithCredentialUser(mockUserRepository, mockFirebaseCrashlytics, userId);
       });
@@ -110,7 +112,8 @@ void main() {
         test('ユーザが存在しないため、作成してサインインできる', () async {
           // given
           when(mockUserRepository.get(userId)).thenAnswer((_) => Future.value(null));
-          when(mockUserIconRepository.loadIconImage('http://example.com')).thenAnswer((_) async => Future.value(BitmapDescriptor.defaultMarker));
+          when(mockUserIconRepository.loadIconImage('http://example.com'))
+              .thenAnswer((_) async => Future.value(BitmapDescriptor.defaultMarker));
 
           final expected = defaultUser(id: userId).copyWith(
             nickname: '',
@@ -207,7 +210,8 @@ void main() {
       const password = 'Passw0rd123';
       group('正常系', () {
         setUp(() {
-          when(mockUserIconRepository.loadIconImage('')).thenAnswer((_) async => Future.value(BitmapDescriptor.defaultMarker));
+          when(mockUserIconRepository.loadIconImage(''))
+              .thenAnswer((_) async => Future.value(BitmapDescriptor.defaultMarker));
         });
 
         test('ユーザが既に存在し、サインインできる', () async {
@@ -327,5 +331,6 @@ VirtualPilgrimageUser defaultUser({String id = 'dummyId'}) {
     userStatus: UserStatus.created,
     createdAt: CustomizableDateTime.current,
     updatedAt: CustomizableDateTime.current,
+    pilgrimage: PilgrimageInfo(id: id),
   );
 }
