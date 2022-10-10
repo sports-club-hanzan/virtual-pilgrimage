@@ -127,8 +127,6 @@ class HealthRepositoryImpl implements HealthRepository {
     }
 
     try {
-      // 昨日1日、過去一週間、過去一ヶ月間、過去全ての3パターンでヘルスケア情報を取得
-      // 昨日
       final health = await _getHealthData(from, to, types);
       final aggregatedHealth = _aggregateHealthInfo(health);
       return aggregatedHealth;

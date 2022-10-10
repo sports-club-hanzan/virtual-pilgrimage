@@ -82,7 +82,7 @@ void main() {
     });
 
     test('tabLabels', () {
-      expect(target.tabLabels(), ['昨日', '週間', '月間']);
+      expect(target.tabLabels(), ['今日', '昨日', '週間', '月間']);
     });
 
     test('setSelectedTabIndex', () async {
