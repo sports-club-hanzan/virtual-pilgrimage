@@ -23,9 +23,6 @@ class TempleInfo with _$TempleInfo {
     // 次のお寺までの距離
     required int nextDistance,
 
-    // 経過ステップ数
-    required int totalSteps,
-
     // お寺の座標
     @JsonKey(
       fromJson: _geoPointFromJson,

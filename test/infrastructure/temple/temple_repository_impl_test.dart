@@ -67,6 +67,5 @@ TempleInfo defaultTempleInfo([
     name: 'お寺',
     prefecture: '徳島県',
     nextDistance: 1,
-    totalSteps: 0,
   );
 }
