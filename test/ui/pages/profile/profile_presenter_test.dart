@@ -26,7 +26,7 @@ void main() {
       birthDay: CustomizableDateTime.current,
       createdAt: CustomizableDateTime.current,
       updatedAt: CustomizableDateTime.current,
-      pilgrimage: const PilgrimageInfo(id: id),
+      pilgrimage: PilgrimageInfo(id: id, updatedAt: CustomizableDateTime.current),
     );
     userRepository = FakeUserRepository(user);
   });
@@ -38,7 +38,7 @@ void main() {
       birthDay: CustomizableDateTime.current,
       createdAt: CustomizableDateTime.current,
       updatedAt: CustomizableDateTime.current,
-      pilgrimage: const PilgrimageInfo(id: 'dummyLoginUserId'),
+      pilgrimage: PilgrimageInfo(id: 'dummyLoginUserId', updatedAt: CustomizableDateTime.current),
     );
     setUp(() {
       container = mockedProviderContainer(
@@ -63,7 +63,7 @@ void main() {
         birthDay: CustomizableDateTime.current,
         createdAt: CustomizableDateTime.current,
         updatedAt: CustomizableDateTime.current,
-        pilgrimage: const PilgrimageInfo(id: 'dummyId'),
+        pilgrimage: PilgrimageInfo(id: 'dummyId', updatedAt: CustomizableDateTime.current),
       );
 
       final actualLoading = container.read(profileUserProvider('dummyId'));

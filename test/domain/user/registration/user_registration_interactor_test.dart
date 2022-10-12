@@ -44,7 +44,7 @@ void main() {
         userStatus: UserStatus.temporary,
         createdAt: CustomizableDateTime.current,
         updatedAt: CustomizableDateTime.current,
-        pilgrimage: const PilgrimageInfo(id: 'dummyId'),
+        pilgrimage: PilgrimageInfo(id: 'dummyId', updatedAt: CustomizableDateTime.current),
       );
       setUp(() {
         when(mockFirebaseCrashlytics.log(any)).thenAnswer((_) => Future.value());

@@ -231,6 +231,6 @@ VirtualPilgrimageUser defaultUser([
     userStatus: UserStatus.created,
     createdAt: CustomizableDateTime.current,
     updatedAt: CustomizableDateTime.current,
-    pilgrimage: PilgrimageInfo(id: userId),
+    pilgrimage: PilgrimageInfo(id: userId, updatedAt: CustomizableDateTime.current),
   );
 }

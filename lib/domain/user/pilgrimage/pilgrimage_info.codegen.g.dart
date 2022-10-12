@@ -11,7 +11,9 @@ _$_PilgrimageInfo _$$_PilgrimageInfoFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       nowPilgrimageId: json['nowPilgrimageId'] as int? ?? 1,
       lap: json['lap'] as int? ?? 1,
-      movingDistance: (json['movingDistance'] as num?)?.toDouble() ?? 0,
+      movingDistance: json['movingDistance'] as int? ?? 0,
+      updatedAt: _FirestoreTimestampConverter.timestampToDateTime(
+          json['updatedAt'] as Timestamp),
     );
 
 Map<String, dynamic> _$$_PilgrimageInfoToJson(_$_PilgrimageInfo instance) =>
@@ -20,4 +22,6 @@ Map<String, dynamic> _$$_PilgrimageInfoToJson(_$_PilgrimageInfo instance) =>
       'nowPilgrimageId': instance.nowPilgrimageId,
       'lap': instance.lap,
       'movingDistance': instance.movingDistance,
+      'updatedAt':
+          _FirestoreTimestampConverter.dateTimeToTimestamp(instance.updatedAt),
     };

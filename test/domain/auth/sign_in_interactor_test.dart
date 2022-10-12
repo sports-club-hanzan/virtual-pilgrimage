@@ -331,6 +331,6 @@ VirtualPilgrimageUser defaultUser({String id = 'dummyId'}) {
     userStatus: UserStatus.created,
     createdAt: CustomizableDateTime.current,
     updatedAt: CustomizableDateTime.current,
-    pilgrimage: PilgrimageInfo(id: id),
+    pilgrimage: PilgrimageInfo(id: id, updatedAt: CustomizableDateTime.current),
   );
 }

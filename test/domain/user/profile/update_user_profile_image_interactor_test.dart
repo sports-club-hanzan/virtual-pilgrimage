@@ -45,7 +45,7 @@ void main() {
           birthDay: DateTime(1990, 1, 1),
           createdAt: DateTime(2022, 10, 10),
           updatedAt: DateTime(2022, 10, 10),
-          pilgrimage: const PilgrimageInfo(id: 'dummyId'),
+          pilgrimage: PilgrimageInfo(id: 'dummyId', updatedAt: CustomizableDateTime.current),
         );
         final expected = user.copyWith(
           userIconUrl: 'https://dummy.png',

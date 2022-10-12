@@ -126,6 +126,7 @@ class SignInInteractor extends SignInUsecase {
           updatedAt: now,
           pilgrimage: PilgrimageInfo(
             id: credentialUser.uid,
+            updatedAt: now,
           ),
         );
         await _userRepository.update(user);

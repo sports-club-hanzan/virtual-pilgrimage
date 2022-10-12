@@ -189,7 +189,7 @@ VirtualPilgrimageUser defaultUser() {
       totalDistance: 0,
       updatedAt: CustomizableDateTime.current,
     ),
-    pilgrimage: const PilgrimageInfo(id: 'dummyId'),
+    pilgrimage: PilgrimageInfo(id: 'dummyId', updatedAt: CustomizableDateTime.current),
   );
 }
 
