@@ -1,3 +1,5 @@
+// ignore_for_file: type=lint
+
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -54,37 +56,10 @@ void main() {
         ),
       ).thenAnswer(
         (_) => Future.value([
-          // @formatter:off
-          HealthDataPoint(
-              NumericHealthValue(468),
-              HealthDataType.ACTIVE_ENERGY_BURNED,
-              HealthDataUnit.KILOCALORIE,
-              DateTime(2022, 9, 12),
-              DateTime(2022, 9, 18),
-              PlatformType.ANDROID,
-              defaultDeviceId,
-              defaultSourceId,
-              defaultSourceName),
-          HealthDataPoint(
-              NumericHealthValue(427),
-              HealthDataType.STEPS,
-              HealthDataUnit.COUNT,
-              DateTime(2022, 9, 12),
-              DateTime(2022, 9, 18),
-              PlatformType.ANDROID,
-              defaultDeviceId,
-              defaultSourceId,
-              defaultSourceName),
-          HealthDataPoint(
-              NumericHealthValue(670),
-              HealthDataType.DISTANCE_DELTA,
-              HealthDataUnit.METER,
-              DateTime(2022, 9, 12),
-              DateTime(2022, 9, 18),
-              PlatformType.ANDROID,
-              defaultDeviceId,
-              defaultSourceId,
-              defaultSourceName),
+              // @formatter:off
+          HealthDataPoint(NumericHealthValue(468), HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataUnit.KILOCALORIE, DateTime(2022, 9, 12), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
+          HealthDataPoint(NumericHealthValue(427), HealthDataType.STEPS, HealthDataUnit.COUNT, DateTime(2022, 9, 12), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
+          HealthDataPoint(NumericHealthValue(670), HealthDataType.DISTANCE_DELTA, HealthDataUnit.METER, DateTime(2022, 9, 12), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
           // @formatter:on
         ]),
       );
@@ -97,37 +72,10 @@ void main() {
       when(mockHealthFactory.getHealthDataFromTypes(lastWeek, targetToDate, types)).thenAnswer(
         (_) => Future.value([
           ...defaultHealthDataPoint(),
-          // @formatter:off
-          HealthDataPoint(
-              NumericHealthValue(10000),
-              HealthDataType.ACTIVE_ENERGY_BURNED,
-              HealthDataUnit.KILOCALORIE,
-              DateTime(2022, 9, 12),
-              DateTime(2022, 9, 18),
-              PlatformType.ANDROID,
-              defaultDeviceId,
-              defaultSourceId,
-              defaultSourceName),
-          HealthDataPoint(
-              NumericHealthValue(10000),
-              HealthDataType.STEPS,
-              HealthDataUnit.COUNT,
-              DateTime(2022, 9, 12),
-              DateTime(2022, 9, 18),
-              PlatformType.ANDROID,
-              defaultDeviceId,
-              defaultSourceId,
-              defaultSourceName),
-          HealthDataPoint(
-              NumericHealthValue(10000),
-              HealthDataType.DISTANCE_DELTA,
-              HealthDataUnit.METER,
-              DateTime(2022, 9, 12),
-              DateTime(2022, 9, 18),
-              PlatformType.ANDROID,
-              defaultDeviceId,
-              defaultSourceId,
-              defaultSourceName),
+              // @formatter:off
+          HealthDataPoint(NumericHealthValue(10000), HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataUnit.KILOCALORIE, DateTime(2022, 9, 12), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
+          HealthDataPoint(NumericHealthValue(10000), HealthDataType.STEPS, HealthDataUnit.COUNT, DateTime(2022, 9, 12), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
+          HealthDataPoint(NumericHealthValue(10000), HealthDataType.DISTANCE_DELTA, HealthDataUnit.METER, DateTime(2022, 9, 12), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
           // @formatter:on
         ]),
       );
@@ -136,37 +84,10 @@ void main() {
       when(mockHealthFactory.getHealthDataFromTypes(lastMonth, targetToDate, types)).thenAnswer(
         (_) => Future.value([
           ...defaultHealthDataPoint(),
-          // @formatter:off
-          HealthDataPoint(
-              NumericHealthValue(100000),
-              HealthDataType.ACTIVE_ENERGY_BURNED,
-              HealthDataUnit.KILOCALORIE,
-              DateTime(2022, 8, 19),
-              DateTime(2022, 9, 18),
-              PlatformType.ANDROID,
-              defaultDeviceId,
-              defaultSourceId,
-              defaultSourceName),
-          HealthDataPoint(
-              NumericHealthValue(100000),
-              HealthDataType.STEPS,
-              HealthDataUnit.COUNT,
-              DateTime(2022, 8, 19),
-              DateTime(2022, 9, 18),
-              PlatformType.ANDROID,
-              defaultDeviceId,
-              defaultSourceId,
-              defaultSourceName),
-          HealthDataPoint(
-              NumericHealthValue(100000),
-              HealthDataType.DISTANCE_DELTA,
-              HealthDataUnit.METER,
-              DateTime(2022, 8, 19),
-              DateTime(2022, 9, 18),
-              PlatformType.ANDROID,
-              defaultDeviceId,
-              defaultSourceId,
-              defaultSourceName),
+              // @formatter:off
+          HealthDataPoint(NumericHealthValue(100000), HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataUnit.KILOCALORIE, DateTime(2022, 8, 19), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
+          HealthDataPoint(NumericHealthValue(100000), HealthDataType.STEPS, HealthDataUnit.COUNT, DateTime(2022, 8, 19), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
+          HealthDataPoint(NumericHealthValue(100000), HealthDataType.DISTANCE_DELTA, HealthDataUnit.METER, DateTime(2022, 8, 19), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
           // @formatter:on
         ]),
       );
@@ -198,37 +119,10 @@ void main() {
           when(mockHealthFactory.getHealthDataFromTypes(createdAt, targetToDate, types)).thenAnswer(
             (_) => Future.value([
               ...defaultHealthDataPoint(),
-              // @formatter:off
-              HealthDataPoint(
-                  NumericHealthValue(1000000),
-                  HealthDataType.ACTIVE_ENERGY_BURNED,
-                  HealthDataUnit.KILOCALORIE,
-                  DateTime(2022),
-                  DateTime(2022, 9, 18),
-                  PlatformType.ANDROID,
-                  defaultDeviceId,
-                  defaultSourceId,
-                  defaultSourceName),
-              HealthDataPoint(
-                  NumericHealthValue(1000000),
-                  HealthDataType.STEPS,
-                  HealthDataUnit.COUNT,
-                  DateTime(2022),
-                  DateTime(2022, 9, 18),
-                  PlatformType.ANDROID,
-                  defaultDeviceId,
-                  defaultSourceId,
-                  defaultSourceName),
-              HealthDataPoint(
-                  NumericHealthValue(1000000),
-                  HealthDataType.DISTANCE_DELTA,
-                  HealthDataUnit.METER,
-                  DateTime(2022),
-                  DateTime(2022, 9, 18),
-                  PlatformType.ANDROID,
-                  defaultDeviceId,
-                  defaultSourceId,
-                  defaultSourceName),
+                  // @formatter:off
+              HealthDataPoint(NumericHealthValue(1000000), HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataUnit.KILOCALORIE, DateTime(2022), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
+              HealthDataPoint(NumericHealthValue(1000000), HealthDataType.STEPS, HealthDataUnit.COUNT, DateTime(2022), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
+              HealthDataPoint(NumericHealthValue(1000000), HealthDataType.DISTANCE_DELTA, HealthDataUnit.METER, DateTime(2022), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
               // @formatter:on
             ]),
           );
@@ -303,37 +197,10 @@ void main() {
             ),
           ).thenAnswer(
             (_) => Future.value([
-              // @formatter:off
-              HealthDataPoint(
-                  NumericHealthValue(468),
-                  HealthDataType.ACTIVE_ENERGY_BURNED,
-                  HealthDataUnit.KILOCALORIE,
-                  DateTime(2022, 9, 12),
-                  DateTime(2022, 9, 18),
-                  PlatformType.ANDROID,
-                  defaultDeviceId,
-                  defaultSourceId,
-                  defaultSourceName),
-              HealthDataPoint(
-                  NumericHealthValue(427),
-                  HealthDataType.STEPS,
-                  HealthDataUnit.COUNT,
-                  DateTime(2022, 9, 12),
-                  DateTime(2022, 9, 18),
-                  PlatformType.ANDROID,
-                  defaultDeviceId,
-                  defaultSourceId,
-                  defaultSourceName),
-              HealthDataPoint(
-                  NumericHealthValue(670),
-                  HealthDataType.DISTANCE_DELTA,
-                  HealthDataUnit.METER,
-                  DateTime(2022, 9, 12),
-                  DateTime(2022, 9, 18),
-                  PlatformType.ANDROID,
-                  defaultDeviceId,
-                  defaultSourceId,
-                  defaultSourceName),
+                  // @formatter:off
+              HealthDataPoint(NumericHealthValue(468), HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataUnit.KILOCALORIE, DateTime(2022, 9, 12), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
+              HealthDataPoint(NumericHealthValue(427), HealthDataType.STEPS, HealthDataUnit.COUNT, DateTime(2022, 9, 12), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
+              HealthDataPoint(NumericHealthValue(670), HealthDataType.DISTANCE_DELTA, HealthDataUnit.METER, DateTime(2022, 9, 12), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
               // @formatter:on
             ]),
           );
@@ -347,37 +214,10 @@ void main() {
               .thenAnswer(
             (_) => Future.value([
               ...defaultHealthDataPoint(),
-              // @formatter:off
-              HealthDataPoint(
-                  NumericHealthValue(10000),
-                  HealthDataType.ACTIVE_ENERGY_BURNED,
-                  HealthDataUnit.KILOCALORIE,
-                  DateTime(2022, 9, 12),
-                  DateTime(2022, 9, 18),
-                  PlatformType.IOS,
-                  defaultDeviceId,
-                  defaultSourceId,
-                  defaultSourceName),
-              HealthDataPoint(
-                  NumericHealthValue(10000),
-                  HealthDataType.STEPS,
-                  HealthDataUnit.COUNT,
-                  DateTime(2022, 9, 12),
-                  DateTime(2022, 9, 18),
-                  PlatformType.IOS,
-                  defaultDeviceId,
-                  defaultSourceId,
-                  defaultSourceName),
-              HealthDataPoint(
-                  NumericHealthValue(10000),
-                  HealthDataType.DISTANCE_WALKING_RUNNING,
-                  HealthDataUnit.METER,
-                  DateTime(2022, 9, 12),
-                  DateTime(2022, 9, 18),
-                  PlatformType.IOS,
-                  defaultDeviceId,
-                  defaultSourceId,
-                  defaultSourceName),
+                  // @formatter:off
+              HealthDataPoint(NumericHealthValue(10000), HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataUnit.KILOCALORIE, DateTime(2022, 9, 12), DateTime(2022, 9, 18), PlatformType.IOS, defaultDeviceId, defaultSourceId, defaultSourceName),
+              HealthDataPoint(NumericHealthValue(10000), HealthDataType.STEPS, HealthDataUnit.COUNT, DateTime(2022, 9, 12), DateTime(2022, 9, 18), PlatformType.IOS, defaultDeviceId, defaultSourceId, defaultSourceName),
+              HealthDataPoint(NumericHealthValue(10000), HealthDataType.DISTANCE_WALKING_RUNNING, HealthDataUnit.METER, DateTime(2022, 9, 12), DateTime(2022, 9, 18), PlatformType.IOS, defaultDeviceId, defaultSourceId, defaultSourceName),
               // @formatter:on
             ]),
           );
@@ -387,37 +227,10 @@ void main() {
               .thenAnswer(
             (_) => Future.value([
               ...defaultHealthDataPoint(),
-              // @formatter:off
-              HealthDataPoint(
-                  NumericHealthValue(100000),
-                  HealthDataType.ACTIVE_ENERGY_BURNED,
-                  HealthDataUnit.KILOCALORIE,
-                  DateTime(2022, 8, 19),
-                  DateTime(2022, 9, 18),
-                  PlatformType.IOS,
-                  defaultDeviceId,
-                  defaultSourceId,
-                  defaultSourceName),
-              HealthDataPoint(
-                  NumericHealthValue(100000),
-                  HealthDataType.STEPS,
-                  HealthDataUnit.COUNT,
-                  DateTime(2022, 8, 19),
-                  DateTime(2022, 9, 18),
-                  PlatformType.IOS,
-                  defaultDeviceId,
-                  defaultSourceId,
-                  defaultSourceName),
-              HealthDataPoint(
-                  NumericHealthValue(100000),
-                  HealthDataType.DISTANCE_WALKING_RUNNING,
-                  HealthDataUnit.METER,
-                  DateTime(2022, 8, 19),
-                  DateTime(2022, 9, 18),
-                  PlatformType.IOS,
-                  defaultDeviceId,
-                  defaultSourceId,
-                  defaultSourceName),
+                  // @formatter:off
+              HealthDataPoint(NumericHealthValue(100000), HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataUnit.KILOCALORIE, DateTime(2022, 8, 19), DateTime(2022, 9, 18), PlatformType.IOS, defaultDeviceId, defaultSourceId, defaultSourceName),
+              HealthDataPoint(NumericHealthValue(100000), HealthDataType.STEPS, HealthDataUnit.COUNT, DateTime(2022, 8, 19), DateTime(2022, 9, 18), PlatformType.IOS, defaultDeviceId, defaultSourceId, defaultSourceName),
+              HealthDataPoint(NumericHealthValue(100000), HealthDataType.DISTANCE_WALKING_RUNNING, HealthDataUnit.METER, DateTime(2022, 8, 19), DateTime(2022, 9, 18), PlatformType.IOS, defaultDeviceId, defaultSourceId, defaultSourceName),
               // @formatter:on
             ]),
           );
@@ -427,37 +240,10 @@ void main() {
               .thenAnswer(
             (_) => Future.value([
               ...defaultHealthDataPoint(),
-              // @formatter:off
-              HealthDataPoint(
-                  NumericHealthValue(1000000),
-                  HealthDataType.ACTIVE_ENERGY_BURNED,
-                  HealthDataUnit.KILOCALORIE,
-                  DateTime(2022),
-                  DateTime(2022, 9, 18),
-                  PlatformType.IOS,
-                  defaultDeviceId,
-                  defaultSourceId,
-                  defaultSourceName),
-              HealthDataPoint(
-                  NumericHealthValue(1000000),
-                  HealthDataType.STEPS,
-                  HealthDataUnit.COUNT,
-                  DateTime(2022),
-                  DateTime(2022, 9, 18),
-                  PlatformType.IOS,
-                  defaultDeviceId,
-                  defaultSourceId,
-                  defaultSourceName),
-              HealthDataPoint(
-                  NumericHealthValue(1000000),
-                  HealthDataType.DISTANCE_WALKING_RUNNING,
-                  HealthDataUnit.METER,
-                  DateTime(2022),
-                  DateTime(2022, 9, 18),
-                  PlatformType.IOS,
-                  defaultDeviceId,
-                  defaultSourceId,
-                  defaultSourceName),
+                  // @formatter:off
+              HealthDataPoint(NumericHealthValue(1000000), HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataUnit.KILOCALORIE, DateTime(2022), DateTime(2022, 9, 18), PlatformType.IOS, defaultDeviceId, defaultSourceId, defaultSourceName),
+              HealthDataPoint(NumericHealthValue(1000000), HealthDataType.STEPS, HealthDataUnit.COUNT, DateTime(2022), DateTime(2022, 9, 18), PlatformType.IOS, defaultDeviceId, defaultSourceId, defaultSourceName),
+              HealthDataPoint(NumericHealthValue(1000000), HealthDataType.DISTANCE_WALKING_RUNNING, HealthDataUnit.METER, DateTime(2022), DateTime(2022, 9, 18), PlatformType.IOS, defaultDeviceId, defaultSourceId, defaultSourceName),
               // @formatter:on
             ]),
           );
@@ -508,210 +294,30 @@ List<HealthDataPoint> defaultHealthDataPoint() {
   final distanceType =
       Platform.isIOS ? HealthDataType.DISTANCE_WALKING_RUNNING : HealthDataType.DISTANCE_DELTA;
   final platformType = Platform.isIOS ? PlatformType.IOS : PlatformType.ANDROID;
+  // @formatter:off
   return [
     // 実データを元にテストデータを作成している
     // 1行が長いため、readability のため、Android Studio などで補完されないように @formatter:off を付与
-    // @formatter:off
-    HealthDataPoint(
-        NumericHealthValue(1305.7261962890625),
-        HealthDataType.ACTIVE_ENERGY_BURNED,
-        HealthDataUnit.KILOCALORIE,
-        DateTime(2022, 9, 18),
-        DateTime(2022, 9, 18, 21, 40, 31, 986),
-        platformType,
-        defaultDeviceId,
-        defaultSourceId,
-        defaultSourceName),
-    HealthDataPoint(
-        NumericHealthValue(13.775235176086426),
-        HealthDataType.ACTIVE_ENERGY_BURNED,
-        HealthDataUnit.KILOCALORIE,
-        DateTime(2022, 9, 18, 21, 40, 31, 986),
-        DateTime(2022, 9, 18, 21, 44, 16, 990),
-        platformType,
-        defaultDeviceId,
-        defaultSourceId,
-        defaultSourceName),
-    HealthDataPoint(
-        NumericHealthValue(3.1692113876342773),
-        HealthDataType.ACTIVE_ENERGY_BURNED,
-        HealthDataUnit.KILOCALORIE,
-        DateTime(2022, 9, 18, 21, 44, 16, 990),
-        DateTime(2022, 9, 18, 21, 47, 31, 986),
-        platformType,
-        defaultDeviceId,
-        defaultSourceId,
-        defaultSourceName),
-    HealthDataPoint(
-        NumericHealthValue(14.213860511779785),
-        HealthDataType.ACTIVE_ENERGY_BURNED,
-        HealthDataUnit.KILOCALORIE,
-        DateTime(2022, 9, 18, 21, 47, 31, 986),
-        DateTime(2022, 9, 18, 21, 49, 31, 986),
-        platformType,
-        defaultDeviceId,
-        defaultSourceId,
-        defaultSourceName),
-    HealthDataPoint(
-        NumericHealthValue(1.1071913242340088),
-        HealthDataType.ACTIVE_ENERGY_BURNED,
-        HealthDataUnit.KILOCALORIE,
-        DateTime(2022, 9, 18, 21, 49, 31, 986),
-        DateTime(2022, 9, 18, 21, 50, 31, 986),
-        platformType,
-        defaultDeviceId,
-        defaultSourceId,
-        defaultSourceName),
-    HealthDataPoint(
-        NumericHealthValue(106.05174255371094),
-        HealthDataType.ACTIVE_ENERGY_BURNED,
-        HealthDataUnit.KILOCALORIE,
-        DateTime(2022, 9, 18, 21, 50, 31, 986),
-        DateTime(2022, 9, 18, 23, 36, 7, 983),
-        platformType,
-        defaultDeviceId,
-        defaultSourceId,
-        defaultSourceName),
-    HealthDataPoint(
-        NumericHealthValue(22.61113929748535),
-        HealthDataType.ACTIVE_ENERGY_BURNED,
-        HealthDataUnit.KILOCALORIE,
-        DateTime(2022, 9, 18, 23, 36, 7, 983),
-        DateTime(2022, 9, 18, 23, 58, 39, 256),
-        platformType,
-        defaultDeviceId,
-        defaultSourceId,
-        defaultSourceName),
-    HealthDataPoint(
-        NumericHealthValue(1.330716609954834),
-        HealthDataType.ACTIVE_ENERGY_BURNED,
-        HealthDataUnit.KILOCALORIE,
-        DateTime(2022, 9, 18, 23, 58, 39, 256),
-        DateTime(2022, 9, 18, 23, 59, 59, 99),
-        platformType,
-        defaultDeviceId,
-        defaultSourceId,
-        defaultSourceName),
-    HealthDataPoint(
-        NumericHealthValue(4),
-        HealthDataType.STEPS,
-        HealthDataUnit.COUNT,
-        DateTime(2022, 9, 18, 7, 10),
-        DateTime(2022, 9, 18, 7, 10, 58),
-        platformType,
-        defaultDeviceId,
-        defaultSourceId,
-        defaultSourceName),
-    HealthDataPoint(
-        NumericHealthValue(23),
-        HealthDataType.STEPS,
-        HealthDataUnit.COUNT,
-        DateTime(2022, 9, 18, 8, 29),
-        DateTime(2022, 9, 18, 8, 37, 58),
-        platformType,
-        defaultDeviceId,
-        defaultSourceId,
-        defaultSourceName),
-    HealthDataPoint(
-        NumericHealthValue(300),
-        HealthDataType.STEPS,
-        HealthDataUnit.COUNT,
-        DateTime(2022, 9, 18, 8, 37, 58),
-        DateTime(2022, 9, 18, 8, 41),
-        platformType,
-        defaultDeviceId,
-        defaultSourceId,
-        defaultSourceName),
-    HealthDataPoint(
-        NumericHealthValue(1400),
-        HealthDataType.STEPS,
-        HealthDataUnit.COUNT,
-        DateTime(2022, 9, 18, 8, 41),
-        DateTime(2022, 9, 18, 10),
-        platformType,
-        defaultDeviceId,
-        defaultSourceId,
-        defaultSourceName),
-    HealthDataPoint(
-        NumericHealthValue(3300),
-        HealthDataType.STEPS,
-        HealthDataUnit.COUNT,
-        DateTime(2022, 9, 18, 10),
-        DateTime(2022, 9, 18, 10, 30),
-        platformType,
-        defaultDeviceId,
-        defaultSourceId,
-        defaultSourceName),
-    HealthDataPoint(
-        NumericHealthValue(400),
-        HealthDataType.STEPS,
-        HealthDataUnit.COUNT,
-        DateTime(2022, 9, 18, 23),
-        DateTime(2022, 9, 18, 23, 30),
-        platformType,
-        defaultDeviceId,
-        defaultSourceId,
-        defaultSourceName),
-    HealthDataPoint(
-        NumericHealthValue(2.7836718559265137),
-        distanceType,
-        HealthDataUnit.METER,
-        DateTime(2022, 9, 18, 7, 10),
-        DateTime(2022, 9, 18, 7, 10, 58),
-        platformType,
-        defaultDeviceId,
-        defaultSourceId,
-        defaultSourceName),
-    HealthDataPoint(
-        NumericHealthValue(16.597394943237305),
-        distanceType,
-        HealthDataUnit.METER,
-        DateTime(2022, 9, 18, 8, 29),
-        DateTime(2022, 9, 18, 8, 37, 58),
-        platformType,
-        defaultDeviceId,
-        defaultSourceId,
-        defaultSourceName),
-    HealthDataPoint(
-        NumericHealthValue(278.25809478759766),
-        distanceType,
-        HealthDataUnit.METER,
-        DateTime(2022, 9, 18, 8, 37, 58),
-        DateTime(2022, 9, 18, 8, 41),
-        platformType,
-        defaultDeviceId,
-        defaultSourceId,
-        defaultSourceName),
-    HealthDataPoint(
-        NumericHealthValue(1000.1),
-        distanceType,
-        HealthDataUnit.METER,
-        DateTime(2022, 9, 18, 8, 41),
-        DateTime(2022, 9, 18, 10),
-        platformType,
-        defaultDeviceId,
-        defaultSourceId,
-        defaultSourceName),
-    HealthDataPoint(
-        NumericHealthValue(3000.555),
-        distanceType,
-        HealthDataUnit.METER,
-        DateTime(2022, 9, 18, 10),
-        DateTime(2022, 9, 18, 10, 30),
-        platformType,
-        defaultDeviceId,
-        defaultSourceId,
-        defaultSourceName),
-    HealthDataPoint(
-        NumericHealthValue(380.11),
-        distanceType,
-        HealthDataUnit.METER,
-        DateTime(2022, 9, 18, 23),
-        DateTime(2022, 9, 18, 23, 30),
-        platformType,
-        defaultDeviceId,
-        defaultSourceId,
-        defaultSourceName),
-    // @formatter:on
+    HealthDataPoint(NumericHealthValue(1305.7261962890625), HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataUnit.KILOCALORIE, DateTime(2022, 9, 18), DateTime(2022, 9, 18, 21, 40, 31, 986), platformType, defaultDeviceId, defaultSourceId, defaultSourceName),
+    HealthDataPoint(NumericHealthValue(13.775235176086426), HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataUnit.KILOCALORIE, DateTime(2022, 9, 18, 21, 40, 31, 986), DateTime(2022, 9, 18, 21, 44, 16, 990), platformType, defaultDeviceId, defaultSourceId, defaultSourceName),
+    HealthDataPoint(NumericHealthValue(3.1692113876342773), HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataUnit.KILOCALORIE, DateTime(2022, 9, 18, 21, 44, 16, 990), DateTime(2022, 9, 18, 21, 47, 31, 986), platformType, defaultDeviceId, defaultSourceId, defaultSourceName),
+    HealthDataPoint(NumericHealthValue(14.213860511779785), HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataUnit.KILOCALORIE, DateTime(2022, 9, 18, 21, 47, 31, 986), DateTime(2022, 9, 18, 21, 49, 31, 986), platformType, defaultDeviceId, defaultSourceId, defaultSourceName),
+    HealthDataPoint(NumericHealthValue(1.1071913242340088), HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataUnit.KILOCALORIE, DateTime(2022, 9, 18, 21, 49, 31, 986), DateTime(2022, 9, 18, 21, 50, 31, 986), platformType, defaultDeviceId, defaultSourceId, defaultSourceName),
+    HealthDataPoint(NumericHealthValue(106.05174255371094), HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataUnit.KILOCALORIE, DateTime(2022, 9, 18, 21, 50, 31, 986), DateTime(2022, 9, 18, 23, 36, 7, 983), platformType, defaultDeviceId, defaultSourceId, defaultSourceName),
+    HealthDataPoint(NumericHealthValue(22.61113929748535), HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataUnit.KILOCALORIE, DateTime(2022, 9, 18, 23, 36, 7, 983), DateTime(2022, 9, 18, 23, 58, 39, 256), platformType, defaultDeviceId, defaultSourceId, defaultSourceName),
+    HealthDataPoint(NumericHealthValue(1.330716609954834), HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataUnit.KILOCALORIE, DateTime(2022, 9, 18, 23, 58, 39, 256), DateTime(2022, 9, 18, 23, 59, 59, 99), platformType, defaultDeviceId, defaultSourceId, defaultSourceName),
+    HealthDataPoint(NumericHealthValue(4), HealthDataType.STEPS, HealthDataUnit.COUNT, DateTime(2022, 9, 18, 7, 10), DateTime(2022, 9, 18, 7, 10, 58), platformType, defaultDeviceId, defaultSourceId, defaultSourceName),
+    HealthDataPoint(NumericHealthValue(23), HealthDataType.STEPS, HealthDataUnit.COUNT, DateTime(2022, 9, 18, 8, 29), DateTime(2022, 9, 18, 8, 37, 58), platformType, defaultDeviceId, defaultSourceId, defaultSourceName),
+    HealthDataPoint(NumericHealthValue(300), HealthDataType.STEPS, HealthDataUnit.COUNT, DateTime(2022, 9, 18, 8, 37, 58), DateTime(2022, 9, 18, 8, 41), platformType, defaultDeviceId, defaultSourceId, defaultSourceName),
+    HealthDataPoint(NumericHealthValue(1400), HealthDataType.STEPS, HealthDataUnit.COUNT, DateTime(2022, 9, 18, 8, 41), DateTime(2022, 9, 18, 10), platformType, defaultDeviceId, defaultSourceId, defaultSourceName),
+    HealthDataPoint(NumericHealthValue(3300), HealthDataType.STEPS, HealthDataUnit.COUNT, DateTime(2022, 9, 18, 10), DateTime(2022, 9, 18, 10, 30), platformType, defaultDeviceId, defaultSourceId, defaultSourceName),
+    HealthDataPoint(NumericHealthValue(400), HealthDataType.STEPS, HealthDataUnit.COUNT, DateTime(2022, 9, 18, 23), DateTime(2022, 9, 18, 23, 30), platformType, defaultDeviceId, defaultSourceId, defaultSourceName),
+    HealthDataPoint(NumericHealthValue(2.7836718559265137), distanceType, HealthDataUnit.METER, DateTime(2022, 9, 18, 7, 10), DateTime(2022, 9, 18, 7, 10, 58), platformType, defaultDeviceId, defaultSourceId, defaultSourceName),
+    HealthDataPoint(NumericHealthValue(16.597394943237305), distanceType, HealthDataUnit.METER, DateTime(2022, 9, 18, 8, 29), DateTime(2022, 9, 18, 8, 37, 58), platformType, defaultDeviceId, defaultSourceId, defaultSourceName),
+    HealthDataPoint(NumericHealthValue(278.25809478759766), distanceType, HealthDataUnit.METER, DateTime(2022, 9, 18, 8, 37, 58), DateTime(2022, 9, 18, 8, 41), platformType, defaultDeviceId, defaultSourceId, defaultSourceName),
+    HealthDataPoint(NumericHealthValue(1000.1), distanceType, HealthDataUnit.METER, DateTime(2022, 9, 18, 8, 41), DateTime(2022, 9, 18, 10), platformType, defaultDeviceId, defaultSourceId, defaultSourceName),
+    HealthDataPoint(NumericHealthValue(3000.555), distanceType, HealthDataUnit.METER, DateTime(2022, 9, 18, 10), DateTime(2022, 9, 18, 10, 30), platformType, defaultDeviceId, defaultSourceId, defaultSourceName),
+    HealthDataPoint(NumericHealthValue(380.11), distanceType, HealthDataUnit.METER, DateTime(2022, 9, 18, 23), DateTime(2022, 9, 18, 23, 30), platformType, defaultDeviceId, defaultSourceId, defaultSourceName),
   ];
+  // @formatter:on
 }
