@@ -108,6 +108,7 @@ class HomePresenter extends StateNotifier<HomeState> {
     // 到着したお寺までの累積距離[m]
     num totalDistance = 0;
     if (user.pilgrimage!.nowPilgrimageId != 1) {
+      // ignore: unused_local_variable
       final templeInfo = await _ref.read(templeRepositoryProvider)
           .getTempleInfo(user.pilgrimage!.nowPilgrimageId - 1);
       totalDistance = 100;
