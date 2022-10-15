@@ -46,13 +46,13 @@ class SignInPageBody extends StatelessWidget {
                     bottom: 12,
                   ),
                   child: _createTextFormField(
-                    state.email,
+                    state.emailOrNickname,
                     notifier.onChangeEmail,
                     _inputDecorationBuilder(
                       context,
                       'メールアドレス or ニックネーム',
                       Icon(
-                        Icons.mail,
+                        Icons.mail_outline,
                         color: Theme.of(context).primaryColor,
                       ),
                     ),

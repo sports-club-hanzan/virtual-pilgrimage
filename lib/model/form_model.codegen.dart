@@ -23,6 +23,13 @@ String? emailValidator(String? value) {
   }
 }
 
+String? requiredValidator(String? value) {
+  if (value == null || value.isEmpty) {
+    return '必須項目です';
+  }
+  return null;
+}
+
 String? passwordValidator(String? value) {
   if (value == null || value.isEmpty) {
     return '必須項目です';

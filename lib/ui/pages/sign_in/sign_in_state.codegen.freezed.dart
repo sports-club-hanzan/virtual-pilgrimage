@@ -19,7 +19,7 @@ mixin _$SignInState {
   SignInStateContext get context => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
   Exception? get error => throw _privateConstructorUsedError;
-  FormModel get email => throw _privateConstructorUsedError;
+  FormModel get emailOrNickname => throw _privateConstructorUsedError;
   FormModel get password => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -36,10 +36,10 @@ abstract class $SignInStateCopyWith<$Res> {
       {SignInStateContext context,
       bool isLoading,
       Exception? error,
-      FormModel email,
+      FormModel emailOrNickname,
       FormModel password});
 
-  $FormModelCopyWith<$Res> get email;
+  $FormModelCopyWith<$Res> get emailOrNickname;
   $FormModelCopyWith<$Res> get password;
 }
 
@@ -56,7 +56,7 @@ class _$SignInStateCopyWithImpl<$Res> implements $SignInStateCopyWith<$Res> {
     Object? context = freezed,
     Object? isLoading = freezed,
     Object? error = freezed,
-    Object? email = freezed,
+    Object? emailOrNickname = freezed,
     Object? password = freezed,
   }) {
     return _then(_value.copyWith(
@@ -72,9 +72,9 @@ class _$SignInStateCopyWithImpl<$Res> implements $SignInStateCopyWith<$Res> {
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
               as Exception?,
-      email: email == freezed
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
+      emailOrNickname: emailOrNickname == freezed
+          ? _value.emailOrNickname
+          : emailOrNickname // ignore: cast_nullable_to_non_nullable
               as FormModel,
       password: password == freezed
           ? _value.password
@@ -84,9 +84,9 @@ class _$SignInStateCopyWithImpl<$Res> implements $SignInStateCopyWith<$Res> {
   }
 
   @override
-  $FormModelCopyWith<$Res> get email {
-    return $FormModelCopyWith<$Res>(_value.email, (value) {
-      return _then(_value.copyWith(email: value));
+  $FormModelCopyWith<$Res> get emailOrNickname {
+    return $FormModelCopyWith<$Res>(_value.emailOrNickname, (value) {
+      return _then(_value.copyWith(emailOrNickname: value));
     });
   }
 
@@ -109,11 +109,11 @@ abstract class _$$_SignInStateCopyWith<$Res>
       {SignInStateContext context,
       bool isLoading,
       Exception? error,
-      FormModel email,
+      FormModel emailOrNickname,
       FormModel password});
 
   @override
-  $FormModelCopyWith<$Res> get email;
+  $FormModelCopyWith<$Res> get emailOrNickname;
   @override
   $FormModelCopyWith<$Res> get password;
 }
@@ -133,7 +133,7 @@ class __$$_SignInStateCopyWithImpl<$Res> extends _$SignInStateCopyWithImpl<$Res>
     Object? context = freezed,
     Object? isLoading = freezed,
     Object? error = freezed,
-    Object? email = freezed,
+    Object? emailOrNickname = freezed,
     Object? password = freezed,
   }) {
     return _then(_$_SignInState(
@@ -149,9 +149,9 @@ class __$$_SignInStateCopyWithImpl<$Res> extends _$SignInStateCopyWithImpl<$Res>
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
               as Exception?,
-      email: email == freezed
-          ? _value.email
-          : email // ignore: cast_nullable_to_non_nullable
+      emailOrNickname: emailOrNickname == freezed
+          ? _value.emailOrNickname
+          : emailOrNickname // ignore: cast_nullable_to_non_nullable
               as FormModel,
       password: password == freezed
           ? _value.password
@@ -168,7 +168,7 @@ class _$_SignInState extends _SignInState {
       {this.context = SignInStateContext.failed,
       this.isLoading = false,
       this.error,
-      required this.email,
+      required this.emailOrNickname,
       required this.password})
       : super._();
 
@@ -181,13 +181,13 @@ class _$_SignInState extends _SignInState {
   @override
   final Exception? error;
   @override
-  final FormModel email;
+  final FormModel emailOrNickname;
   @override
   final FormModel password;
 
   @override
   String toString() {
-    return 'SignInState(context: $context, isLoading: $isLoading, error: $error, email: $email, password: $password)';
+    return 'SignInState(context: $context, isLoading: $isLoading, error: $error, emailOrNickname: $emailOrNickname, password: $password)';
   }
 
   @override
@@ -198,7 +198,8 @@ class _$_SignInState extends _SignInState {
             const DeepCollectionEquality().equals(other.context, context) &&
             const DeepCollectionEquality().equals(other.isLoading, isLoading) &&
             const DeepCollectionEquality().equals(other.error, error) &&
-            const DeepCollectionEquality().equals(other.email, email) &&
+            const DeepCollectionEquality()
+                .equals(other.emailOrNickname, emailOrNickname) &&
             const DeepCollectionEquality().equals(other.password, password));
   }
 
@@ -208,7 +209,7 @@ class _$_SignInState extends _SignInState {
       const DeepCollectionEquality().hash(context),
       const DeepCollectionEquality().hash(isLoading),
       const DeepCollectionEquality().hash(error),
-      const DeepCollectionEquality().hash(email),
+      const DeepCollectionEquality().hash(emailOrNickname),
       const DeepCollectionEquality().hash(password));
 
   @JsonKey(ignore: true)
@@ -222,7 +223,7 @@ abstract class _SignInState extends SignInState {
       {final SignInStateContext context,
       final bool isLoading,
       final Exception? error,
-      required final FormModel email,
+      required final FormModel emailOrNickname,
       required final FormModel password}) = _$_SignInState;
   const _SignInState._() : super._();
 
@@ -233,7 +234,7 @@ abstract class _SignInState extends SignInState {
   @override
   Exception? get error;
   @override
-  FormModel get email;
+  FormModel get emailOrNickname;
   @override
   FormModel get password;
   @override
