@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtualpilgrimage/domain/auth/auth_repository.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_repository.dart';
@@ -29,3 +30,8 @@ ProviderContainer mockedProviderContainer({List<Override>? overrides}) => Provid
         ...?overrides,
       ],
     );
+
+ProviderScope mockedProviderScope(Widget child, {List<Override>? overrides}) => ProviderScope(
+  parent: mockedProviderContainer(overrides: overrides),
+  child: child,
+);
