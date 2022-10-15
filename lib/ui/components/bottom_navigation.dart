@@ -25,11 +25,11 @@ class BottomNavigation extends StatelessWidget {
 
     final destinations = <Widget>[
       NavigationDestination(
-        icon: const Icon(Icons.map_rounded),
+        icon: const Icon(Icons.map_outlined),
         label: PageType.home.name,
       ),
       NavigationDestination(
-        icon: const Icon(Icons.account_circle),
+        icon: const Icon(Icons.account_circle_outlined),
         label: PageType.profile.name,
       ),
       // 下記はランキングページ用の設定
@@ -38,7 +38,7 @@ class BottomNavigation extends StatelessWidget {
     return NavigationBar(
       selectedIndex: pageType.index,
       destinations: destinations,
-      backgroundColor: Colors.white10,
+      backgroundColor: Colors.white70,
       onDestinationSelected: (int index) {
         final pageType = PageType.values[index];
         pageTypeNotifier.state = pageType;

@@ -180,10 +180,11 @@ class _ProfilePageBody extends StatelessWidget {
           },
           selectedTextStyle: const TextStyle(
             fontWeight: FontWeight.bold,
+            color: ColorStyle.white,
           ),
           unSelectedTextStyle: const TextStyle(
-            color: Colors.black54,
-            fontWeight: FontWeight.w200,
+            color: Colors.black87,
+            fontWeight: FontWeight.w400,
           ),
           selectedIndex: state.selectedTabIndex,
         ),
