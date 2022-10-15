@@ -102,7 +102,7 @@ class HomePageBody extends StatelessWidget {
               onPressed: () async {
                 final pilgrimage = _ref.watch(pilgrimageRepositoryProvider);
                 final url = await pilgrimage.getTempleImageUrl(
-                  userState?.pilgrimage?.nowPilgrimageId.toString() ?? '1',
+                  userState?.pilgrimage.nowPilgrimageId.toString() ?? '1',
                   '1.jpg',
                 );
                 final temple = _ref.watch(templeRepositoryProvider);
