@@ -15,6 +15,7 @@ import 'package:virtualpilgrimage/domain/user/health/update_health_usecase.dart'
 import 'package:virtualpilgrimage/domain/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 
+import '../../../helper/default_mock_firebase_crashlytics.dart';
 import '../../../helper/mock.mocks.dart';
 import '../../../helper/provider_container.dart';
 import 'update_health_interactor_test.mocks.dart';
@@ -88,8 +89,7 @@ void main() {
 
     group('異常系', () {
       setUp(() {
-        when(mockFirebaseCrashlytics.log(any)).thenAnswer((_) => Future.value());
-        when(mockFirebaseCrashlytics.recordError(any, null)).thenAnswer((_) => Future.value());
+        defaultMockFirebaseCrashlytics(mockFirebaseCrashlytics);
       });
       test('ヘルスケア情報の取得に失敗', () async {
         // given

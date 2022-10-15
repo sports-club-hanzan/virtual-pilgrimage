@@ -169,4 +169,44 @@ class SignInInteractor extends SignInUsecase {
 
     return user;
   }
+
+  @override
+  Future<VirtualPilgrimageUser> signInWithNicknameAndPassword(
+    String nickname,
+    String password,
+  ) async {
+    late final VirtualPilgrimageUser? user;
+    try {
+      // ログインしていないが先にユーザ情報を検索し、そのニックネームが存在するか確認する
+      user = await _userRepository.findWithNickname(nickname);
+    } on DatabaseException catch (e) {
+      // 初回の検索時の例外ハンドリングだけはこのメソッド内に実装
+      _logger.e(e.message, [e]);
+      await _crashlytics.log(e.message);
+      final causeException = e.cause;
+      final stackTrace = causeException is FirebaseException ? causeException.stackTrace : null;
+      await _crashlytics.recordError(
+        e,
+        stackTrace,
+        reason: 'DatabaseException',
+      );
+
+      throw SignInException(
+        message: e.message,
+        status: SignInExceptionStatus.firebaseException,
+        cause: e,
+      );
+    }
+
+    if (user == null) {
+      throw SignInException(
+        message: 'failed to find user for login with nickname and password [nickname][$nickname}]',
+        status: SignInExceptionStatus.userNotFoundException,
+      );
+    }
+
+    // ニックネームが存在している場合、検索時に取得できたメールアドレスを使って認証する
+    // 例外処理もこのメソッドの中で実装されているため必要なし
+    return signInWithEmailAndPassword(user.email, password);
+  }
 }

@@ -15,6 +15,7 @@ import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.da
 import 'package:virtualpilgrimage/infrastructure/auth/email_and_password_auth_repository.dart';
 import 'package:virtualpilgrimage/infrastructure/auth/google_auth_repository.dart';
 
+import '../../helper/default_mock_firebase_crashlytics.dart';
 import '../../helper/mock.mocks.dart';
 import '../../helper/provider_container.dart';
 import 'sign_in_interactor_test.mocks.dart';
@@ -81,15 +82,21 @@ void main() {
 
     group('signInWithGoogle', () {
       setUp(() {
+        const email = 'test@example.com';
         when(mockUser.uid).thenReturn(userId);
-        when(mockUser.email).thenReturn('test@example.com');
+        when(mockUser.email).thenReturn(email);
         when(mockUser.displayName).thenReturn('dummyName');
         when(mockUser.photoURL).thenReturn('http://example.com');
         when(mockUserCredential.user).thenReturn(mockUser);
         when(mockUserIconRepository.loadIconImage(''))
             .thenAnswer((_) async => Future.value(BitmapDescriptor.defaultMarker));
         when(mockGoogleAuthRepository.signIn()).thenAnswer((_) => Future.value(mockUserCredential));
-        defaultMockSignInWithCredentialUser(mockUserRepository, mockFirebaseCrashlytics, userId);
+        defaultMockSignInWithCredentialUser(
+          mockUserRepository,
+          mockFirebaseCrashlytics,
+          userId: userId,
+          email: email,
+        );
       });
       group('正常系', () {
         test('ユーザが既に存在し、サインインできる', () async {
@@ -211,20 +218,20 @@ void main() {
         setUp(() {
           when(mockUserIconRepository.loadIconImage(''))
               .thenAnswer((_) async => Future.value(BitmapDescriptor.defaultMarker));
-        });
-
-        test('ユーザが既に存在し、サインインできる', () async {
-          // given
           defaultMockSignInWithEmailAndPassword(
             mockEmailAndPasswordAuthRepository,
             mockUserRepository,
             mockFirebaseCrashlytics,
-            email,
-            password,
-            userId,
             mockUserCredential,
             mockUser,
+            userId: userId,
+            email: email,
+            password: password,
           );
+        });
+
+        test('ユーザが既に存在し、サインインできる', () async {
+          // given
           final expected = defaultUser(id: userId);
 
           // when
@@ -244,16 +251,6 @@ void main() {
       group('異常系', () {
         test('Credential が空', () async {
           // given
-          defaultMockSignInWithEmailAndPassword(
-            mockEmailAndPasswordAuthRepository,
-            mockUserRepository,
-            mockFirebaseCrashlytics,
-            email,
-            password,
-            userId,
-            mockUserCredential,
-            mockUser,
-          );
           when(mockEmailAndPasswordAuthRepository.signIn(email: email, password: password))
               .thenAnswer((_) => Future.value(null));
 
@@ -265,6 +262,89 @@ void main() {
           verify(mockEmailAndPasswordAuthRepository.signIn(email: email, password: password))
               .called(1);
           verifyNever(mockUserRepository.get(any)).called(0);
+        });
+      });
+    });
+
+    // signInWithGoogle のテストで signInWithCredentialUser のテストが担保できているため
+    // こちらでのテストは最低限とする
+    group('signInWithNicknameAndPassword', () {
+      const nickname = 'dummy00';
+      const email = 'test@example.com';
+      const password = 'Passw0rd123';
+      group('正常系', () {
+        setUp(() {
+          when(mockUserIconRepository.loadIconImage(''))
+              .thenAnswer((_) async => Future.value(BitmapDescriptor.defaultMarker));
+          defaultMockSignInWithEmailAndPassword(
+            mockEmailAndPasswordAuthRepository,
+            mockUserRepository,
+            mockFirebaseCrashlytics,
+            mockUserCredential,
+            mockUser,
+            userId: userId,
+            email: email,
+            nickname: nickname,
+            password: password,
+          );
+        });
+
+        test('ユーザが既に存在し、サインインできる', () async {
+          // given
+          final expected = defaultUser(id: userId, nickname: nickname, email: email);
+          when(mockUserRepository.findWithNickname(nickname)).thenAnswer(
+            (_) => Future.value(
+              expected,
+            ),
+          );
+
+          // when
+          final actual = await target.signInWithNicknameAndPassword(nickname, password);
+
+          // then
+          expect(actual, expected);
+          verify(mockUserRepository.findWithNickname(nickname)).called(1);
+          verify(mockEmailAndPasswordAuthRepository.signIn(email: email, password: password))
+              .called(1);
+          verify(mockFirebaseCrashlytics.setUserIdentifier(userId)).called(1);
+          verify(mockUserRepository.get(userId)).called(1);
+          verifyNever(mockUserIconRepository.loadIconImage(''));
+          verifyNever(mockUserRepository.update(any)).called(0); // ユーザが存在していたので更新は実行されない
+        });
+      });
+
+      group('異常系', () {
+        test('指定したニックネームのユーザが存在しない', () async {
+          // given
+          when(mockUserRepository.findWithNickname(any)).thenAnswer((_) => Future.value(null));
+
+          // when, then
+          expect(
+            () => target.signInWithNicknameAndPassword(nickname, password),
+            throwsA(const TypeMatcher<SignInException>()),
+          );
+          verify(mockUserRepository.findWithNickname(any)).called(1);
+          verifyNever(mockEmailAndPasswordAuthRepository.signIn(email: email, password: password))
+              .called(0);
+        });
+
+        test('ニックネームを使った検索時にDBへの問い合わせに失敗', () async {
+          // given
+          when(mockUserRepository.findWithNickname(any)).thenThrow(
+            DatabaseException(
+              message: 'dummy',
+              cause: FirebaseException(plugin: 'dummy', stackTrace: StackTrace.current),
+            ),
+          );
+
+          // when, then
+          expect(
+            () => target.signInWithNicknameAndPassword(nickname, password),
+            throwsA(const TypeMatcher<SignInException>()),
+          );
+          verify(mockUserRepository.findWithNickname(any)).called(1);
+          verifyNever(mockEmailAndPasswordAuthRepository.signIn(email: email, password: password))
+              .called(0);
         });
       });
     });
@@ -286,30 +366,35 @@ void main() {
 
 void defaultMockSignInWithCredentialUser(
   MockUserRepository mockUserRepository,
-  MockFirebaseCrashlytics mockFirebaseCrashlytics,
-  String userId,
-) {
-  when(mockUserRepository.get(userId)).thenAnswer((_) => Future.value(defaultUser(id: userId)));
+  MockFirebaseCrashlytics mockFirebaseCrashlytics, {
+  String userId = 'dummyId',
+  String email = 'test@example.com',
+  String nickname = 'dummyName',
+}) {
+  when(mockUserRepository.get(userId)).thenAnswer(
+    (_) => Future.value(
+      defaultUser(
+        id: userId,
+        email: email,
+        nickname: nickname,
+      ),
+    ),
+  );
   when(mockUserRepository.update(any)).thenAnswer((_) => Future.value());
-  // TODO(s14t284): FirebaseCrashlyticsのモックは他のテストで使うはずなので共通化したい
-  when(mockFirebaseCrashlytics.log(any)).thenAnswer((_) => Future.value());
-  when(mockFirebaseCrashlytics.recordError(any, any, reason: 'DatabaseException'))
-      .thenAnswer((_) => Future.value());
-  when(mockFirebaseCrashlytics.recordError(any, any, reason: 'Exception'))
-      .thenAnswer((_) => Future.value());
-  when(mockFirebaseCrashlytics.setUserIdentifier(any)).thenAnswer((_) => Future.value());
+  defaultMockFirebaseCrashlytics(mockFirebaseCrashlytics);
 }
 
 void defaultMockSignInWithEmailAndPassword(
   MockEmailAndPasswordAuthRepository mockEmailAndPasswordAuthRepository,
   MockUserRepository mockUserRepository,
   MockFirebaseCrashlytics mockFirebaseCrashlytics,
-  String email,
-  String password,
-  String userId,
   MockUserCredential mockUserCredential,
-  MockUser mockUser,
-) {
+  MockUser mockUser, {
+  String userId = 'dummyId',
+  String email = 'test@example.com',
+  String nickname = 'dummyName',
+  String password = 'Passw0rd123',
+}) {
   when(mockUser.uid).thenReturn(userId);
   when(mockUser.email).thenReturn(email);
   when(mockUser.displayName).thenReturn('dummyName');
@@ -317,15 +402,25 @@ void defaultMockSignInWithEmailAndPassword(
   when(mockUserCredential.user).thenReturn(mockUser);
   when(mockEmailAndPasswordAuthRepository.signIn(email: email, password: password))
       .thenAnswer((_) => Future.value(mockUserCredential));
-  defaultMockSignInWithCredentialUser(mockUserRepository, mockFirebaseCrashlytics, userId);
+  defaultMockSignInWithCredentialUser(
+    mockUserRepository,
+    mockFirebaseCrashlytics,
+    userId: userId,
+    email: email,
+    nickname: nickname,
+  );
 }
 
-VirtualPilgrimageUser defaultUser({String id = 'dummyId'}) {
+VirtualPilgrimageUser defaultUser({
+  String id = 'dummyId',
+  String nickname = 'dummyName',
+  String email = 'test@example.com',
+}) {
   return VirtualPilgrimageUser(
     id: id,
-    nickname: 'dummyName',
+    nickname: nickname,
     birthDay: DateTime.utc(2000),
-    email: 'test@example.com',
+    email: email,
     userIconUrl: '',
     userStatus: UserStatus.created,
     createdAt: CustomizableDateTime.current,
