@@ -18,7 +18,7 @@ class HomePage extends ConsumerWidget {
     return Scaffold(
       appBar: const MyAppBar(),
       body: HomePageBody(ref),
-      bottomNavigationBar: BottomNavigation(ref),
+      bottomNavigationBar: const BottomNavigation(),
     );
   }
 }

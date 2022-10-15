@@ -52,7 +52,7 @@ class ProfilePage extends ConsumerWidget {
           },
         ),
       ),
-      bottomNavigationBar: BottomNavigation(ref),
+      bottomNavigationBar: const BottomNavigation(),
     );
   }
 }
