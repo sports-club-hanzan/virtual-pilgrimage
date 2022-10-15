@@ -9,8 +9,6 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: const Text(appTitle),
-      backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-      automaticallyImplyLeading: true,
     );
   }
 
