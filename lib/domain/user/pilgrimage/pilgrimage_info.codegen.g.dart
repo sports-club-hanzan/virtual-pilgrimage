@@ -8,7 +8,7 @@ part of 'pilgrimage_info.codegen.dart';
 
 _$_PilgrimageInfo _$$_PilgrimageInfoFromJson(Map<String, dynamic> json) =>
     _$_PilgrimageInfo(
-      id: json['id'] as int,
+      id: json['id'] as String,
       nowPilgrimageId: json['nowPilgrimageId'] as int,
       lap: json['lap'] as int,
     );
