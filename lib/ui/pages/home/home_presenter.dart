@@ -77,9 +77,10 @@ class HomePresenter extends StateNotifier<HomeState> {
         // ログインした時点でお寺の情報を取得する
         _templeRepository.getTempleInfoAll(),
       ]);
-      // TODO(s14t284) この中に今回到達したお寺の情報が含まれているのでUIに利用したりローカルpush通知に利用したりする
+      // TODO(s14t284): この中に今回到達したお寺の情報が含まれているのでUIに利用したりローカルpush通知に利用したりする
       // UIに使う例：到達した札所のスタンプを押すアニメーションなど
       // ローカルpush通知：ここで実装するのではなく、バックグラウンド処理で利用する
+      // ignore: avoid_print
       print(pilgrimageProgressResult.reachedPilgrimageIdList);
     } on Exception catch (e) {
       unawaited(_crashlytics.recordError(e, null));

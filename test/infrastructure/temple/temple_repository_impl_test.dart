@@ -63,6 +63,7 @@ void main() {
       setUp(() {
         when(mockDocumentSnapshot.data()).thenReturn(expected);
         when(mockCollectionReference.doc(templeId.toString())).thenReturn(mockMapDocumentReference);
+        when(mockDocumentSnapshot.exists).thenReturn(true);
       });
 
       group('正常系', () {
