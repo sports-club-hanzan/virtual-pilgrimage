@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/router.dart';
+import 'package:virtualpilgrimage/ui/components/bottom_navigation.dart';
 import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
 import 'package:virtualpilgrimage/ui/components/profile_icon.dart';
 import 'package:virtualpilgrimage/ui/pages/profile/components/profile_health_card.dart';
@@ -51,6 +52,7 @@ class ProfilePage extends ConsumerWidget {
           },
         ),
       ),
+      bottomNavigationBar: BottomNavigation(ref),
     );
   }
 }
