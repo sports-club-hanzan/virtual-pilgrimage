@@ -20,7 +20,7 @@ PilgrimageInfo _$PilgrimageInfoFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$PilgrimageInfo {
-  int get id => throw _privateConstructorUsedError;
+  String get id => throw _privateConstructorUsedError;
   int get nowPilgrimageId => throw _privateConstructorUsedError;
   int get lap => throw _privateConstructorUsedError;
 
@@ -35,7 +35,7 @@ abstract class $PilgrimageInfoCopyWith<$Res> {
   factory $PilgrimageInfoCopyWith(
           PilgrimageInfo value, $Res Function(PilgrimageInfo) then) =
       _$PilgrimageInfoCopyWithImpl<$Res>;
-  $Res call({int id, int nowPilgrimageId, int lap});
+  $Res call({String id, int nowPilgrimageId, int lap});
 }
 
 /// @nodoc
@@ -57,7 +57,7 @@ class _$PilgrimageInfoCopyWithImpl<$Res>
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String,
       nowPilgrimageId: nowPilgrimageId == freezed
           ? _value.nowPilgrimageId
           : nowPilgrimageId // ignore: cast_nullable_to_non_nullable
@@ -77,7 +77,7 @@ abstract class _$$_PilgrimageInfoCopyWith<$Res>
           _$_PilgrimageInfo value, $Res Function(_$_PilgrimageInfo) then) =
       __$$_PilgrimageInfoCopyWithImpl<$Res>;
   @override
-  $Res call({int id, int nowPilgrimageId, int lap});
+  $Res call({String id, int nowPilgrimageId, int lap});
 }
 
 /// @nodoc
@@ -101,7 +101,7 @@ class __$$_PilgrimageInfoCopyWithImpl<$Res>
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as int,
+              as String,
       nowPilgrimageId: nowPilgrimageId == freezed
           ? _value.nowPilgrimageId
           : nowPilgrimageId // ignore: cast_nullable_to_non_nullable
@@ -126,7 +126,7 @@ class _$_PilgrimageInfo extends _PilgrimageInfo {
       _$$_PilgrimageInfoFromJson(json);
 
   @override
-  final int id;
+  final String id;
   @override
   final int nowPilgrimageId;
   @override
@@ -171,7 +171,7 @@ class _$_PilgrimageInfo extends _PilgrimageInfo {
 
 abstract class _PilgrimageInfo extends PilgrimageInfo {
   const factory _PilgrimageInfo(
-      {required final int id,
+      {required final String id,
       required final int nowPilgrimageId,
       required final int lap}) = _$_PilgrimageInfo;
   const _PilgrimageInfo._() : super._();
@@ -180,7 +180,7 @@ abstract class _PilgrimageInfo extends PilgrimageInfo {
       _$_PilgrimageInfo.fromJson;
 
   @override
-  int get id;
+  String get id;
   @override
   int get nowPilgrimageId;
   @override

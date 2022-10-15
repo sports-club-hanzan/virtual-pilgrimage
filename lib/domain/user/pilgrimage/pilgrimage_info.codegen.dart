@@ -7,7 +7,7 @@ part 'pilgrimage_info.codegen.g.dart';
 class PilgrimageInfo with _$PilgrimageInfo {
   @JsonSerializable(explicitToJson: true)
   const factory PilgrimageInfo({
-    required int id,
+    required String id,
     required int nowPilgrimageId,
     required int lap,
 }) = _PilgrimageInfo;
