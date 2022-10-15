@@ -25,7 +25,7 @@ mixin _$TempleInfo {
   String get name => throw _privateConstructorUsedError; // 都道府県
   String get prefecture => throw _privateConstructorUsedError; // 住所
   String get address => throw _privateConstructorUsedError; // 次のお寺までの距離
-  int get nextDistance => throw _privateConstructorUsedError; // お寺の座標
+  int get distance => throw _privateConstructorUsedError; // お寺の座標
   @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
   GeoPoint get geoPoint => throw _privateConstructorUsedError;
   List<TempleImage>? get images => throw _privateConstructorUsedError;
@@ -46,7 +46,7 @@ abstract class $TempleInfoCopyWith<$Res> {
       String name,
       String prefecture,
       String address,
-      int nextDistance,
+      int distance,
       @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
           GeoPoint geoPoint,
       List<TempleImage>? images});
@@ -66,7 +66,7 @@ class _$TempleInfoCopyWithImpl<$Res> implements $TempleInfoCopyWith<$Res> {
     Object? name = freezed,
     Object? prefecture = freezed,
     Object? address = freezed,
-    Object? nextDistance = freezed,
+    Object? distance = freezed,
     Object? geoPoint = freezed,
     Object? images = freezed,
   }) {
@@ -87,9 +87,9 @@ class _$TempleInfoCopyWithImpl<$Res> implements $TempleInfoCopyWith<$Res> {
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
               as String,
-      nextDistance: nextDistance == freezed
-          ? _value.nextDistance
-          : nextDistance // ignore: cast_nullable_to_non_nullable
+      distance: distance == freezed
+          ? _value.distance
+          : distance // ignore: cast_nullable_to_non_nullable
               as int,
       geoPoint: geoPoint == freezed
           ? _value.geoPoint
@@ -115,7 +115,7 @@ abstract class _$$_TempleInfoCopyWith<$Res>
       String name,
       String prefecture,
       String address,
-      int nextDistance,
+      int distance,
       @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
           GeoPoint geoPoint,
       List<TempleImage>? images});
@@ -137,7 +137,7 @@ class __$$_TempleInfoCopyWithImpl<$Res> extends _$TempleInfoCopyWithImpl<$Res>
     Object? name = freezed,
     Object? prefecture = freezed,
     Object? address = freezed,
-    Object? nextDistance = freezed,
+    Object? distance = freezed,
     Object? geoPoint = freezed,
     Object? images = freezed,
   }) {
@@ -158,9 +158,9 @@ class __$$_TempleInfoCopyWithImpl<$Res> extends _$TempleInfoCopyWithImpl<$Res>
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
               as String,
-      nextDistance: nextDistance == freezed
-          ? _value.nextDistance
-          : nextDistance // ignore: cast_nullable_to_non_nullable
+      distance: distance == freezed
+          ? _value.distance
+          : distance // ignore: cast_nullable_to_non_nullable
               as int,
       geoPoint: geoPoint == freezed
           ? _value.geoPoint
@@ -182,7 +182,7 @@ class _$_TempleInfo extends _TempleInfo {
       required this.name,
       required this.prefecture,
       required this.address,
-      required this.nextDistance,
+      required this.distance,
       @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
           required this.geoPoint,
       final List<TempleImage>? images})
@@ -206,7 +206,7 @@ class _$_TempleInfo extends _TempleInfo {
   final String address;
 // 次のお寺までの距離
   @override
-  final int nextDistance;
+  final int distance;
 // お寺の座標
   @override
   @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
@@ -222,7 +222,7 @@ class _$_TempleInfo extends _TempleInfo {
 
   @override
   String toString() {
-    return 'TempleInfo(id: $id, name: $name, prefecture: $prefecture, address: $address, nextDistance: $nextDistance, geoPoint: $geoPoint, images: $images)';
+    return 'TempleInfo(id: $id, name: $name, prefecture: $prefecture, address: $address, distance: $distance, geoPoint: $geoPoint, images: $images)';
   }
 
   @override
@@ -235,8 +235,7 @@ class _$_TempleInfo extends _TempleInfo {
             const DeepCollectionEquality()
                 .equals(other.prefecture, prefecture) &&
             const DeepCollectionEquality().equals(other.address, address) &&
-            const DeepCollectionEquality()
-                .equals(other.nextDistance, nextDistance) &&
+            const DeepCollectionEquality().equals(other.distance, distance) &&
             const DeepCollectionEquality().equals(other.geoPoint, geoPoint) &&
             const DeepCollectionEquality().equals(other._images, _images));
   }
@@ -249,7 +248,7 @@ class _$_TempleInfo extends _TempleInfo {
       const DeepCollectionEquality().hash(name),
       const DeepCollectionEquality().hash(prefecture),
       const DeepCollectionEquality().hash(address),
-      const DeepCollectionEquality().hash(nextDistance),
+      const DeepCollectionEquality().hash(distance),
       const DeepCollectionEquality().hash(geoPoint),
       const DeepCollectionEquality().hash(_images));
 
@@ -272,7 +271,7 @@ abstract class _TempleInfo extends TempleInfo {
       required final String name,
       required final String prefecture,
       required final String address,
-      required final int nextDistance,
+      required final int distance,
       @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
           required final GeoPoint geoPoint,
       final List<TempleImage>? images}) = _$_TempleInfo;
@@ -290,7 +289,7 @@ abstract class _TempleInfo extends TempleInfo {
   @override // 住所
   String get address;
   @override // 次のお寺までの距離
-  int get nextDistance;
+  int get distance;
   @override // お寺の座標
   @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
   GeoPoint get geoPoint;

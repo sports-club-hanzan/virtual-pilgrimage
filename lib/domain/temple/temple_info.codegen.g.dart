@@ -12,7 +12,7 @@ _$_TempleInfo _$$_TempleInfoFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       prefecture: json['prefecture'] as String,
       address: json['address'] as String,
-      nextDistance: json['nextDistance'] as int,
+      distance: json['distance'] as int,
       geoPoint: _geoPointFromJson(json['geoPoint'] as GeoPoint),
       images: (json['images'] as List<dynamic>?)
           ?.map((e) => TempleImage.fromJson(e as Map<String, dynamic>))
@@ -25,7 +25,7 @@ Map<String, dynamic> _$$_TempleInfoToJson(_$_TempleInfo instance) =>
       'name': instance.name,
       'prefecture': instance.prefecture,
       'address': instance.address,
-      'nextDistance': instance.nextDistance,
+      'distance': instance.distance,
       'geoPoint': _geoPointToJson(instance.geoPoint),
       'images': instance.images,
     };

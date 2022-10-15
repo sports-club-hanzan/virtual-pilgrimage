@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:logger/logger.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
@@ -24,13 +25,19 @@ void main() {
   late HealthRepository healthRepository;
   final user = defaultUser();
   final userRepository = FakeUserRepository(user);
+  final logger = Logger(level: Level.nothing);
 
   final container = mockedProviderContainer();
 
   setUp(() {
     templeRepository = MockTempleRepository();
     healthRepository = MockHealthRepository();
-    target = UpdatePilgrimageProgressInteractor(templeRepository, healthRepository, userRepository);
+    target = UpdatePilgrimageProgressInteractor(
+      templeRepository,
+      healthRepository,
+      userRepository,
+      logger,
+    );
 
     CustomizableDateTime.customTime = DateTime.now();
   });
@@ -104,7 +111,8 @@ void setupTempleRepositoryMock(TempleRepository templeRepository) {
         id: 87,
         name: '長尾寺',
         address: '香川県さぬき市長尾西653',
-        nextDistance: 7000, // 7km
+        // 7km
+        distance: 7000,
         geoPoint: GeoPoint(34.26680556, 134.1717778),
         prefecture: '香川県',
       ),
@@ -116,7 +124,8 @@ void setupTempleRepositoryMock(TempleRepository templeRepository) {
         id: 88,
         name: '大窪寺',
         address: '香川県さぬき市多和兼割96',
-        nextDistance: 17000, // 17km
+        // 17km
+        distance: 17000,
         geoPoint: GeoPoint(34.26680556, 134.1717778),
         prefecture: '香川県',
       ),
@@ -128,7 +137,8 @@ void setupTempleRepositoryMock(TempleRepository templeRepository) {
         id: 2,
         name: '極楽寺',
         address: '徳島県鳴門市大麻町檜段の上12',
-        nextDistance: 17000, // 17km
+        // 17km
+        distance: 17000,
         geoPoint: GeoPoint(34.26680556, 134.1717778),
         prefecture: '徳島県',
       ),

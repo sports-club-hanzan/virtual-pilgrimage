@@ -7,6 +7,7 @@ import 'package:virtualpilgrimage/infrastructure/firebase/firestore_collection_p
 
 // Firestoreに格納しているお寺の情報のキャッシュ
 // お寺の情報は不変であるため、一度取得したら更新する必要はないためキャッシュしておく
+// アプリの起動時は空だが、Firestore からデータを詰めて利用する
 final templeInfoCache = StateProvider<Map<int, TempleInfo>>((_) => {});
 
 class TempleRepositoryImpl extends TempleRepository {
@@ -34,7 +35,11 @@ class TempleRepositoryImpl extends TempleRepository {
           );
 
       final templeSnapshot = await ref.get();
-      return templeSnapshot.data()!;
+      final data = templeSnapshot.data();
+      if (templeSnapshot.exists && data != null) {
+        return data;
+      }
+      throw DatabaseException(message: 'not exists temple info [templeId][$templeId]');
     } on FirebaseException catch (e) {
       throw DatabaseException(
         message: 'cause Firestore error [code][${e.code}][message][${e.message}]',
@@ -50,7 +55,7 @@ class TempleRepositoryImpl extends TempleRepository {
 
   /// 全てのお寺情報を取得する
   /// アプリの起動時にお寺情報を取得しておくことで、毎回お寺の情報を参照しなくて済む
-  /// Firestoreのキャッシュも効くので、アプリの初回ログイン時にのみFirebaseに問い合わせるような仕様になるはず
+  /// アプリの初回ログイン時にのみFirebaseに問い合わせるような仕様になるはず
   @override
   Future<void> getTempleInfoAll() async {
     // templeInfoCache にすでにキャッシュされた情報が含まれている場合は何もしない
@@ -74,6 +79,7 @@ class TempleRepositoryImpl extends TempleRepository {
           templeInfoMap.addAll({data.id: data});
         }
       }
+      print(templeInfoMap);
       _reader(templeInfoCache.state).state = templeInfoMap;
     } on FirebaseException catch (e) {
       throw DatabaseException(

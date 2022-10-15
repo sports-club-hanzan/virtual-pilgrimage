@@ -117,6 +117,6 @@ TempleInfo defaultTempleInfo([
     geoPoint: const GeoPoint(0, 2.11),
     name: 'お寺',
     prefecture: '徳島県',
-    nextDistance: 1,
+    distance: 1000,
   );
 }

@@ -21,7 +21,7 @@ class TempleInfo with _$TempleInfo {
     required String address,
 
     // 次のお寺までの距離
-    required int nextDistance,
+    required int distance,
 
     // お寺の座標
     @JsonKey(

@@ -5,12 +5,14 @@ import 'package:virtualpilgrimage/domain/temple/temple_repository.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_repository.dart';
 import 'package:virtualpilgrimage/domain/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
+import 'package:virtualpilgrimage/logger.dart';
 
 final updatePilgrimageProgressUsecaseProvider = Provider<UpdatePilgrimageProgressUsecase>(
   (ref) => UpdatePilgrimageProgressInteractor(
     ref.read(templeRepositoryProvider),
     ref.read(healthRepositoryProvider),
     ref.read(userRepositoryProvider),
+    ref.read(loggerProvider),
   ),
 );
 
