@@ -11,17 +11,15 @@ enum PageType {
   // ranking,
 }
 
-class BottomNavigation extends StatelessWidget {
-  const BottomNavigation(this._ref, {super.key});
-
-  final WidgetRef _ref;
+class BottomNavigation extends ConsumerWidget {
+  const BottomNavigation({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final userState = _ref.watch(userStateProvider);
-    final pageType = _ref.watch(pageTypeProvider);
-    final pageTypeNotifier = _ref.read(pageTypeProvider.notifier);
-    final router = _ref.read(routerProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userState = ref.watch(userStateProvider);
+    final pageType = ref.watch(pageTypeProvider);
+    final pageTypeNotifier = ref.read(pageTypeProvider.notifier);
+    final router = ref.read(routerProvider);
 
     final destinations = <Widget>[
       NavigationDestination(
