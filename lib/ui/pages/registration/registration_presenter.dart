@@ -1,10 +1,8 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:virtualpilgrimage/analytics.dart';
-import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/user/registration/registration_result.dart';
 import 'package:virtualpilgrimage/domain/user/registration/user_registration_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
@@ -23,6 +21,7 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
       : super(
           RegistrationState(
             nickname: FormModel.of(nicknameValidator, user?.nickname ?? ''),
+            birthday: FormModel.of(birthdayValidator),
             gender: RadioButtonModel.of<Gender>(
               ['未設定', '男性', '女性'],
               Gender.values,
@@ -36,7 +35,6 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
                 ColorModel(lightColor: ColorStyle.womanLight, darkColor: ColorStyle.womanDark),
               ],
             ),
-            birthDay: user != null ? user.birthDay : DateTime.utc(1980),
           ),
         ) {
     _usecase = _ref.read(userRegistrationUsecaseProvider);
@@ -46,46 +44,27 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
   final Ref _ref;
   late final UserRegistrationUsecase _usecase;
   late final Analytics _analytics;
-
-  void initialize(String nickname, DateTime birthday) {
-    state = RegistrationState(
-      nickname: FormModel.of(nicknameValidator, nickname),
-      gender: RadioButtonModel.of<Gender>(['未設定', '男性', '女性'], Gender.values),
-      birthDay: birthday,
-    );
-  }
+  final dateFormatter = DateFormat();
 
   void onChangedNickname(FormModel nickname) {
-    state.gender.unfocus();
     state = state.copyWith(nickname: nickname);
+  }
+
+  void onChangedBirthday(FormModel birthday) {
+    state = state.copyWith(birthday: birthday);
   }
 
   void onChangedGender(Gender? gender) {
     state.nickname.unfocus();
-    state = state.copyWith(
-      gender: state.gender.copyWith(selectedValue: gender!),
-    );
-  }
-
-  void onPressedDate(BuildContext context) {
-    state.nickname.unfocus();
-    state.gender.unfocus();
-    DatePicker.showDatePicker(
-      context,
-      showTitleActions: true,
-      minTime: DateTime(CustomizableDateTime.current.year - 100, 1, 1),
-      maxTime: CustomizableDateTime.current,
-      onConfirm: (date) => state = state.copyWith(birthDay: date),
-      locale: LocaleType.jp,
-      currentTime: state.birthDay,
-    );
+    state.birthday.unfocus();
+    state = state.copyWith(gender: state.gender.copyWith(selectedValue: gender!));
   }
 
   Future<void> onPressedRegistration() async {
     final defaultParams = {
       'nickname': state.nickname.text,
       'gender': state.gender.selectedValue.name,
-      'birthday': state.birthDay.toIso8601String(),
+      'birthday': state.birthday.text,
     };
     await _analytics.logEvent(
       eventName: AnalyticsEvent.pressedRegistration,
@@ -93,13 +72,14 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
     );
     state = state.onSubmit();
     // バリデーションエラーにかかっている場合はリクエストを送らない
-    if (!state.nickname.isValid) {
+    if (!state.nickname.isValid || !state.birthday.isValid) {
       unawaited(
         _analytics.logEvent(
           eventName: AnalyticsEvent.registrationFailed,
           parameters: {
             ...defaultParams,
             'nicknameValidationError': state.nickname.displayError,
+            'birthdayValidationError': state.birthday.displayError,
           },
         ),
       );
@@ -114,11 +94,11 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
     final updatedUser = user.copyWith(
       nickname: state.nickname.text,
       gender: state.gender.selectedValue,
-      birthDay: state.birthDay,
+      birthDay: dateFormatter.parse(state.birthday.text),
       userStatus: UserStatus.created, // 作成済みステータスに変える
     );
     final result = await _usecase.execute(updatedUser);
-    // TODO(s14t284): result の出しわけに応じて画面の表示を変える
+
     switch (result.status) {
       // ユーザ登録に成功したらユーザの state を更新
       case RegistrationResultStatus.success:

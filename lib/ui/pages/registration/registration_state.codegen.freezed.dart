@@ -17,8 +17,8 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$RegistrationState {
   FormModel get nickname => throw _privateConstructorUsedError;
+  FormModel get birthday => throw _privateConstructorUsedError;
   RadioButtonModel<Gender> get gender => throw _privateConstructorUsedError;
-  DateTime get birthDay => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $RegistrationStateCopyWith<RegistrationState> get copyWith =>
@@ -31,9 +31,12 @@ abstract class $RegistrationStateCopyWith<$Res> {
           RegistrationState value, $Res Function(RegistrationState) then) =
       _$RegistrationStateCopyWithImpl<$Res>;
   $Res call(
-      {FormModel nickname, RadioButtonModel<Gender> gender, DateTime birthDay});
+      {FormModel nickname,
+      FormModel birthday,
+      RadioButtonModel<Gender> gender});
 
   $FormModelCopyWith<$Res> get nickname;
+  $FormModelCopyWith<$Res> get birthday;
   $RadioButtonModelCopyWith<Gender, $Res> get gender;
 }
 
@@ -49,22 +52,22 @@ class _$RegistrationStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? nickname = freezed,
+    Object? birthday = freezed,
     Object? gender = freezed,
-    Object? birthDay = freezed,
   }) {
     return _then(_value.copyWith(
       nickname: nickname == freezed
           ? _value.nickname
           : nickname // ignore: cast_nullable_to_non_nullable
               as FormModel,
+      birthday: birthday == freezed
+          ? _value.birthday
+          : birthday // ignore: cast_nullable_to_non_nullable
+              as FormModel,
       gender: gender == freezed
           ? _value.gender
           : gender // ignore: cast_nullable_to_non_nullable
               as RadioButtonModel<Gender>,
-      birthDay: birthDay == freezed
-          ? _value.birthDay
-          : birthDay // ignore: cast_nullable_to_non_nullable
-              as DateTime,
     ));
   }
 
@@ -72,6 +75,13 @@ class _$RegistrationStateCopyWithImpl<$Res>
   $FormModelCopyWith<$Res> get nickname {
     return $FormModelCopyWith<$Res>(_value.nickname, (value) {
       return _then(_value.copyWith(nickname: value));
+    });
+  }
+
+  @override
+  $FormModelCopyWith<$Res> get birthday {
+    return $FormModelCopyWith<$Res>(_value.birthday, (value) {
+      return _then(_value.copyWith(birthday: value));
     });
   }
 
@@ -91,10 +101,14 @@ abstract class _$$_RegistrationStateCopyWith<$Res>
       __$$_RegistrationStateCopyWithImpl<$Res>;
   @override
   $Res call(
-      {FormModel nickname, RadioButtonModel<Gender> gender, DateTime birthDay});
+      {FormModel nickname,
+      FormModel birthday,
+      RadioButtonModel<Gender> gender});
 
   @override
   $FormModelCopyWith<$Res> get nickname;
+  @override
+  $FormModelCopyWith<$Res> get birthday;
   @override
   $RadioButtonModelCopyWith<Gender, $Res> get gender;
 }
@@ -113,22 +127,22 @@ class __$$_RegistrationStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? nickname = freezed,
+    Object? birthday = freezed,
     Object? gender = freezed,
-    Object? birthDay = freezed,
   }) {
     return _then(_$_RegistrationState(
       nickname: nickname == freezed
           ? _value.nickname
           : nickname // ignore: cast_nullable_to_non_nullable
               as FormModel,
+      birthday: birthday == freezed
+          ? _value.birthday
+          : birthday // ignore: cast_nullable_to_non_nullable
+              as FormModel,
       gender: gender == freezed
           ? _value.gender
           : gender // ignore: cast_nullable_to_non_nullable
               as RadioButtonModel<Gender>,
-      birthDay: birthDay == freezed
-          ? _value.birthDay
-          : birthDay // ignore: cast_nullable_to_non_nullable
-              as DateTime,
     ));
   }
 }
@@ -137,19 +151,19 @@ class __$$_RegistrationStateCopyWithImpl<$Res>
 
 class _$_RegistrationState extends _RegistrationState {
   const _$_RegistrationState(
-      {required this.nickname, required this.gender, required this.birthDay})
+      {required this.nickname, required this.birthday, required this.gender})
       : super._();
 
   @override
   final FormModel nickname;
   @override
-  final RadioButtonModel<Gender> gender;
+  final FormModel birthday;
   @override
-  final DateTime birthDay;
+  final RadioButtonModel<Gender> gender;
 
   @override
   String toString() {
-    return 'RegistrationState(nickname: $nickname, gender: $gender, birthDay: $birthDay)';
+    return 'RegistrationState(nickname: $nickname, birthday: $birthday, gender: $gender)';
   }
 
   @override
@@ -158,16 +172,16 @@ class _$_RegistrationState extends _RegistrationState {
         (other.runtimeType == runtimeType &&
             other is _$_RegistrationState &&
             const DeepCollectionEquality().equals(other.nickname, nickname) &&
-            const DeepCollectionEquality().equals(other.gender, gender) &&
-            const DeepCollectionEquality().equals(other.birthDay, birthDay));
+            const DeepCollectionEquality().equals(other.birthday, birthday) &&
+            const DeepCollectionEquality().equals(other.gender, gender));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(nickname),
-      const DeepCollectionEquality().hash(gender),
-      const DeepCollectionEquality().hash(birthDay));
+      const DeepCollectionEquality().hash(birthday),
+      const DeepCollectionEquality().hash(gender));
 
   @JsonKey(ignore: true)
   @override
@@ -179,16 +193,16 @@ class _$_RegistrationState extends _RegistrationState {
 abstract class _RegistrationState extends RegistrationState {
   const factory _RegistrationState(
       {required final FormModel nickname,
-      required final RadioButtonModel<Gender> gender,
-      required final DateTime birthDay}) = _$_RegistrationState;
+      required final FormModel birthday,
+      required final RadioButtonModel<Gender> gender}) = _$_RegistrationState;
   const _RegistrationState._() : super._();
 
   @override
   FormModel get nickname;
   @override
-  RadioButtonModel<Gender> get gender;
+  FormModel get birthday;
   @override
-  DateTime get birthDay;
+  RadioButtonModel<Gender> get gender;
   @override
   @JsonKey(ignore: true)
   _$$_RegistrationStateCopyWith<_$_RegistrationState> get copyWith =>
