@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:virtualpilgrimage/analytics.dart';
@@ -44,6 +45,7 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
   final Ref _ref;
   late final UserRegistrationUsecase _usecase;
   late final Analytics _analytics;
+  late final FirebaseCrashlytics _crashlytics;
   final dateFormatter = DateFormat();
 
   void onChangedNickname(FormModel nickname) {
@@ -86,16 +88,32 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
       return;
     }
 
-    final user = _ref.read(userStateProvider);
-    if (user == null) {
+    late DateTime birthday;
+    try {
+      birthday = dateFormatter.parse(state.birthday.text);
+    } on FormatException catch (e) {
+      state = state.copyWith(
+        birthday: state.birthday.addExternalError('生年月日の形式が不正です'),
+      );
+      unawaited(
+        _analytics.logEvent(
+          eventName: AnalyticsEvent.registrationFailed,
+          parameters: {
+            ...defaultParams,
+            'nicknameValidationError': state.nickname.displayError,
+            'birthdayValidationError': state.birthday.displayError,
+          },
+        ),
+      );
+      unawaited(_crashlytics.recordError(e, null));
       return;
     }
 
+    final user = _ref.read(userStateProvider)!;
     final updatedUser = user.copyWith(
       nickname: state.nickname.text,
       gender: state.gender.selectedValue,
-      birthDay: dateFormatter.parse(state.birthday.text),
-      userStatus: UserStatus.created, // 作成済みステータスに変える
+      birthDay: birthday,
     );
     final result = await _usecase.execute(updatedUser);
 
@@ -118,6 +136,7 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
             },
           ),
         );
+        unawaited(_crashlytics.recordError(result.error, null));
         break;
       case RegistrationResultStatus.fail:
         unawaited(
@@ -129,6 +148,7 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
             },
           ),
         );
+        unawaited(_crashlytics.recordError(result.error, null));
         break;
     }
   }
