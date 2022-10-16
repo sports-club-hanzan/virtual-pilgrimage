@@ -7,9 +7,27 @@ extension AppTheme on ThemeData {
     useMaterial3: true,
     colorSchemeSeed: ColorStyle.primary,
     unselectedWidgetColor: ColorStyle.grey,
-    focusColor: ColorStyle.primary,
-    primaryColorDark: ColorStyle.primaryDark,
-    primaryColorLight: ColorStyle.primaryLight,
     backgroundColor: ColorStyle.white,
+    iconTheme: const IconThemeData(color: ColorStyle.primary),
+    // ref. https://zenn.dev/pressedkonbu/articles/copy-paste-text-form-field
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: Colors.white,
+      focusColor: ColorStyle.primary,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: const BorderSide(
+          color: ColorStyle.grey,
+          width: 2,
+        ),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: const BorderSide(
+          color: ColorStyle.primaryDark,
+          width: 2,
+        ),
+      ),
+    ),
   );
 }

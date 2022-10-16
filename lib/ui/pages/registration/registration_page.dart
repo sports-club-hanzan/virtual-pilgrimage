@@ -7,7 +7,6 @@ import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
 import 'package:virtualpilgrimage/ui/components/my_text_form_field.dart';
 import 'package:virtualpilgrimage/ui/pages/registration/registration_presenter.dart';
 import 'package:virtualpilgrimage/ui/pages/sign_in/sign_in_presenter.dart';
-import 'package:virtualpilgrimage/ui/style/color.dart';
 
 class RegistrationPage extends ConsumerWidget {
   const RegistrationPage({super.key});
@@ -46,36 +45,9 @@ class RegistrationPageBody extends StatelessWidget {
               MyTextFormField(
                 formModel: state.nickname,
                 onChanged: notifier.onChangedNickname,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  labelStyle: TextStyle(
-                    color: state.nickname.focusNode.hasFocus
-                        ? Theme.of(context).primaryColor
-                        : ColorStyle.text,
-                    fontWeight:
-                        state.nickname.focusNode.hasFocus ? FontWeight.bold : FontWeight.normal,
-                  ),
+                decoration: const InputDecoration(
                   hintText: 'ニックネーム',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: const BorderSide(
-                      color: ColorStyle.white,
-                      width: 2,
-                    ),
-                  ),
-                  focusColor: Theme.of(context).primaryColor,
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide(
-                      color: Theme.of(context).primaryColor,
-                      width: 2,
-                    ),
-                  ),
-                  prefixIcon: Icon(
-                    Icons.account_circle,
-                    color: Theme.of(context).primaryColor,
-                  ),
+                  prefixIcon: Icon(Icons.account_circle),
                 ),
               ),
               const Padding(

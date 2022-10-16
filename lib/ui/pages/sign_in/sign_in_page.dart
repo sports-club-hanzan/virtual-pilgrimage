@@ -37,24 +37,14 @@ class SignInPageBody extends StatelessWidget {
           child: SafeArea(
             child: Column(
               children: <Widget>[
-                // ref. https://zenn.dev/pressedkonbu/articles/copy-paste-text-form-field
                 Padding(
-                  padding: const EdgeInsets.only(
-                    top: 32,
-                    right: 12,
-                    left: 12,
-                    bottom: 12,
-                  ),
+                  padding: const EdgeInsets.only(top: 32, right: 12, left: 12, bottom: 12),
                   child: _createTextFormField(
                     state.emailOrNickname,
                     notifier.onChangeEmail,
-                    _inputDecorationBuilder(
-                      context,
-                      'メールアドレス or ニックネーム',
-                      Icon(
-                        Icons.mail_outline,
-                        color: Theme.of(context).primaryColor,
-                      ),
+                    const InputDecoration(
+                      hintText: 'メールアドレス or ニックネーム',
+                      prefixIcon: Icon(Icons.mail_outline),
                     ),
                   ),
                 ),
@@ -63,13 +53,9 @@ class SignInPageBody extends StatelessWidget {
                   child: _createTextFormField(
                     state.password,
                     notifier.onChangePassword,
-                    _inputDecorationBuilder(
-                      context,
-                      'パスワード',
-                      Icon(
-                        Icons.password,
-                        color: Theme.of(context).primaryColor,
-                      ),
+                    const InputDecoration(
+                      hintText: 'パスワード',
+                      prefixIcon: Icon(Icons.password_outlined),
                     ),
                     true,
                   ),
@@ -88,7 +74,7 @@ class SignInPageBody extends StatelessWidget {
                     },
                     // ボタンを押したときの色
                     style: ElevatedButton.styleFrom(
-                      primary: Theme.of(context).primaryColor,
+                      primary: Theme.of(context).colorScheme.primary,
                       onPrimary: Theme.of(context).primaryColorDark,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -103,7 +89,7 @@ class SignInPageBody extends StatelessWidget {
                     ),
                     child: const Text(
                       'サインイン・新規アカウント作成',
-                      style: TextStyle(color: ColorStyle.text),
+                      style: TextStyle(color: ColorStyle.text, fontWeight: FontWeight.w500),
                     ),
                   ),
                 ),
@@ -155,33 +141,6 @@ class SignInPageBody extends StatelessWidget {
       onChanged: onChanged,
       decoration: decoration,
       obscureText: obsecureText,
-    );
-  }
-
-  InputDecoration _inputDecorationBuilder(
-    BuildContext context,
-    String hintText,
-    Icon icon,
-  ) {
-    return InputDecoration(
-      filled: true,
-      fillColor: ColorStyle.white,
-      hintText: hintText,
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
-        borderSide: BorderSide(
-          color: Theme.of(context).unselectedWidgetColor,
-          width: 2,
-        ),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(16),
-        borderSide: BorderSide(
-          color: Theme.of(context).primaryColor,
-          width: 2,
-        ),
-      ),
-      prefixIcon: icon,
     );
   }
 }
