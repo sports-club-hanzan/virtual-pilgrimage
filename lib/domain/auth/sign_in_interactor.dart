@@ -114,16 +114,16 @@ class SignInInteractor extends SignInUsecase {
         final now = CustomizableDateTime.current;
         user = VirtualPilgrimageUser(
           id: credentialUser.uid,
-          // nickname はユーザ登録フォームで入力するので空の値を指定
-          nickname: '',
           birthDay: DateTime.utc(1980, 1, 1),
-          email: credentialUser.email!,
           // email はどのログイン方法でも必ず存在するはず
-          userIconUrl: credentialUser.photoURL ?? '',
+          email: credentialUser.email!,
           userStatus: UserStatus.temporary,
           createdAt: now,
           updatedAt: now,
         );
+        if (credentialUser.photoURL != null) {
+          user = user.copyWith(userIconUrl: credentialUser.photoURL!);
+        }
         await _userRepository.update(user);
       } else {
         user = gotUser;
