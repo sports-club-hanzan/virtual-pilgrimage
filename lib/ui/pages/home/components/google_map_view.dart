@@ -19,7 +19,7 @@ class GoogleMapView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = _ref.watch(homeProvider).googleMap;
+    final state = _ref.watch(homeProvider);
     final notifier = _ref.read(homeProvider.notifier);
 
     return SizedBox(
