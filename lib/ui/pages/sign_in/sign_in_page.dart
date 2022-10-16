@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:virtualpilgrimage/model/form_model.codegen.dart';
+import 'package:virtualpilgrimage/ui/components/atoms/primary_button.dart';
 import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
 import 'package:virtualpilgrimage/ui/components/my_text_form_field.dart';
 import 'package:virtualpilgrimage/ui/pages/sign_in/sign_in_presenter.dart';
-import 'package:virtualpilgrimage/ui/style/color.dart';
 import 'package:virtualpilgrimage/ui/style/font.dart';
 
 class SignInPage extends ConsumerWidget {
@@ -60,37 +60,11 @@ class SignInPageBody extends StatelessWidget {
                     true,
                   ),
                 ),
-                // FIXME(s14t284): PrimaryButton などのコンポーネントに切り出す
                 Padding(
-                  padding: const EdgeInsets.only(
-                    top: 32,
-                    right: 8,
-                    left: 8,
-                    bottom: 8,
-                  ),
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      await notifier.signInWithEmailAndPassword();
-                    },
-                    // ボタンを押したときの色
-                    style: ElevatedButton.styleFrom(
-                      primary: Theme.of(context).colorScheme.primary,
-                      onPrimary: Theme.of(context).primaryColorDark,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      textStyle: const TextStyle(
-                        fontSize: FontStyle.mediumSize,
-                        // TODO(s14t284): custom font を導入
-                        // ref. https://zenn.dev/susatthi/articles/20220419-143426-flutter-custom-fonts
-                        // fontFamily: ""
-                      ),
-                      padding: const EdgeInsets.all(10),
-                    ),
-                    child: const Text(
-                      'サインイン・新規アカウント作成',
-                      style: TextStyle(color: ColorStyle.text, fontWeight: FontWeight.w500),
-                    ),
+                  padding: const EdgeInsets.only(top: 32, right: 8, left: 8, bottom: 8),
+                  child: PrimaryButton(
+                    onPressed: () async => notifier.signInWithEmailAndPassword(),
+                    text: 'サインイン・新規アカウント作成',
                   ),
                 ),
                 const Padding(
