@@ -11,6 +11,7 @@ import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.da
 import 'package:virtualpilgrimage/model/form_model.codegen.dart';
 import 'package:virtualpilgrimage/model/radio_button_model.codegen.dart';
 import 'package:virtualpilgrimage/ui/pages/registration/registration_state.codegen.dart';
+import 'package:virtualpilgrimage/ui/style/color.dart';
 
 final registrationPresenterProvider =
     StateNotifierProvider.autoDispose<RegistrationPresenter, RegistrationState>(
@@ -25,7 +26,15 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
             gender: RadioButtonModel.of<Gender>(
               ['未設定', '男性', '女性'],
               Gender.values,
-              user?.gender,
+              selectedValue: user?.gender,
+              colors: [
+                ColorModel(
+                  lightColor: ColorStyle.unknownGenderLight,
+                  darkColor: ColorStyle.unknownGenderDark,
+                ),
+                ColorModel(lightColor: ColorStyle.manLight, darkColor: ColorStyle.manDark),
+                ColorModel(lightColor: ColorStyle.womanLight, darkColor: ColorStyle.womanDark),
+              ],
             ),
             birthDay: user != null ? user.birthDay : DateTime.utc(1980),
           ),

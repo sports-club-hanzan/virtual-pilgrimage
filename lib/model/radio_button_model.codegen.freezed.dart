@@ -15,12 +15,149 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
 /// @nodoc
+mixin _$ColorModel {
+  Color get lightColor => throw _privateConstructorUsedError;
+  Color get darkColor => throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $ColorModelCopyWith<ColorModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ColorModelCopyWith<$Res> {
+  factory $ColorModelCopyWith(
+          ColorModel value, $Res Function(ColorModel) then) =
+      _$ColorModelCopyWithImpl<$Res>;
+  $Res call({Color lightColor, Color darkColor});
+}
+
+/// @nodoc
+class _$ColorModelCopyWithImpl<$Res> implements $ColorModelCopyWith<$Res> {
+  _$ColorModelCopyWithImpl(this._value, this._then);
+
+  final ColorModel _value;
+  // ignore: unused_field
+  final $Res Function(ColorModel) _then;
+
+  @override
+  $Res call({
+    Object? lightColor = freezed,
+    Object? darkColor = freezed,
+  }) {
+    return _then(_value.copyWith(
+      lightColor: lightColor == freezed
+          ? _value.lightColor
+          : lightColor // ignore: cast_nullable_to_non_nullable
+              as Color,
+      darkColor: darkColor == freezed
+          ? _value.darkColor
+          : darkColor // ignore: cast_nullable_to_non_nullable
+              as Color,
+    ));
+  }
+}
+
+/// @nodoc
+abstract class _$$_ColorModelCopyWith<$Res>
+    implements $ColorModelCopyWith<$Res> {
+  factory _$$_ColorModelCopyWith(
+          _$_ColorModel value, $Res Function(_$_ColorModel) then) =
+      __$$_ColorModelCopyWithImpl<$Res>;
+  @override
+  $Res call({Color lightColor, Color darkColor});
+}
+
+/// @nodoc
+class __$$_ColorModelCopyWithImpl<$Res> extends _$ColorModelCopyWithImpl<$Res>
+    implements _$$_ColorModelCopyWith<$Res> {
+  __$$_ColorModelCopyWithImpl(
+      _$_ColorModel _value, $Res Function(_$_ColorModel) _then)
+      : super(_value, (v) => _then(v as _$_ColorModel));
+
+  @override
+  _$_ColorModel get _value => super._value as _$_ColorModel;
+
+  @override
+  $Res call({
+    Object? lightColor = freezed,
+    Object? darkColor = freezed,
+  }) {
+    return _then(_$_ColorModel(
+      lightColor: lightColor == freezed
+          ? _value.lightColor
+          : lightColor // ignore: cast_nullable_to_non_nullable
+              as Color,
+      darkColor: darkColor == freezed
+          ? _value.darkColor
+          : darkColor // ignore: cast_nullable_to_non_nullable
+              as Color,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_ColorModel extends _ColorModel {
+  _$_ColorModel({required this.lightColor, required this.darkColor})
+      : super._();
+
+  @override
+  final Color lightColor;
+  @override
+  final Color darkColor;
+
+  @override
+  String toString() {
+    return 'ColorModel(lightColor: $lightColor, darkColor: $darkColor)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_ColorModel &&
+            const DeepCollectionEquality()
+                .equals(other.lightColor, lightColor) &&
+            const DeepCollectionEquality().equals(other.darkColor, darkColor));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(lightColor),
+      const DeepCollectionEquality().hash(darkColor));
+
+  @JsonKey(ignore: true)
+  @override
+  _$$_ColorModelCopyWith<_$_ColorModel> get copyWith =>
+      __$$_ColorModelCopyWithImpl<_$_ColorModel>(this, _$identity);
+}
+
+abstract class _ColorModel extends ColorModel {
+  factory _ColorModel(
+      {required final Color lightColor,
+      required final Color darkColor}) = _$_ColorModel;
+  _ColorModel._() : super._();
+
+  @override
+  Color get lightColor;
+  @override
+  Color get darkColor;
+  @override
+  @JsonKey(ignore: true)
+  _$$_ColorModelCopyWith<_$_ColorModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
 mixin _$RadioButtonModel<T> {
 // TODO(s14t284): focusNode がラジオボタンにおいて複数必要なのか調べる
   List<FocusNode> get focusNodes => throw _privateConstructorUsedError;
   List<String> get titles => throw _privateConstructorUsedError;
   List<T> get values => throw _privateConstructorUsedError;
   T get selectedValue => throw _privateConstructorUsedError;
+  List<ColorModel> get colors => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $RadioButtonModelCopyWith<T, RadioButtonModel<T>> get copyWith =>
@@ -36,7 +173,8 @@ abstract class $RadioButtonModelCopyWith<T, $Res> {
       {List<FocusNode> focusNodes,
       List<String> titles,
       List<T> values,
-      T selectedValue});
+      T selectedValue,
+      List<ColorModel> colors});
 }
 
 /// @nodoc
@@ -54,6 +192,7 @@ class _$RadioButtonModelCopyWithImpl<T, $Res>
     Object? titles = freezed,
     Object? values = freezed,
     Object? selectedValue = freezed,
+    Object? colors = freezed,
   }) {
     return _then(_value.copyWith(
       focusNodes: focusNodes == freezed
@@ -72,6 +211,10 @@ class _$RadioButtonModelCopyWithImpl<T, $Res>
           ? _value.selectedValue
           : selectedValue // ignore: cast_nullable_to_non_nullable
               as T,
+      colors: colors == freezed
+          ? _value.colors
+          : colors // ignore: cast_nullable_to_non_nullable
+              as List<ColorModel>,
     ));
   }
 }
@@ -87,7 +230,8 @@ abstract class _$$_RadioButtonModelCopyWith<T, $Res>
       {List<FocusNode> focusNodes,
       List<String> titles,
       List<T> values,
-      T selectedValue});
+      T selectedValue,
+      List<ColorModel> colors});
 }
 
 /// @nodoc
@@ -107,6 +251,7 @@ class __$$_RadioButtonModelCopyWithImpl<T, $Res>
     Object? titles = freezed,
     Object? values = freezed,
     Object? selectedValue = freezed,
+    Object? colors = freezed,
   }) {
     return _then(_$_RadioButtonModel<T>(
       focusNodes: focusNodes == freezed
@@ -125,6 +270,10 @@ class __$$_RadioButtonModelCopyWithImpl<T, $Res>
           ? _value.selectedValue
           : selectedValue // ignore: cast_nullable_to_non_nullable
               as T,
+      colors: colors == freezed
+          ? _value._colors
+          : colors // ignore: cast_nullable_to_non_nullable
+              as List<ColorModel>,
     ));
   }
 }
@@ -136,10 +285,12 @@ class _$_RadioButtonModel<T> extends _RadioButtonModel<T> {
       {required final List<FocusNode> focusNodes,
       required final List<String> titles,
       required final List<T> values,
-      required this.selectedValue})
+      required this.selectedValue,
+      final List<ColorModel> colors = const []})
       : _focusNodes = focusNodes,
         _titles = titles,
         _values = values,
+        _colors = colors,
         super._();
 
 // TODO(s14t284): focusNode がラジオボタンにおいて複数必要なのか調べる
@@ -167,10 +318,17 @@ class _$_RadioButtonModel<T> extends _RadioButtonModel<T> {
 
   @override
   final T selectedValue;
+  final List<ColorModel> _colors;
+  @override
+  @JsonKey()
+  List<ColorModel> get colors {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_colors);
+  }
 
   @override
   String toString() {
-    return 'RadioButtonModel<$T>(focusNodes: $focusNodes, titles: $titles, values: $values, selectedValue: $selectedValue)';
+    return 'RadioButtonModel<$T>(focusNodes: $focusNodes, titles: $titles, values: $values, selectedValue: $selectedValue, colors: $colors)';
   }
 
   @override
@@ -183,7 +341,8 @@ class _$_RadioButtonModel<T> extends _RadioButtonModel<T> {
             const DeepCollectionEquality().equals(other._titles, _titles) &&
             const DeepCollectionEquality().equals(other._values, _values) &&
             const DeepCollectionEquality()
-                .equals(other.selectedValue, selectedValue));
+                .equals(other.selectedValue, selectedValue) &&
+            const DeepCollectionEquality().equals(other._colors, _colors));
   }
 
   @override
@@ -192,7 +351,8 @@ class _$_RadioButtonModel<T> extends _RadioButtonModel<T> {
       const DeepCollectionEquality().hash(_focusNodes),
       const DeepCollectionEquality().hash(_titles),
       const DeepCollectionEquality().hash(_values),
-      const DeepCollectionEquality().hash(selectedValue));
+      const DeepCollectionEquality().hash(selectedValue),
+      const DeepCollectionEquality().hash(_colors));
 
   @JsonKey(ignore: true)
   @override
@@ -206,7 +366,8 @@ abstract class _RadioButtonModel<T> extends RadioButtonModel<T> {
       {required final List<FocusNode> focusNodes,
       required final List<String> titles,
       required final List<T> values,
-      required final T selectedValue}) = _$_RadioButtonModel<T>;
+      required final T selectedValue,
+      final List<ColorModel> colors}) = _$_RadioButtonModel<T>;
   _RadioButtonModel._() : super._();
 
   @override // TODO(s14t284): focusNode がラジオボタンにおいて複数必要なのか調べる
@@ -217,6 +378,8 @@ abstract class _RadioButtonModel<T> extends RadioButtonModel<T> {
   List<T> get values;
   @override
   T get selectedValue;
+  @override
+  List<ColorModel> get colors;
   @override
   @JsonKey(ignore: true)
   _$$_RadioButtonModelCopyWith<T, _$_RadioButtonModel<T>> get copyWith =>
