@@ -103,7 +103,10 @@ class RegistrationPageBody extends StatelessWidget {
   }
 
   Widget _birthdayForm(
-      RegistrationState state, RegistrationPresenter notifier, BuildContext context) {
+    RegistrationState state,
+    RegistrationPresenter notifier,
+    BuildContext context,
+  ) {
     return SizedBox(
       height: 140,
       child: Column(

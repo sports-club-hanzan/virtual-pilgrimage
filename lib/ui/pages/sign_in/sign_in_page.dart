@@ -6,6 +6,7 @@ import 'package:virtualpilgrimage/ui/components/atoms/primary_button.dart';
 import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
 import 'package:virtualpilgrimage/ui/components/my_text_form_field.dart';
 import 'package:virtualpilgrimage/ui/pages/sign_in/sign_in_presenter.dart';
+import 'package:virtualpilgrimage/ui/pages/sign_in/sign_in_state.codegen.dart';
 import 'package:virtualpilgrimage/ui/style/font.dart';
 
 class SignInPage extends ConsumerWidget {
@@ -37,69 +38,92 @@ class SignInPageBody extends StatelessWidget {
           child: SafeArea(
             child: Column(
               children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 32, 12, 12),
-                  child: _createTextFormField(
-                    state.emailOrNickname,
-                    notifier.onChangeEmail,
-                    const InputDecoration(
-                      hintText: 'メールアドレス or ニックネーム',
-                      prefixIcon: Icon(Icons.mail_outline),
-                    ),
-                    TextInputType.emailAddress,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: _createTextFormField(
-                    state.password,
-                    notifier.onChangePassword,
-                    const InputDecoration(
-                      hintText: 'パスワード',
-                      prefixIcon: Icon(Icons.password_outlined),
-                    ),
-                    // パスワードの仕様を漏らすのは脆弱性に繋がるが、DB側にパスワードを保存していない（Authentication に保存している）のでわかりやすさ重視
-                    TextInputType.visiblePassword,
-                    true,
-                    TextInputAction.done,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 32, right: 8, left: 8, bottom: 8),
-                  child: PrimaryButton(
-                    onPressed: () async => notifier.signInWithEmailAndPassword(),
-                    text: 'サインイン・新規アカウント作成',
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Text(
-                    'または',
-                    style: TextStyle(
-                      fontSize: FontSize.mediumSize,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(8, 16, 8, 8),
-                  child: Center(
-                    child: SignInButton(
-                      Buttons.GoogleDark,
-                      text: 'Google でサインイン',
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      onPressed: () async {
-                        await notifier.signInWithGoogle();
-                      },
-                    ),
-                  ),
-                )
+                _emailOrNicknameForm(state, notifier),
+                _passwordForm(state, notifier),
+                _signInButtons(notifier),
               ],
             ),
           ),
         );
       },
+    );
+  }
+
+  Widget _emailOrNicknameForm(SignInState state, SignInPresenter notifier) {
+    return SizedBox(
+      height: 130,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 12, top: 32, right: 12),
+        child: _createTextFormField(
+          state.emailOrNickname,
+          notifier.onChangeEmail,
+          const InputDecoration(
+            hintText: 'メールアドレス or ニックネーム',
+            prefixIcon: Icon(Icons.mail_outline),
+          ),
+          TextInputType.emailAddress,
+        ),
+      ),
+    );
+  }
+
+  Widget _passwordForm(SignInState state, SignInPresenter notifier) {
+    return SizedBox(
+      height: 130,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 12, top: 12, right: 12),
+        child: _createTextFormField(
+          state.password,
+          notifier.onChangePassword,
+          const InputDecoration(
+            hintText: 'パスワード',
+            prefixIcon: Icon(Icons.password_outlined),
+          ),
+          // パスワードの仕様を漏らすのは脆弱性に繋がるが、DB側にパスワードを保存していない（Authentication に保存している）のでわかりやすさ重視
+          TextInputType.visiblePassword,
+          true,
+          TextInputAction.done,
+        ),
+      ),
+    );
+  }
+
+  Widget _signInButtons(SignInPresenter notifier) {
+    return Container(
+      margin: const EdgeInsets.only(top: 12),
+      child: Column(
+        children: [
+          PrimaryButton(
+            onPressed: () async => notifier.signInWithEmailAndPassword(),
+            text: 'サインイン・新規アカウント作成',
+          ),
+          const Padding(
+            padding: EdgeInsets.only(top: 16),
+            child: Text(
+              'または',
+              style: TextStyle(
+                fontSize: FontSize.mediumSize,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 16),
+            child: Center(
+              child: SignInButton(
+                Buttons.GoogleDark,
+                text: 'Google でサインイン',
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                onPressed: () async {
+                  await notifier.signInWithGoogle();
+                },
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 
