@@ -40,7 +40,7 @@ class ProfileHealthCard extends StatelessWidget {
                     title,
                     style: TextStyle(
                       color: textColor,
-                      fontSize: FontStyle.mediumSize,
+                      fontSize: FontSize.mediumSize,
                       fontWeight: FontWeight.w300,
                     ),
                     textAlign: TextAlign.center,
@@ -52,7 +52,7 @@ class ProfileHealthCard extends StatelessWidget {
                     value,
                     style: TextStyle(
                       color: textColor,
-                      fontSize: FontStyle.largeSize,
+                      fontSize: FontSize.largeSize,
                       fontWeight: FontWeight.w900,
                     ),
                   ),

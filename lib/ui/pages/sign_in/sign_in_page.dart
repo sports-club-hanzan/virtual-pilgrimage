@@ -98,7 +98,7 @@ class SignInPageBody extends StatelessWidget {
                   child: Text(
                     'または',
                     style: TextStyle(
-                      fontSize: FontStyle.mediumSize,
+                      fontSize: FontSize.mediumSize,
                     ),
                   ),
                 ),

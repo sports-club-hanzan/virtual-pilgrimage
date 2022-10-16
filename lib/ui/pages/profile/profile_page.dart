@@ -155,7 +155,7 @@ class _ProfilePageBody extends StatelessWidget {
       children: [
         Text(
           '${user.nickname} さん',
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: FontStyle.largeSize),
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: FontSize.largeSize),
         ),
         const SizedBox(height: 12),
         Row(
@@ -165,7 +165,7 @@ class _ProfilePageBody extends StatelessWidget {
             Text(
               '${notifier.getAgeString(user.birthDay)} ${notifier.getGenderString(user.gender)}',
               style: const TextStyle(
-                fontSize: FontStyle.largeSize,
+                fontSize: FontSize.largeSize,
                 fontWeight: FontWeight.bold,
               ),
             ),
