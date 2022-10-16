@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:virtualpilgrimage/model/form_model.codegen.dart';
 
 class MyTextFormField extends StatefulWidget {
@@ -7,8 +8,11 @@ class MyTextFormField extends StatefulWidget {
     required this.formModel,
     required this.onChanged,
     this.decoration = const InputDecoration(),
-    this.style,
     this.obscureText = false,
+    this.formatters,
+    this.inputAction = TextInputAction.next,
+    this.style,
+    this.textInputType,
   })  : textEditingController = formModel.controller,
         focusNode = formModel.focusNode;
 
@@ -17,6 +21,8 @@ class MyTextFormField extends StatefulWidget {
   final ValueChanged<FormModel> onChanged;
   final TextEditingController textEditingController;
   final FocusNode focusNode;
+  final List<TextInputFormatter>? formatters;
+  final TextInputAction inputAction;
 
   // デザインに関する変数
   // 必要に応じて追加
@@ -25,6 +31,7 @@ class MyTextFormField extends StatefulWidget {
   final InputDecoration decoration;
   final TextStyle? style;
   final bool obscureText;
+  final TextInputType? textInputType;
 
   @override
   State<StatefulWidget> createState() => _MyTextFormFieldState();
@@ -58,6 +65,10 @@ class _MyTextFormFieldState extends State<MyTextFormField> {
       ),
       style: widget.style,
       obscureText: widget.obscureText,
+      keyboardType: widget.textInputType,
+      inputFormatters: widget.formatters,
+      textInputAction: widget.inputAction,
+      onEditingComplete: () => FocusScope.of(context).nextFocus(),
     );
   }
 }

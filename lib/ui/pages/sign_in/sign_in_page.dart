@@ -38,7 +38,7 @@ class SignInPageBody extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(top: 32, right: 12, left: 12, bottom: 12),
+                  padding: const EdgeInsets.fromLTRB(12, 32, 12, 12),
                   child: _createTextFormField(
                     state.emailOrNickname,
                     notifier.onChangeEmail,
@@ -46,6 +46,7 @@ class SignInPageBody extends StatelessWidget {
                       hintText: 'メールアドレス or ニックネーム',
                       prefixIcon: Icon(Icons.mail_outline),
                     ),
+                    TextInputType.emailAddress,
                   ),
                 ),
                 Padding(
@@ -57,7 +58,10 @@ class SignInPageBody extends StatelessWidget {
                       hintText: 'パスワード',
                       prefixIcon: Icon(Icons.password_outlined),
                     ),
+                    // パスワードの仕様を漏らすのは脆弱性に繋がるが、DB側にパスワードを保存していない（Authentication に保存している）のでわかりやすさ重視
+                    TextInputType.visiblePassword,
                     true,
+                    TextInputAction.done,
                   ),
                 ),
                 Padding(
@@ -77,12 +81,7 @@ class SignInPageBody extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(
-                    top: 16,
-                    right: 8,
-                    left: 8,
-                    bottom: 8,
-                  ),
+                  padding: const EdgeInsets.fromLTRB(8, 16, 8, 8),
                   child: Center(
                     child: SignInButton(
                       Buttons.GoogleDark,
@@ -107,14 +106,18 @@ class SignInPageBody extends StatelessWidget {
   Widget _createTextFormField(
     FormModel formModel,
     ValueChanged<FormModel> onChanged,
-    InputDecoration decoration, [
+    InputDecoration decoration,
+    TextInputType textInputType, [
     bool obsecureText = false,
+    TextInputAction inputAction = TextInputAction.next,
   ]) {
     return MyTextFormField(
       formModel: formModel,
       onChanged: onChanged,
       decoration: decoration,
       obscureText: obsecureText,
+      textInputType: textInputType,
+      inputAction: inputAction,
     );
   }
 }
