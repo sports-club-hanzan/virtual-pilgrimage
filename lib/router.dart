@@ -17,6 +17,15 @@ extension RouterPath on String {
   static const profile = '/profile';
 }
 
+// アニメーション抜きで即ページ遷移させるための設定
+// タブで移動できるページに実装
+CustomTransitionPage<ConsumerWidget> zeroTransitionPage(Widget child, BuildContext context) =>
+    CustomTransitionPage(
+      child: child,
+      transitionDuration: Duration.zero,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) => child,
+    );
+
 // ref. https://zenn.dev/mkikuchi/articles/cc87c84e1404c4
 final Provider<GoRouter> routerProvider = Provider<GoRouter>(
   (ref) => GoRouter(
@@ -28,7 +37,7 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>(
       // ルート
       GoRoute(
         path: RouterPath.home,
-        builder: (context, state) => const HomePage(),
+        pageBuilder: (context, state) => zeroTransitionPage(const HomePage(), context),
       ),
       // ログイン
       GoRoute(
@@ -48,15 +57,16 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>(
       GoRoute(
         name: RouterPath.profile,
         path: RouterPath.profile,
-        builder: (BuildContext context, GoRouterState state) {
+        pageBuilder: (context, state) {
           final userId = state.queryParams['userId']!;
           final canEdit = state.queryParams['canEdit'];
           final previousPage = state.queryParams['previousPagePath'];
-          return ProfilePage(
+          final page = ProfilePage(
             userId: userId,
             canEdit: canEdit == 'true',
             previousPagePath: previousPage ?? RouterPath.home,
           );
+          return zeroTransitionPage(page, context);
         },
       ),
     ],

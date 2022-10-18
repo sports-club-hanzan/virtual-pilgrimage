@@ -47,6 +47,7 @@ class PilgrimageInfo with _$PilgrimageInfo {
     )
         required DateTime updatedAt,
   }) = _PilgrimageInfo;
+
   const PilgrimageInfo._();
 
   factory PilgrimageInfo.fromJson(Map<String, dynamic> json) => _$PilgrimageInfoFromJson(json);
