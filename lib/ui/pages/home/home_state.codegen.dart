@@ -8,6 +8,8 @@ part 'home_state.codegen.freezed.dart';
 class HomeState with _$HomeState {
   const factory HomeState({
     required GoogleMapModel googleMap,
+    @Default({}) Set<Marker> markers,
+    @Default({}) Set<Polyline> polylines,
   }) = _HomeState;
 
   const HomeState._();

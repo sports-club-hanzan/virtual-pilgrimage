@@ -4,6 +4,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:maps_toolkit/maps_toolkit.dart' as maps;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:virtualpilgrimage/analytics.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/direction_polyline_repository.dart';
@@ -73,7 +74,6 @@ class HomePresenter extends StateNotifier<HomeState> {
         updatePilgrimageProgress(user).then((value) => pilgrimageProgressResult = value),
         updateHealthInfo(user),
         updatePolyline(),
-        setUserMarker(user),
         // ログインした時点でお寺の情報を取得する
         _templeRepository.getTempleInfoAll(),
       ]);
@@ -82,6 +82,7 @@ class HomePresenter extends StateNotifier<HomeState> {
       // ローカルpush通知：ここで実装するのではなく、バックグラウンド処理で利用する
       // ignore: avoid_print
       print(pilgrimageProgressResult.reachedPilgrimageIdList);
+      await setUserMarker(user);
     } on Exception catch (e) {
       unawaited(_crashlytics.recordError(e, null));
     }
@@ -114,38 +115,78 @@ class HomePresenter extends StateNotifier<HomeState> {
 
   /// map 上で2点間の距離を可視化するための経路を取得するメソッド
   /// FIXME: 利用する地点が固定値になっているため機能追加に合わせて修正する
-  Future<void> updatePolyline() async {
+  Future<void> updatePolyline(VirtualPilgrimageUser user) async {
     // 現在地点から適当なお寺への経路の可視化
-    final latlngs = await _directionPolylineRepository.getPolylines(
-      origin: const LatLng(34.15944444, 134.503),
-      destination: const LatLng(34.10, 134.467),
+    final originTempleInfo = await _ref.read(templeRepositoryProvider).getTempleInfo(user.pilgrimage!.nowPilgrimageId);
+    final destTempleInfo = await _ref.read(templeRepositoryProvider).getTempleInfo(user.pilgrimage!.nowPilgrimageId + 1);
+
+    final lines = await _directionPolylineRepository.getPolylines(
+      origin: LatLng(originTempleInfo.geoPoint.latitude, originTempleInfo.geoPoint.longitude),
+      destination: LatLng(destTempleInfo.geoPoint.latitude, destTempleInfo.geoPoint.longitude),
     );
     final polylines = {
       Polyline(
         polylineId: const PolylineId('id'),
-        points: latlngs,
+        points: lines,
         color: Colors.pinkAccent,
         width: 5,
       )
     };
-    state = state.setGoogleMap(state.googleMap.copyWith(polylines: polylines));
+    state = state.copyWith(polylines: polylines);
   }
 
   /// ユーザ情報を利用して GoogleMap 上に描画するユーザ情報のマーカーを追加
   Future<void> setUserMarker(VirtualPilgrimageUser user) async {
+    // 到着したお寺までの累積距離[m]
+    num totalDistance = 0;
+    if (user.pilgrimage!.nowPilgrimageId != 1) {
+      // ignore: unused_local_variable
+      final templeInfo = await _ref.read(templeRepositoryProvider)
+          .getTempleInfo(user.pilgrimage!.nowPilgrimageId - 1);
+      totalDistance = 100;
+      //totalDistance = templeInfo.totalDistance;
+    }
+    // 到着したお寺からの経過距離[m]
+    final distance = (user.health?.totalDistance ?? 0) - totalDistance;
+    final position = computePosition(
+        state.polylines.first.points,
+        distance,
+    );
     final markers = {
-      ...state.googleMap.markers,
+      ...state.markers,
       Marker(
         markerId: MarkerId(user.nickname),
-        position: const LatLng(34.10, 134.467), // FIXME: 適当に固定値を入れているだけであるため修正する
+        position: position,
         icon: user.userIcon,
         infoWindow: InfoWindow(title: '現在: ${user.health?.totalSteps ?? 0}歩'),
       )
     };
-    state = state.setGoogleMap(state.googleMap.copyWith(markers: markers));
+
+    state = state.copyWith(markers: markers);
   }
 
   /// GoogleMap の描画が完了した時に呼ばれる
   /// [controller] GoogleMap の描画に使われるインスタンス
   void onMapCreated(GoogleMapController controller) => state.onGoogleMapCreated(controller);
+
+  /// 経路情報（リスト）から現在地を算出する
+  LatLng computePosition(List<LatLng> latlngs, num meter) {
+    num distance = meter;
+    for(int i = 0; i < latlngs.length - 1; i++) {
+      final from = maps.LatLng(latlngs[i].latitude, latlngs[i].longitude);
+      final to = maps.LatLng(latlngs[i+1].latitude, latlngs[i+1].longitude);
+      final num d = maps.SphericalUtil.computeDistanceBetween(from, to);
+      if (distance < d) {
+        // fromからtoの間にいる場合は割合で表示する
+        final latlng = maps.SphericalUtil.interpolate(from, to, distance / d);
+        return LatLng(latlng.latitude, latlng.longitude);
+      } else {
+        // fromからtoの距離をdistanceが超える場合は次の区間で計算する
+        distance = distance - d;
+      }
+    }
+
+    // 経路リストを超える場合は次のお寺にほぼ到着している
+    return latlngs.last;
+  }
 }
