@@ -9,5 +9,5 @@ $ python3 get-pip.py
 $ pip install -r requirements.txt
 ```
 ### firebaseにアクセスするための秘密鍵の発行方法
-[秘密鍵の発行についてはこのサイトを参考にしてください](href="https://qiita.com/Mikumirai/items/f8a2ead6a6a1a4f57df8#api%E3%82%AD%E3%83%BC%E3%82%92%E3%82%82%E3%81%A3%E3%81%A6%E3%81%93%E3%82%88%E3%81%86)
+[秘密鍵の発行についてはこのサイトを参考にしてください](https://qiita.com/Mikumirai/items/f8a2ead6a6a1a4f57df8#api%E3%82%AD%E3%83%BC%E3%82%92%E3%82%82%E3%81%A3%E3%81%A6%E3%81%93%E3%82%88%E3%81%86)
 ## Setup
