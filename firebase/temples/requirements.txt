@@ -2,3 +2,4 @@ pandas
 beautifulsoup4
 firebase_admin
 google-cloud-firestore
+notebook
