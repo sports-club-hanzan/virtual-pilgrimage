@@ -30,7 +30,8 @@ def main():
     - distance:徒歩距離(m)
     - geoPoint:[緯度(北緯),経度(東経)]
     - id:お遍路の番号
-    - images:
+    - images:画像のパス
+    - stamp_images:スタンプの画像パス
     - name:名前
     - prefecture:住所[:3]
     """
@@ -43,6 +44,7 @@ def main():
     name = df["名前"].to_list()
     geoPoint = make_geopoint(geo_n,geo_t)
     image_path = make_image_path(ids)
+    stamp_image_path = make_stamp_image_path(ids)
     prefecture = [add[:3] for add in address]
 
     """
@@ -59,6 +61,7 @@ def main():
             u'geoPoint':geoPoint[i],
             u'id':id_,
             u'images':image_path[i],
+            u'stamp_images':stamp_image_path[i],
             u'name':name[i],
             u'prefecture':prefecture[i]
         })
@@ -89,5 +92,15 @@ def make_image_path(ids):
         image_list.append([image_path])
 
     return image_list
+
+def make_stamp_image_path(ids):
+    stamp_image_list = []
+
+    # ※ 1つのパス(1.jpg)に対してのみしか対応できていないので改良必要
+    for id_ in ids:
+        image_path = "https://firebasestorage.googleapis.com/v0/b/virtual-pilgrimage-dev.appspot.com/o/temples%2F"+str(id_)+"%2Fstamp.jpg?alt=media&token=6fe4c2ed-b204-4837-9c56-3b72f24e1186"
+        stamp_image_list.append([image_path])
+
+    return stamp_image_list
 
 main()
