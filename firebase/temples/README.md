@@ -12,7 +12,7 @@ $ pip install -r requirements.txt
 #### 秘密鍵の発行方法
 ~.jsonのJSON形式の秘密鍵が発行して用いる（今後はWEB APIでのアクセスに変更したい）
 [秘密鍵の発行についてはこのサイトを参考にしてください](https://qiita.com/Mikumirai/items/f8a2ead6a6a1a4f57df8#api%E3%82%AD%E3%83%BC%E3%82%92%E3%82%82%E3%81%A3%E3%81%A6%E3%81%93%E3%82%88%E3%81%86)
-ディレクトリ構造
+#### ディレクトリ構造
 ```
 temple_images
 README.md
