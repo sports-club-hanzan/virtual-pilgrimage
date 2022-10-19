@@ -42,7 +42,7 @@ temples:
   prefecture: string # お寺の所在地の県
   address: string # 住所
   images: [string] # お寺の画像のURl一覧
-  stamp_images: [string] # お寺のスタンプ画像のURL
+  stampImageUrl: string # 札所でもらえる御朱印のURL
   geoPoint:  # お寺の緯度・経度
     geohash: string
     geopoint: [double]
