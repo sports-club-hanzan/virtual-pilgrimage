@@ -4,14 +4,28 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 from google.cloud.firestore import GeoPoint
 import pandas as pd
+import argparse
 
 def main():
+    """
+    コマンドライン引数でファイルのパスを入力できるようにする
+    """
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--key_path", required=True)
+    parser.add_argument("--data_path",required=True)
+    
+    # 引数の読み込み
+    args = parser.parse_args()
+
+    key_path  = args.key_path
+    data_path = args.data_path
+
     """
     firestoreデータにアクセス
     """
     
     # 秘密鍵によるfirebaseに認証を行う
-    cred = credentials.Certificate('virtual-pilgrimage-dev-firebase-adminsdk-fnt9u-dbd50504a7.json')
+    cred = credentials.Certificate(key_path)
     firebase_admin.initialize_app(cred)
 
     # firestoreにアクセスする
@@ -22,7 +36,7 @@ def main():
     """
     
     # pandasのDataFrameでcsvからデータを読み込む
-    df = pd.read_csv("temple_info_update.csv",encoding="utf-8")
+    df = pd.read_csv(data_path,encoding="utf-8")
     
     # データの結びつけ
     """
