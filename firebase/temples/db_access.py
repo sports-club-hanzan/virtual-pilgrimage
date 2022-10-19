@@ -96,7 +96,7 @@ def make_image_path(ids):
 def make_stamp_image_path(ids):
     stamp_image_list = []
 
-    # ※ 1つのパス(1.jpg)に対してのみしか対応できていないので改良必要
+    # TODO: 1つのパス(1.jpg)に対してのみしか対応できていないので改良必要
     for id_ in ids:
         image_path = "https://firebasestorage.googleapis.com/v0/b/virtual-pilgrimage-dev.appspot.com/o/temples%2F"+str(id_)+"%2Fstamp.jpg?alt=media&token=6fe4c2ed-b204-4837-9c56-3b72f24e1186"
         stamp_image_list.append([image_path])
