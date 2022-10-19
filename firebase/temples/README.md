@@ -34,5 +34,7 @@ jupyter notebook
 ### python
 ```
 python db_access.py
+--key_path KEY_PATH.json
+--data_path TEMPLE_DATA.csv
 ```
 
