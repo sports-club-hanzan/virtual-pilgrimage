@@ -23,6 +23,9 @@ class TempleInfo with _$TempleInfo {
     // 次のお寺までの距離
     required int nextDistance,
 
+    // 次のお寺までの経路(エンコード文字列)
+    required String encodedPoints,
+
     // お寺の座標
     @JsonKey(
       fromJson: _geoPointFromJson,
