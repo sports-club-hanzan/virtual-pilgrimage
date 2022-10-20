@@ -18,4 +18,7 @@ abstract class DirectionPolylineRepository {
   /// [origin] スタート地点
   /// [destination] ゴール地点
   Future<List<LatLng>> getPolylines({required LatLng origin, required LatLng destination});
+
+  /// エンコード文字列から経路を導出して返す
+  List<LatLng> getPolylinesFromEncodedPoints({required String encodedPoints});
 }
