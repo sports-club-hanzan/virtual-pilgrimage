@@ -7,6 +7,7 @@ import 'package:virtualpilgrimage/domain/auth/sign_in_usecase.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
 import 'package:virtualpilgrimage/domain/exception/sign_in_exception.dart';
+import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/user_icon_repository.dart';
 import 'package:virtualpilgrimage/domain/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
@@ -120,6 +121,10 @@ class SignInInteractor extends SignInUsecase {
           userStatus: UserStatus.temporary,
           createdAt: now,
           updatedAt: now,
+          pilgrimage: PilgrimageInfo(
+            id: credentialUser.uid,
+            updatedAt: now,
+          ),
         );
         if (credentialUser.photoURL != null) {
           user = user.copyWith(userIconUrl: credentialUser.photoURL!);

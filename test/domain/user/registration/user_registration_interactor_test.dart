@@ -4,6 +4,7 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
+import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/registration/registration_result.dart';
 import 'package:virtualpilgrimage/domain/user/registration/user_registration_interactor.dart';
 import 'package:virtualpilgrimage/domain/user/registration/user_registration_usecase.dart';
@@ -44,6 +45,7 @@ void main() {
         userStatus: UserStatus.temporary,
         createdAt: CustomizableDateTime.current,
         updatedAt: CustomizableDateTime.current,
+        pilgrimage: PilgrimageInfo(id: 'dummyId', updatedAt: CustomizableDateTime.current),
       );
       setUp(() {
         defaultMockFirebaseCrashlytics(mockFirebaseCrashlytics);

@@ -124,7 +124,7 @@ class _ProfilePageBody extends StatelessWidget {
     final health = user.health;
     final List<List<ProfileHealthCard>> healthCards = [];
     if (health != null) {
-      final healthByPeriod = [health.yesterday, health.week, health.month];
+      final healthByPeriod = [health.today, health.yesterday, health.week, health.month];
       for (final h in healthByPeriod) {
         healthCards.add([
           ProfileHealthCard(

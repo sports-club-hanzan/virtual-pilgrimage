@@ -1,0 +1,61 @@
+# firestore のスキーマ構造
+## このyamlは利用されていないが、firestore 内のテーブル構造を把握するためにこのファイルに現行の設計を記述している
+
+## ユーザ情報
+users:
+  documentId: string # Firebase Authentication によって得られるuid
+  nickname: string # ニックネーム
+  email: string # emailアドレス(認証に利用 or google アカウントのメールアドレス)
+  gender: int # 性別
+  birthDay: timestamp # 誕生日
+  userIconUrl: string? # ユーザのアイコン画像 default値：google アカウントのアイコン画像のURL
+  userStatus: int # ユーザの状態 0：仮登録、1：登録完了、2：削除済み
+  createdAt: timestamp # 作成時刻
+  updatedAt: timestamp # 更新時刻
+  # 以下は iOS, Android の Health 情報から取得する歩数情報
+  health: Map<string, dynamic>?
+    yesterday: Map<string, int>
+      steps: int # 昨日の歩数。ランキングで利用
+      distance: int # 昨日の歩行距離
+      burnedCalorie: int # 昨日消費したカロリー
+    week: Map<string, int>
+      steps: int # 昨日までの1週間の歩数。ランキングで利用
+      distance: int # 昨日までの1週間の歩行距離
+      burnedCalorie: int # 昨日までの1週間で消費したカロリー
+    month: Map<string, int>
+      steps: int # 昨日までの1ヶ月の歩数。ランキングで利用
+      distance: int # 昨日までの1ヶ月の歩行距離
+      burnedCalorie: int # 昨日までの1ヶ月で消費したカロリー
+    updatedAt: timestamp # 更新時刻
+    totalSteps: int # アプリを利用し始めてからの合計歩数
+    totalDistance: int # アプリを利用し始めてからの合計距離
+  # 以下はお遍路に関する情報
+  pilgrimage: Map<string, dynamic>?
+    temple: ref<temples> # temples/:id
+    lap: int # 何周目か
+    walkingDistance: int # 現在
+
+## お遍路の情報
+temples:
+  documentId: int # お寺のID。お遍路の順路の番号を振る
+  templeName: string（お寺の名前）
+  prefecture: string # お寺の所在地の県
+  address: string # 住所
+  images: [string] # お寺の画像のURl一覧
+  stampImageUrl: string # 札所でもらえる御朱印のURL
+  geoPoint:  # お寺の緯度・経度
+    geohash: string
+    geopoint: [double]
+  distance: int # 次のお寺までに必要な距離
+  # そのほかお寺に必要な情報（TODO）
+
+## ランキング情報
+rankings:
+  documentId: string # daily, weekly, monthly のいずれか
+  users: List
+    rank: int # 順位
+    user: ref<users>
+    # 集計の都合上、ref<users> を利用するのが難しかったら以下を追加
+    # userId: string # uidで表現されたユーザID
+    # nickname: string # ニックネーム
+    # userIconUrl: string # ユーザアイコンのURL

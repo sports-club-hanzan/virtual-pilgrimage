@@ -12,6 +12,7 @@ import 'package:virtualpilgrimage/domain/user/health/health_repository.dart';
 import 'package:virtualpilgrimage/domain/user/health/update_health_interactor.dart';
 import 'package:virtualpilgrimage/domain/user/health/update_health_result.dart';
 import 'package:virtualpilgrimage/domain/user/health/update_health_usecase.dart';
+import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 
@@ -44,6 +45,7 @@ void main() {
   group('UpdateHealthInteractor', () {
     final user = defaultUser();
     final health = HealthInfo(
+      today: defaultHealthByPeriod(steps: 10, distance: 10, burnedCalorie: 10),
       yesterday: defaultHealthByPeriod(steps: 100, distance: 100, burnedCalorie: 100),
       week: defaultHealthByPeriod(steps: 1000, distance: 1000, burnedCalorie: 1000),
       month: defaultHealthByPeriod(steps: 1000, distance: 10000, burnedCalorie: 10000),
@@ -76,7 +78,7 @@ void main() {
         final actual = await target.execute(user);
 
         // then
-        expect(actual, UpdateHealthResult(UpdateHealthStatus.success));
+        expect(actual, UpdateHealthResult(UpdateHealthStatus.success, updatedUser));
         verify(
           mockHealthRepository.getHealthInfo(
             targetDateTime: CustomizableDateTime.current,
@@ -179,6 +181,7 @@ VirtualPilgrimageUser defaultUser() {
     createdAt: CustomizableDateTime.current.subtract(const Duration(days: 14)),
     updatedAt: CustomizableDateTime.current.subtract(const Duration(days: 10)),
     health: HealthInfo(
+      today: defaultHealthByPeriod(),
       yesterday: defaultHealthByPeriod(),
       week: defaultHealthByPeriod(),
       month: defaultHealthByPeriod(),
@@ -186,6 +189,7 @@ VirtualPilgrimageUser defaultUser() {
       totalDistance: 0,
       updatedAt: CustomizableDateTime.current,
     ),
+    pilgrimage: PilgrimageInfo(id: 'dummyId', updatedAt: CustomizableDateTime.current),
   );
 }
 

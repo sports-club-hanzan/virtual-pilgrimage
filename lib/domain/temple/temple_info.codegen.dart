@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:virtualpilgrimage/domain/temple/temple_image.codegen.dart';
 
 part 'temple_info.codegen.freezed.dart';
 part 'temple_info.codegen.g.dart';
@@ -21,23 +20,22 @@ class TempleInfo with _$TempleInfo {
     required String address,
 
     // 次のお寺までの距離
-    required int nextDistance,
+    required int distance,
 
     // お寺の座標
     @JsonKey(
       fromJson: _geoPointFromJson,
       toJson: _geoPointToJson,
     )
-    required GeoPoint geoPoint,
-
-    List<TempleImage>? images,
+        required GeoPoint geoPoint,
+    @Default([]) List<String> images,
   }) = _TempleInfo;
 
   const TempleInfo._();
 
-  factory TempleInfo.fromJson(Map<String, dynamic> json) =>
-      _$TempleInfoFromJson(json);
+  factory TempleInfo.fromJson(Map<String, dynamic> json) => _$TempleInfoFromJson(json);
 }
 
 GeoPoint _geoPointFromJson(GeoPoint json) => json;
+
 GeoPoint _geoPointToJson(GeoPoint geoPoint) => geoPoint;

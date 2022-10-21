@@ -17,17 +17,17 @@ extension HealthFieldKeys on String {
 // DateTime <-> Timestamp の相互変換用クラス
 // 共通化したいが、ここで定義しないと自動生成ファイル側で import エラーが発生する
 class _FirestoreTimestampConverter {
-  static Timestamp dateTimeToTimestamp(DateTime dateTime) =>
-      Timestamp.fromDate(dateTime);
+  static Timestamp dateTimeToTimestamp(DateTime dateTime) => Timestamp.fromDate(dateTime);
 
-  static DateTime timestampToDateTime(Timestamp timestamp) =>
-      timestamp.toDate();
+  static DateTime timestampToDateTime(Timestamp timestamp) => timestamp.toDate();
 }
 
 @freezed
 class HealthInfo with _$HealthInfo {
   @JsonSerializable(explicitToJson: true)
   const factory HealthInfo({
+    // 当日のヘルスケア情報
+    required HealthByPeriod today,
     // 昨日のヘルスケア情報
     required HealthByPeriod yesterday,
     // 昨日から一週間前までのヘルスケア情報
@@ -47,6 +47,5 @@ class HealthInfo with _$HealthInfo {
 
   const HealthInfo._();
 
-  factory HealthInfo.fromJson(Map<String, dynamic> json) =>
-      _$HealthInfoFromJson(json);
+  factory HealthInfo.fromJson(Map<String, dynamic> json) => _$HealthInfoFromJson(json);
 }
