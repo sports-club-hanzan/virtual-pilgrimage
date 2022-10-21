@@ -5,6 +5,7 @@ import 'package:virtualpilgrimage/analytics.dart';
 import 'package:virtualpilgrimage/domain/auth/sign_in_usecase.dart';
 import 'package:virtualpilgrimage/domain/exception/sign_in_exception.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
+import 'package:virtualpilgrimage/logger.dart';
 import 'package:virtualpilgrimage/model/form_model.codegen.dart';
 import 'package:virtualpilgrimage/ui/pages/sign_in/sign_in_state.codegen.dart';
 
@@ -52,6 +53,7 @@ class SignInPresenter extends StateNotifier<SignInState> {
       unawaited(_analytics.setUserProperties(user: user));
       _updateState(user, user.userStatus);
     } on Exception catch (e) {
+      _ref.read(loggerProvider).e(e);
       state = state.copyWith(
         error: e,
       );

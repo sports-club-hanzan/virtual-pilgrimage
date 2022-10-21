@@ -20,7 +20,8 @@ HealthInfo _$HealthInfoFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$HealthInfo {
-// 昨日のヘルスケア情報
+// 当日のヘルスケア情報
+  HealthByPeriod get today => throw _privateConstructorUsedError; // 昨日のヘルスケア情報
   HealthByPeriod get yesterday =>
       throw _privateConstructorUsedError; // 昨日から一週間前までのヘルスケア情報
   HealthByPeriod get week =>
@@ -45,7 +46,8 @@ abstract class $HealthInfoCopyWith<$Res> {
           HealthInfo value, $Res Function(HealthInfo) then) =
       _$HealthInfoCopyWithImpl<$Res>;
   $Res call(
-      {HealthByPeriod yesterday,
+      {HealthByPeriod today,
+      HealthByPeriod yesterday,
       HealthByPeriod week,
       HealthByPeriod month,
       @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
@@ -53,6 +55,7 @@ abstract class $HealthInfoCopyWith<$Res> {
       int totalSteps,
       int totalDistance});
 
+  $HealthByPeriodCopyWith<$Res> get today;
   $HealthByPeriodCopyWith<$Res> get yesterday;
   $HealthByPeriodCopyWith<$Res> get week;
   $HealthByPeriodCopyWith<$Res> get month;
@@ -68,6 +71,7 @@ class _$HealthInfoCopyWithImpl<$Res> implements $HealthInfoCopyWith<$Res> {
 
   @override
   $Res call({
+    Object? today = freezed,
     Object? yesterday = freezed,
     Object? week = freezed,
     Object? month = freezed,
@@ -76,6 +80,10 @@ class _$HealthInfoCopyWithImpl<$Res> implements $HealthInfoCopyWith<$Res> {
     Object? totalDistance = freezed,
   }) {
     return _then(_value.copyWith(
+      today: today == freezed
+          ? _value.today
+          : today // ignore: cast_nullable_to_non_nullable
+              as HealthByPeriod,
       yesterday: yesterday == freezed
           ? _value.yesterday
           : yesterday // ignore: cast_nullable_to_non_nullable
@@ -101,6 +109,13 @@ class _$HealthInfoCopyWithImpl<$Res> implements $HealthInfoCopyWith<$Res> {
           : totalDistance // ignore: cast_nullable_to_non_nullable
               as int,
     ));
+  }
+
+  @override
+  $HealthByPeriodCopyWith<$Res> get today {
+    return $HealthByPeriodCopyWith<$Res>(_value.today, (value) {
+      return _then(_value.copyWith(today: value));
+    });
   }
 
   @override
@@ -133,7 +148,8 @@ abstract class _$$_HealthInfoCopyWith<$Res>
       __$$_HealthInfoCopyWithImpl<$Res>;
   @override
   $Res call(
-      {HealthByPeriod yesterday,
+      {HealthByPeriod today,
+      HealthByPeriod yesterday,
       HealthByPeriod week,
       HealthByPeriod month,
       @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
@@ -141,6 +157,8 @@ abstract class _$$_HealthInfoCopyWith<$Res>
       int totalSteps,
       int totalDistance});
 
+  @override
+  $HealthByPeriodCopyWith<$Res> get today;
   @override
   $HealthByPeriodCopyWith<$Res> get yesterday;
   @override
@@ -161,6 +179,7 @@ class __$$_HealthInfoCopyWithImpl<$Res> extends _$HealthInfoCopyWithImpl<$Res>
 
   @override
   $Res call({
+    Object? today = freezed,
     Object? yesterday = freezed,
     Object? week = freezed,
     Object? month = freezed,
@@ -169,6 +188,10 @@ class __$$_HealthInfoCopyWithImpl<$Res> extends _$HealthInfoCopyWithImpl<$Res>
     Object? totalDistance = freezed,
   }) {
     return _then(_$_HealthInfo(
+      today: today == freezed
+          ? _value.today
+          : today // ignore: cast_nullable_to_non_nullable
+              as HealthByPeriod,
       yesterday: yesterday == freezed
           ? _value.yesterday
           : yesterday // ignore: cast_nullable_to_non_nullable
@@ -202,7 +225,8 @@ class __$$_HealthInfoCopyWithImpl<$Res> extends _$HealthInfoCopyWithImpl<$Res>
 @JsonSerializable(explicitToJson: true)
 class _$_HealthInfo extends _HealthInfo {
   const _$_HealthInfo(
-      {required this.yesterday,
+      {required this.today,
+      required this.yesterday,
       required this.week,
       required this.month,
       @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
@@ -214,6 +238,9 @@ class _$_HealthInfo extends _HealthInfo {
   factory _$_HealthInfo.fromJson(Map<String, dynamic> json) =>
       _$$_HealthInfoFromJson(json);
 
+// 当日のヘルスケア情報
+  @override
+  final HealthByPeriod today;
 // 昨日のヘルスケア情報
   @override
   final HealthByPeriod yesterday;
@@ -237,7 +264,7 @@ class _$_HealthInfo extends _HealthInfo {
 
   @override
   String toString() {
-    return 'HealthInfo(yesterday: $yesterday, week: $week, month: $month, updatedAt: $updatedAt, totalSteps: $totalSteps, totalDistance: $totalDistance)';
+    return 'HealthInfo(today: $today, yesterday: $yesterday, week: $week, month: $month, updatedAt: $updatedAt, totalSteps: $totalSteps, totalDistance: $totalDistance)';
   }
 
   @override
@@ -245,6 +272,7 @@ class _$_HealthInfo extends _HealthInfo {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_HealthInfo &&
+            const DeepCollectionEquality().equals(other.today, today) &&
             const DeepCollectionEquality().equals(other.yesterday, yesterday) &&
             const DeepCollectionEquality().equals(other.week, week) &&
             const DeepCollectionEquality().equals(other.month, month) &&
@@ -259,6 +287,7 @@ class _$_HealthInfo extends _HealthInfo {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      const DeepCollectionEquality().hash(today),
       const DeepCollectionEquality().hash(yesterday),
       const DeepCollectionEquality().hash(week),
       const DeepCollectionEquality().hash(month),
@@ -281,7 +310,8 @@ class _$_HealthInfo extends _HealthInfo {
 
 abstract class _HealthInfo extends HealthInfo {
   const factory _HealthInfo(
-      {required final HealthByPeriod yesterday,
+      {required final HealthByPeriod today,
+      required final HealthByPeriod yesterday,
       required final HealthByPeriod week,
       required final HealthByPeriod month,
       @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
@@ -293,6 +323,8 @@ abstract class _HealthInfo extends HealthInfo {
   factory _HealthInfo.fromJson(Map<String, dynamic> json) =
       _$_HealthInfo.fromJson;
 
+  @override // 当日のヘルスケア情報
+  HealthByPeriod get today;
   @override // 昨日のヘルスケア情報
   HealthByPeriod get yesterday;
   @override // 昨日から一週間前までのヘルスケア情報

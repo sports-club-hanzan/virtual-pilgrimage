@@ -38,7 +38,7 @@ class ProfilePresenter extends StateNotifier<ProfileState> {
   late final UserIconRepository _userIconRepository;
   late final Analytics _analytics;
 
-  final _selectedTabs = ['昨日', '週間', '月間'];
+  final _selectedTabs = ['今日', '昨日', '週間', '月間'];
   final _genderString = ['', '男性', '女性'];
 
   List<String> tabLabels() => _selectedTabs;
@@ -80,8 +80,7 @@ class ProfilePresenter extends StateNotifier<ProfileState> {
 
     // カメラロールから画像を選択させる
     final picker = ImagePicker();
-    final image =
-        await picker.pickImage(source: ImageSource.gallery, maxHeight: 128, maxWidth: 128);
+    final image = await picker.pickImage(source: ImageSource.gallery, maxHeight: 64, maxWidth: 64);
     // 空だったら更新しない
     // FIXME: ユーザに画像が保存できなかった旨のpopupを見せたい
     if (image == null) {

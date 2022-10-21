@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
+import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/ui/pages/profile/profile_presenter.dart';
@@ -25,6 +26,7 @@ void main() {
       birthDay: CustomizableDateTime.current,
       createdAt: CustomizableDateTime.current,
       updatedAt: CustomizableDateTime.current,
+      pilgrimage: PilgrimageInfo(id: id, updatedAt: CustomizableDateTime.current),
     );
     userRepository = FakeUserRepository(user);
   });
@@ -36,6 +38,7 @@ void main() {
       birthDay: CustomizableDateTime.current,
       createdAt: CustomizableDateTime.current,
       updatedAt: CustomizableDateTime.current,
+      pilgrimage: PilgrimageInfo(id: 'dummyLoginUserId', updatedAt: CustomizableDateTime.current),
     );
     setUp(() {
       container = mockedProviderContainer(
@@ -60,6 +63,7 @@ void main() {
         birthDay: CustomizableDateTime.current,
         createdAt: CustomizableDateTime.current,
         updatedAt: CustomizableDateTime.current,
+        pilgrimage: PilgrimageInfo(id: 'dummyId', updatedAt: CustomizableDateTime.current),
       );
 
       final actualLoading = container.read(profileUserProvider('dummyId'));
@@ -78,7 +82,7 @@ void main() {
     });
 
     test('tabLabels', () {
-      expect(target.tabLabels(), ['昨日', '週間', '月間']);
+      expect(target.tabLabels(), ['今日', '昨日', '週間', '月間']);
     });
 
     test('setSelectedTabIndex', () async {

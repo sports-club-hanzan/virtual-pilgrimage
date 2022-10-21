@@ -8,12 +8,15 @@ import 'package:maps_toolkit/maps_toolkit.dart' as maps;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:virtualpilgrimage/analytics.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/direction_polyline_repository.dart';
+import 'package:virtualpilgrimage/domain/pilgrimage/update_pilgrimage_progress_result.dart';
+import 'package:virtualpilgrimage/domain/pilgrimage/update_pilgrimage_progress_usecase.dart';
 import 'package:virtualpilgrimage/domain/temple/temple_repository.dart';
 import 'package:virtualpilgrimage/domain/user/health/update_health_result.dart';
 import 'package:virtualpilgrimage/domain/user/health/update_health_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/infrastructure/pilgrimage/direction_polyline_repository_impl.dart';
+import 'package:virtualpilgrimage/logger.dart';
 
 import 'home_state.codegen.dart';
 
@@ -23,18 +26,22 @@ final homeProvider = StateNotifierProvider.autoDispose<HomePresenter, HomeState>
 
 class HomePresenter extends StateNotifier<HomeState> {
   HomePresenter(this._ref) : super(HomeState.initialize()) {
+    _updatePilgrimageProgressUsecase = _ref.read(updatePilgrimageProgressUsecaseProvider);
     _updateHealthUsecase = _ref.read(updateHealthUsecaseProvider);
     _directionPolylineRepository = _ref.read(directionPolylineRepositoryPresenter);
     _analytics = _ref.read(analyticsProvider);
     _crashlytics = _ref.read(firebaseCrashlyticsProvider);
+    _templeRepository = _ref.read(templeRepositoryProvider);
     initialize();
   }
 
   final Ref _ref;
+  late final UpdatePilgrimageProgressUsecase _updatePilgrimageProgressUsecase;
   late final UpdateHealthUsecase _updateHealthUsecase;
   late final DirectionPolylineRepositoryImpl _directionPolylineRepository;
   late final Analytics _analytics;
   late final FirebaseCrashlytics _crashlytics;
+  late final TempleRepository _templeRepository;
 
   /// 初期化処理
   /// 初期化時にユーザのヘルスケア情報を読み取ってDBに書き込む
@@ -53,7 +60,9 @@ class HomePresenter extends StateNotifier<HomeState> {
 
     // ヘルスケア情報取得の権限が付与されていない場合、許可を得るダイアログを開く
     // TODO(s14t284): ヘルスケア情報を取得するダイアログで許可を押す旨をUIに表示した方が良いか検討
-    if ((await Permission.activityRecognition.request()).isDenied) {
+    final activityPermission = await Permission.activityRecognition.request();
+    _ref.read(loggerProvider).d(activityPermission);
+    if (activityPermission.isDenied) {
       await _crashlytics.recordError(
         'now allowed to get health information [userId][${user.id}]',
         null,
@@ -61,16 +70,44 @@ class HomePresenter extends StateNotifier<HomeState> {
       await openAppSettings();
     }
 
-    // 以下は処理順は重要ではないため、非同期に並列で処理して UI への反映を早める
     try {
-      await Future.wait(<Future<void>>[getHealth(user), updatePolyline(user)]);
-      await setUserMarker(user);
+      // 以下は処理順は重要ではないため、非同期に並列で処理して UI への反映を早める
+      await Future.wait(<Future<void>>[
+        updateHealthInfo(user),
+        // ログインした時点でお寺の情報を取得する
+        _templeRepository.getTempleInfoAll(),
+      ]);
+      final pilgrimageProgressResult = await updatePilgrimageProgress(user);
+      // TODO(s14t284): ロジックが突貫工事化し、presenterのなかにビジネスロジックまで含まれているので整理する
+      // TODO(s14t284): この中に今回到達したお寺の情報が含まれているのでUIに利用したりローカルpush通知に利用したりする
+      // UIに使う例：到達した札所のスタンプを押すアニメーションなど
+      // ローカルpush通知：ここで実装するのではなく、バックグラウンド処理で利用する
+      // ignore: avoid_print
+      print(pilgrimageProgressResult.reachedPilgrimageIdList);
+      if (pilgrimageProgressResult.updatedUser != null) {
+        await setUserMarker(pilgrimageProgressResult.updatedUser!);
+        _ref.read(userStateProvider.notifier).state = pilgrimageProgressResult.updatedUser;
+      }
     } on Exception catch (e) {
       unawaited(_crashlytics.recordError(e, null));
     }
   }
 
-  Future<void> getHealth(VirtualPilgrimageUser user) async {
+  Future<UpdatePilgrimageProgressResult> updatePilgrimageProgress(
+    VirtualPilgrimageUser user,
+  ) async {
+    final result = await _updatePilgrimageProgressUsecase.execute(user.id);
+    if (result.status != UpdatePilgrimageProgressResultStatus.success) {
+      await _crashlytics.recordError(
+        result.error,
+        null,
+        reason: 'failed to update pilgrimage progress [status][${result.status}]',
+      );
+    }
+    return result;
+  }
+
+  Future<void> updateHealthInfo(VirtualPilgrimageUser user) async {
     final result = await _updateHealthUsecase.execute(user);
     if (result.status != UpdateHealthStatus.success) {
       await _crashlytics.recordError(
@@ -82,11 +119,12 @@ class HomePresenter extends StateNotifier<HomeState> {
   }
 
   /// map 上で2点間の距離を可視化するための経路を取得するメソッド
-  /// FIXME: 利用する地点が固定値になっているため機能追加に合わせて修正する
   Future<void> updatePolyline(VirtualPilgrimageUser user) async {
     // 現在地点から適当なお寺への経路の可視化
-    final originTempleInfo = await _ref.read(templeRepositoryProvider).getTempleInfo(user.pilgrimage!.nowPilgrimageId);
-    final destTempleInfo = await _ref.read(templeRepositoryProvider).getTempleInfo(user.pilgrimage!.nowPilgrimageId + 1);
+    final originTempleInfo = await _templeRepository.getTempleInfo(user.pilgrimage.nowPilgrimageId);
+    final destTempleInfo = await _templeRepository.getTempleInfo(
+      user.pilgrimage.nowPilgrimageId + 1,
+    );
 
     final lines = await _directionPolylineRepository.getPolylines(
       origin: LatLng(originTempleInfo.geoPoint.latitude, originTempleInfo.geoPoint.longitude),
@@ -105,21 +143,8 @@ class HomePresenter extends StateNotifier<HomeState> {
 
   /// ユーザ情報を利用して GoogleMap 上に描画するユーザ情報のマーカーを追加
   Future<void> setUserMarker(VirtualPilgrimageUser user) async {
-    // 到着したお寺までの累積距離[m]
-    num totalDistance = 0;
-    if (user.pilgrimage!.nowPilgrimageId != 1) {
-      // ignore: unused_local_variable
-      final templeInfo = await _ref.read(templeRepositoryProvider)
-          .getTempleInfo(user.pilgrimage!.nowPilgrimageId - 1);
-      totalDistance = 100;
-      //totalDistance = templeInfo.totalDistance;
-    }
-    // 到着したお寺からの経過距離[m]
-    final distance = (user.health?.totalDistance ?? 0) - totalDistance;
-    final position = computePosition(
-        state.polylines.first.points,
-        distance,
-    );
+    await updatePolyline(user);
+    final position = computePosition(state.polylines.first.points, user.pilgrimage.movingDistance);
     final markers = {
       ...state.markers,
       Marker(
@@ -140,9 +165,9 @@ class HomePresenter extends StateNotifier<HomeState> {
   /// 経路情報（リスト）から現在地を算出する
   LatLng computePosition(List<LatLng> latlngs, num meter) {
     num distance = meter;
-    for(int i = 0; i < latlngs.length - 1; i++) {
+    for (int i = 0; i < latlngs.length - 1; i++) {
       final from = maps.LatLng(latlngs[i].latitude, latlngs[i].longitude);
-      final to = maps.LatLng(latlngs[i+1].latitude, latlngs[i+1].longitude);
+      final to = maps.LatLng(latlngs[i + 1].latitude, latlngs[i + 1].longitude);
       final num d = maps.SphericalUtil.computeDistanceBetween(from, to);
       if (distance < d) {
         // fromからtoの間にいる場合は割合で表示する

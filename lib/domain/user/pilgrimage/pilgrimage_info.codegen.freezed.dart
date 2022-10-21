@@ -20,9 +20,20 @@ PilgrimageInfo _$PilgrimageInfoFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$PilgrimageInfo {
-  String get id => throw _privateConstructorUsedError;
-  int get nowPilgrimageId => throw _privateConstructorUsedError;
-  int get lap => throw _privateConstructorUsedError;
+// Firestore のid。
+// 利用しない値なので、Firebase Authentication から取得できるidを詰める
+  String get id => throw _privateConstructorUsedError; // 現在のお遍路の番所
+// 1番札所からスタートするのでデフォルト：1
+  int get nowPilgrimageId => throw _privateConstructorUsedError; // お遍路が何周目か。
+// 1週目からスタートするのでデフォルト：1
+  int get lap => throw _privateConstructorUsedError; // お寺に到着したかを参照するための移動距離
+// 次の札所に到着したかを計算する為に保存
+  int get movingDistance =>
+      throw _privateConstructorUsedError; // 最後にお遍路の進捗状況を更新した時刻
+  @JsonKey(
+      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
+      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+  DateTime get updatedAt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -35,7 +46,13 @@ abstract class $PilgrimageInfoCopyWith<$Res> {
   factory $PilgrimageInfoCopyWith(
           PilgrimageInfo value, $Res Function(PilgrimageInfo) then) =
       _$PilgrimageInfoCopyWithImpl<$Res>;
-  $Res call({String id, int nowPilgrimageId, int lap});
+  $Res call(
+      {String id,
+      int nowPilgrimageId,
+      int lap,
+      int movingDistance,
+      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+          DateTime updatedAt});
 }
 
 /// @nodoc
@@ -52,6 +69,8 @@ class _$PilgrimageInfoCopyWithImpl<$Res>
     Object? id = freezed,
     Object? nowPilgrimageId = freezed,
     Object? lap = freezed,
+    Object? movingDistance = freezed,
+    Object? updatedAt = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed
@@ -66,6 +85,14 @@ class _$PilgrimageInfoCopyWithImpl<$Res>
           ? _value.lap
           : lap // ignore: cast_nullable_to_non_nullable
               as int,
+      movingDistance: movingDistance == freezed
+          ? _value.movingDistance
+          : movingDistance // ignore: cast_nullable_to_non_nullable
+              as int,
+      updatedAt: updatedAt == freezed
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
     ));
   }
 }
@@ -77,7 +104,13 @@ abstract class _$$_PilgrimageInfoCopyWith<$Res>
           _$_PilgrimageInfo value, $Res Function(_$_PilgrimageInfo) then) =
       __$$_PilgrimageInfoCopyWithImpl<$Res>;
   @override
-  $Res call({String id, int nowPilgrimageId, int lap});
+  $Res call(
+      {String id,
+      int nowPilgrimageId,
+      int lap,
+      int movingDistance,
+      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+          DateTime updatedAt});
 }
 
 /// @nodoc
@@ -96,6 +129,8 @@ class __$$_PilgrimageInfoCopyWithImpl<$Res>
     Object? id = freezed,
     Object? nowPilgrimageId = freezed,
     Object? lap = freezed,
+    Object? movingDistance = freezed,
+    Object? updatedAt = freezed,
   }) {
     return _then(_$_PilgrimageInfo(
       id: id == freezed
@@ -110,31 +145,62 @@ class __$$_PilgrimageInfoCopyWithImpl<$Res>
           ? _value.lap
           : lap // ignore: cast_nullable_to_non_nullable
               as int,
+      movingDistance: movingDistance == freezed
+          ? _value.movingDistance
+          : movingDistance // ignore: cast_nullable_to_non_nullable
+              as int,
+      updatedAt: updatedAt == freezed
+          ? _value.updatedAt
+          : updatedAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
     ));
   }
 }
 
 /// @nodoc
-
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable()
 class _$_PilgrimageInfo extends _PilgrimageInfo {
   const _$_PilgrimageInfo(
-      {required this.id, required this.nowPilgrimageId, required this.lap})
+      {required this.id,
+      this.nowPilgrimageId = 1,
+      this.lap = 1,
+      this.movingDistance = 0,
+      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+          required this.updatedAt})
       : super._();
 
   factory _$_PilgrimageInfo.fromJson(Map<String, dynamic> json) =>
       _$$_PilgrimageInfoFromJson(json);
 
+// Firestore のid。
+// 利用しない値なので、Firebase Authentication から取得できるidを詰める
   @override
   final String id;
+// 現在のお遍路の番所
+// 1番札所からスタートするのでデフォルト：1
   @override
+  @JsonKey()
   final int nowPilgrimageId;
+// お遍路が何周目か。
+// 1週目からスタートするのでデフォルト：1
   @override
+  @JsonKey()
   final int lap;
+// お寺に到着したかを参照するための移動距離
+// 次の札所に到着したかを計算する為に保存
+  @override
+  @JsonKey()
+  final int movingDistance;
+// 最後にお遍路の進捗状況を更新した時刻
+  @override
+  @JsonKey(
+      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
+      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+  final DateTime updatedAt;
 
   @override
   String toString() {
-    return 'PilgrimageInfo(id: $id, nowPilgrimageId: $nowPilgrimageId, lap: $lap)';
+    return 'PilgrimageInfo(id: $id, nowPilgrimageId: $nowPilgrimageId, lap: $lap, movingDistance: $movingDistance, updatedAt: $updatedAt)';
   }
 
   @override
@@ -145,7 +211,10 @@ class _$_PilgrimageInfo extends _PilgrimageInfo {
             const DeepCollectionEquality().equals(other.id, id) &&
             const DeepCollectionEquality()
                 .equals(other.nowPilgrimageId, nowPilgrimageId) &&
-            const DeepCollectionEquality().equals(other.lap, lap));
+            const DeepCollectionEquality().equals(other.lap, lap) &&
+            const DeepCollectionEquality()
+                .equals(other.movingDistance, movingDistance) &&
+            const DeepCollectionEquality().equals(other.updatedAt, updatedAt));
   }
 
   @JsonKey(ignore: true)
@@ -154,7 +223,9 @@ class _$_PilgrimageInfo extends _PilgrimageInfo {
       runtimeType,
       const DeepCollectionEquality().hash(id),
       const DeepCollectionEquality().hash(nowPilgrimageId),
-      const DeepCollectionEquality().hash(lap));
+      const DeepCollectionEquality().hash(lap),
+      const DeepCollectionEquality().hash(movingDistance),
+      const DeepCollectionEquality().hash(updatedAt));
 
   @JsonKey(ignore: true)
   @override
@@ -172,19 +243,33 @@ class _$_PilgrimageInfo extends _PilgrimageInfo {
 abstract class _PilgrimageInfo extends PilgrimageInfo {
   const factory _PilgrimageInfo(
       {required final String id,
-      required final int nowPilgrimageId,
-      required final int lap}) = _$_PilgrimageInfo;
+      final int nowPilgrimageId,
+      final int lap,
+      final int movingDistance,
+      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+          required final DateTime updatedAt}) = _$_PilgrimageInfo;
   const _PilgrimageInfo._() : super._();
 
   factory _PilgrimageInfo.fromJson(Map<String, dynamic> json) =
       _$_PilgrimageInfo.fromJson;
 
-  @override
+  @override // Firestore のid。
+// 利用しない値なので、Firebase Authentication から取得できるidを詰める
   String get id;
-  @override
+  @override // 現在のお遍路の番所
+// 1番札所からスタートするのでデフォルト：1
   int get nowPilgrimageId;
-  @override
+  @override // お遍路が何周目か。
+// 1週目からスタートするのでデフォルト：1
   int get lap;
+  @override // お寺に到着したかを参照するための移動距離
+// 次の札所に到着したかを計算する為に保存
+  int get movingDistance;
+  @override // 最後にお遍路の進捗状況を更新した時刻
+  @JsonKey(
+      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
+      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+  DateTime get updatedAt;
   @override
   @JsonKey(ignore: true)
   _$$_PilgrimageInfoCopyWith<_$_PilgrimageInfo> get copyWith =>

@@ -125,8 +125,8 @@ class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
         required DateTime updatedAt,
     // ヘルスケア情報。歩数や移動距離など
     HealthInfo? health,
-    // TODO(s14t284): 以下の情報を含める
     // 現在地のお遍路で巡っているお寺の情報
+    required PilgrimageInfo pilgrimage,
 
     // 以下は json に変換した時に含めないパラメータ
     // DB で管理されずアプリ上で値がセットされる
@@ -135,7 +135,6 @@ class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
     @JsonKey(ignore: true, fromJson: _BitmapConverter.stringToBitmap)
     @Default(BitmapDescriptor.defaultMarker)
         BitmapDescriptor userIcon,
-    PilgrimageInfo? pilgrimage,
   }) = _VirtualPilgrimageUser;
 
   const VirtualPilgrimageUser._();

@@ -5,6 +5,7 @@ import 'package:logger/logger.dart';
 import 'package:mockito/mockito.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
+import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/user/user_repository_impl.dart';
@@ -163,7 +164,10 @@ void main() {
       ];
 
       group('正常系', () {
-        final mockQueryDocumentSnapshots = users.map(MockQueryDocumentSnapshot.new).toList();
+        final mockQueryDocumentSnapshots = [
+          MockQueryDocumentSnapshot<VirtualPilgrimageUser>(users[0], MockDocumentReference()),
+          MockQueryDocumentSnapshot<VirtualPilgrimageUser>(users[1], MockDocumentReference()),
+        ];
         setUp(() {
           when(mockQuerySnapshot.docs).thenReturn(mockQueryDocumentSnapshots);
           when(mockQuerySnapshot.size).thenReturn(users.length);
@@ -227,5 +231,6 @@ VirtualPilgrimageUser defaultUser([
     userStatus: UserStatus.created,
     createdAt: CustomizableDateTime.current,
     updatedAt: CustomizableDateTime.current,
+    pilgrimage: PilgrimageInfo(id: userId, updatedAt: CustomizableDateTime.current),
   );
 }

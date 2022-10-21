@@ -50,9 +50,13 @@ class HealthRepositoryImpl implements HealthRepository {
     DateTime fixDt(DateTime dt) => dt.compareTo(createdAt) == 1 ? dt : createdAt;
 
     try {
-      // 昨日1日、過去一週間、過去一ヶ月間、過去全ての3パターンでヘルスケア情報を取得
-      final toDate = _lastTime(targetDateTime.subtract(const Duration(days: 1)));
+      // 今日、昨日1日、過去一週間、過去一ヶ月間、過去全ての3パターンでヘルスケア情報を取得
+      // 今日
+      final healthOfToday =
+          await _getHealthData(fixDt(targetDateTime), _lastTime(targetDateTime), types);
+
       // 昨日
+      final toDate = _lastTime(targetDateTime.subtract(const Duration(days: 1)));
       final healthOfYesterday = await _getHealthData(
         DateTime(toDate.year, toDate.month, toDate.day),
         toDate,
@@ -79,6 +83,7 @@ class HealthRepositoryImpl implements HealthRepository {
 
       final totalHealth = _aggregateHealthInfo(healthOfTotal);
       final health = HealthInfo(
+        today: _aggregateHealthInfo(healthOfToday),
         yesterday: _aggregateHealthInfo(healthOfYesterday),
         week: _aggregateHealthInfo(healthOfWeek),
         month: _aggregateHealthInfo(healthOfMonth),
@@ -88,6 +93,43 @@ class HealthRepositoryImpl implements HealthRepository {
       );
       _logger.d(health);
       return health;
+    } on HealthException catch (e) {
+      throw GetHealthException(
+        message: e.cause,
+        status: GetHealthExceptionStatus.unknown,
+        cause: e,
+      );
+    } on Exception catch (e) {
+      throw GetHealthException(
+        message: 'cause unknown error when update health info',
+        status: GetHealthExceptionStatus.unknown,
+        cause: e,
+      );
+    }
+  }
+
+  /// 指定した期間のみのヘルスケア情報を各OSの仕組みから取得
+  ///
+  /// [from] ヘルスケア情報を取得する起点となる時間
+  /// [to] ヘルスケア情報を取得する終点となる時間
+  @override
+  Future<HealthByPeriod> getHealthByPeriod({
+    required DateTime from,
+    required DateTime to,
+  }) async {
+    final types = _healthTypes[defaultTargetPlatform.name.toLowerCase()]!;
+    // Health 情報を取得できるか権限チェック
+    final requested = await _healthFactory.requestAuthorization(types);
+    if (!requested) {
+      const message = 'get health information error because don\'t have health permission';
+      _logger.e(message);
+      throw GetHealthException(message: message, status: GetHealthExceptionStatus.notAuthorized);
+    }
+
+    try {
+      final health = await _getHealthData(from, to, types);
+      final aggregatedHealth = _aggregateHealthInfo(health);
+      return aggregatedHealth;
     } on HealthException catch (e) {
       throw GetHealthException(
         message: e.cause,
