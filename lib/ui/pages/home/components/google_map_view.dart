@@ -27,7 +27,7 @@ class GoogleMapView extends StatelessWidget {
       child: GoogleMap(
         myLocationEnabled: false,
         myLocationButtonEnabled: false,
-        zoomControlsEnabled: false,
+        zoomControlsEnabled: true,
         zoomGesturesEnabled: true,
         tiltGesturesEnabled: false,
         scrollGesturesEnabled: true,
