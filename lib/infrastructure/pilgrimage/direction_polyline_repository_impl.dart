@@ -73,7 +73,7 @@ class DirectionPolylineRepositoryImpl implements DirectionPolylineRepository {
 
   /// 経路を導出して返す
   ///
-  /// [points] 経路文字列
+  /// [encodedPoints] 経路文字列
   @override
   List<LatLng> getPolylinesFromEncodedPoints({required String encodedPoints}) {
     return decodePolyline(encodedPoints)
