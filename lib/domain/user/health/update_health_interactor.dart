@@ -25,6 +25,7 @@ class UpdateHealthInteractor implements UpdateHealthUsecase {
   @override
   Future<UpdateHealthResult> execute(VirtualPilgrimageUser user) async {
     UpdateHealthStatus status = UpdateHealthStatus.success;
+    VirtualPilgrimageUser? updatedUser;
     Exception? error;
     final now = CustomizableDateTime.current;
     try {
@@ -32,7 +33,8 @@ class UpdateHealthInteractor implements UpdateHealthUsecase {
         targetDateTime: now,
         createdAt: user.createdAt,
       );
-      await _userRepository.update(user.copyWith(health: health));
+      updatedUser = user.copyWith(health: health);
+      await _userRepository.update(updatedUser);
     } on GetHealthException catch (e) {
       final message = 'get user health information error [user][$user][error][$e]';
       _logger.e(message);
@@ -58,6 +60,6 @@ class UpdateHealthInteractor implements UpdateHealthUsecase {
       error = e;
     }
 
-    return UpdateHealthResult(status, error);
+    return UpdateHealthResult(status, updatedUser, error);
   }
 }

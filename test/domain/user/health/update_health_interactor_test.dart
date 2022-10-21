@@ -77,7 +77,7 @@ void main() {
         final actual = await target.execute(user);
 
         // then
-        expect(actual, UpdateHealthResult(UpdateHealthStatus.success));
+        expect(actual, UpdateHealthResult(UpdateHealthStatus.success, updatedUser));
         verify(
           mockHealthRepository.getHealthInfo(
             targetDateTime: CustomizableDateTime.current,
