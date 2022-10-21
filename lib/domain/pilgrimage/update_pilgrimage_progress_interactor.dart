@@ -28,13 +28,21 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
 
   /// お遍路の進捗状況を更新
   ///
-  /// [user] 更新対象のユーザ情報
+  /// [userId] 更新対象のユーザID
   @override
-  Future<UpdatePilgrimageProgressResult> execute(VirtualPilgrimageUser user) async {
+  Future<UpdatePilgrimageProgressResult> execute(String userId) async {
     final now = CustomizableDateTime.current;
+    final user = await _userRepository.get(userId);
+    if (user == null) {
+      return UpdatePilgrimageProgressResult(
+        UpdatePilgrimageProgressResultStatus.failWithGetUser,
+        [],
+        null,
+      );
+    }
     final lastProgressUpdatedAt = user.pilgrimage.updatedAt;
     int lap = user.pilgrimage.lap;
-    int nextPilgrimageId = _nextPilgrimageNumber(user.pilgrimage.nowPilgrimageId);
+    int nextPilgrimageId = user.pilgrimage.nowPilgrimageId;
 
     // ロジックに利用する変数群
     late TempleInfo nowTempleInfo;
@@ -44,8 +52,14 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
     int movingDistance;
     // 到達した札所のID一覧
     final List<int> reachedPilgrimageIdList = [];
-
-    _logger.d('update pilgrimage progress start [nextPilgrimageId][$nextPilgrimageId]');
+    // ロジックで更新した後のユーザ情報
+    VirtualPilgrimageUser? updatedUser;
+    _logger.d(
+      'update pilgrimage progress start '
+      '[nextPilgrimageId][$nextPilgrimageId]'
+      '[from][$lastProgressUpdatedAt]'
+      '[to][$now]',
+    );
     try {
       /// 1. 進捗を更新するために必要な情報を取得
 
@@ -57,6 +71,11 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
             .getHealthByPeriod(from: lastProgressUpdatedAt, to: now)
             .then((value) => healthFromLastUpdatedAt = value),
       ]);
+      _logger.d(
+        'got info for updating pilgrimage progress '
+        '[nowTempleInfo][$nowTempleInfo]'
+        '[health][$healthFromLastUpdatedAt]',
+      );
 
       /// 2. 移動距離 > 次の札所までの距離 の間、で移動距離を減らしながら次に目指すべき札所を導出する
       movingDistance = healthFromLastUpdatedAt.distance;
@@ -67,13 +86,18 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
         nextPilgrimageId = _nextPilgrimageNumber(nextPilgrimageId);
         // 次の札所が1番札所の時、1番札所からお遍路を再開する事になるため、以下の処理を行う
         // - lap を1増やす
-        // - 1番札所から再スタートするため、次の目的地を2番札所に切り替える
-        if (nextPilgrimageId == 1) {
+        // - 1番札所から再スタートするため、次の現在地点を1番札所に切り替える
+        if (nextPilgrimageId == 88) {
           lap++;
           nextPilgrimageId = _nextPilgrimageNumber(nextPilgrimageId);
         }
         // NOTE: while で外部通信していて時間がかかるように見えるが、実際はキャッシュしたお寺の情報を問い合わせに行っているだけ
         nowTempleInfo = await _templeRepository.getTempleInfo(nextPilgrimageId);
+        _logger.d(
+          'calc pilgrimage progress '
+          '[movingDistance][$movingDistance]'
+          '[templeDistance][${nowTempleInfo.distance}]',
+        );
       }
 
       /// 3. 導出した進捗状況でユーザ情報を更新
@@ -83,15 +107,17 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
         movingDistance: movingDistance,
         updatedAt: now,
       );
-      await _userRepository.update(user.copyWith(pilgrimage: updatedPilgrimage, updatedAt: now));
+      updatedUser = user.copyWith(pilgrimage: updatedPilgrimage, updatedAt: now);
+      await _userRepository.update(updatedUser);
     } on Exception catch (e) {
-      _logger.e(e.toString());
-      return UpdatePilgrimageProgressResult(UpdatePilgrimageProgressResultStatus.fail, [], e);
+      _logger.e(e);
+      return UpdatePilgrimageProgressResult(UpdatePilgrimageProgressResultStatus.fail, [], null, e);
     }
 
     return UpdatePilgrimageProgressResult(
       UpdatePilgrimageProgressResultStatus.success,
       reachedPilgrimageIdList,
+      updatedUser,
     );
   }
 
