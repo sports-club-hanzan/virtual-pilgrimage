@@ -144,13 +144,7 @@ class HomePresenter extends StateNotifier<HomeState> {
   /// ユーザ情報を利用して GoogleMap 上に描画するユーザ情報のマーカーを追加
   Future<void> setUserMarker(VirtualPilgrimageUser user) async {
     await updatePolyline(user);
-    // 到着したお寺からの経過距離[m]
-    num distance = 0;
-    if (user.pilgrimage.nowPilgrimageId != 88) {
-      final templeInfo = await _templeRepository.getTempleInfo(user.pilgrimage.nowPilgrimageId);
-      distance = templeInfo.distance - user.pilgrimage.movingDistance;
-    }
-    final position = computePosition(state.polylines.first.points, distance);
+    final position = computePosition(state.polylines.first.points, user.pilgrimage.movingDistance);
     final markers = {
       ...state.markers,
       Marker(
@@ -188,5 +182,4 @@ class HomePresenter extends StateNotifier<HomeState> {
     // 経路リストを超える場合は次のお寺にほぼ到着している
     return latlngs.last;
   }
-
 }
