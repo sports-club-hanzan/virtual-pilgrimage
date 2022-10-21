@@ -87,7 +87,7 @@ class HomePresenter extends StateNotifier<HomeState> {
     // 現在地点から適当なお寺への経路の可視化
     final templeInfo = await _ref.read(templeRepositoryProvider).getTempleInfo(user.pilgrimage!.nowPilgrimageId);
 
-    final lines = await _directionPolylineRepository.getPolylinesFromEncodedPoints(encodedPoints: templeInfo.encodedPoints);
+    final lines = _directionPolylineRepository.getPolylinesFromEncodedPoints(encodedPoints: templeInfo.encodedPoints);
     final polylines = {
       Polyline(
         polylineId: const PolylineId('id'),
