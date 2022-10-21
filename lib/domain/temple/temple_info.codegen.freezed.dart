@@ -28,7 +28,7 @@ mixin _$TempleInfo {
   int get distance => throw _privateConstructorUsedError; // お寺の座標
   @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
   GeoPoint get geoPoint => throw _privateConstructorUsedError;
-  List<TempleImage>? get images => throw _privateConstructorUsedError;
+  List<String> get images => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -49,7 +49,7 @@ abstract class $TempleInfoCopyWith<$Res> {
       int distance,
       @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
           GeoPoint geoPoint,
-      List<TempleImage>? images});
+      List<String> images});
 }
 
 /// @nodoc
@@ -98,7 +98,7 @@ class _$TempleInfoCopyWithImpl<$Res> implements $TempleInfoCopyWith<$Res> {
       images: images == freezed
           ? _value.images
           : images // ignore: cast_nullable_to_non_nullable
-              as List<TempleImage>?,
+              as List<String>,
     ));
   }
 }
@@ -118,7 +118,7 @@ abstract class _$$_TempleInfoCopyWith<$Res>
       int distance,
       @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
           GeoPoint geoPoint,
-      List<TempleImage>? images});
+      List<String> images});
 }
 
 /// @nodoc
@@ -169,7 +169,7 @@ class __$$_TempleInfoCopyWithImpl<$Res> extends _$TempleInfoCopyWithImpl<$Res>
       images: images == freezed
           ? _value._images
           : images // ignore: cast_nullable_to_non_nullable
-              as List<TempleImage>?,
+              as List<String>,
     ));
   }
 }
@@ -185,7 +185,7 @@ class _$_TempleInfo extends _TempleInfo {
       required this.distance,
       @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
           required this.geoPoint,
-      final List<TempleImage>? images})
+      final List<String> images = const []})
       : _images = images,
         super._();
 
@@ -211,13 +211,12 @@ class _$_TempleInfo extends _TempleInfo {
   @override
   @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
   final GeoPoint geoPoint;
-  final List<TempleImage>? _images;
+  final List<String> _images;
   @override
-  List<TempleImage>? get images {
-    final value = _images;
-    if (value == null) return null;
+  @JsonKey()
+  List<String> get images {
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
+    return EqualUnmodifiableListView(_images);
   }
 
   @override
@@ -274,7 +273,7 @@ abstract class _TempleInfo extends TempleInfo {
       required final int distance,
       @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
           required final GeoPoint geoPoint,
-      final List<TempleImage>? images}) = _$_TempleInfo;
+      final List<String> images}) = _$_TempleInfo;
   const _TempleInfo._() : super._();
 
   factory _TempleInfo.fromJson(Map<String, dynamic> json) =
@@ -294,7 +293,7 @@ abstract class _TempleInfo extends TempleInfo {
   @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
   GeoPoint get geoPoint;
   @override
-  List<TempleImage>? get images;
+  List<String> get images;
   @override
   @JsonKey(ignore: true)
   _$$_TempleInfoCopyWith<_$_TempleInfo> get copyWith =>

@@ -15,8 +15,9 @@ _$_TempleInfo _$$_TempleInfoFromJson(Map<String, dynamic> json) =>
       distance: json['distance'] as int,
       geoPoint: _geoPointFromJson(json['geoPoint'] as GeoPoint),
       images: (json['images'] as List<dynamic>?)
-          ?.map((e) => TempleImage.fromJson(e as Map<String, dynamic>))
-          .toList(),
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$$_TempleInfoToJson(_$_TempleInfo instance) =>
