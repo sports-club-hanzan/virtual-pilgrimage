@@ -7,6 +7,7 @@ import 'package:virtualpilgrimage/analytics.dart';
 import 'package:virtualpilgrimage/domain/user/registration/registration_result.dart';
 import 'package:virtualpilgrimage/domain/user/registration/user_registration_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
+import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/model/form_model.codegen.dart';
 import 'package:virtualpilgrimage/model/radio_button_model.codegen.dart';
 import 'package:virtualpilgrimage/ui/pages/registration/registration_state.codegen.dart';
@@ -22,7 +23,10 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
       : super(
           RegistrationState(
             nickname: FormModel.of(nicknameValidator, user?.nickname ?? ''),
-            birthday: FormModel.of(birthdayValidator),
+            birthday: FormModel.of(
+              birthdayValidator,
+              user != null ? DateFormat('yyyyMMdd').format(user.birthDay) : '',
+            ),
             gender: RadioButtonModel.of<Gender>(
               ['未設定', '男性', '女性'],
               Gender.values,
@@ -40,20 +44,25 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
         ) {
     _usecase = _ref.read(userRegistrationUsecaseProvider);
     _analytics = _ref.read(analyticsProvider);
+    _crashlytics = _ref.read(firebaseCrashlyticsProvider);
+    _userState = _ref.watch(userStateProvider.notifier);
+    _loginState = _ref.watch(loginStateProvider.state);
   }
 
   final Ref _ref;
   late final UserRegistrationUsecase _usecase;
   late final Analytics _analytics;
   late final FirebaseCrashlytics _crashlytics;
+  late final StateController<VirtualPilgrimageUser?> _userState;
+  late final StateController<UserStatus?> _loginState;
   final dateFormatter = DateFormat();
 
   void onChangedNickname(FormModel nickname) {
-    state = state.copyWith(nickname: nickname);
+    state = state.copyWith(nickname: nickname.copyWith(externalErrors: []));
   }
 
   void onChangedBirthday(FormModel birthday) {
-    state = state.copyWith(birthday: birthday);
+    state = state.copyWith(birthday: birthday.copyWith(externalErrors: []));
   }
 
   void onChangedGender(Gender? gender) {
@@ -80,8 +89,8 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
           eventName: AnalyticsEvent.registrationFailed,
           parameters: {
             ...defaultParams,
-            'nicknameValidationError': state.nickname.displayError,
-            'birthdayValidationError': state.birthday.displayError,
+            'nicknameValidationError': state.nickname.displayError ?? '',
+            'birthdayValidationError': state.birthday.displayError ?? '',
           },
         ),
       );
@@ -90,7 +99,7 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
 
     late DateTime birthday;
     try {
-      birthday = dateFormatter.parse(state.birthday.text);
+      birthday = DateTime.parse(state.birthday.text);
     } on FormatException catch (e) {
       state = state.copyWith(
         birthday: state.birthday.addExternalError('生年月日の形式が不正です'),
@@ -100,8 +109,8 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
           eventName: AnalyticsEvent.registrationFailed,
           parameters: {
             ...defaultParams,
-            'nicknameValidationError': state.nickname.displayError,
-            'birthdayValidationError': state.birthday.displayError,
+            'nicknameValidationError': state.nickname.displayError ?? '',
+            'birthdayValidationError': state.birthday.displayError ?? '',
           },
         ),
       );
@@ -114,14 +123,15 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
       nickname: state.nickname.text,
       gender: state.gender.selectedValue,
       birthDay: birthday,
+      userStatus: UserStatus.created,
     );
     final result = await _usecase.execute(updatedUser);
 
     switch (result.status) {
       // ユーザ登録に成功したらユーザの state を更新
       case RegistrationResultStatus.success:
-        _ref.read(userStateProvider.state).state = updatedUser;
-        _ref.read(loginStateProvider.state).state = updatedUser.userStatus;
+        _userState.state = updatedUser;
+        _loginState.state = updatedUser.userStatus;
         break;
       case RegistrationResultStatus.alreadyExistSameNicknameUser:
         state = state.copyWith(
@@ -130,10 +140,7 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
         unawaited(
           _analytics.logEvent(
             eventName: AnalyticsEvent.registrationFailed,
-            parameters: {
-              ...defaultParams,
-              'status': result.status.name,
-            },
+            parameters: {...defaultParams, 'status': result.status.name},
           ),
         );
         unawaited(_crashlytics.recordError(result.error, null));
@@ -142,10 +149,7 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
         unawaited(
           _analytics.logEvent(
             eventName: AnalyticsEvent.registrationFailed,
-            parameters: {
-              ...defaultParams,
-              'status': result.status.name,
-            },
+            parameters: {...defaultParams, 'status': result.status.name},
           ),
         );
         unawaited(_crashlytics.recordError(result.error, null));

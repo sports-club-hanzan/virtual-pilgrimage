@@ -25,7 +25,6 @@ class RegistrationPage extends ConsumerWidget {
   }
 }
 
-// TODO(s14t284): デザインを整える
 class RegistrationPageBody extends StatelessWidget {
   const RegistrationPageBody(this.ref, {super.key});
 
@@ -81,7 +80,7 @@ class RegistrationPageBody extends StatelessWidget {
 
   Widget _nicknameFormSection(RegistrationState state, RegistrationPresenter notifier) {
     return SizedBox(
-      height: 140,
+      height: 150,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -127,13 +126,6 @@ class RegistrationPageBody extends StatelessWidget {
               LengthLimitingTextInputFormatter(8),
             ],
           ),
-          // TextButton(
-          //   onPressed: () => notifier.onPressedDate(context),
-          //   child: Text(
-          //     DateFormat('yyyy/MM/dd').format(state.birthDay),
-          //     style: const TextStyle(color: Colors.black, fontSize: FontSize.largeSize),
-          //   ),
-          // ),
         ],
       ),
     );
@@ -186,10 +178,7 @@ class RegistrationPageBody extends StatelessWidget {
                   ),
                 ),
               // leadingを表示
-              Text(
-                leadingText,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
+              Text(leadingText, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             ],
           ),
         ),

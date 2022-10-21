@@ -54,9 +54,7 @@ class SignInPresenter extends StateNotifier<SignInState> {
       _updateState(user, user.userStatus);
     } on Exception catch (e) {
       _ref.read(loggerProvider).e(e);
-      state = state.copyWith(
-        error: e,
-      );
+      state = state.copyWith(error: e);
       unawaited(
         _analytics.logEvent(
           eventName: AnalyticsEvent.signInWithGoogleFailed,
@@ -106,9 +104,7 @@ class SignInPresenter extends StateNotifier<SignInState> {
           state.password.text,
         );
       }
-      state = state.copyWith(
-        context: _getSignInContext(user),
-      );
+      state = state.copyWith(context: _getSignInContext(user));
       unawaited(_analytics.setUserProperties(user: user));
       _updateState(user, user.userStatus);
     } on SignInException catch (e) {
