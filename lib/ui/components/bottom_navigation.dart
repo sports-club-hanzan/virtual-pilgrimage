@@ -6,6 +6,7 @@ import 'package:virtualpilgrimage/router.dart';
 final pageTypeProvider = StateProvider<PageType>((_) => PageType.home);
 
 enum PageType {
+  temple,
   home,
   profile,
   // ranking,
@@ -22,6 +23,10 @@ class BottomNavigation extends ConsumerWidget {
     final router = ref.read(routerProvider);
 
     final destinations = <Widget>[
+      NavigationDestination(
+        icon: const Icon(Icons.temple_hindu),
+        label: PageType.temple.name,
+      ),
       NavigationDestination(
         icon: const Icon(Icons.map_outlined),
         label: PageType.home.name,
@@ -41,6 +46,9 @@ class BottomNavigation extends ConsumerWidget {
         final pageType = PageType.values[index];
         pageTypeNotifier.state = pageType;
         switch (pageType) {
+          case PageType.temple:
+            router.go(RouterPath.temple);
+            break;
           case PageType.home:
             router.go(RouterPath.home);
             break;

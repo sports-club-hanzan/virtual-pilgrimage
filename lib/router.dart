@@ -9,9 +9,11 @@ import 'package:virtualpilgrimage/ui/pages/home/home_page.dart';
 import 'package:virtualpilgrimage/ui/pages/profile/profile_page.dart';
 import 'package:virtualpilgrimage/ui/pages/registration/registration_page.dart';
 import 'package:virtualpilgrimage/ui/pages/sign_in/sign_in_page.dart';
+import 'package:virtualpilgrimage/ui/pages/temple/temple_page.dart';
 
 extension RouterPath on String {
   static const home = '/';
+  static const temple = '/temple';
   static const signIn = '/signin';
   static const registration = '/registration';
   static const profile = '/profile';
@@ -75,6 +77,15 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>(
         path: RouterPath.edit,
         builder: (BuildContext context, GoRouterState state) {
           return const RegistrationPage();
+        }
+      ),
+      // お寺一覧
+      GoRoute(
+        name: RouterPath.temple,
+        path: RouterPath.temple,
+        pageBuilder: (context, state) {
+          const page = TemplePage();
+          return zeroTransitionPage(page, context);
         },
       ),
     ],
