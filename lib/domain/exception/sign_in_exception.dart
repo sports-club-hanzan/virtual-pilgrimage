@@ -8,6 +8,7 @@ enum SignInExceptionStatus {
   wrongPassword,
   unknownException,
   platformException,
+  userNotFoundException,
 }
 
 class SignInException implements Exception {

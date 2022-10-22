@@ -20,14 +20,14 @@ class SignInState with _$SignInState {
     @Default(SignInStateContext.failed) SignInStateContext context,
     @Default(false) bool isLoading,
     Exception? error,
-    required FormModel email,
+    required FormModel emailOrNickname,
     required FormModel password,
   }) = _SignInState;
 
   const SignInState._();
 
-  bool isValidAll() => email.isValid && password.isValid;
+  bool isValidAll() => emailOrNickname.isValid && password.isValid;
 
   SignInState onSubmit() =>
-      copyWith(email: email.onSubmit(), password: password.onSubmit());
+      copyWith(emailOrNickname: emailOrNickname.onSubmit(), password: password.onSubmit());
 }

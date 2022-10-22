@@ -8,7 +8,6 @@ import 'package:virtualpilgrimage/infrastructure/firebase/firebase_auth_provider
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/logger.dart';
 
-
 final signInUsecaseProvider = Provider.autoDispose<SignInUsecase>(
   (ref) => SignInInteractor(
     ref.watch(emailAndPasswordAuthRepositoryProvider),
@@ -26,6 +25,11 @@ abstract class SignInUsecase {
 
   Future<VirtualPilgrimageUser> signInWithEmailAndPassword(
     String email,
+    String password,
+  );
+
+  Future<VirtualPilgrimageUser> signInWithNicknameAndPassword(
+    String nickname,
     String password,
   );
 

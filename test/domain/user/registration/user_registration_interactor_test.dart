@@ -11,6 +11,7 @@ import 'package:virtualpilgrimage/domain/user/registration/user_registration_use
 import 'package:virtualpilgrimage/domain/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 
+import '../../../helper/default_mock_firebase_crashlytics.dart';
 import '../../../helper/mock.mocks.dart';
 import '../../../helper/provider_container.dart';
 import '../../auth/sign_in_interactor_test.mocks.dart';
@@ -47,8 +48,7 @@ void main() {
         pilgrimage: PilgrimageInfo(id: 'dummyId', updatedAt: CustomizableDateTime.current),
       );
       setUp(() {
-        when(mockFirebaseCrashlytics.log(any)).thenAnswer((_) => Future.value());
-        when(mockFirebaseCrashlytics.recordError(any, null)).thenAnswer((_) => Future.value());
+        defaultMockFirebaseCrashlytics(mockFirebaseCrashlytics);
       });
       group('正常系', () {
         test('ユーザを登録できる', () async {

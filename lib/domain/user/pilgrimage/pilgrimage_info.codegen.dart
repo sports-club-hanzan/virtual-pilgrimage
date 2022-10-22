@@ -21,7 +21,7 @@ class _FirestoreTimestampConverter {
 @freezed
 class PilgrimageInfo with _$PilgrimageInfo {
   const factory PilgrimageInfo({
-    // Firestore のid。
+    // Firestore のid
     // 利用しない値なので、Firebase Authentication から取得できるidを詰める
     required String id,
 

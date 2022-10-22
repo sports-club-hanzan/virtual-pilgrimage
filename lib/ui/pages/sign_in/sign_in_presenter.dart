@@ -19,9 +19,7 @@ class SignInPresenter extends StateNotifier<SignInState> {
   ) : super(
           SignInState(
             context: SignInStateContext.notSignedIn,
-            // MEMO: ニックネームでもログインできるようにしたかったが、
-            // Firebaseの制約で難しそうなので email validation を入れている
-            email: FormModel.of(emailValidator),
+            emailOrNickname: FormModel.of(requiredValidator),
             password: FormModel.of(passwordValidator),
           ),
         ) {
@@ -37,7 +35,9 @@ class SignInPresenter extends StateNotifier<SignInState> {
   late final StateController<UserStatus?> _loginState;
   late final Analytics _analytics;
 
-  void onChangeEmail(FormModel email) => state = state.copyWith(email: email);
+  void onChangeEmail(FormModel emailOrNickname) => state = state.copyWith(
+        emailOrNickname: emailOrNickname,
+      );
 
   void onChangePassword(FormModel password) => state = state.copyWith(password: password);
 
@@ -47,16 +47,14 @@ class SignInPresenter extends StateNotifier<SignInState> {
       final user = await _signInUsecase.signInWithGoogle();
       state = SignInState(
         context: _getSignInContext(user),
-        email: state.email,
+        emailOrNickname: state.emailOrNickname,
         password: state.password,
       );
       unawaited(_analytics.setUserProperties(user: user));
       _updateState(user, user.userStatus);
     } on Exception catch (e) {
       _ref.read(loggerProvider).e(e);
-      state = state.copyWith(
-        error: e,
-      );
+      state = state.copyWith(error: e);
       unawaited(
         _analytics.logEvent(
           eventName: AnalyticsEvent.signInWithGoogleFailed,
@@ -69,7 +67,10 @@ class SignInPresenter extends StateNotifier<SignInState> {
   Future<void> signInWithEmailAndPassword() async {
     await _analytics.logEvent(
       eventName: AnalyticsEvent.signInWithEmailAndPassword,
-      parameters: {'email': state.email.text, 'passwordLength': state.password.text.length},
+      parameters: {
+        'email': state.emailOrNickname.text,
+        'passwordLength': state.password.text.length
+      },
     );
     state = state.onSubmit();
     // バリデーションエラーにかかっている場合はリクエストを送らない
@@ -78,9 +79,9 @@ class SignInPresenter extends StateNotifier<SignInState> {
         _analytics.logEvent(
           eventName: AnalyticsEvent.signInWithEmailAndPasswordFailed,
           parameters: {
-            'email': state.email.text,
+            'email': state.emailOrNickname.text,
             'passwordLength': state.password.text.length,
-            'emailValidationError': state.email.displayError,
+            'emailValidationError': state.emailOrNickname.displayError,
             'passwordValidationError': state.password.displayError,
           },
         ),
@@ -89,13 +90,21 @@ class SignInPresenter extends StateNotifier<SignInState> {
     }
 
     try {
-      final user = await _signInUsecase.signInWithEmailAndPassword(
-        state.email.text,
-        state.password.text,
-      );
-      state = state.copyWith(
-        context: _getSignInContext(user),
-      );
+      late final VirtualPilgrimageUser user;
+      if (emailValidator(state.emailOrNickname.text) != null) {
+        // null じゃないときメールアドレス形式でない ≒ ニックネームのはずなので、ニックネームで検索
+        user = await _signInUsecase.signInWithNicknameAndPassword(
+          state.emailOrNickname.text,
+          state.password.text,
+        );
+      } else {
+        // email validation で null だった場合はメールアドレスの形式を満たしているので、ユーザ情報が存在するか確認
+        user = await _signInUsecase.signInWithEmailAndPassword(
+          state.emailOrNickname.text,
+          state.password.text,
+        );
+      }
+      state = state.copyWith(context: _getSignInContext(user));
       unawaited(_analytics.setUserProperties(user: user));
       _updateState(user, user.userStatus);
     } on SignInException catch (e) {
@@ -103,25 +112,28 @@ class SignInPresenter extends StateNotifier<SignInState> {
         case SignInExceptionStatus.credentialIsNull:
         case SignInExceptionStatus.credentialUserIsNull:
           state = state.copyWith(
-            email: state.email.addExternalError('認証情報が空でした。認証に利用するメールアドレスを見直してください'),
+            emailOrNickname:
+                state.emailOrNickname.addExternalError('認証情報が空でした。認証に利用するメールアドレスを見直してください'),
           );
           break;
         case SignInExceptionStatus.emailOrPasswordIsNull:
           // 設定しているもののvalidationで弾かれるため、ここには分岐しないはず
           state = state.copyWith(
-            email: state.email.addExternalError('メールアドレス・ニックネームまたはパスワードを入力してください'),
+            emailOrNickname:
+                state.emailOrNickname.addExternalError('メールアドレス・ニックネームまたはパスワードを入力してください'),
             password: state.password.addExternalError('メールアドレス・ニックネームまたはパスワードを入力してください'),
           );
           break;
         case SignInExceptionStatus.firebaseException:
         case SignInExceptionStatus.unknownException:
           state = state.copyWith(
-            email: state.email.addExternalError('サインイン時に想定外のエラーが発生しました'),
+            emailOrNickname: state.emailOrNickname.addExternalError('サインイン時に想定外のエラーが発生しました'),
           );
           break;
         case SignInExceptionStatus.platformException:
           state = state.copyWith(
-            email: state.email.addExternalError('お使いの端末のバージョンではアプリを利用できない可能性があります'),
+            emailOrNickname:
+                state.emailOrNickname.addExternalError('お使いの端末のバージョンではアプリを利用できない可能性があります'),
           );
           break;
         case SignInExceptionStatus.wrongPassword:
@@ -137,7 +149,13 @@ class SignInPresenter extends StateNotifier<SignInState> {
           break;
         case SignInExceptionStatus.alreadyUsedEmail:
           state = state.copyWith(
-            email: state.password.addExternalError('そのメールアドレスは既に利用されています'),
+            emailOrNickname: state.password.addExternalError('そのメールアドレスは既に利用されています'),
+          );
+          break;
+        case SignInExceptionStatus.userNotFoundException:
+          state = state.copyWith(
+            emailOrNickname:
+                state.emailOrNickname.addExternalError('そのユーザは存在しません。新規アカウント作成時はメールアドレスで認証してください'),
           );
           break;
       }

@@ -23,6 +23,13 @@ String? emailValidator(String? value) {
   }
 }
 
+String? requiredValidator(String? value) {
+  if (value == null || value.isEmpty) {
+    return '必須項目です';
+  }
+  return null;
+}
+
 String? passwordValidator(String? value) {
   if (value == null || value.isEmpty) {
     return '必須項目です';
@@ -41,6 +48,16 @@ String? nicknameValidator(String? value) {
   } else {
     return null;
   }
+}
+
+String? birthdayValidator(String? value) {
+  if (value == null || value.isEmpty) {
+    return '必須項目です';
+  } else if (value.length != 8) {
+    // 数字しか入力できないフォームになっているので、数字であることをバリデーションする必要はない
+    return '8文字の数字で入力してください';
+  }
+  return null;
 }
 
 // 入力フォームで利用するモデル

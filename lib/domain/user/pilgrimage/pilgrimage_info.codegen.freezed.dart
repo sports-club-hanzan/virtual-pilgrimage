@@ -20,7 +20,7 @@ PilgrimageInfo _$PilgrimageInfoFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$PilgrimageInfo {
-// Firestore のid。
+// Firestore のid
 // 利用しない値なので、Firebase Authentication から取得できるidを詰める
   String get id => throw _privateConstructorUsedError; // 現在のお遍路の番所
 // 1番札所からスタートするのでデフォルト：1
@@ -172,7 +172,7 @@ class _$_PilgrimageInfo extends _PilgrimageInfo {
   factory _$_PilgrimageInfo.fromJson(Map<String, dynamic> json) =>
       _$$_PilgrimageInfoFromJson(json);
 
-// Firestore のid。
+// Firestore のid
 // 利用しない値なので、Firebase Authentication から取得できるidを詰める
   @override
   final String id;
@@ -253,7 +253,7 @@ abstract class _PilgrimageInfo extends PilgrimageInfo {
   factory _PilgrimageInfo.fromJson(Map<String, dynamic> json) =
       _$_PilgrimageInfo.fromJson;
 
-  @override // Firestore のid。
+  @override // Firestore のid
 // 利用しない値なので、Firebase Authentication から取得できるidを詰める
   String get id;
   @override // 現在のお遍路の番所

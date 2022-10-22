@@ -9,11 +9,12 @@ part 'registration_state.codegen.freezed.dart';
 class RegistrationState with _$RegistrationState {
   const factory RegistrationState({
     required FormModel nickname,
+    required FormModel birthday,
     required RadioButtonModel<Gender> gender,
-    required DateTime birthDay,
   }) = _RegistrationState;
 
   const RegistrationState._();
 
-  RegistrationState onSubmit() => copyWith(nickname: nickname.onSubmit());
+  RegistrationState onSubmit() =>
+      copyWith(nickname: nickname.onSubmit(), birthday: birthday.onSubmit());
 }
