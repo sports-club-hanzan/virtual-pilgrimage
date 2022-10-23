@@ -101,7 +101,14 @@ class ProfilePresenter extends StateNotifier<ProfileState> {
     );
   }
 
-  /// ユーザの現在移動している地点のお寺の情報を返す
+  /// ユーザの現在到達している地点のお寺の情報を返す
+  ///
+  /// [user] プロフィールを参照しているユーザ
+  Future<TempleInfo> getNowPilgrimageTempleInfo(VirtualPilgrimageUser user) {
+    return _ref.read(templeRepositoryProvider).getTempleInfo(user.pilgrimage.nowPilgrimageId);
+  }
+
+  /// ユーザが向かっているのお寺の情報を返す
   ///
   /// [user] プロフィールを参照しているユーザ
   Future<TempleInfo> getNextPilgrimageTempleInfo(VirtualPilgrimageUser user) {

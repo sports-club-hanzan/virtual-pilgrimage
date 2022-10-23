@@ -32,6 +32,7 @@ void main() {
             key: key,
             pilgrimageInfo: pilgrimageInfo,
             templeInfo: templeInfo,
+            nextDistance: 10000,
           ),
         ),
       );
