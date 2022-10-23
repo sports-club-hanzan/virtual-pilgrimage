@@ -69,7 +69,7 @@ void main() {
             pilgrimage: user.pilgrimage.copyWith(
               nowPilgrimageId: 2, // 86 -> 87 -> 88(スタート地点がリセットされて1) -> 2
               lap: 2, // 88にたどり着いたのでlap++
-              movingDistance: 1600, // 27000 - (7000 + 17000 + 1400)
+              movingDistance: 1600 + 100, // (27000 - (7000 + 17000 + 1400)) + 100(元々ユーザ情報に保持していた距離)
               updatedAt: CustomizableDateTime.current,
             ),
           ),
@@ -111,7 +111,7 @@ VirtualPilgrimageUser defaultUser() {
     userStatus: UserStatus.created,
     createdAt: DateTime.utc(2022),
     updatedAt: DateTime.utc(2022),
-    pilgrimage: PilgrimageInfo(id: 'dummyId', nowPilgrimageId: 86, updatedAt: DateTime.utc(2022)),
+    pilgrimage: PilgrimageInfo(id: 'dummyId', nowPilgrimageId: 86, updatedAt: DateTime.utc(2022), movingDistance: 100),
   );
 }
 

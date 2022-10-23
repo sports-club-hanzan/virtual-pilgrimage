@@ -78,7 +78,12 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
       );
 
       /// 2. 移動距離 > 次の札所までの距離 の間、で移動距離を減らしながら次に目指すべき札所を導出する
-      movingDistance = healthFromLastUpdatedAt.distance;
+      movingDistance = user.pilgrimage.movingDistance + healthFromLastUpdatedAt.distance;
+      _logger.d(
+        'calc pilgrimage progress '
+        '[movingDistance][$movingDistance]'
+        '[templeDistance][${nowTempleInfo.distance}]',
+      );
       while (movingDistance >= nowTempleInfo.distance) {
         reachedPilgrimageIdList.add(nowTempleInfo.id);
         // 札所までの距離を移動距離から引いて、札所を更新
