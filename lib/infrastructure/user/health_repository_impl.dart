@@ -49,11 +49,15 @@ class HealthRepositoryImpl implements HealthRepository {
     // アプリを登録した時点をヘルスケア情報の集計起点とする
     DateTime fixDt(DateTime dt) => dt.compareTo(createdAt) == 1 ? dt : createdAt;
 
+    _logger.d('collect health info start [targetDateTime][$targetDateTime]');
     try {
       // 今日、昨日1日、過去一週間、過去一ヶ月間、過去全ての3パターンでヘルスケア情報を取得
       // 今日
-      final healthOfToday =
-          await _getHealthData(fixDt(targetDateTime), _lastTime(targetDateTime), types);
+      final healthOfToday = await _getHealthData(
+        DateTime(targetDateTime.year, targetDateTime.month, targetDateTime.day),
+        _lastTime(targetDateTime),
+        types,
+      );
 
       // 昨日
       final toDate = _lastTime(targetDateTime.subtract(const Duration(days: 1)));
