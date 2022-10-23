@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:virtualpilgrimage/analytics.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
+import 'package:virtualpilgrimage/domain/temple/temple_info.codegen.dart';
+import 'package:virtualpilgrimage/domain/temple/temple_repository.dart';
 import 'package:virtualpilgrimage/domain/user/profile/update_user_profile_image_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/user_icon_repository.dart';
 import 'package:virtualpilgrimage/domain/user/user_repository.dart';
@@ -40,6 +42,7 @@ class ProfilePresenter extends StateNotifier<ProfileState> {
 
   final _selectedTabs = ['今日', '昨日', '週間', '月間'];
   final _genderString = ['', '男性', '女性'];
+  final maxTempleNumber = 88;
 
   List<String> tabLabels() => _selectedTabs;
 
@@ -96,5 +99,31 @@ class ProfilePresenter extends StateNotifier<ProfileState> {
     _ref.read(userStateProvider.state).state = updatedUser.copyWith(
       userIcon: bitmap,
     );
+  }
+
+  /// ユーザの現在移動している地点のお寺の情報を返す
+  ///
+  /// [user] プロフィールを参照しているユーザ
+  Future<TempleInfo> getNextPilgrimageTempleInfo(VirtualPilgrimageUser user) {
+    return _ref.read(templeRepositoryProvider).getTempleInfo(
+          _nextPilgrimageNumber(user.pilgrimage.nowPilgrimageId),
+        );
+  }
+
+  /// m単位の数値をkm単位に補正した文字列を返す
+  ///
+  /// [meter] m単位の数値
+  String meterToKilometerString(int meter) {
+    return (meter / 1000).toStringAsFixed(1);
+  }
+
+  /// 次の札所の番号を返す
+  /// 88箇所目に到達していたら 1 を返す
+  /// [pilgrimageId] 現在の札所の番号
+  int _nextPilgrimageNumber(int pilgrimageId) {
+    if (pilgrimageId < maxTempleNumber) {
+      return pilgrimageId + 1;
+    }
+    return 1;
   }
 }
