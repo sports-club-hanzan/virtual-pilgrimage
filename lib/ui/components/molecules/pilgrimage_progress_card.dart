@@ -9,10 +9,12 @@ class PilgrimageProgressCard extends StatelessWidget {
     super.key,
     required this.pilgrimageInfo,
     required this.templeInfo,
+    required this.nextDistance,
   });
 
   final PilgrimageInfo pilgrimageInfo;
   final TempleInfo templeInfo;
+  final int nextDistance;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +61,7 @@ class PilgrimageProgressCard extends StatelessWidget {
           ),
         ),
         Text(
-          templeInfo.name,
+          _templeNameFilter(templeInfo.name),
           style: TextStyle(
             color: Theme.of(context).colorScheme.primary,
             fontSize: FontSize.xlargeSize,
@@ -72,41 +74,55 @@ class PilgrimageProgressCard extends StatelessWidget {
 
   CircularPercentIndicator progressCircularPercentIndicator(BuildContext context) {
     // 移動距離 > 目標距離とならないよう念の為制御
-    final movingDistance = pilgrimageInfo.movingDistance < templeInfo.distance
+    final movingDistance = pilgrimageInfo.movingDistance < nextDistance
         ? pilgrimageInfo.movingDistance
-        : templeInfo.distance;
+        : nextDistance;
     return CircularPercentIndicator(
-      radius: 50,
-      lineWidth: 15,
+      radius: 64,
+      lineWidth: 18,
       backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       progressColor: Theme.of(context).colorScheme.primary,
-      percent: _calcPercent(pilgrimageInfo.movingDistance, templeInfo.distance),
+      percent: _calcPercent(pilgrimageInfo.movingDistance, nextDistance),
+      animation: true,
       center: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            _meterToKilometerString(movingDistance),
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onSecondaryContainer,
-              fontSize: FontSize.mediumSize,
-              fontWeight: FontWeight.bold,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                _meterToKilometerString(movingDistance),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSecondaryContainer,
+                  fontSize: FontSize.largeSize - 4,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              const Text(' km', style: TextStyle(fontWeight: FontWeight.bold)),
+            ],
           ),
           Divider(
             color: Theme.of(context).colorScheme.onSecondaryContainer,
             height: 3,
-            indent: 35,
-            endIndent: 35,
-            thickness: 1.5,
+            indent: 30,
+            endIndent: 30,
+            thickness: 2,
           ),
-          Text(
-            _meterToKilometerString(templeInfo.distance),
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.primary,
-              fontSize: FontSize.mediumSize,
-              fontWeight: FontWeight.bold,
-            ),
-          )
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                _meterToKilometerString(nextDistance),
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onSecondaryContainer,
+                  fontSize: FontSize.largeSize - 4,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              const Text(' km', style: TextStyle(fontWeight: FontWeight.bold)),
+            ],
+          ),
         ],
       ),
     );
@@ -126,5 +142,15 @@ class PilgrimageProgressCard extends StatelessWidget {
       percent = 1;
     }
     return percent;
+  }
+
+  /// お寺の表示名をUIに合わせる
+  /// （通称）のような名称をもつデータがあるため、このメソッドで通称を表示しないようにフィルタリング
+  /// ex. 【24番札所】最御崎寺（東寺）
+  String _templeNameFilter(String templeName) {
+    if (templeName.contains('（')) {
+      return templeName.replaceRange(templeName.indexOf('（'), templeName.length, '');
+    }
+    return templeName;
   }
 }

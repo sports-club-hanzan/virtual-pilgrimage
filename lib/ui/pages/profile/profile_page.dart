@@ -218,18 +218,26 @@ class _ProfilePageBody extends StatelessWidget {
 
   Widget _pilgrimageProgress(BuildContext context, VirtualPilgrimageUser user) {
     final notifier = ref.read(profileProvider.notifier);
-    return FutureBuilder<TempleInfo>(
-      future: notifier.getNextPilgrimageTempleInfo(user),
-      builder: (BuildContext context, AsyncSnapshot<TempleInfo> snapshot) {
+    return FutureBuilder<List<TempleInfo>>(
+      // 次の札所への距離は到達している札所が持っているデータ構造となっているため、2つ取得する必要がある
+      // 実態はキャッシュしてあるmapからデータを引っ張ってきているだけ
+      future: () async {
+        final now = await notifier.getNowPilgrimageTempleInfo(user);
+        final next = await notifier.getNextPilgrimageTempleInfo(user);
+        return [now, next];
+      }(),
+      builder: (BuildContext context, AsyncSnapshot<List<TempleInfo>> snapshot) {
         if (snapshot.hasData) {
           final data = snapshot.requireData;
           return SizedBox(
-            height: 160,
+            height: 170,
+            width: MediaQuery.of(context).size.width / 10 * 9,
             child: Padding(
               padding: const EdgeInsets.only(bottom: 12),
               child: PilgrimageProgressCard(
                 pilgrimageInfo: user.pilgrimage,
-                templeInfo: data,
+                templeInfo: data[1],
+                nextDistance: data[0].distance,
               ),
             ),
           );
