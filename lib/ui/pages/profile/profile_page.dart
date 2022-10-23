@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
+import 'package:virtualpilgrimage/domain/temple/temple_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
+import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/router.dart';
 import 'package:virtualpilgrimage/ui/components/bottom_navigation.dart';
+import 'package:virtualpilgrimage/ui/components/molecules/pilgrimage_progress_card.dart';
 import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
 import 'package:virtualpilgrimage/ui/components/profile_icon.dart';
 import 'package:virtualpilgrimage/ui/pages/profile/components/profile_health_card.dart';
@@ -30,8 +33,8 @@ class ProfilePage extends ConsumerWidget {
     if (userState == null) {
       ref.read(routerProvider).go(RouterPath.signIn);
     }
-
     final user = ref.watch(profileUserProvider(userId));
+
     return Scaffold(
       appBar: const MyAppBar(),
       body: SafeArea(
@@ -44,11 +47,12 @@ class ProfilePage extends ConsumerWidget {
             // TODO(s14t284): 他ユーザの情報を参照できるようになったら　null の場合の UI も実装する
             return const Text('そのユーザは存在しませんでした');
           },
-          error: (e, _) {
-            return Text(e.toString());
+          error: (e, s) {
+            ref.read(firebaseCrashlyticsProvider).recordError(e, s);
+            return const Text('ユーザ情報の取得に失敗しました');
           },
           loading: () {
-            return const Text('読み込み中');
+            return const CircularProgressIndicator();
           },
         ),
       ),
@@ -122,7 +126,7 @@ class _ProfilePageBody extends StatelessWidget {
   Widget _userProfile(BuildContext context) {
     final notifier = ref.read(profileProvider.notifier);
     return SizedBox(
-      height: 100,
+      height: 110,
       child: Column(
         children: [
           Padding(
@@ -148,10 +152,6 @@ class _ProfilePageBody extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  Widget _pilgrimageProgress(BuildContext context, VirtualPilgrimageUser user) {
-    return Text('TODO');
   }
 
   Widget _healthCards(BuildContext context, VirtualPilgrimageUser user) {
@@ -213,6 +213,30 @@ class _ProfilePageBody extends StatelessWidget {
             Row(children: healthCards[state.selectedTabIndex]),
         ],
       ),
+    );
+  }
+
+  Widget _pilgrimageProgress(BuildContext context, VirtualPilgrimageUser user) {
+    final notifier = ref.read(profileProvider.notifier);
+    return FutureBuilder<TempleInfo>(
+      future: notifier.getNextPilgrimageTempleInfo(user),
+      builder: (BuildContext context, AsyncSnapshot<TempleInfo> snapshot) {
+        if (snapshot.hasData) {
+          final data = snapshot.requireData;
+          return SizedBox(
+            height: 160,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: PilgrimageProgressCard(
+                pilgrimageInfo: user.pilgrimage,
+                templeInfo: data,
+              ),
+            ),
+          );
+        }
+        // TODO(s14t284): 取得できなかった場合のUIを改善する
+        return const Text('お遍路の進捗状況が取得できませんでした');
+      },
     );
   }
 }
