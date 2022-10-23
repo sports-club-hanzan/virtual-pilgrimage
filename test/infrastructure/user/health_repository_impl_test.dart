@@ -48,10 +48,11 @@ void main() {
       when(mockHealthFactory.requestAuthorization(any)).thenAnswer((_) => Future.value(true));
 
       /// 今日
+      /// 今日の集計だけ対象時間からではなく、当日の00:00:00-23:59:59まで集計
       when(
         mockHealthFactory.getHealthDataFromTypes(
-          targetDate,
-          targetToDate.add(const Duration(days: 1)),
+          DateTime(2022, 9, 19),
+          DateTime(2022, 9, 19, 23, 59, 59, 999, 999),
           types,
         ),
       ).thenAnswer(
@@ -191,8 +192,8 @@ void main() {
           /// 今日
           when(
             mockHealthFactory.getHealthDataFromTypes(
-              targetDate,
-              targetToDate.add(const Duration(days: 1)),
+              DateTime(2022, 9, 19),
+              DateTime(2022, 9, 19, 23, 59, 59, 999, 999),
               iosTypes,
             ),
           ).thenAnswer(
@@ -264,10 +265,27 @@ void main() {
       });
     });
 
-    group('getHealthInfo', () {
+    group('getHealthByPeriod', () {
       test('正常系', () async {
         // given
         const expected = HealthByPeriod(steps: 427, distance: 670, burnedCalorie: 468);
+
+        /// 今日
+        when(
+          mockHealthFactory.getHealthDataFromTypes(
+            targetDate,
+            DateTime(2022, 9, 19, 23, 59, 59, 999, 999),
+            types,
+          ),
+        ).thenAnswer(
+          (_) => Future.value([
+                // @formatter:off
+            HealthDataPoint(NumericHealthValue(468), HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataUnit.KILOCALORIE, DateTime(2022, 9, 12), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
+            HealthDataPoint(NumericHealthValue(427), HealthDataType.STEPS, HealthDataUnit.COUNT, DateTime(2022, 9, 12), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
+            HealthDataPoint(NumericHealthValue(670), HealthDataType.DISTANCE_DELTA, HealthDataUnit.METER, DateTime(2022, 9, 12), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
+            // @formatter:on
+          ]),
+        );
 
         // when
         final actual = await target.getHealthByPeriod(
