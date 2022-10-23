@@ -70,55 +70,91 @@ class _ProfilePageBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final notifier = ref.read(profileProvider.notifier);
     return ListView(
       children: [
-        const SizedBox(
-          height: 24,
-        ),
-
-        /// ユーザアイコン
-        Center(
-          child: Stack(
-            children: [
-              ProfileIconWidget(
-                iconUrl: user.userIconUrl,
-                size: 128,
-                onTap: notifier.updateProfileImage,
-              ),
-              if (canEdit)
-                Positioned(
-                  bottom: 0,
-                  right: 4,
-                  child: _buildUserIconEditButton(context),
-                ),
-            ],
-          ),
-        ),
-        const SizedBox(
-          height: 24,
-        ),
-
-        /// ユーザの基礎情報
-        // TODO(s14t284): お遍路の進捗状況も表示する
-        _buildProfile(context, user),
+        _userIcon(context),
+        _userProfile(context),
+        _healthCards(context, user),
+        _pilgrimageProgress(context, user),
       ],
     );
   }
 
-  Widget _buildUserIconEditButton(BuildContext context) => ClipOval(
-        child: Container(
-          padding: const EdgeInsets.all(8),
-          color: Theme.of(context).primaryColor,
-          child: const Icon(
-            Icons.edit,
-            color: ColorStyle.white,
-            size: 20,
-          ),
+  Widget _userIcon(BuildContext context) {
+    final notifier = ref.read(profileProvider.notifier);
+    return Center(
+      child: SizedBox(
+        height: 150,
+        width: 130,
+        child: Stack(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 24),
+              child: ProfileIconWidget(
+                iconUrl: user.userIconUrl,
+                size: 128,
+                onTap: notifier.updateProfileImage,
+              ),
+            ),
+            // ユーザアイコンの編集ボタン
+            if (canEdit)
+              Positioned(
+                bottom: 0,
+                right: 4,
+                child: ClipOval(
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    color: Theme.of(context).primaryColor,
+                    child: const Icon(
+                      Icons.edit,
+                      color: ColorStyle.white,
+                      size: 20,
+                    ),
+                  ),
+                ),
+              ),
+          ],
         ),
-      );
+      ),
+    );
+  }
 
-  Widget _buildProfile(BuildContext context, VirtualPilgrimageUser user) {
+  Widget _userProfile(BuildContext context) {
+    final notifier = ref.read(profileProvider.notifier);
+    return SizedBox(
+      height: 100,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 12, bottom: 0),
+            child: Text(
+              '${user.nickname} さん',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: FontSize.largeSize),
+            ),
+          ),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '${notifier.getAgeString(user.birthDay)} ${notifier.getGenderString(user.gender)}',
+                style: const TextStyle(
+                  fontSize: FontSize.largeSize,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _pilgrimageProgress(BuildContext context, VirtualPilgrimageUser user) {
+    return Text('TODO');
+  }
+
+  Widget _healthCards(BuildContext context, VirtualPilgrimageUser user) {
     final notifier = ref.read(profileProvider.notifier);
     final state = ref.watch(profileProvider);
     final health = user.health;
@@ -136,8 +172,8 @@ class _ProfilePageBody extends StatelessWidget {
           ),
           ProfileHealthCard(
             title: '移動距離',
-            value: h.distance.toString(),
-            unit: 'm',
+            value: notifier.meterToKilometerString(h.distance),
+            unit: 'km',
             backgroundColor: Colors.lightBlue,
             icon: Icons.map_outlined,
           ),
@@ -151,48 +187,32 @@ class _ProfilePageBody extends StatelessWidget {
         ]);
       }
     }
-    return Column(
-      children: [
-        Text(
-          '${user.nickname} さん',
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: FontSize.largeSize),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              '${notifier.getAgeString(user.birthDay)} ${notifier.getGenderString(user.gender)}',
-              style: const TextStyle(
-                fontSize: FontSize.largeSize,
-                fontWeight: FontWeight.bold,
-              ),
+    return SizedBox(
+      height: 200,
+      child: Column(
+        children: [
+          FlutterToggleTab(
+            width: 60,
+            labels: notifier.tabLabels(),
+            selectedLabelIndex: (index) {
+              notifier.setSelectedTabIndex(index);
+            },
+            selectedTextStyle: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: ColorStyle.white,
             ),
-          ],
-        ),
-        const SizedBox(height: 24),
-        FlutterToggleTab(
-          width: 60,
-          labels: notifier.tabLabels(),
-          selectedLabelIndex: (index) {
-            notifier.setSelectedTabIndex(index);
-          },
-          selectedTextStyle: const TextStyle(
-            fontWeight: FontWeight.bold,
-            color: ColorStyle.white,
+            unSelectedTextStyle: const TextStyle(
+              color: Colors.black87,
+              fontWeight: FontWeight.w400,
+            ),
+            selectedIndex: state.selectedTabIndex,
           ),
-          unSelectedTextStyle: const TextStyle(
-            color: Colors.black87,
-            fontWeight: FontWeight.w400,
-          ),
-          selectedIndex: state.selectedTabIndex,
-        ),
-        const SizedBox(height: 12),
-        // クラッシュ対策のため、全てのヘルスチェック情報を取得できているときに表示
-        if (healthCards.length == notifier.tabLabels().length)
-          Row(children: healthCards[state.selectedTabIndex]),
-      ],
+          const SizedBox(height: 12),
+          // クラッシュ対策のため、全てのヘルスチェック情報を取得できているときに表示
+          if (healthCards.length == notifier.tabLabels().length)
+            Row(children: healthCards[state.selectedTabIndex]),
+        ],
+      ),
     );
   }
 }
