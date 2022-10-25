@@ -37,7 +37,7 @@ class HomePageBody extends StatelessWidget {
       child: SafeArea(
         child: ListView(
           children: [
-            GoogleMapView(_ref),
+            const GoogleMapView(),
             // TODO(s14t284): 開発用に残しているだけなので削除予定
             if (kDebugMode)
               Column(
