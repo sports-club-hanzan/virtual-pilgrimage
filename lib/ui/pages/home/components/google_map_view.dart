@@ -9,12 +9,6 @@ import 'package:virtualpilgrimage/ui/pages/home/home_presenter.dart';
 class GoogleMapView extends ConsumerWidget {
   const GoogleMapView({super.key});
 
-  // FIXME: 一時的に用意しているだけ
-  static const initialCameraPosition = CameraPosition(
-    target: LatLng(34.1597388, 134.4675072),
-    zoom: 10,
-  );
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(homeProvider);
@@ -30,7 +24,7 @@ class GoogleMapView extends ConsumerWidget {
         tiltGesturesEnabled: false,
         scrollGesturesEnabled: true,
         mapType: MapType.normal,
-        initialCameraPosition: initialCameraPosition,
+        initialCameraPosition: state.initialCameraPosition,
         markers: state.markers,
         polylines: state.polylines,
         onMapCreated: notifier.onMapCreated,

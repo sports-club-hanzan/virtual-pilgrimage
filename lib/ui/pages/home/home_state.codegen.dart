@@ -4,10 +4,18 @@ import 'package:virtualpilgrimage/model/google_map_model.codegen.dart';
 
 part 'home_state.codegen.freezed.dart';
 
+/// MAPの中心地点の初期値
+/// 四国の中心地点: https://ja.wikipedia.org/wiki/%E5%9B%9B%E5%9B%BD
+const _initialCameraPosition = CameraPosition(
+  target: LatLng(33.3339, 133.22565),
+  zoom: 7.5,
+);
+
 @freezed
 class HomeState with _$HomeState {
   const factory HomeState({
     required GoogleMapModel googleMap,
+    required CameraPosition initialCameraPosition,
     @Default({}) Set<Marker> markers,
     @Default({}) Set<Polyline> polylines,
   }) = _HomeState;
@@ -19,5 +27,8 @@ class HomeState with _$HomeState {
   void onGoogleMapCreated(GoogleMapController controller) => googleMap.onMapCreated(controller);
 
   // ignore: prefer_constructors_over_static_methods
-  static HomeState initialize() => HomeState(googleMap: GoogleMapModel.initialize());
+  static HomeState initialize() => HomeState(
+        googleMap: GoogleMapModel.initialize(),
+        initialCameraPosition: _initialCameraPosition,
+      );
 }
