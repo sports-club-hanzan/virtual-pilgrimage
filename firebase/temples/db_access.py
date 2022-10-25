@@ -13,7 +13,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--key_path", required=True)
     parser.add_argument("--data_path",required=True)
-    
+
     # 引数の読み込み
     args = parser.parse_args()
 
@@ -23,7 +23,7 @@ def main():
     """
     firestoreデータにアクセス
     """
-    
+
     # 秘密鍵によるfirebaseに認証を行う
     cred = credentials.Certificate(key_path)
     firebase_admin.initialize_app(cred)
@@ -34,10 +34,10 @@ def main():
     """
     四国八十八か所のお寺の情報をcsvから読み込む
     """
-    
+
     # pandasのDataFrameでcsvからデータを読み込む
     df = pd.read_csv(data_path,encoding="utf-8")
-    
+
     # データの結びつけ
     """
     - address:住所
@@ -48,6 +48,7 @@ def main():
     - stamp_images:スタンプの画像パス
     - name:名前
     - prefecture:住所[:3]
+    - encoded_points:エンコードした札所間の経路情報
     """
     # 各種リストの作成
     address = df["住所"].to_list()
@@ -60,11 +61,12 @@ def main():
     image_path = make_image_path(ids)
     stamp_image_path = make_stamp_image_path(ids)
     prefecture = [add[:3] for add in address]
+    encoded_points = df["経路情報（エンコード）"].to_list()
 
     """
     firestoreにデータを書き込む
     """
-    
+
     for i,id_ in enumerate(ids):
         # firestoreのtemplesのid_(1,2,3,4,...)にアクセス
         ref = db.collection(u'temples').document(str(id_))
@@ -77,7 +79,8 @@ def main():
             u'images':image_path[i],
             u'stamp_images':stamp_image_path[i],
             u'name':name[i],
-            u'prefecture':prefecture[i]
+            u'prefecture':prefecture[i],
+            u'encodedPoints':str(encoded_points[i]),
         })
 
     return
@@ -88,11 +91,11 @@ def main():
 # 経度、緯度のデータをもとにGeoPoint型のデータを作成する関数の作成
 def make_geopoint(geo_n,geo_t):
     geoPoint = []
-    
+
     # GeoPoint型のデータの作成
     for n,t in zip(geo_n,geo_t):
         geoPoint.append(GeoPoint(n,t))
-    
+
     return geoPoint
 
 
