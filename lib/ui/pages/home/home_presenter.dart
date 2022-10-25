@@ -121,15 +121,9 @@ class HomePresenter extends StateNotifier<HomeState> {
   /// map 上で2点間の距離を可視化するための経路を取得するメソッド
   Future<void> updatePolyline(VirtualPilgrimageUser user) async {
     // 現在地点から適当なお寺への経路の可視化
-    final originTempleInfo = await _templeRepository.getTempleInfo(user.pilgrimage.nowPilgrimageId);
-    final destTempleInfo = await _templeRepository.getTempleInfo(
-      user.pilgrimage.nowPilgrimageId + 1,
-    );
+    final templeInfo = await _templeRepository.getTempleInfo(user.pilgrimage.nowPilgrimageId);
 
-    final lines = await _directionPolylineRepository.getPolylines(
-      origin: LatLng(originTempleInfo.geoPoint.latitude, originTempleInfo.geoPoint.longitude),
-      destination: LatLng(destTempleInfo.geoPoint.latitude, destTempleInfo.geoPoint.longitude),
-    );
+    final lines = _directionPolylineRepository.getPolylinesFromEncodedPoints(encodedPoints: templeInfo.encodedPoints);
     final polylines = {
       Polyline(
         polylineId: const PolylineId('id'),

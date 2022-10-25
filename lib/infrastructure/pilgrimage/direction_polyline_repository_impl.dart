@@ -68,7 +68,15 @@ class DirectionPolylineRepositoryImpl implements DirectionPolylineRepository {
     }
 
     _logger.d(dpResp);
-    return decodePolyline(dpResp.routes.first.overviewPolyline.points)
+    return getPolylinesFromEncodedPoints(encodedPoints: dpResp.routes.first.overviewPolyline.points);
+  }
+
+  /// 経路を導出して返す
+  ///
+  /// [encodedPoints] 経路文字列
+  @override
+  List<LatLng> getPolylinesFromEncodedPoints({required String encodedPoints}) {
+    return decodePolyline(encodedPoints)
         .map((e) => LatLng(e.first.toDouble(), e.last.toDouble()))
         .toList();
   }
