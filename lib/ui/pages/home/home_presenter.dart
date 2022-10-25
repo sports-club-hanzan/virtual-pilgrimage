@@ -9,8 +9,6 @@ import 'package:virtualpilgrimage/analytics.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/update_pilgrimage_progress_result.codegen.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/update_pilgrimage_progress_usecase.dart';
 import 'package:virtualpilgrimage/domain/temple/temple_repository.dart';
-import 'package:virtualpilgrimage/domain/user/health/update_health_result.dart';
-import 'package:virtualpilgrimage/domain/user/health/update_health_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/logger.dart';
@@ -24,7 +22,6 @@ final homeProvider = StateNotifierProvider.autoDispose<HomePresenter, HomeState>
 class HomePresenter extends StateNotifier<HomeState> {
   HomePresenter(this._ref) : super(HomeState.initialize()) {
     _updatePilgrimageProgressUsecase = _ref.read(updatePilgrimageProgressUsecaseProvider);
-    _updateHealthUsecase = _ref.read(updateHealthUsecaseProvider);
     _analytics = _ref.read(analyticsProvider);
     _crashlytics = _ref.read(firebaseCrashlyticsProvider);
     _templeRepository = _ref.read(templeRepositoryProvider);
@@ -33,7 +30,6 @@ class HomePresenter extends StateNotifier<HomeState> {
 
   final Ref _ref;
   late final UpdatePilgrimageProgressUsecase _updatePilgrimageProgressUsecase;
-  late final UpdateHealthUsecase _updateHealthUsecase;
   late final Analytics _analytics;
   late final FirebaseCrashlytics _crashlytics;
   late final TempleRepository _templeRepository;
@@ -44,6 +40,8 @@ class HomePresenter extends StateNotifier<HomeState> {
   /// 初期化処理
   /// 初期化時にユーザのヘルスケア情報を読み取ってDBに書き込む
   Future<void> initialize() async {
+    // ログインした時点でお寺の情報を取得する。初回のみこの処理で時間がかかる
+    unawaited(_templeRepository.getTempleInfoAll());
     unawaited(_analytics.logEvent(eventName: AnalyticsEvent.initializeHomePageAndGetHealth));
 
     final loginState = _ref.read(loginStateProvider);
@@ -70,20 +68,14 @@ class HomePresenter extends StateNotifier<HomeState> {
     }
 
     try {
-      // 以下は処理順は重要ではないため、非同期に並列で処理して UI への反映を早める
-      await Future.wait(<Future<void>>[
-        _updateHealthInfo(user),
-        // ログインした時点でお寺の情報を取得する
-        _templeRepository.getTempleInfoAll(),
-      ]);
-
       final logicResult = await _updatePilgrimageProgressUsecase.execute(user.id);
       if (logicResult.status != UpdatePilgrimageProgressResultStatus.success) {
         await _crashlytics.recordError(
           logicResult.error,
           null,
-          reason:
-              'failed to update pilgrimage progress [status][${logicResult.status}][logicResult][${logicResult}]',
+          reason: 'failed to update pilgrimage progress '
+              '[status][${logicResult.status}]'
+              '[logicResult][$logicResult]',
         );
       }
       // TODO(s14t284): この中に今回到達したお寺の情報が含まれているのでUIに利用したりローカルpush通知に利用したりする
@@ -91,26 +83,13 @@ class HomePresenter extends StateNotifier<HomeState> {
       // ローカルpush通知：ここで実装するのではなく、バックグラウンド処理で利用する
       // ignore: avoid_print
       print(logicResult.reachedPilgrimageIdList);
-      if (logicResult.updatedUser != null) {
-        await setMarkerAndPolylines(
-          logicResult.updatedUser!,
-          logicResult,
-        );
-        _ref.read(userStateProvider.notifier).state = logicResult.updatedUser;
+      final updatedUser = logicResult.updatedUser;
+      if (updatedUser != null) {
+        await setMarkerAndPolylines(updatedUser, logicResult);
+        _ref.read(userStateProvider.notifier).state = updatedUser;
       }
     } on Exception catch (e) {
       unawaited(_crashlytics.recordError(e, null));
-    }
-  }
-
-  Future<void> _updateHealthInfo(VirtualPilgrimageUser user) async {
-    final result = await _updateHealthUsecase.execute(user);
-    if (result.status != UpdateHealthStatus.success) {
-      await _crashlytics.recordError(
-        result.error,
-        null,
-        reason: 'failed to record health information [status][${result.status}]',
-      );
     }
   }
 
