@@ -4,18 +4,15 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:maps_toolkit/maps_toolkit.dart' as maps;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:virtualpilgrimage/analytics.dart';
-import 'package:virtualpilgrimage/domain/pilgrimage/direction_polyline_repository.dart';
-import 'package:virtualpilgrimage/domain/pilgrimage/update_pilgrimage_progress_result.dart';
+import 'package:virtualpilgrimage/domain/pilgrimage/update_pilgrimage_progress_result.codegen.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/update_pilgrimage_progress_usecase.dart';
 import 'package:virtualpilgrimage/domain/temple/temple_repository.dart';
 import 'package:virtualpilgrimage/domain/user/health/update_health_result.dart';
 import 'package:virtualpilgrimage/domain/user/health/update_health_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
-import 'package:virtualpilgrimage/infrastructure/pilgrimage/direction_polyline_repository_impl.dart';
 import 'package:virtualpilgrimage/logger.dart';
 
 import 'home_state.codegen.dart';
@@ -28,7 +25,6 @@ class HomePresenter extends StateNotifier<HomeState> {
   HomePresenter(this._ref) : super(HomeState.initialize()) {
     _updatePilgrimageProgressUsecase = _ref.read(updatePilgrimageProgressUsecaseProvider);
     _updateHealthUsecase = _ref.read(updateHealthUsecaseProvider);
-    _directionPolylineRepository = _ref.read(directionPolylineRepositoryPresenter);
     _analytics = _ref.read(analyticsProvider);
     _crashlytics = _ref.read(firebaseCrashlyticsProvider);
     _templeRepository = _ref.read(templeRepositoryProvider);
@@ -38,21 +34,24 @@ class HomePresenter extends StateNotifier<HomeState> {
   final Ref _ref;
   late final UpdatePilgrimageProgressUsecase _updatePilgrimageProgressUsecase;
   late final UpdateHealthUsecase _updateHealthUsecase;
-  late final DirectionPolylineRepositoryImpl _directionPolylineRepository;
   late final Analytics _analytics;
   late final FirebaseCrashlytics _crashlytics;
   late final TempleRepository _templeRepository;
+
+  // 札所の数
+  static const maxTempleNumber = 88;
 
   /// 初期化処理
   /// 初期化時にユーザのヘルスケア情報を読み取ってDBに書き込む
   Future<void> initialize() async {
     unawaited(_analytics.logEvent(eventName: AnalyticsEvent.initializeHomePageAndGetHealth));
 
+    final loginState = _ref.read(loginStateProvider);
     final user = _ref.read(userStateProvider);
     // ログインしていない状態で Home Page に遷移してきても
     // 情報を描画できずどうしようもないので crash させる
-    if (user == null) {
-      const reason = 'user must be login in home page';
+    if (loginState != UserStatus.created || user == null) {
+      final reason = 'user must be login in home page [loginState][$loginState][user][$user]';
       await _crashlytics.recordError(ArgumentError(reason), null, reason: reason);
       _crashlytics.crash();
       return;
@@ -73,41 +72,38 @@ class HomePresenter extends StateNotifier<HomeState> {
     try {
       // 以下は処理順は重要ではないため、非同期に並列で処理して UI への反映を早める
       await Future.wait(<Future<void>>[
-        updateHealthInfo(user),
+        _updateHealthInfo(user),
         // ログインした時点でお寺の情報を取得する
         _templeRepository.getTempleInfoAll(),
       ]);
-      final pilgrimageProgressResult = await updatePilgrimageProgress(user);
-      // TODO(s14t284): ロジックが突貫工事化し、presenterのなかにビジネスロジックまで含まれているので整理する
+
+      final logicResult = await _updatePilgrimageProgressUsecase.execute(user.id);
+      if (logicResult.status != UpdatePilgrimageProgressResultStatus.success) {
+        await _crashlytics.recordError(
+          logicResult.error,
+          null,
+          reason:
+              'failed to update pilgrimage progress [status][${logicResult.status}][logicResult][${logicResult}]',
+        );
+      }
       // TODO(s14t284): この中に今回到達したお寺の情報が含まれているのでUIに利用したりローカルpush通知に利用したりする
       // UIに使う例：到達した札所のスタンプを押すアニメーションなど
       // ローカルpush通知：ここで実装するのではなく、バックグラウンド処理で利用する
       // ignore: avoid_print
-      print(pilgrimageProgressResult.reachedPilgrimageIdList);
-      if (pilgrimageProgressResult.updatedUser != null) {
-        await setUserMarker(pilgrimageProgressResult.updatedUser!);
-        _ref.read(userStateProvider.notifier).state = pilgrimageProgressResult.updatedUser;
+      print(logicResult.reachedPilgrimageIdList);
+      if (logicResult.updatedUser != null) {
+        await setMarkerAndPolylines(
+          logicResult.updatedUser!,
+          logicResult,
+        );
+        _ref.read(userStateProvider.notifier).state = logicResult.updatedUser;
       }
     } on Exception catch (e) {
       unawaited(_crashlytics.recordError(e, null));
     }
   }
 
-  Future<UpdatePilgrimageProgressResult> updatePilgrimageProgress(
-    VirtualPilgrimageUser user,
-  ) async {
-    final result = await _updatePilgrimageProgressUsecase.execute(user.id);
-    if (result.status != UpdatePilgrimageProgressResultStatus.success) {
-      await _crashlytics.recordError(
-        result.error,
-        null,
-        reason: 'failed to update pilgrimage progress [status][${result.status}]',
-      );
-    }
-    return result;
-  }
-
-  Future<void> updateHealthInfo(VirtualPilgrimageUser user) async {
+  Future<void> _updateHealthInfo(VirtualPilgrimageUser user) async {
     final result = await _updateHealthUsecase.execute(user);
     if (result.status != UpdateHealthStatus.success) {
       await _crashlytics.recordError(
@@ -118,62 +114,47 @@ class HomePresenter extends StateNotifier<HomeState> {
     }
   }
 
-  /// map 上で2点間の距離を可視化するための経路を取得するメソッド
-  Future<void> updatePolyline(VirtualPilgrimageUser user) async {
-    // 現在地点から適当なお寺への経路の可視化
-    final templeInfo = await _templeRepository.getTempleInfo(user.pilgrimage.nowPilgrimageId);
+  /// ユーザ情報を利用して GoogleMap 上に描画するユーザ情報のマーカーを追加
+  Future<void> setMarkerAndPolylines(
+    VirtualPilgrimageUser user,
+    UpdatePilgrimageProgressResult logicResult,
+  ) async {
+    final nextPilgrimage = await _templeRepository
+        .getTempleInfo(_nextPilgrimageNumber(user.pilgrimage.nowPilgrimageId));
+    final markers = {
+      ...state.markers,
+      if (logicResult.virtualPosition != null)
+        Marker(
+          markerId: MarkerId(user.nickname),
+          position: logicResult.virtualPosition!,
+          icon: user.userIcon,
+          infoWindow: InfoWindow(title: '現在: ${user.health?.totalSteps ?? 0}歩'),
+        )
+    };
 
-    final lines = _directionPolylineRepository.getPolylinesFromEncodedPoints(encodedPoints: templeInfo.encodedPoints);
     final polylines = {
       Polyline(
-        polylineId: const PolylineId('id'),
-        points: lines,
+        polylineId: PolylineId('${nextPilgrimage.id}番札所:${nextPilgrimage.name}の経路'),
+        points: logicResult.virtualPolylineLatLngs,
         color: Colors.pinkAccent,
         width: 5,
       )
     };
-    state = state.copyWith(polylines: polylines);
-  }
 
-  /// ユーザ情報を利用して GoogleMap 上に描画するユーザ情報のマーカーを追加
-  Future<void> setUserMarker(VirtualPilgrimageUser user) async {
-    await updatePolyline(user);
-    final position = computePosition(state.polylines.first.points, user.pilgrimage.movingDistance);
-    final markers = {
-      ...state.markers,
-      Marker(
-        markerId: MarkerId(user.nickname),
-        position: position,
-        icon: user.userIcon,
-        infoWindow: InfoWindow(title: '現在: ${user.health?.totalSteps ?? 0}歩'),
-      )
-    };
-
-    state = state.copyWith(markers: markers);
+    state = state.copyWith(markers: markers, polylines: polylines);
   }
 
   /// GoogleMap の描画が完了した時に呼ばれる
   /// [controller] GoogleMap の描画に使われるインスタンス
   void onMapCreated(GoogleMapController controller) => state.onGoogleMapCreated(controller);
 
-  /// 経路情報（リスト）から現在地を算出する
-  LatLng computePosition(List<LatLng> latlngs, num meter) {
-    num distance = meter;
-    for (int i = 0; i < latlngs.length - 1; i++) {
-      final from = maps.LatLng(latlngs[i].latitude, latlngs[i].longitude);
-      final to = maps.LatLng(latlngs[i + 1].latitude, latlngs[i + 1].longitude);
-      final num d = maps.SphericalUtil.computeDistanceBetween(from, to);
-      if (distance < d) {
-        // fromからtoの間にいる場合は割合で表示する
-        final latlng = maps.SphericalUtil.interpolate(from, to, distance / d);
-        return LatLng(latlng.latitude, latlng.longitude);
-      } else {
-        // fromからtoの距離をdistanceが超える場合は次の区間で計算する
-        distance = distance - d;
-      }
+  /// 次の札所の番号を返す
+  /// 88箇所目に到達していたら 1 を返す
+  /// [pilgrimageId] 現在の札所の番号
+  int _nextPilgrimageNumber(int pilgrimageId) {
+    if (pilgrimageId < maxTempleNumber) {
+      return pilgrimageId + 1;
     }
-
-    // 経路リストを超える場合は次のお寺にほぼ到着している
-    return latlngs.last;
+    return 1;
   }
 }

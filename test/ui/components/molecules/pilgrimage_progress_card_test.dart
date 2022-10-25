@@ -18,6 +18,7 @@ void main() {
       address: '徳島県海部郡日和佐町奥河内寺前２８５－１',
       distance: 75400,
       geoPoint: GeoPoint(33.73244444, 134.5274722),
+      encodedPoints: '',
     );
     final pilgrimageInfo = PilgrimageInfo(
       id: 'dummy',
