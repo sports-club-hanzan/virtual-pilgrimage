@@ -1,6 +1,9 @@
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_polyline_algorithm/google_polyline_algorithm.dart';
 import 'package:logger/logger.dart';
+import 'package:maps_toolkit/maps_toolkit.dart' as maps;
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
-import 'package:virtualpilgrimage/domain/pilgrimage/update_pilgrimage_progress_result.dart';
+import 'package:virtualpilgrimage/domain/pilgrimage/update_pilgrimage_progress_result.codegen.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/update_pilgrimage_progress_usecase.dart';
 import 'package:virtualpilgrimage/domain/temple/temple_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/temple/temple_repository.dart';
@@ -26,7 +29,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
   // 札所の数
   static const maxTempleNumber = 88;
 
-  /// お遍路の進捗状況を更新
+  /// お遍路の進捗状況を更新し、ユーザの仮想的な歩行経路と現在地点を返す
   ///
   /// [userId] 更新対象のユーザID
   @override
@@ -34,10 +37,9 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
     final now = CustomizableDateTime.current;
     final user = await _userRepository.get(userId);
     if (user == null) {
-      return UpdatePilgrimageProgressResult(
-        UpdatePilgrimageProgressResultStatus.failWithGetUser,
-        [],
-        null,
+      return const UpdatePilgrimageProgressResult(
+        status: UpdatePilgrimageProgressResultStatus.failWithGetUser,
+        reachedPilgrimageIdList: [],
       );
     }
 
@@ -45,18 +47,36 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
     final List<int> reachedPilgrimageIdList = [];
     try {
       final updatedProgressUser = await _calcPilgrimageProgress(user, now, reachedPilgrimageIdList);
+      final latlngs = await _getPilgrimagePolylines(updatedProgressUser);
+      final virtualPosition = _calcVirtualPosition(
+        latlngs,
+        updatedProgressUser.pilgrimage.movingDistance,
+      );
+
+      // 念の為、レスポンスに使う全ての情報が出揃ってからユーザ情報を更新
       await _userRepository.update(updatedProgressUser);
       return UpdatePilgrimageProgressResult(
-        UpdatePilgrimageProgressResultStatus.success,
-        reachedPilgrimageIdList,
-        updatedProgressUser,
+        status: UpdatePilgrimageProgressResultStatus.success,
+        reachedPilgrimageIdList: reachedPilgrimageIdList,
+        updatedUser: updatedProgressUser,
+        virtualPolylineLatLngs: latlngs,
+        virtualPosition: virtualPosition,
       );
     } on Exception catch (e) {
       _logger.e(e);
-      return UpdatePilgrimageProgressResult(UpdatePilgrimageProgressResultStatus.fail, [], null, e);
+      return UpdatePilgrimageProgressResult(
+        status: UpdatePilgrimageProgressResultStatus.fail,
+        reachedPilgrimageIdList: [],
+        error: e,
+      );
     }
   }
 
+  /// お遍路の進捗状況を更新
+  ///
+  /// [user] ユーザ情報
+  /// [now] 進捗状況を更新する時間
+  /// [reachedPilgrimageIdList] 到達した札所の番号を格納するリスト
   Future<VirtualPilgrimageUser> _calcPilgrimageProgress(
     VirtualPilgrimageUser user,
     DateTime now,
@@ -132,6 +152,36 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
       updatedAt: now,
     );
     return user.copyWith(pilgrimage: updatedPilgrimage, updatedAt: now);
+  }
+
+  /// map 上で2点間の経路を可視化するための情報を取得するメソッド
+  Future<List<LatLng>> _getPilgrimagePolylines(VirtualPilgrimageUser user) async {
+    final templeInfo = await _templeRepository.getTempleInfo(user.pilgrimage.nowPilgrimageId);
+    // エンコードされた経路文字列を経路の緯度・経度のリストにして返す
+    return decodePolyline(templeInfo.encodedPoints)
+        .map((ep) => LatLng(ep.first.toDouble(), ep.last.toDouble()))
+        .toList();
+  }
+
+  /// 経路情報（リスト）から仮想的なMap上の現在地を算出する
+  LatLng _calcVirtualPosition(List<LatLng> latlngs, num meter) {
+    num distance = meter;
+    for (int i = 0; i < latlngs.length - 1; i++) {
+      final from = maps.LatLng(latlngs[i].latitude, latlngs[i].longitude);
+      final to = maps.LatLng(latlngs[i + 1].latitude, latlngs[i + 1].longitude);
+      final num d = maps.SphericalUtil.computeDistanceBetween(from, to);
+      if (distance < d) {
+        // fromからtoの間にいる場合は割合で表示する
+        final latlng = maps.SphericalUtil.interpolate(from, to, distance / d);
+        return LatLng(latlng.latitude, latlng.longitude);
+      } else {
+        // fromからtoの距離をdistanceが超える場合は次の区間で計算する
+        distance = distance - d;
+      }
+    }
+
+    // 経路リストを超える場合は次のお寺にほぼ到着している
+    return latlngs.last;
   }
 
   /// 次の札所の番号を返す
