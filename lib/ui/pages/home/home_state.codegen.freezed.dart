@@ -17,6 +17,8 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$HomeState {
   GoogleMapModel get googleMap => throw _privateConstructorUsedError;
+  CameraPosition get initialCameraPosition =>
+      throw _privateConstructorUsedError;
   Set<Marker> get markers => throw _privateConstructorUsedError;
   Set<Polyline> get polylines => throw _privateConstructorUsedError;
 
@@ -30,7 +32,10 @@ abstract class $HomeStateCopyWith<$Res> {
   factory $HomeStateCopyWith(HomeState value, $Res Function(HomeState) then) =
       _$HomeStateCopyWithImpl<$Res>;
   $Res call(
-      {GoogleMapModel googleMap, Set<Marker> markers, Set<Polyline> polylines});
+      {GoogleMapModel googleMap,
+      CameraPosition initialCameraPosition,
+      Set<Marker> markers,
+      Set<Polyline> polylines});
 
   $GoogleMapModelCopyWith<$Res> get googleMap;
 }
@@ -46,6 +51,7 @@ class _$HomeStateCopyWithImpl<$Res> implements $HomeStateCopyWith<$Res> {
   @override
   $Res call({
     Object? googleMap = freezed,
+    Object? initialCameraPosition = freezed,
     Object? markers = freezed,
     Object? polylines = freezed,
   }) {
@@ -54,6 +60,10 @@ class _$HomeStateCopyWithImpl<$Res> implements $HomeStateCopyWith<$Res> {
           ? _value.googleMap
           : googleMap // ignore: cast_nullable_to_non_nullable
               as GoogleMapModel,
+      initialCameraPosition: initialCameraPosition == freezed
+          ? _value.initialCameraPosition
+          : initialCameraPosition // ignore: cast_nullable_to_non_nullable
+              as CameraPosition,
       markers: markers == freezed
           ? _value.markers
           : markers // ignore: cast_nullable_to_non_nullable
@@ -80,7 +90,10 @@ abstract class _$$_HomeStateCopyWith<$Res> implements $HomeStateCopyWith<$Res> {
       __$$_HomeStateCopyWithImpl<$Res>;
   @override
   $Res call(
-      {GoogleMapModel googleMap, Set<Marker> markers, Set<Polyline> polylines});
+      {GoogleMapModel googleMap,
+      CameraPosition initialCameraPosition,
+      Set<Marker> markers,
+      Set<Polyline> polylines});
 
   @override
   $GoogleMapModelCopyWith<$Res> get googleMap;
@@ -99,6 +112,7 @@ class __$$_HomeStateCopyWithImpl<$Res> extends _$HomeStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? googleMap = freezed,
+    Object? initialCameraPosition = freezed,
     Object? markers = freezed,
     Object? polylines = freezed,
   }) {
@@ -107,6 +121,10 @@ class __$$_HomeStateCopyWithImpl<$Res> extends _$HomeStateCopyWithImpl<$Res>
           ? _value.googleMap
           : googleMap // ignore: cast_nullable_to_non_nullable
               as GoogleMapModel,
+      initialCameraPosition: initialCameraPosition == freezed
+          ? _value.initialCameraPosition
+          : initialCameraPosition // ignore: cast_nullable_to_non_nullable
+              as CameraPosition,
       markers: markers == freezed
           ? _value._markers
           : markers // ignore: cast_nullable_to_non_nullable
@@ -124,6 +142,7 @@ class __$$_HomeStateCopyWithImpl<$Res> extends _$HomeStateCopyWithImpl<$Res>
 class _$_HomeState extends _HomeState {
   const _$_HomeState(
       {required this.googleMap,
+      required this.initialCameraPosition,
       final Set<Marker> markers = const {},
       final Set<Polyline> polylines = const {}})
       : _markers = markers,
@@ -132,6 +151,8 @@ class _$_HomeState extends _HomeState {
 
   @override
   final GoogleMapModel googleMap;
+  @override
+  final CameraPosition initialCameraPosition;
   final Set<Marker> _markers;
   @override
   @JsonKey()
@@ -150,7 +171,7 @@ class _$_HomeState extends _HomeState {
 
   @override
   String toString() {
-    return 'HomeState(googleMap: $googleMap, markers: $markers, polylines: $polylines)';
+    return 'HomeState(googleMap: $googleMap, initialCameraPosition: $initialCameraPosition, markers: $markers, polylines: $polylines)';
   }
 
   @override
@@ -159,6 +180,8 @@ class _$_HomeState extends _HomeState {
         (other.runtimeType == runtimeType &&
             other is _$_HomeState &&
             const DeepCollectionEquality().equals(other.googleMap, googleMap) &&
+            const DeepCollectionEquality()
+                .equals(other.initialCameraPosition, initialCameraPosition) &&
             const DeepCollectionEquality().equals(other._markers, _markers) &&
             const DeepCollectionEquality()
                 .equals(other._polylines, _polylines));
@@ -168,6 +191,7 @@ class _$_HomeState extends _HomeState {
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(googleMap),
+      const DeepCollectionEquality().hash(initialCameraPosition),
       const DeepCollectionEquality().hash(_markers),
       const DeepCollectionEquality().hash(_polylines));
 
@@ -180,12 +204,15 @@ class _$_HomeState extends _HomeState {
 abstract class _HomeState extends HomeState {
   const factory _HomeState(
       {required final GoogleMapModel googleMap,
+      required final CameraPosition initialCameraPosition,
       final Set<Marker> markers,
       final Set<Polyline> polylines}) = _$_HomeState;
   const _HomeState._() : super._();
 
   @override
   GoogleMapModel get googleMap;
+  @override
+  CameraPosition get initialCameraPosition;
   @override
   Set<Marker> get markers;
   @override

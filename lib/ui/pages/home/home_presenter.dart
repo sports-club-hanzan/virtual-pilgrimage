@@ -121,17 +121,6 @@ class HomePresenter extends StateNotifier<HomeState> {
   ) async {
     final nextPilgrimage = await _templeRepository
         .getTempleInfo(_nextPilgrimageNumber(user.pilgrimage.nowPilgrimageId));
-    final markers = {
-      ...state.markers,
-      if (logicResult.virtualPosition != null)
-        Marker(
-          markerId: MarkerId(user.nickname),
-          position: logicResult.virtualPosition!,
-          icon: user.userIcon,
-          infoWindow: InfoWindow(title: '現在: ${user.health?.totalSteps ?? 0}歩'),
-        )
-    };
-
     final polylines = {
       Polyline(
         polylineId: PolylineId('${nextPilgrimage.id}番札所:${nextPilgrimage.name}の経路'),
@@ -141,7 +130,32 @@ class HomePresenter extends StateNotifier<HomeState> {
       )
     };
 
-    state = state.copyWith(markers: markers, polylines: polylines);
+    Set<Marker> markers = state.markers;
+    final virtualPosition = logicResult.virtualPosition;
+    if (virtualPosition != null) {
+      markers = {
+        ...state.markers,
+        Marker(
+          markerId: MarkerId(user.nickname),
+          position: virtualPosition,
+          icon: user.userIcon,
+          infoWindow: InfoWindow(title: '現在: ${user.health?.totalSteps ?? 0}歩'),
+        )
+      };
+      // stateより先にカメラポジションを更新するアニメーションを実行
+      final controller = await state.googleMap.controller.future;
+      await controller.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(target: virtualPosition, zoom: 13),
+        ),
+      );
+    }
+
+    // stateを更新して、markerと経路を表示
+    state = state.copyWith(
+      markers: markers,
+      polylines: polylines,
+    );
   }
 
   /// GoogleMap の描画が完了した時に呼ばれる
