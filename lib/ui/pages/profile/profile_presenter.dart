@@ -7,18 +7,34 @@ import 'package:virtualpilgrimage/analytics.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/temple/temple_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/temple/temple_repository.dart';
+import 'package:virtualpilgrimage/domain/user/health/update_health_result.dart';
+import 'package:virtualpilgrimage/domain/user/health/update_health_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/profile/update_user_profile_image_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/user_icon_repository.dart';
 import 'package:virtualpilgrimage/domain/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
+import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/ui/pages/profile/profile_state.codegen.dart';
 
 final profileUserProvider =
     FutureProvider.family<VirtualPilgrimageUser?, String>((ref, userId) async {
   // ログイン状態でしか呼ばれないため、nullable を想定していない
-  final loginUser = ref.watch(userStateProvider)!;
-  // ログインユーザ自身を指定していた場合はそのまま返す
+  final loginUser = ref.read(userStateProvider)!;
+  // ログインユーザ自身を指定していた場合
   if (loginUser.id == userId) {
+    // ヘルスケア情報をとりにいく
+    final result = await ref.read(updateHealthUsecaseProvider).execute(loginUser);
+    // ヘルスケア情報が上手く取れた場合は更新後のユーザ情報を返す
+    if (result.status == UpdateHealthStatus.success) {
+      ref.read(userStateProvider.notifier).state = result.updatedUser;
+      return result.updatedUser;
+    } else {
+      await ref.read(firebaseCrashlyticsProvider).recordError(
+        result.error,
+        null,
+        reason: 'failed to record health information [status][${result.status}]',
+      );
+    }
     return loginUser;
   }
   // そうでなければDBに問い合わせ

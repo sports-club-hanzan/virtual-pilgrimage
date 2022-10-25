@@ -8,11 +8,12 @@ import 'package:virtualpilgrimage/router.dart';
 import 'package:virtualpilgrimage/ui/components/bottom_navigation.dart';
 import 'package:virtualpilgrimage/ui/components/molecules/pilgrimage_progress_card.dart';
 import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
-import 'package:virtualpilgrimage/ui/components/profile_icon.dart';
 import 'package:virtualpilgrimage/ui/pages/profile/components/profile_health_card.dart';
+import 'package:virtualpilgrimage/ui/pages/profile/components/profile_icon.dart';
+import 'package:virtualpilgrimage/ui/pages/profile/components/profile_text.dart';
 import 'package:virtualpilgrimage/ui/pages/profile/profile_presenter.dart';
+import 'package:virtualpilgrimage/ui/pages/profile/profile_state.codegen.dart';
 import 'package:virtualpilgrimage/ui/style/color.dart';
-import 'package:virtualpilgrimage/ui/style/font.dart';
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({
@@ -42,17 +43,17 @@ class ProfilePage extends ConsumerWidget {
         child: user.when(
           data: (data) {
             if (data != null) {
-              return _ProfilePageBody(user: data, canEdit: canEdit, ref: ref);
+              return _ProfilePageBody(user: data, canEdit: canEdit);
             }
             // TODO(s14t284): 他ユーザの情報を参照できるようになったら　null の場合の UI も実装する
             return const Text('そのユーザは存在しませんでした');
           },
           error: (e, s) {
             ref.read(firebaseCrashlyticsProvider).recordError(e, s);
-            return const Text('ユーザ情報の取得に失敗しました');
+            return const Text('ユーザのヘルスケア情報の取得に失敗しました');
           },
           loading: () {
-            return const CircularProgressIndicator();
+            return ProfilePageLoadingBody(user: userState!);
           },
         ),
       ),
@@ -61,102 +62,35 @@ class ProfilePage extends ConsumerWidget {
   }
 }
 
-class _ProfilePageBody extends StatelessWidget {
+class _ProfilePageBody extends ConsumerWidget {
   const _ProfilePageBody({
     required this.user,
     required this.canEdit,
-    required this.ref,
   });
 
   final VirtualPilgrimageUser user;
   final bool canEdit;
-  final WidgetRef ref;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(profileProvider);
+    final notifier = ref.read(profileProvider.notifier);
     return ListView(
       children: [
-        _userIcon(context),
-        _userProfile(context),
-        _healthCards(context, user),
-        _pilgrimageProgress(context, user),
+        ProfileIcon(user: user, canEdit: canEdit, context: context, notifier: notifier),
+        ProfileText(user: user, context: context, notifier: notifier),
+        _healthCards(context, user, notifier, state),
+        _pilgrimageProgress(context, user, notifier),
       ],
     );
   }
 
-  Widget _userIcon(BuildContext context) {
-    final notifier = ref.read(profileProvider.notifier);
-    return Center(
-      child: SizedBox(
-        height: 150,
-        width: 130,
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 24),
-              child: ProfileIconWidget(
-                iconUrl: user.userIconUrl,
-                size: 128,
-                onTap: notifier.updateProfileImage,
-              ),
-            ),
-            // ユーザアイコンの編集ボタン
-            if (canEdit)
-              Positioned(
-                bottom: 0,
-                right: 4,
-                child: ClipOval(
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    color: Theme.of(context).primaryColor,
-                    child: const Icon(
-                      Icons.edit,
-                      color: ColorStyle.white,
-                      size: 20,
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _userProfile(BuildContext context) {
-    final notifier = ref.read(profileProvider.notifier);
-    return SizedBox(
-      height: 110,
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 12, bottom: 0),
-            child: Text(
-              '${user.nickname} さん',
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: FontSize.largeSize),
-            ),
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                '${notifier.getAgeString(user.birthDay)} ${notifier.getGenderString(user.gender)}',
-                style: const TextStyle(
-                  fontSize: FontSize.largeSize,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _healthCards(BuildContext context, VirtualPilgrimageUser user) {
-    final notifier = ref.read(profileProvider.notifier);
-    final state = ref.watch(profileProvider);
+  Widget _healthCards(
+    BuildContext context,
+    VirtualPilgrimageUser user,
+    ProfilePresenter notifier,
+    ProfileState state,
+  ) {
     final health = user.health;
     final List<List<ProfileHealthCard>> healthCards = [];
     if (health != null) {
@@ -216,8 +150,8 @@ class _ProfilePageBody extends StatelessWidget {
     );
   }
 
-  Widget _pilgrimageProgress(BuildContext context, VirtualPilgrimageUser user) {
-    final notifier = ref.read(profileProvider.notifier);
+  Widget _pilgrimageProgress(
+      BuildContext context, VirtualPilgrimageUser user, ProfilePresenter notifier) {
     return FutureBuilder<List<TempleInfo>>(
       // 次の札所への距離は到達している札所が持っているデータ構造となっているため、2つ取得する必要がある
       // 実態はキャッシュしてあるmapからデータを引っ張ってきているだけ
@@ -245,6 +179,40 @@ class _ProfilePageBody extends StatelessWidget {
         // TODO(s14t284): 取得できなかった場合のUIを改善する
         return const Text('お遍路の進捗状況が取得できませんでした');
       },
+    );
+  }
+}
+
+// ローディング時のボディ
+// お遍路の進捗やヘルスケア情報をローディングで埋めている
+// MEMO: 実際はヘルスケア情報だけを取得してきているが、UIのわかりやすさ的にお遍路進捗もローディングで隠している
+class ProfilePageLoadingBody extends ConsumerWidget {
+  const ProfilePageLoadingBody({required this.user, super.key});
+
+  final VirtualPilgrimageUser user;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final notifier = ref.read(profileProvider.notifier);
+    return ListView(
+      children: [
+        ProfileIcon(user: user, canEdit: false, context: context, notifier: notifier),
+        ProfileText(user: user, context: context, notifier: notifier),
+        Padding(
+          padding: const EdgeInsets.only(top: 32),
+          child: Center(
+            child: SizedBox(
+              height: 120,
+              width: 120,
+              child: CircularProgressIndicator(
+                strokeWidth: 16,
+                color: Theme.of(context).colorScheme.primary,
+                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
