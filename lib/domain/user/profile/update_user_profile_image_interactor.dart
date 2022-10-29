@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/user/profile/update_user_profile_image_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/profile/user_profile_image_repository.dart';
 import 'package:virtualpilgrimage/domain/user/user_repository.dart';
@@ -33,10 +32,7 @@ class UpdateUserProfileImageInteractor extends UpdateUserProfileImageUsecase {
     );
 
     // 最後にFirestoreに保存して state を更新
-    final updatedUser = user.copyWith(
-      userIconUrl: profileImageUrl,
-      updatedAt: CustomizableDateTime.current,
-    );
+    final updatedUser = user.updateUserIconUrl(profileImageUrl);
     await _userRepository.update(updatedUser);
 
     return updatedUser;

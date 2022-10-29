@@ -1,9 +1,11 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/helper/firestore_timestamp_converter.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen.dart';
@@ -134,4 +136,57 @@ class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
 
   factory VirtualPilgrimageUser.fromJson(Map<String, dynamic> json) =>
       _$VirtualPilgrimageUserFromJson(json);
+
+  /// 初回のサインイン時に設定するユーザ情報を作成
+  ///
+  /// [credentialUser] firebase authentication でサインインした時に生成されるユーザ情報
+  // ignore: prefer_constructors_over_static_methods
+  static VirtualPilgrimageUser initializeForSignIn(User credentialUser) {
+    final now = CustomizableDateTime.current;
+    // TODO(s14t284): ユーザアイコンのデフォルト値が画質が悪いので変えたい
+    final userIconUrl =
+        credentialUser.photoURL ?? 'https://maps.google.com/mapfiles/kml/shapes/info-i_maps.png';
+    return VirtualPilgrimageUser(
+      id: credentialUser.uid,
+      birthDay: DateTime.utc(1980, 1, 1),
+      // email はどのログイン方法でも必ず存在するはず
+      email: credentialUser.email!,
+      userStatus: UserStatus.temporary,
+      createdAt: now,
+      updatedAt: now,
+      userIconUrl: userIconUrl,
+      pilgrimage: PilgrimageInfo(
+        id: credentialUser.uid,
+        updatedAt: now,
+      ),
+    );
+  }
+
+  /// ユーザ登録フォームから入力されたユーザ情報を更新
+  VirtualPilgrimageUser fromRegistrationForm(String nickname, Gender gender, DateTime birthday) =>
+      copyWith(
+        nickname: nickname,
+        gender: gender,
+        birthDay: birthday,
+        userStatus: UserStatus.created,
+      );
+
+  /// ユーザ登録が完了したため作成済みステータスに変更
+  VirtualPilgrimageUser toRegistration() => copyWith(userStatus: UserStatus.created);
+
+  /// ヘルスケア情報を更新
+  VirtualPilgrimageUser updateHealth(HealthInfo health) => copyWith(health: health);
+
+  /// お遍路の進捗を更新
+  VirtualPilgrimageUser updatePilgrimageProgress(PilgrimageInfo pilgrimage, DateTime now) =>
+      copyWith(pilgrimage: pilgrimage, updatedAt: now);
+
+  /// プロフィール画像のURLを更新
+  VirtualPilgrimageUser updateUserIconUrl(String userIconUrl) => copyWith(
+        userIconUrl: userIconUrl,
+        updatedAt: CustomizableDateTime.current,
+      );
+
+  /// MAP上のピンを設定
+  VirtualPilgrimageUser setUserIconBitmap(BitmapDescriptor bitmap) => copyWith(userIcon: bitmap);
 }

@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtualpilgrimage/analytics.dart';
-import 'package:virtualpilgrimage/domain/user/user_icon_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/gen/firebase_options_dev.dart' as dev;
 import 'package:virtualpilgrimage/gen/firebase_options_prod.dart' as prod;
@@ -29,7 +28,7 @@ class _App extends ConsumerWidget {
     final analytics = ref.read(analyticsProvider);
     final userState = ref.watch(userStateProvider.state);
     final loginState = ref.watch(loginStateProvider.state);
-    final userIconRepository = ref.read(userIconRepositoryProvider);
+    // final userIconRepository = ref.read(userIconRepositoryProvider);
 
     // Firebaseへのログインがキャッシュされていれば
     // Firestoreからユーザ情報を詰める
@@ -38,11 +37,13 @@ class _App extends ConsumerWidget {
       ref.read(userRepositoryProvider).get(firebaseAuth.currentUser!.uid).then((value) {
         if (value != null) {
           analytics.setUserProperties(user: value);
-          userIconRepository.loadIconImage(value.userIconUrl).then((bitmap) {
-            value = value!.copyWith(userIcon: bitmap);
-            userState.state = value;
-            loginState.state = value!.userStatus;
-          });
+          // 一旦、ピン画像は更新しないようにしている
+          // userIconRepository.loadIconImage(value.userIconUrl).then((bitmap) {
+          //   value = value!.setUserIconBitmap(bitmap);
+          //   userState.state = value;
+          // });
+          userState.state = value;
+          loginState.state = value.userStatus;
         }
       });
     }

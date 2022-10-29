@@ -151,7 +151,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
       movingDistance: movingDistance,
       updatedAt: now,
     );
-    return user.copyWith(pilgrimage: updatedPilgrimage, updatedAt: now);
+    return user.updatePilgrimageProgress(updatedPilgrimage, now);
   }
 
   /// map 上で2点間の経路を可視化するための情報を取得するメソッド

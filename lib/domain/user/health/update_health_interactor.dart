@@ -33,7 +33,7 @@ class UpdateHealthInteractor implements UpdateHealthUsecase {
         targetDateTime: now,
         createdAt: user.createdAt,
       );
-      updatedUser = user.copyWith(health: health);
+      updatedUser = user.updateHealth(health);
       await _userRepository.update(updatedUser);
     } on GetHealthException catch (e) {
       final message = 'get user health information error [user][$user][error][$e]';

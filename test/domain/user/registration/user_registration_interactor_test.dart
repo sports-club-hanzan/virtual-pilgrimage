@@ -53,7 +53,7 @@ void main() {
       group('正常系', () {
         test('ユーザを登録できる', () async {
           // given
-          final updateTarget = user.copyWith(userStatus: UserStatus.created);
+          final updateTarget = user.toRegistration();
           final expected = RegistrationResult(RegistrationResultStatus.success);
           when(mockUserRepository.findWithNickname(nickname)).thenAnswer(
             (_) => Future.value(null),

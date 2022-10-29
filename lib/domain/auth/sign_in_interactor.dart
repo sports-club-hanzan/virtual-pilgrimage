@@ -1,13 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:virtualpilgrimage/domain/auth/auth_repository.dart';
 import 'package:virtualpilgrimage/domain/auth/sign_in_usecase.dart';
-import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
 import 'package:virtualpilgrimage/domain/exception/sign_in_exception.dart';
-import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/user_icon_repository.dart';
 import 'package:virtualpilgrimage/domain/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
@@ -31,10 +28,12 @@ class SignInInteractor extends SignInUsecase {
   final AuthRepository _emailAndPasswordAuthRepository;
   final AuthRepository _googleAuthRepository;
   final UserRepository _userRepository;
-  final UserIconRepository _userIconRepository;
   final Logger _logger;
   final FirebaseCrashlytics _crashlytics;
   final FirebaseAuth _firebaseAuth;
+
+  // ignore: unused_field
+  final UserIconRepository _userIconRepository;
 
   @override
   Future<VirtualPilgrimageUser> signInWithGoogle() async {
@@ -112,33 +111,18 @@ class SignInInteractor extends SignInUsecase {
       final gotUser = await _userRepository.get(credentialUser.uid);
       // ユーザーがまだ作成されていない場合、デフォルト値を埋めてFirestoreに保存
       if (gotUser == null) {
-        final now = CustomizableDateTime.current;
-        user = VirtualPilgrimageUser(
-          id: credentialUser.uid,
-          birthDay: DateTime.utc(1980, 1, 1),
-          // email はどのログイン方法でも必ず存在するはず
-          email: credentialUser.email!,
-          userStatus: UserStatus.temporary,
-          createdAt: now,
-          updatedAt: now,
-          pilgrimage: PilgrimageInfo(
-            id: credentialUser.uid,
-            updatedAt: now,
-          ),
-        );
-        if (credentialUser.photoURL != null) {
-          user = user.copyWith(userIconUrl: credentialUser.photoURL!);
-        }
+        user = VirtualPilgrimageUser.initializeForSignIn(credentialUser);
         await _userRepository.update(user);
       } else {
         user = gotUser;
       }
-      if (user.userIconUrl.isNotEmpty) {
-        final BitmapDescriptor image = await _userIconRepository.loadIconImage(user.userIconUrl);
-        user = user.copyWith(
-          userIcon: image,
-        );
-      }
+
+      // ユーザが設定した画像をピンに使うと表示位置がずれるなどUI上の課題があるので一旦コメントアウト
+      // FIXME: ピンにユーザが設定した画像を使う方針にするか、使わない方針にするか議論する
+      // if (user.userIconUrl.isNotEmpty) {
+      //   final BitmapDescriptor bitmap = await _userIconRepository.loadIconImage(user.userIconUrl);
+      //   user = user.setUserIconBitmap(bitmap);
+      // }
     } on DatabaseException catch (e) {
       _logger.e(e.message, [e]);
       await _crashlytics.log(e.message);
