@@ -15,7 +15,7 @@ import 'package:virtualpilgrimage/domain/user/health/health_repository.dart';
 import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 
-import '../../helper/fake_user_repository.dart';
+import '../../helper/fakes/fake_user_repository.dart';
 import '../../helper/provider_container.dart';
 import 'update_pilgrimage_progress_interactor_test.mocks.dart';
 

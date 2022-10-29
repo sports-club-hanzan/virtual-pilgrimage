@@ -14,6 +14,7 @@ import 'package:virtualpilgrimage/domain/user/user_icon_repository.dart';
 import 'package:virtualpilgrimage/domain/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
+import 'package:virtualpilgrimage/logger.dart';
 import 'package:virtualpilgrimage/ui/pages/profile/profile_state.codegen.dart';
 
 final profileUserProvider =
@@ -26,9 +27,11 @@ final profileUserProvider =
     final result = await ref.read(updateHealthUsecaseProvider).execute(loginUser);
     // ヘルスケア情報が上手く取れた場合は更新後のユーザ情報を返す
     if (result.status == UpdateHealthStatus.success) {
+      ref.read(loggerProvider).d(result);
       ref.read(userStateProvider.notifier).state = result.updatedUser;
       return result.updatedUser;
     } else {
+      ref.read(loggerProvider).e(result);
       await ref.read(firebaseCrashlyticsProvider).recordError(
         result.error,
         null,

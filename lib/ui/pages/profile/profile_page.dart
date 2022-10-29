@@ -151,7 +151,10 @@ class _ProfilePageBody extends ConsumerWidget {
   }
 
   Widget _pilgrimageProgress(
-      BuildContext context, VirtualPilgrimageUser user, ProfilePresenter notifier) {
+    BuildContext context,
+    VirtualPilgrimageUser user,
+    ProfilePresenter notifier,
+  ) {
     return FutureBuilder<List<TempleInfo>>(
       // 次の札所への距離は到達している札所が持っているデータ構造となっているため、2つ取得する必要がある
       // 実態はキャッシュしてあるmapからデータを引っ張ってきているだけ
