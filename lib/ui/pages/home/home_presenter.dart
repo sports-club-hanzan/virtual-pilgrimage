@@ -131,10 +131,7 @@ class HomePresenter extends StateNotifier<HomeState> {
     }
 
     // stateを更新して、markerと経路を表示
-    state = state.copyWith(
-      markers: markers,
-      polylines: polylines,
-    );
+    state = state.setupMarkers(markers, polylines);
   }
 
   /// GoogleMap の描画が完了した時に呼ばれる

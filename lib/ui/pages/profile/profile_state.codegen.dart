@@ -9,4 +9,7 @@ class ProfileState with _$ProfileState {
   }) = _ProfileState;
 
   const ProfileState._();
+
+  /// ヘルスケア情報のタブを選択
+  ProfileState onTapHealthTab(int index) => copyWith(selectedTabIndex: index);
 }
