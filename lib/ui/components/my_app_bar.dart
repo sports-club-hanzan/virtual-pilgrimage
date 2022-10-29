@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:virtualpilgrimage/analytics.dart';
-import 'package:virtualpilgrimage/domain/auth/sign_in_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
+import 'package:virtualpilgrimage/ui/components/molecules/my_drawer.dart';
 
 class MyAppBar extends ConsumerWidget with PreferredSizeWidget {
   const MyAppBar({this.isLogin = true, super.key});
@@ -16,31 +15,31 @@ class MyAppBar extends ConsumerWidget with PreferredSizeWidget {
     final textStyle = TextStyle(color: color);
     return AppBar(
       title: Text(appTitle, style: textStyle),
-      actions: <Widget>[
+      actions: [
         if (isLogin)
-          TextButton(
-            onPressed: () => _logout(ref),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 4),
-                  child: Icon(Icons.login_outlined, color: color),
-                ),
-                Text('ログアウト', style: textStyle)
-              ],
-            ),
-          )
+          userIcon(
+            ref.watch(userStateProvider)?.userIconUrl,
+            () => MyDrawer.globalScaffoldKey.currentState?.openEndDrawer(),
+          ),
       ],
     );
   }
 
-  Future<void> _logout(WidgetRef ref) async {
-    await ref.read(analyticsProvider).logEvent(eventName: AnalyticsEvent.logout);
-    await ref.read(signInUsecaseProvider).logout();
-    ref.read(userStateProvider.state).state = null;
-    // loginState を変更するとページが遷移するので更新順を後ろにしている
-    ref.read(loginStateProvider.state).state = null;
+  Widget userIcon(String? iconUrl, VoidCallback onPressed) {
+    const iconSize = 32.0;
+    return IconButton(
+      icon: iconUrl != null
+          ? CircleAvatar(
+              backgroundImage: NetworkImage(iconUrl),
+              backgroundColor: Colors.transparent,
+              radius: iconSize / 2,
+            )
+          : const Icon(
+              Icons.account_circle_outlined,
+              size: iconSize,
+            ),
+      onPressed: onPressed,
+    );
   }
 
   @override

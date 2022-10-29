@@ -14,6 +14,7 @@ extension AnalyticsEvent on String {
   static const signInWithGoogle = 'sign_in_with_google';
   static const signInWithGoogleFailed = 'sign_in_with_google_failed';
   static const logout = 'logout';
+  static const moveEditPage = 'move_edit_page';
   static const pressedRegistration = 'pressed_registration';
   static const registrationFailed = 'registration_failed';
   static const initializeHomePageAndGetHealth = 'initialize_home_page_and_get_health';
