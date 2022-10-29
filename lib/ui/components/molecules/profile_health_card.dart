@@ -25,29 +25,23 @@ class ProfileHealthCard extends StatelessWidget {
       child: Stack(
         children: [
           Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             color: backgroundColor,
             child: Padding(
               padding: const EdgeInsetsDirectional.all(12),
               child: Column(
                 children: [
-                  const SizedBox(
-                    height: 12,
-                  ),
+                  const SizedBox(height: 12),
                   Text(
                     title,
                     style: TextStyle(
                       color: textColor,
                       fontSize: FontSize.mediumSize,
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.w600,
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(
-                    height: 8,
-                  ),
+                  const SizedBox(height: 8),
                   Text(
                     value,
                     style: TextStyle(
@@ -68,15 +62,7 @@ class ProfileHealthCard extends StatelessWidget {
               ),
             ),
           ),
-          Positioned(
-            top: 8,
-            right: 4,
-            child: Icon(
-              icon,
-              color: textColor,
-              size: 28,
-            ),
-          )
+          Positioned(top: 8, right: 4, child: Icon(icon, color: textColor, size: 28))
         ],
       ),
     );

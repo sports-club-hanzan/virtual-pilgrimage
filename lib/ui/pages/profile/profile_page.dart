@@ -6,8 +6,8 @@ import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_p
 import 'package:virtualpilgrimage/router.dart';
 import 'package:virtualpilgrimage/ui/components/bottom_navigation.dart';
 import 'package:virtualpilgrimage/ui/components/molecules/pilgrimage_progress_card.dart';
+import 'package:virtualpilgrimage/ui/components/molecules/profile_health_card.dart';
 import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
-import 'package:virtualpilgrimage/ui/pages/profile/components/profile_health_card.dart';
 import 'package:virtualpilgrimage/ui/pages/profile/components/profile_icon.dart';
 import 'package:virtualpilgrimage/ui/pages/profile/components/profile_text.dart';
 import 'package:virtualpilgrimage/ui/pages/profile/profile_presenter.dart';

@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/ui/components/bottom_navigation.dart';
 import 'package:virtualpilgrimage/ui/components/molecules/pilgrimage_progress_card.dart';
+import 'package:virtualpilgrimage/ui/components/molecules/profile_health_card.dart';
 import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
 import 'package:virtualpilgrimage/ui/pages/home/components/google_map_view.dart';
-import 'package:virtualpilgrimage/ui/pages/profile/components/profile_health_card.dart';
 
 import 'home_presenter.dart';
 
