@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:virtualpilgrimage/domain/helper/firestore_timestamp_converter.dart';
 
 part 'pilgrimage_info.codegen.freezed.dart';
 part 'pilgrimage_info.codegen.g.dart';
@@ -8,14 +9,6 @@ extension PilgrimageInfoFieldKeys on String {
   static const nowPilgrimageId = 'nowPilgrimageId';
   static const lap = 'lap';
   static const movingDistance = 'movingDistance';
-}
-
-// DateTime <-> Timestamp の相互変換用クラス
-// 共通化したいが、ここで定義しないと自動生成ファイル側で import エラーが発生する
-class _FirestoreTimestampConverter {
-  static Timestamp dateTimeToTimestamp(DateTime dateTime) => Timestamp.fromDate(dateTime);
-
-  static DateTime timestampToDateTime(Timestamp timestamp) => timestamp.toDate();
 }
 
 @freezed
@@ -42,8 +35,8 @@ class PilgrimageInfo with _$PilgrimageInfo {
 
     // 最後にお遍路の進捗状況を更新した時刻
     @JsonKey(
-      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
-      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp,
+      fromJson: FirestoreTimestampConverter.timestampToDateTime,
+      toJson: FirestoreTimestampConverter.dateTimeToTimestamp,
     )
         required DateTime updatedAt,
   }) = _PilgrimageInfo;

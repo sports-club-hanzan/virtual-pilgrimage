@@ -31,8 +31,8 @@ mixin _$PilgrimageInfo {
   int get movingDistance =>
       throw _privateConstructorUsedError; // 最後にお遍路の進捗状況を更新した時刻
   @JsonKey(
-      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
-      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      fromJson: FirestoreTimestampConverter.timestampToDateTime,
+      toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
   DateTime get updatedAt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -51,7 +51,7 @@ abstract class $PilgrimageInfoCopyWith<$Res> {
       int nowPilgrimageId,
       int lap,
       int movingDistance,
-      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      @JsonKey(fromJson: FirestoreTimestampConverter.timestampToDateTime, toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
           DateTime updatedAt});
 }
 
@@ -109,7 +109,7 @@ abstract class _$$_PilgrimageInfoCopyWith<$Res>
       int nowPilgrimageId,
       int lap,
       int movingDistance,
-      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      @JsonKey(fromJson: FirestoreTimestampConverter.timestampToDateTime, toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
           DateTime updatedAt});
 }
 
@@ -165,7 +165,7 @@ class _$_PilgrimageInfo extends _PilgrimageInfo {
       this.nowPilgrimageId = 1,
       this.lap = 1,
       this.movingDistance = 0,
-      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      @JsonKey(fromJson: FirestoreTimestampConverter.timestampToDateTime, toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
           required this.updatedAt})
       : super._();
 
@@ -194,8 +194,8 @@ class _$_PilgrimageInfo extends _PilgrimageInfo {
 // 最後にお遍路の進捗状況を更新した時刻
   @override
   @JsonKey(
-      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
-      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      fromJson: FirestoreTimestampConverter.timestampToDateTime,
+      toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
   final DateTime updatedAt;
 
   @override
@@ -246,7 +246,7 @@ abstract class _PilgrimageInfo extends PilgrimageInfo {
       final int nowPilgrimageId,
       final int lap,
       final int movingDistance,
-      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      @JsonKey(fromJson: FirestoreTimestampConverter.timestampToDateTime, toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
           required final DateTime updatedAt}) = _$_PilgrimageInfo;
   const _PilgrimageInfo._() : super._();
 
@@ -267,8 +267,8 @@ abstract class _PilgrimageInfo extends PilgrimageInfo {
   int get movingDistance;
   @override // 最後にお遍路の進捗状況を更新した時刻
   @JsonKey(
-      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
-      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      fromJson: FirestoreTimestampConverter.timestampToDateTime,
+      toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
   DateTime get updatedAt;
   @override
   @JsonKey(ignore: true)

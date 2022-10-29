@@ -28,8 +28,8 @@ mixin _$HealthInfo {
       throw _privateConstructorUsedError; // 昨日から一ヶ月前までのヘルスケア情報
   HealthByPeriod get month => throw _privateConstructorUsedError;
   @JsonKey(
-      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
-      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      fromJson: FirestoreTimestampConverter.timestampToDateTime,
+      toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
   DateTime get updatedAt => throw _privateConstructorUsedError; // 総歩数
   int get totalSteps => throw _privateConstructorUsedError; // 総歩行距離[m]
   int get totalDistance => throw _privateConstructorUsedError;
@@ -50,7 +50,7 @@ abstract class $HealthInfoCopyWith<$Res> {
       HealthByPeriod yesterday,
       HealthByPeriod week,
       HealthByPeriod month,
-      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      @JsonKey(fromJson: FirestoreTimestampConverter.timestampToDateTime, toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
           DateTime updatedAt,
       int totalSteps,
       int totalDistance});
@@ -152,7 +152,7 @@ abstract class _$$_HealthInfoCopyWith<$Res>
       HealthByPeriod yesterday,
       HealthByPeriod week,
       HealthByPeriod month,
-      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      @JsonKey(fromJson: FirestoreTimestampConverter.timestampToDateTime, toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
           DateTime updatedAt,
       int totalSteps,
       int totalDistance});
@@ -229,7 +229,7 @@ class _$_HealthInfo extends _HealthInfo {
       required this.yesterday,
       required this.week,
       required this.month,
-      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      @JsonKey(fromJson: FirestoreTimestampConverter.timestampToDateTime, toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
           required this.updatedAt,
       required this.totalSteps,
       required this.totalDistance})
@@ -252,8 +252,8 @@ class _$_HealthInfo extends _HealthInfo {
   final HealthByPeriod month;
   @override
   @JsonKey(
-      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
-      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      fromJson: FirestoreTimestampConverter.timestampToDateTime,
+      toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
   final DateTime updatedAt;
 // 総歩数
   @override
@@ -314,7 +314,7 @@ abstract class _HealthInfo extends HealthInfo {
       required final HealthByPeriod yesterday,
       required final HealthByPeriod week,
       required final HealthByPeriod month,
-      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      @JsonKey(fromJson: FirestoreTimestampConverter.timestampToDateTime, toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
           required final DateTime updatedAt,
       required final int totalSteps,
       required final int totalDistance}) = _$_HealthInfo;
@@ -333,8 +333,8 @@ abstract class _HealthInfo extends HealthInfo {
   HealthByPeriod get month;
   @override
   @JsonKey(
-      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
-      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      fromJson: FirestoreTimestampConverter.timestampToDateTime,
+      toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
   DateTime get updatedAt;
   @override // 総歩数
   int get totalSteps;

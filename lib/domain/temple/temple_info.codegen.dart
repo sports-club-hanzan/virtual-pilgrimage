@@ -31,7 +31,8 @@ class TempleInfo with _$TempleInfo {
       toJson: _geoPointToJson,
     )
         required GeoPoint geoPoint,
-    @Default([]) List<String> images,
+    @Default([])
+        List<String> images,
   }) = _TempleInfo;
 
   const TempleInfo._();
