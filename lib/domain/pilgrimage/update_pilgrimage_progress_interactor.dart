@@ -145,11 +145,11 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
     }
 
     /// 3. 導出した進捗状況でユーザ情報を更新
-    final updatedPilgrimage = user.pilgrimage.copyWith(
-      nowPilgrimageId: nextPilgrimageId,
-      lap: lap,
-      movingDistance: movingDistance,
-      updatedAt: now,
+    final updatedPilgrimage = user.pilgrimage.updatePilgrimageProgress(
+      nextPilgrimageId,
+      lap,
+      movingDistance,
+      now,
     );
     return user.updatePilgrimageProgress(updatedPilgrimage, now);
   }

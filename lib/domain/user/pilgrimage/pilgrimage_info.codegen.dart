@@ -44,4 +44,17 @@ class PilgrimageInfo with _$PilgrimageInfo {
   const PilgrimageInfo._();
 
   factory PilgrimageInfo.fromJson(Map<String, dynamic> json) => _$PilgrimageInfoFromJson(json);
+
+  PilgrimageInfo updatePilgrimageProgress(
+    int pilgrimageId,
+    int lap,
+    int movingDistance,
+    DateTime now,
+  ) =>
+      copyWith(
+        nowPilgrimageId: pilgrimageId,
+        lap: lap,
+        movingDistance: movingDistance,
+        updatedAt: now,
+      );
 }
