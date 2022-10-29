@@ -61,7 +61,7 @@ void main() {
           when(mockUserRepository.update(user)).thenAnswer((_) => Future.value(null));
 
           // when
-          final actual = await target.execute(user);
+          final actual = await target.execute(user: user, isRegistered: false);
 
           // then
           expect(actual, expected);
@@ -77,12 +77,26 @@ void main() {
           );
 
           // when
-          final actual = await target.execute(user);
+          final actual = await target.execute(user: user, isRegistered: false);
 
           // then
           expect(actual, expected);
           verify(mockUserRepository.findWithNickname(nickname)).called(1);
           verifyNever(mockUserRepository.update(any)).called(0);
+        });
+        test('ユーザが既に存在するが登録済みの情報を上書きするのでそのまま処理しきる', () async {
+          // given
+          final updateTarget = user.toRegistration();
+          final expected = RegistrationResult(RegistrationResultStatus.success);
+          when(mockUserRepository.update(user)).thenAnswer((_) => Future.value(null));
+
+          // when
+          final actual = await target.execute(user: user, isRegistered: true);
+
+          // then
+          expect(actual, expected);
+          verifyNever(mockUserRepository.findWithNickname(any)).called(0);
+          verify(mockUserRepository.update(updateTarget)).called(1);
         });
       });
 
@@ -98,7 +112,7 @@ void main() {
             when(mockUserRepository.findWithNickname(nickname)).thenThrow(param.value);
 
             // when
-            final actual = await target.execute(user);
+            final actual = await target.execute(user: user, isRegistered: false);
 
             // then
             expect(actual.status, RegistrationResultStatus.fail);

@@ -10,6 +10,7 @@ import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.da
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/model/form_model.codegen.dart';
 import 'package:virtualpilgrimage/model/radio_button_model.codegen.dart';
+import 'package:virtualpilgrimage/router.dart';
 import 'package:virtualpilgrimage/ui/pages/registration/registration_state.codegen.dart';
 import 'package:virtualpilgrimage/ui/style/color.dart';
 
@@ -47,6 +48,7 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
     _crashlytics = _ref.read(firebaseCrashlyticsProvider);
     _userState = _ref.watch(userStateProvider.notifier);
     _loginState = _ref.watch(loginStateProvider.state);
+    isRegistered = _ref.read(userStateProvider)?.userStatus == UserStatus.created;
   }
 
   final Ref _ref;
@@ -56,6 +58,9 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
   late final StateController<VirtualPilgrimageUser?> _userState;
   late final StateController<UserStatus?> _loginState;
   final dateFormatter = DateFormat();
+
+  // 作成済みの状態から遷移してきたかどうか
+  late final bool isRegistered;
 
   void onChangedNickname(FormModel nickname) {
     state = state.onChangeNickname(nickname);
@@ -117,13 +122,18 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
     final user = _ref.read(userStateProvider)!;
     final updatedUser =
         user.fromRegistrationForm(state.nickname.text, state.gender.selectedValue, birthday);
-    final result = await _usecase.execute(updatedUser);
+    final result = await _usecase.execute(user: updatedUser, isRegistered: isRegistered);
 
     switch (result.status) {
       // ユーザ登録に成功したらユーザの state を更新
       case RegistrationResultStatus.success:
-        _userState.state = updatedUser;
-        _loginState.state = updatedUser.userStatus;
+        if (isRegistered) {
+          // 登録済みの場合はloginStateが更新されないので、強制的にページ遷移させる
+          _ref.read(routerProvider).go(RouterPath.home);
+        } else {
+          _userState.state = updatedUser;
+          _loginState.state = updatedUser.userStatus;
+        }
         break;
       case RegistrationResultStatus.alreadyExistSameNicknameUser:
         state = state.setExternalErrors(nicknameError: '既に使われているため別のニックネームにしてください');
