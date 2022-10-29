@@ -33,10 +33,10 @@ final profileUserProvider =
     } else {
       ref.read(loggerProvider).e(result);
       await ref.read(firebaseCrashlyticsProvider).recordError(
-        result.error,
-        null,
-        reason: 'failed to record health information [status][${result.status}]',
-      );
+            result.error,
+            null,
+            reason: 'failed to record health information [status][${result.status}]',
+          );
     }
     return loginUser;
   }
@@ -115,9 +115,7 @@ class ProfilePresenter extends StateNotifier<ProfileState> {
     );
     // GoogleMap 上で表示する userIcon も更新してstateを更新
     final bitmap = await _userIconRepository.loadIconImage(updatedUser.userIconUrl);
-    _ref.read(userStateProvider.state).state = updatedUser.copyWith(
-      userIcon: bitmap,
-    );
+    _ref.read(userStateProvider.state).state = updatedUser.setUserIconBitmap(bitmap);
   }
 
   /// ユーザの現在到達している地点のお寺の情報を返す

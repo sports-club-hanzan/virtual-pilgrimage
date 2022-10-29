@@ -30,7 +30,7 @@ class UserRegistrationInteractor extends UserRegistrationUsecase {
       }
       _logger.i('register user: $user');
       // 作成済みステータスに変えて保存
-      await _userRepository.update(user.copyWith(userStatus: UserStatus.created));
+      await _userRepository.update(user.toRegistration());
       status = RegistrationResultStatus.success;
     } on DatabaseException catch (e) {
       final message = 'registration user error [user][$user]';

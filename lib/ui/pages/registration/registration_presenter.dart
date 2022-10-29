@@ -119,12 +119,8 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
     }
 
     final user = _ref.read(userStateProvider)!;
-    final updatedUser = user.copyWith(
-      nickname: state.nickname.text,
-      gender: state.gender.selectedValue,
-      birthDay: birthday,
-      userStatus: UserStatus.created,
-    );
+    final updatedUser =
+        user.fromRegistrationForm(state.nickname.text, state.gender.selectedValue, birthday);
     final result = await _usecase.execute(updatedUser);
 
     switch (result.status) {

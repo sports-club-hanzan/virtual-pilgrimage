@@ -137,8 +137,9 @@ void main() {
           verify(mockGoogleAuthRepository.signIn()).called(1);
           verify(mockFirebaseCrashlytics.setUserIdentifier(userId)).called(1);
           verify(mockUserRepository.get(userId)).called(1);
-          verify(mockUserIconRepository.loadIconImage('http://example.com')).called(1);
           verify(mockUserRepository.update(expected)).called(1); // ユーザが存在していなかったので更新を実行
+          // 一旦、ピン画像は更新しないようにしている
+          // verify(mockUserIconRepository.loadIconImage('http://example.com')).called(1);
         });
       });
 
