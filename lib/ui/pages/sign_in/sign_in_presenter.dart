@@ -160,13 +160,6 @@ class SignInPresenter extends StateNotifier<SignInState> {
     }
   }
 
-  // TODO(s14t284): 他のページやstateに実装する
-  Future<void> logout() async {
-    await _analytics.logEvent(eventName: AnalyticsEvent.logout);
-    await _signInUsecase.logout();
-    _updateState(null, null);
-  }
-
   SignInStateContext _getSignInContext(VirtualPilgrimageUser user) {
     switch (user.userStatus) {
       case UserStatus.temporary:

@@ -4,6 +4,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:virtualpilgrimage/analytics.dart';
+import 'package:virtualpilgrimage/domain/auth/sign_in_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/registration/registration_result.dart';
 import 'package:virtualpilgrimage/domain/user/registration/user_registration_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
@@ -155,5 +156,12 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
         unawaited(_crashlytics.recordError(result.error, null));
         break;
     }
+  }
+
+  Future<void> onPressedLogout() async {
+    await _ref.read(analyticsProvider).logEvent(eventName: AnalyticsEvent.logout);
+    await _ref.read(signInUsecaseProvider).logout();
+    _ref.read(loginStateProvider.state).state = null;
+    _ref.read(routerProvider).go(RouterPath.signIn);
   }
 }
