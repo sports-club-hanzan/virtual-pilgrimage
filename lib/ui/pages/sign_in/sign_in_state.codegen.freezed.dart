@@ -18,7 +18,6 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$SignInState {
   SignInStateContext get context => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
-  Exception? get error => throw _privateConstructorUsedError;
   FormModel get emailOrNickname => throw _privateConstructorUsedError;
   FormModel get password => throw _privateConstructorUsedError;
 
@@ -35,7 +34,6 @@ abstract class $SignInStateCopyWith<$Res> {
   $Res call(
       {SignInStateContext context,
       bool isLoading,
-      Exception? error,
       FormModel emailOrNickname,
       FormModel password});
 
@@ -55,7 +53,6 @@ class _$SignInStateCopyWithImpl<$Res> implements $SignInStateCopyWith<$Res> {
   $Res call({
     Object? context = freezed,
     Object? isLoading = freezed,
-    Object? error = freezed,
     Object? emailOrNickname = freezed,
     Object? password = freezed,
   }) {
@@ -68,10 +65,6 @@ class _$SignInStateCopyWithImpl<$Res> implements $SignInStateCopyWith<$Res> {
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
-      error: error == freezed
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as Exception?,
       emailOrNickname: emailOrNickname == freezed
           ? _value.emailOrNickname
           : emailOrNickname // ignore: cast_nullable_to_non_nullable
@@ -108,7 +101,6 @@ abstract class _$$_SignInStateCopyWith<$Res>
   $Res call(
       {SignInStateContext context,
       bool isLoading,
-      Exception? error,
       FormModel emailOrNickname,
       FormModel password});
 
@@ -132,7 +124,6 @@ class __$$_SignInStateCopyWithImpl<$Res> extends _$SignInStateCopyWithImpl<$Res>
   $Res call({
     Object? context = freezed,
     Object? isLoading = freezed,
-    Object? error = freezed,
     Object? emailOrNickname = freezed,
     Object? password = freezed,
   }) {
@@ -145,10 +136,6 @@ class __$$_SignInStateCopyWithImpl<$Res> extends _$SignInStateCopyWithImpl<$Res>
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
-      error: error == freezed
-          ? _value.error
-          : error // ignore: cast_nullable_to_non_nullable
-              as Exception?,
       emailOrNickname: emailOrNickname == freezed
           ? _value.emailOrNickname
           : emailOrNickname // ignore: cast_nullable_to_non_nullable
@@ -167,7 +154,6 @@ class _$_SignInState extends _SignInState {
   const _$_SignInState(
       {this.context = SignInStateContext.failed,
       this.isLoading = false,
-      this.error,
       required this.emailOrNickname,
       required this.password})
       : super._();
@@ -179,15 +165,13 @@ class _$_SignInState extends _SignInState {
   @JsonKey()
   final bool isLoading;
   @override
-  final Exception? error;
-  @override
   final FormModel emailOrNickname;
   @override
   final FormModel password;
 
   @override
   String toString() {
-    return 'SignInState(context: $context, isLoading: $isLoading, error: $error, emailOrNickname: $emailOrNickname, password: $password)';
+    return 'SignInState(context: $context, isLoading: $isLoading, emailOrNickname: $emailOrNickname, password: $password)';
   }
 
   @override
@@ -197,7 +181,6 @@ class _$_SignInState extends _SignInState {
             other is _$_SignInState &&
             const DeepCollectionEquality().equals(other.context, context) &&
             const DeepCollectionEquality().equals(other.isLoading, isLoading) &&
-            const DeepCollectionEquality().equals(other.error, error) &&
             const DeepCollectionEquality()
                 .equals(other.emailOrNickname, emailOrNickname) &&
             const DeepCollectionEquality().equals(other.password, password));
@@ -208,7 +191,6 @@ class _$_SignInState extends _SignInState {
       runtimeType,
       const DeepCollectionEquality().hash(context),
       const DeepCollectionEquality().hash(isLoading),
-      const DeepCollectionEquality().hash(error),
       const DeepCollectionEquality().hash(emailOrNickname),
       const DeepCollectionEquality().hash(password));
 
@@ -222,7 +204,6 @@ abstract class _SignInState extends SignInState {
   const factory _SignInState(
       {final SignInStateContext context,
       final bool isLoading,
-      final Exception? error,
       required final FormModel emailOrNickname,
       required final FormModel password}) = _$_SignInState;
   const _SignInState._() : super._();
@@ -231,8 +212,6 @@ abstract class _SignInState extends SignInState {
   SignInStateContext get context;
   @override
   bool get isLoading;
-  @override
-  Exception? get error;
   @override
   FormModel get emailOrNickname;
   @override

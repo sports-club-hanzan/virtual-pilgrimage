@@ -31,4 +31,8 @@ class HomeState with _$HomeState {
         googleMap: GoogleMapModel.initialize(),
         initialCameraPosition: _initialCameraPosition,
       );
+
+  /// MAP上のマーカー・経路を更新
+  HomeState setupMarkers(Set<Marker> markers, Set<Polyline> polylines) =>
+      copyWith(markers: markers, polylines: polylines);
 }

@@ -58,17 +58,15 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
   final dateFormatter = DateFormat();
 
   void onChangedNickname(FormModel nickname) {
-    state = state.copyWith(nickname: nickname.copyWith(externalErrors: []));
+    state = state.onChangeNickname(nickname);
   }
 
   void onChangedBirthday(FormModel birthday) {
-    state = state.copyWith(birthday: birthday.copyWith(externalErrors: []));
+    state = state.onChangeBirthday(birthday);
   }
 
   void onChangedGender(Gender? gender) {
-    state.nickname.unfocus();
-    state.birthday.unfocus();
-    state = state.copyWith(gender: state.gender.copyWith(selectedValue: gender!));
+    state = state.onTapGenderButton(gender!);
   }
 
   Future<void> onPressedRegistration() async {
@@ -101,9 +99,7 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
     try {
       birthday = DateTime.parse(state.birthday.text);
     } on FormatException catch (e) {
-      state = state.copyWith(
-        birthday: state.birthday.addExternalError('生年月日の形式が不正です'),
-      );
+      state = state.setExternalErrors(birthdayError: '生年月日の形式が不正です');
       unawaited(
         _analytics.logEvent(
           eventName: AnalyticsEvent.registrationFailed,
@@ -130,9 +126,7 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
         _loginState.state = updatedUser.userStatus;
         break;
       case RegistrationResultStatus.alreadyExistSameNicknameUser:
-        state = state.copyWith(
-          nickname: state.nickname.addExternalError('既に使われているため別のニックネームにしてください'),
-        );
+        state = state.setExternalErrors(nicknameError: '既に使われているため別のニックネームにしてください');
         unawaited(
           _analytics.logEvent(
             eventName: AnalyticsEvent.registrationFailed,

@@ -17,4 +17,31 @@ class RegistrationState with _$RegistrationState {
 
   RegistrationState onSubmit() =>
       copyWith(nickname: nickname.onSubmit(), birthday: birthday.onSubmit());
+
+  /// ニックネームフォームを更新
+  RegistrationState onChangeNickname(FormModel form) => copyWith(
+        nickname: form.copyWith(externalErrors: []),
+        birthday: birthday.copyWith(externalErrors: []),
+      );
+
+  /// 誕生日フォームを更新
+  RegistrationState onChangeBirthday(FormModel form) => copyWith(
+        nickname: nickname.copyWith(externalErrors: []),
+        birthday: form.copyWith(externalErrors: []),
+      );
+
+  /// 性別選択タブをタップ
+  RegistrationState onTapGenderButton(Gender value) {
+    nickname.unfocus();
+    birthday.unfocus();
+    return copyWith(gender: gender.copyWith(selectedValue: value));
+  }
+
+  /// バリデーションエラーを登録
+  RegistrationState setExternalErrors({String nicknameError = '', String birthdayError = ''}) {
+    return copyWith(
+      nickname: nickname.addExternalError(nicknameError),
+      birthday: birthday.addExternalError(birthdayError),
+    );
+  }
 }

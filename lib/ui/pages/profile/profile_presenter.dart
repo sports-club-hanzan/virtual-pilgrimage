@@ -66,9 +66,7 @@ class ProfilePresenter extends StateNotifier<ProfileState> {
   List<String> tabLabels() => _selectedTabs;
 
   /// ヘルスケア情報のタブ選択の切り替えを行う
-  Future<void> setSelectedTabIndex(int index) async {
-    state = state.copyWith(selectedTabIndex: index);
-  }
+  Future<void> setSelectedTabIndex(int index) async => state = state.onTapHealthTab(index);
 
   /// 性別の表示文字列を取得
   String getGenderString(Gender gender) => _genderString[gender.index];

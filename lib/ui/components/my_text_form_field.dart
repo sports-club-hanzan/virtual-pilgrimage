@@ -62,6 +62,8 @@ class _MyTextFormFieldState extends State<MyTextFormField> {
       focusNode: widget.focusNode,
       decoration: widget.decoration.copyWith(
         errorText: widget.formModel.displayError,
+        // 長いエラーにも対応
+        errorMaxLines: 2,
       ),
       style: widget.style,
       obscureText: widget.obscureText,

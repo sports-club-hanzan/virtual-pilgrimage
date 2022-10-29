@@ -112,11 +112,10 @@ class FormModel with _$FormModel {
   }
 
   FormModel addExternalError(String errorString) =>
-      copyWith(externalErrors: [...externalErrors, errorString]);
+      copyWith(externalErrors: [...externalErrors, if (errorString.isNotEmpty) errorString]);
 
   // ignore: prefer_constructors_over_static_methods
-  static FormModel of(Validator validator, [String defaultText = '']) =>
-      FormModel(
+  static FormModel of(Validator validator, [String defaultText = '']) => FormModel(
         validator: validator,
         controller: TextEditingController(text: defaultText),
         focusNode: FocusNode(),

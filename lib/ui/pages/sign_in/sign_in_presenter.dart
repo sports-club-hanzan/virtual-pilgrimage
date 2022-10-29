@@ -35,11 +35,10 @@ class SignInPresenter extends StateNotifier<SignInState> {
   late final StateController<UserStatus?> _loginState;
   late final Analytics _analytics;
 
-  void onChangeEmail(FormModel emailOrNickname) => state = state.copyWith(
-        emailOrNickname: emailOrNickname,
-      );
+  void onChangeEmail(FormModel emailOrNickname) =>
+      state = state.onChangeEmailOrNickname(emailOrNickname);
 
-  void onChangePassword(FormModel password) => state = state.copyWith(password: password);
+  void onChangePassword(FormModel password) => state = state.onChangePassword(password);
 
   Future<void> signInWithGoogle() async {
     unawaited(_analytics.logEvent(eventName: AnalyticsEvent.signInWithGoogle));
@@ -54,7 +53,6 @@ class SignInPresenter extends StateNotifier<SignInState> {
       _updateState(user, user.userStatus);
     } on Exception catch (e) {
       _ref.read(loggerProvider).e(e);
-      state = state.copyWith(error: e);
       unawaited(
         _analytics.logEvent(
           eventName: AnalyticsEvent.signInWithGoogleFailed,
@@ -104,64 +102,48 @@ class SignInPresenter extends StateNotifier<SignInState> {
           state.password.text,
         );
       }
-      state = state.copyWith(context: _getSignInContext(user));
+      state = state.setContext(_getSignInContext(user));
       unawaited(_analytics.setUserProperties(user: user));
       _updateState(user, user.userStatus);
     } on SignInException catch (e) {
       switch (e.status) {
         case SignInExceptionStatus.credentialIsNull:
         case SignInExceptionStatus.credentialUserIsNull:
-          state = state.copyWith(
-            emailOrNickname:
-                state.emailOrNickname.addExternalError('認証情報が空でした。認証に利用するメールアドレスを見直してください'),
+          state = state.setExternalErrors(
+            emailOrNicknameError: '認証情報が空でした。認証に利用するメールアドレスを見直してください',
           );
           break;
         case SignInExceptionStatus.emailOrPasswordIsNull:
           // 設定しているもののvalidationで弾かれるため、ここには分岐しないはず
-          state = state.copyWith(
-            emailOrNickname:
-                state.emailOrNickname.addExternalError('メールアドレス・ニックネームまたはパスワードを入力してください'),
-            password: state.password.addExternalError('メールアドレス・ニックネームまたはパスワードを入力してください'),
-          );
+          const errorMsg = 'メールアドレス・ニックネームまたはパスワードを入力してください';
+          state = state.setExternalErrors(emailOrNicknameError: errorMsg, passwordError: errorMsg);
           break;
         case SignInExceptionStatus.firebaseException:
         case SignInExceptionStatus.unknownException:
-          state = state.copyWith(
-            emailOrNickname: state.emailOrNickname.addExternalError('サインイン時に想定外のエラーが発生しました'),
-          );
+          const errorMsg = 'サインイン時に想定外のエラーが発生しました';
+          state = state.setExternalErrors(emailOrNicknameError: errorMsg, passwordError: errorMsg);
           break;
         case SignInExceptionStatus.platformException:
-          state = state.copyWith(
-            emailOrNickname:
-                state.emailOrNickname.addExternalError('お使いの端末のバージョンではアプリを利用できない可能性があります'),
-          );
+          const errorMsg = 'お使いの端末のバージョンではアプリを利用できない可能性があります';
+          state = state.setExternalErrors(emailOrNicknameError: errorMsg, passwordError: errorMsg);
           break;
         case SignInExceptionStatus.wrongPassword:
-          state = state.copyWith(
-            password: state.password.addExternalError('パスワードが誤っています'),
-          );
+          const errorMsg = 'メールアドレス・ニックネームまたはパスワードが誤っています';
+          state = state.setExternalErrors(emailOrNicknameError: errorMsg, passwordError: errorMsg);
           break;
         case SignInExceptionStatus.weakPassword:
           // バリデーション側で弾いているため、ここには遷移しないはず
-          state = state.copyWith(
-            password: state.password.addExternalError('半角英数字8文字以上で入力してください'),
-          );
+          state = state.setExternalErrors(passwordError: '半角英数字8文字以上で入力してください');
           break;
         case SignInExceptionStatus.alreadyUsedEmail:
-          state = state.copyWith(
-            emailOrNickname: state.password.addExternalError('そのメールアドレスは既に利用されています'),
-          );
+          state = state.setExternalErrors(emailOrNicknameError: 'そのメールアドレスは既に利用されています');
           break;
         case SignInExceptionStatus.userNotFoundException:
-          state = state.copyWith(
-            emailOrNickname:
-                state.emailOrNickname.addExternalError('そのユーザは存在しません。新規アカウント作成時はメールアドレスで認証してください'),
+          state = state.setExternalErrors(
+            emailOrNicknameError: 'そのユーザは存在しません。新規アカウント作成時はメールアドレスで認証してください',
           );
           break;
       }
-      state = state.copyWith(
-        error: e,
-      );
       unawaited(
         _analytics.logEvent(
           eventName: AnalyticsEvent.signInWithEmailAndPasswordFailed,
@@ -169,9 +151,6 @@ class SignInPresenter extends StateNotifier<SignInState> {
         ),
       );
     } on Exception catch (e) {
-      state = state.copyWith(
-        error: e,
-      );
       unawaited(
         _analytics.logEvent(
           eventName: AnalyticsEvent.signInWithEmailAndPasswordFailed,

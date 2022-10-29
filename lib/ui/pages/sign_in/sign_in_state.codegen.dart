@@ -19,7 +19,6 @@ class SignInState with _$SignInState {
   const factory SignInState({
     @Default(SignInStateContext.failed) SignInStateContext context,
     @Default(false) bool isLoading,
-    Exception? error,
     required FormModel emailOrNickname,
     required FormModel password,
   }) = _SignInState;
@@ -30,4 +29,27 @@ class SignInState with _$SignInState {
 
   SignInState onSubmit() =>
       copyWith(emailOrNickname: emailOrNickname.onSubmit(), password: password.onSubmit());
+
+  /// メールアドレスまたはニックネームを入力するフォームを更新
+  SignInState onChangeEmailOrNickname(FormModel form) => copyWith(
+        emailOrNickname: form.copyWith(externalErrors: []),
+        password: password.copyWith(externalErrors: []),
+      );
+
+  /// パスワードを入力するフォームを更新
+  SignInState onChangePassword(FormModel form) => copyWith(
+        emailOrNickname: emailOrNickname.copyWith(externalErrors: []),
+        password: form.copyWith(externalErrors: []),
+      );
+
+  /// バリデーションエラーを登録
+  SignInState setExternalErrors({String emailOrNicknameError = '', String passwordError = ''}) {
+    return copyWith(
+      emailOrNickname: emailOrNickname.addExternalError(emailOrNicknameError),
+      password: password.addExternalError(passwordError),
+    );
+  }
+
+  /// サインイン状態をセット(現状は活用されていない)
+  SignInState setContext(SignInStateContext context) => copyWith(context: context);
 }
