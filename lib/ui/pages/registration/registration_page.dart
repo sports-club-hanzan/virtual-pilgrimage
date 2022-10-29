@@ -19,7 +19,7 @@ class RegistrationPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: const MyAppBar(),
+      appBar: const MyAppBar(isLogin: false),
       body: RegistrationPageBody(ref),
     );
   }

@@ -40,46 +40,6 @@ class HomePageBody extends StatelessWidget {
             const GoogleMapView(height: 300),
             pilgrimageProgressCardProvider(context, userState!, _ref),
             _healthCards(context, userState, notifier),
-            // TODO(s14t284): 開発用に残しているだけなので削除予定
-            // if (!kDebugMode)
-            //   Column(
-            //     children: [
-            //       ElevatedButton(
-            //         onPressed: () async {
-            //           await _ref.read(signInPresenterProvider.notifier).logout();
-            //           _ref.read(routerProvider).go(RouterPath.signIn);
-            //         },
-            //         child: const Text('サインイン画面に戻る'),
-            //       ),
-            //       ElevatedButton(
-            //         onPressed: () async {
-            //           final pilgrimage = _ref.watch(pilgrimageRepositoryProvider);
-            //           final url = await pilgrimage.getTempleImageUrl(
-            //             userState?.pilgrimage.nowPilgrimageId.toString() ?? '1',
-            //             '1.jpg',
-            //           );
-            //           final temple = _ref.watch(templeRepositoryProvider);
-            //           final templeInfo = await temple.getTempleInfo(1);
-            //           await showDialog<void>(
-            //             context: context,
-            //             builder: (BuildContext context) {
-            //               return AlertDialog(
-            //                 title: Text(templeInfo.prefecture),
-            //                 content: Image.network(url),
-            //                 actions: <Widget>[
-            //                   ElevatedButton(
-            //                     onPressed: () => Navigator.pop(context),
-            //                     child: const Text('閉じる'),
-            //                   ),
-            //                 ],
-            //               );
-            //             },
-            //           );
-            //         },
-            //         child: const Text('お寺の情報を表示する'),
-            //       ),
-            //     ],
-            //   )
           ],
         ),
       ),
