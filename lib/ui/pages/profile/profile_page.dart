@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
-import 'package:virtualpilgrimage/domain/temple/temple_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/router.dart';
@@ -80,7 +79,7 @@ class _ProfilePageBody extends ConsumerWidget {
         ProfileIcon(user: user, canEdit: canEdit, context: context, notifier: notifier),
         ProfileText(user: user, context: context, notifier: notifier),
         _healthCards(context, user, notifier, state),
-        _pilgrimageProgress(context, user, notifier),
+        pilgrimageProgressCardProvider(context, user, ref),
       ],
     );
   }
@@ -147,41 +146,6 @@ class _ProfilePageBody extends ConsumerWidget {
             Row(children: healthCards[state.selectedTabIndex]),
         ],
       ),
-    );
-  }
-
-  Widget _pilgrimageProgress(
-    BuildContext context,
-    VirtualPilgrimageUser user,
-    ProfilePresenter notifier,
-  ) {
-    return FutureBuilder<List<TempleInfo>>(
-      // 次の札所への距離は到達している札所が持っているデータ構造となっているため、2つ取得する必要がある
-      // 実態はキャッシュしてあるmapからデータを引っ張ってきているだけ
-      future: () async {
-        final now = await notifier.getNowPilgrimageTempleInfo(user);
-        final next = await notifier.getNextPilgrimageTempleInfo(user);
-        return [now, next];
-      }(),
-      builder: (BuildContext context, AsyncSnapshot<List<TempleInfo>> snapshot) {
-        if (snapshot.hasData) {
-          final data = snapshot.requireData;
-          return SizedBox(
-            height: 170,
-            width: MediaQuery.of(context).size.width / 10 * 9,
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: PilgrimageProgressCard(
-                pilgrimageInfo: user.pilgrimage,
-                templeInfo: data[1],
-                nextDistance: data[0].distance,
-              ),
-            ),
-          );
-        }
-        // TODO(s14t284): 取得できなかった場合のUIを改善する
-        return const Text('お遍路の進捗状況が取得できませんでした');
-      },
     );
   }
 }

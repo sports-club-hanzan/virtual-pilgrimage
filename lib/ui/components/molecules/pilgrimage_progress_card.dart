@@ -1,8 +1,62 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:virtualpilgrimage/domain/temple/temple_info.codegen.dart';
+import 'package:virtualpilgrimage/domain/temple/temple_repository.dart';
 import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen.dart';
+import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/ui/style/font.dart';
+
+Widget pilgrimageProgressCardProvider(
+  BuildContext context,
+  VirtualPilgrimageUser user,
+  WidgetRef ref,
+) {
+  const maxTempleNumber = 88;
+  final templeRepository = ref.read(templeRepositoryProvider);
+
+  /// 次の札所の番号を返す
+  /// 88箇所目に到達していたら 1 を返す
+  /// [pilgrimageId] 現在の札所の番号
+  int nextPilgrimageNumber(int pilgrimageId) {
+    if (pilgrimageId < maxTempleNumber) {
+      return pilgrimageId + 1;
+    }
+    return 1;
+  }
+
+  return FutureBuilder<List<TempleInfo>>(
+    // 次の札所への距離は到達している札所が持っているデータ構造となっているため、2つ取得する必要がある
+    // 実態はキャッシュしてあるmapからデータを引っ張ってきているだけ
+    future: () async {
+      // ユーザの現在到達している地点のお寺の情報
+      final now = await templeRepository.getTempleInfo(user.pilgrimage.nowPilgrimageId);
+      // ユーザが向かっているのお寺の情報
+      final next = await templeRepository
+          .getTempleInfo(nextPilgrimageNumber(user.pilgrimage.nowPilgrimageId));
+      return [now, next];
+    }(),
+    builder: (BuildContext context, AsyncSnapshot<List<TempleInfo>> snapshot) {
+      if (snapshot.hasData) {
+        final data = snapshot.requireData;
+        return SizedBox(
+          height: 170,
+          width: MediaQuery.of(context).size.width / 10 * 9,
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: PilgrimageProgressCard(
+              pilgrimageInfo: user.pilgrimage,
+              templeInfo: data[1],
+              nextDistance: data[0].distance,
+            ),
+          ),
+        );
+      }
+      // TODO(s14t284): 取得できなかった場合のUIを改善する
+      return const Text('お遍路の進捗状況が取得できませんでした');
+    },
+  );
+}
 
 class PilgrimageProgressCard extends StatelessWidget {
   const PilgrimageProgressCard({
@@ -74,9 +128,8 @@ class PilgrimageProgressCard extends StatelessWidget {
 
   CircularPercentIndicator progressCircularPercentIndicator(BuildContext context) {
     // 移動距離 > 目標距離とならないよう念の為制御
-    final movingDistance = pilgrimageInfo.movingDistance < nextDistance
-        ? pilgrimageInfo.movingDistance
-        : nextDistance;
+    final movingDistance =
+        pilgrimageInfo.movingDistance < nextDistance ? pilgrimageInfo.movingDistance : nextDistance;
     return CircularPercentIndicator(
       radius: 64,
       lineWidth: 18,
