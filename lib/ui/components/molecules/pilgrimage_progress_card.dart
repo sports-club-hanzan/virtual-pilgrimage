@@ -42,13 +42,10 @@ Widget pilgrimageProgressCardProvider(
         return SizedBox(
           height: 170,
           width: MediaQuery.of(context).size.width / 10 * 9,
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: PilgrimageProgressCard(
-              pilgrimageInfo: user.pilgrimage,
-              templeInfo: data[1],
-              nextDistance: data[0].distance,
-            ),
+          child: PilgrimageProgressCard(
+            pilgrimageInfo: user.pilgrimage,
+            templeInfo: data[1],
+            nextDistance: data[0].distance,
           ),
         );
       }
@@ -73,8 +70,14 @@ class PilgrimageProgressCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      elevation: 0.5,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: const BorderSide(
+          color: Colors.transparent,
+          width: 0.5,
+        ),
+      ),
       color: Theme.of(context).colorScheme.onSecondary,
       child: Padding(
         padding: const EdgeInsets.all(8),
