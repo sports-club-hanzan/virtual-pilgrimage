@@ -29,8 +29,8 @@ mixin _$VirtualPilgrimageUser {
       toJson: _GenderConverter.genderToInt)
   Gender get gender => throw _privateConstructorUsedError; // 誕生日
   @JsonKey(
-      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
-      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      fromJson: FirestoreTimestampConverter.timestampToDateTime,
+      toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
   DateTime get birthDay => throw _privateConstructorUsedError; // メールアドレス
   String get email => throw _privateConstructorUsedError; // ユーザアイコンのURL
   String get userIconUrl => throw _privateConstructorUsedError;
@@ -39,12 +39,12 @@ mixin _$VirtualPilgrimageUser {
       toJson: _UserStatusConverter.userStatusToInt)
   UserStatus get userStatus => throw _privateConstructorUsedError; // ユーザの作成日
   @JsonKey(
-      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
-      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      fromJson: FirestoreTimestampConverter.timestampToDateTime,
+      toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
   DateTime get createdAt => throw _privateConstructorUsedError; // ユーザの更新日
   @JsonKey(
-      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
-      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      fromJson: FirestoreTimestampConverter.timestampToDateTime,
+      toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
   DateTime get updatedAt =>
       throw _privateConstructorUsedError; // ヘルスケア情報。歩数や移動距離など
   HealthInfo? get health =>
@@ -72,15 +72,15 @@ abstract class $VirtualPilgrimageUserCopyWith<$Res> {
       String nickname,
       @JsonKey(fromJson: _GenderConverter.intToGender, toJson: _GenderConverter.genderToInt)
           Gender gender,
-      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      @JsonKey(fromJson: FirestoreTimestampConverter.timestampToDateTime, toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
           DateTime birthDay,
       String email,
       String userIconUrl,
       @JsonKey(fromJson: _UserStatusConverter.intToUserStatus, toJson: _UserStatusConverter.userStatusToInt)
           UserStatus userStatus,
-      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      @JsonKey(fromJson: FirestoreTimestampConverter.timestampToDateTime, toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
           DateTime createdAt,
-      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      @JsonKey(fromJson: FirestoreTimestampConverter.timestampToDateTime, toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
           DateTime updatedAt,
       HealthInfo? health,
       PilgrimageInfo pilgrimage,
@@ -198,15 +198,15 @@ abstract class _$$_VirtualPilgrimageUserCopyWith<$Res>
       String nickname,
       @JsonKey(fromJson: _GenderConverter.intToGender, toJson: _GenderConverter.genderToInt)
           Gender gender,
-      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      @JsonKey(fromJson: FirestoreTimestampConverter.timestampToDateTime, toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
           DateTime birthDay,
       String email,
       String userIconUrl,
       @JsonKey(fromJson: _UserStatusConverter.intToUserStatus, toJson: _UserStatusConverter.userStatusToInt)
           UserStatus userStatus,
-      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      @JsonKey(fromJson: FirestoreTimestampConverter.timestampToDateTime, toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
           DateTime createdAt,
-      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      @JsonKey(fromJson: FirestoreTimestampConverter.timestampToDateTime, toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
           DateTime updatedAt,
       HealthInfo? health,
       PilgrimageInfo pilgrimage,
@@ -308,15 +308,15 @@ class _$_VirtualPilgrimageUser extends _VirtualPilgrimageUser {
       this.nickname = '',
       @JsonKey(fromJson: _GenderConverter.intToGender, toJson: _GenderConverter.genderToInt)
           this.gender = Gender.unknown,
-      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      @JsonKey(fromJson: FirestoreTimestampConverter.timestampToDateTime, toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
           required this.birthDay,
       this.email = '',
       this.userIconUrl = 'https://maps.google.com/mapfiles/kml/shapes/info-i_maps.png',
       @JsonKey(fromJson: _UserStatusConverter.intToUserStatus, toJson: _UserStatusConverter.userStatusToInt)
           this.userStatus = UserStatus.temporary,
-      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      @JsonKey(fromJson: FirestoreTimestampConverter.timestampToDateTime, toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
           required this.createdAt,
-      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      @JsonKey(fromJson: FirestoreTimestampConverter.timestampToDateTime, toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
           required this.updatedAt,
       this.health,
       required this.pilgrimage,
@@ -344,8 +344,8 @@ class _$_VirtualPilgrimageUser extends _VirtualPilgrimageUser {
 // 誕生日
   @override
   @JsonKey(
-      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
-      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      fromJson: FirestoreTimestampConverter.timestampToDateTime,
+      toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
   final DateTime birthDay;
 // メールアドレス
   @override
@@ -363,14 +363,14 @@ class _$_VirtualPilgrimageUser extends _VirtualPilgrimageUser {
 // ユーザの作成日
   @override
   @JsonKey(
-      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
-      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      fromJson: FirestoreTimestampConverter.timestampToDateTime,
+      toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
   final DateTime createdAt;
 // ユーザの更新日
   @override
   @JsonKey(
-      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
-      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      fromJson: FirestoreTimestampConverter.timestampToDateTime,
+      toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
   final DateTime updatedAt;
 // ヘルスケア情報。歩数や移動距離など
   @override
@@ -449,15 +449,15 @@ abstract class _VirtualPilgrimageUser extends VirtualPilgrimageUser {
       final String nickname,
       @JsonKey(fromJson: _GenderConverter.intToGender, toJson: _GenderConverter.genderToInt)
           final Gender gender,
-      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      @JsonKey(fromJson: FirestoreTimestampConverter.timestampToDateTime, toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
           required final DateTime birthDay,
       final String email,
       final String userIconUrl,
       @JsonKey(fromJson: _UserStatusConverter.intToUserStatus, toJson: _UserStatusConverter.userStatusToInt)
           final UserStatus userStatus,
-      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      @JsonKey(fromJson: FirestoreTimestampConverter.timestampToDateTime, toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
           required final DateTime createdAt,
-      @JsonKey(fromJson: _FirestoreTimestampConverter.timestampToDateTime, toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      @JsonKey(fromJson: FirestoreTimestampConverter.timestampToDateTime, toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
           required final DateTime updatedAt,
       final HealthInfo? health,
       required final PilgrimageInfo pilgrimage,
@@ -479,8 +479,8 @@ abstract class _VirtualPilgrimageUser extends VirtualPilgrimageUser {
   Gender get gender;
   @override // 誕生日
   @JsonKey(
-      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
-      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      fromJson: FirestoreTimestampConverter.timestampToDateTime,
+      toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
   DateTime get birthDay;
   @override // メールアドレス
   String get email;
@@ -493,13 +493,13 @@ abstract class _VirtualPilgrimageUser extends VirtualPilgrimageUser {
   UserStatus get userStatus;
   @override // ユーザの作成日
   @JsonKey(
-      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
-      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      fromJson: FirestoreTimestampConverter.timestampToDateTime,
+      toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
   DateTime get createdAt;
   @override // ユーザの更新日
   @JsonKey(
-      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
-      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp)
+      fromJson: FirestoreTimestampConverter.timestampToDateTime,
+      toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
   DateTime get updatedAt;
   @override // ヘルスケア情報。歩数や移動距離など
   HealthInfo? get health;

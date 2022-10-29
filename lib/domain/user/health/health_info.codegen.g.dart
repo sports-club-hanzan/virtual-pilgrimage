@@ -13,7 +13,7 @@ _$_HealthInfo _$$_HealthInfoFromJson(Map<String, dynamic> json) =>
           HealthByPeriod.fromJson(json['yesterday'] as Map<String, dynamic>),
       week: HealthByPeriod.fromJson(json['week'] as Map<String, dynamic>),
       month: HealthByPeriod.fromJson(json['month'] as Map<String, dynamic>),
-      updatedAt: _FirestoreTimestampConverter.timestampToDateTime(
+      updatedAt: FirestoreTimestampConverter.timestampToDateTime(
           json['updatedAt'] as Timestamp),
       totalSteps: json['totalSteps'] as int,
       totalDistance: json['totalDistance'] as int,
@@ -26,7 +26,7 @@ Map<String, dynamic> _$$_HealthInfoToJson(_$_HealthInfo instance) =>
       'week': instance.week.toJson(),
       'month': instance.month.toJson(),
       'updatedAt':
-          _FirestoreTimestampConverter.dateTimeToTimestamp(instance.updatedAt),
+          FirestoreTimestampConverter.dateTimeToTimestamp(instance.updatedAt),
       'totalSteps': instance.totalSteps,
       'totalDistance': instance.totalDistance,
     };

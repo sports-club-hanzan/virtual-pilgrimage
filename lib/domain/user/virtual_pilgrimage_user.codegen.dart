@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:virtualpilgrimage/domain/helper/firestore_timestamp_converter.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen.dart';
 
@@ -65,14 +66,6 @@ class _UserStatusConverter {
   static int userStatusToInt(UserStatus userStatus) => userStatus.index;
 }
 
-// DateTime <-> Timestamp の相互変換用クラス
-// 共通化したいが、ここで定義しないと自動生成ファイル側で import エラーが発生する
-class _FirestoreTimestampConverter {
-  static Timestamp dateTimeToTimestamp(DateTime dateTime) => Timestamp.fromDate(dateTime);
-
-  static DateTime timestampToDateTime(Timestamp timestamp) => timestamp.toDate();
-}
-
 class _BitmapConverter {
   static BitmapDescriptor stringToBitmap(String string) =>
       BitmapDescriptor.fromBytes(Uint8List.fromList(string.codeUnits));
@@ -94,8 +87,8 @@ class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
         Gender gender,
     // 誕生日
     @JsonKey(
-      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
-      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp,
+      fromJson: FirestoreTimestampConverter.timestampToDateTime,
+      toJson: FirestoreTimestampConverter.dateTimeToTimestamp,
     )
         required DateTime birthDay,
     // メールアドレス
@@ -113,14 +106,14 @@ class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
         UserStatus userStatus,
     // ユーザの作成日
     @JsonKey(
-      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
-      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp,
+      fromJson: FirestoreTimestampConverter.timestampToDateTime,
+      toJson: FirestoreTimestampConverter.dateTimeToTimestamp,
     )
         required DateTime createdAt,
     // ユーザの更新日
     @JsonKey(
-      fromJson: _FirestoreTimestampConverter.timestampToDateTime,
-      toJson: _FirestoreTimestampConverter.dateTimeToTimestamp,
+      fromJson: FirestoreTimestampConverter.timestampToDateTime,
+      toJson: FirestoreTimestampConverter.dateTimeToTimestamp,
     )
         required DateTime updatedAt,
     // ヘルスケア情報。歩数や移動距離など

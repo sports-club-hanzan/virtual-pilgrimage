@@ -14,7 +14,7 @@ _$_VirtualPilgrimageUser _$$_VirtualPilgrimageUserFromJson(
       gender: json['gender'] == null
           ? Gender.unknown
           : _GenderConverter.intToGender(json['gender'] as int),
-      birthDay: _FirestoreTimestampConverter.timestampToDateTime(
+      birthDay: FirestoreTimestampConverter.timestampToDateTime(
           json['birthDay'] as Timestamp),
       email: json['email'] as String? ?? '',
       userIconUrl: json['userIconUrl'] as String? ??
@@ -22,9 +22,9 @@ _$_VirtualPilgrimageUser _$$_VirtualPilgrimageUserFromJson(
       userStatus: json['userStatus'] == null
           ? UserStatus.temporary
           : _UserStatusConverter.intToUserStatus(json['userStatus'] as int),
-      createdAt: _FirestoreTimestampConverter.timestampToDateTime(
+      createdAt: FirestoreTimestampConverter.timestampToDateTime(
           json['createdAt'] as Timestamp),
-      updatedAt: _FirestoreTimestampConverter.timestampToDateTime(
+      updatedAt: FirestoreTimestampConverter.timestampToDateTime(
           json['updatedAt'] as Timestamp),
       health: json['health'] == null
           ? null
@@ -40,14 +40,14 @@ Map<String, dynamic> _$$_VirtualPilgrimageUserToJson(
       'nickname': instance.nickname,
       'gender': _GenderConverter.genderToInt(instance.gender),
       'birthDay':
-          _FirestoreTimestampConverter.dateTimeToTimestamp(instance.birthDay),
+          FirestoreTimestampConverter.dateTimeToTimestamp(instance.birthDay),
       'email': instance.email,
       'userIconUrl': instance.userIconUrl,
       'userStatus': _UserStatusConverter.userStatusToInt(instance.userStatus),
       'createdAt':
-          _FirestoreTimestampConverter.dateTimeToTimestamp(instance.createdAt),
+          FirestoreTimestampConverter.dateTimeToTimestamp(instance.createdAt),
       'updatedAt':
-          _FirestoreTimestampConverter.dateTimeToTimestamp(instance.updatedAt),
+          FirestoreTimestampConverter.dateTimeToTimestamp(instance.updatedAt),
       'health': instance.health?.toJson(),
       'pilgrimage': instance.pilgrimage.toJson(),
     };
