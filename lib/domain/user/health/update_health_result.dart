@@ -30,5 +30,6 @@ class UpdateHealthResult {
   int get hashCode => status.hashCode + error.hashCode;
 
   @override
-  String toString() => 'UpdateHealthResult(status: ${status.name} error: $error)';
+  String toString() =>
+      'UpdateHealthResult(status: ${status.name} updatedUser: $updatedUser error: $error)';
 }
