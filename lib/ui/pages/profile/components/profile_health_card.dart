@@ -73,7 +73,7 @@ class ProfileHealthCard extends StatelessWidget {
             right: 4,
             child: Icon(
               icon,
-              color: Colors.white,
+              color: textColor,
               size: 28,
             ),
           )

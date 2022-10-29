@@ -74,13 +74,7 @@ class PilgrimageProgressCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 0,
-      shape: RoundedRectangleBorder(
-        side: BorderSide(
-          color: Theme.of(context).colorScheme.onSecondaryContainer,
-          width: 0.3,
-        ),
-        borderRadius: BorderRadius.circular(8),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       color: Theme.of(context).colorScheme.onSecondary,
       child: Padding(
         padding: const EdgeInsets.all(8),

@@ -147,4 +147,11 @@ class HomePresenter extends StateNotifier<HomeState> {
     }
     return 1;
   }
+
+  /// m単位の数値をkm単位に補正した文字列を返す
+  ///
+  /// [meter] m単位の数値
+  String meterToKilometerString(int meter) {
+    return (meter / 1000).toStringAsFixed(1);
+  }
 }
