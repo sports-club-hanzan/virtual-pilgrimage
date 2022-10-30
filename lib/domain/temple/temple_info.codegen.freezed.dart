@@ -26,7 +26,8 @@ mixin _$TempleInfo {
   String get prefecture => throw _privateConstructorUsedError; // 住所
   String get address => throw _privateConstructorUsedError; // 次のお寺までの距離
   int get distance => throw _privateConstructorUsedError; // 次のお寺までの経路(エンコード文字列)
-  String get encodedPoints => throw _privateConstructorUsedError; // お寺の座標
+  String get encodedPoints => throw _privateConstructorUsedError; // お寺のうんちく
+  String get knowledge => throw _privateConstructorUsedError; // お寺の座標
   @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
   GeoPoint get geoPoint => throw _privateConstructorUsedError;
   List<String> get images => throw _privateConstructorUsedError;
@@ -49,6 +50,7 @@ abstract class $TempleInfoCopyWith<$Res> {
       String address,
       int distance,
       String encodedPoints,
+      String knowledge,
       @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
           GeoPoint geoPoint,
       List<String> images});
@@ -70,6 +72,7 @@ class _$TempleInfoCopyWithImpl<$Res> implements $TempleInfoCopyWith<$Res> {
     Object? address = freezed,
     Object? distance = freezed,
     Object? encodedPoints = freezed,
+    Object? knowledge = freezed,
     Object? geoPoint = freezed,
     Object? images = freezed,
   }) {
@@ -98,6 +101,10 @@ class _$TempleInfoCopyWithImpl<$Res> implements $TempleInfoCopyWith<$Res> {
           ? _value.encodedPoints
           : encodedPoints // ignore: cast_nullable_to_non_nullable
               as String,
+      knowledge: knowledge == freezed
+          ? _value.knowledge
+          : knowledge // ignore: cast_nullable_to_non_nullable
+              as String,
       geoPoint: geoPoint == freezed
           ? _value.geoPoint
           : geoPoint // ignore: cast_nullable_to_non_nullable
@@ -124,6 +131,7 @@ abstract class _$$_TempleInfoCopyWith<$Res>
       String address,
       int distance,
       String encodedPoints,
+      String knowledge,
       @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
           GeoPoint geoPoint,
       List<String> images});
@@ -147,6 +155,7 @@ class __$$_TempleInfoCopyWithImpl<$Res> extends _$TempleInfoCopyWithImpl<$Res>
     Object? address = freezed,
     Object? distance = freezed,
     Object? encodedPoints = freezed,
+    Object? knowledge = freezed,
     Object? geoPoint = freezed,
     Object? images = freezed,
   }) {
@@ -175,6 +184,10 @@ class __$$_TempleInfoCopyWithImpl<$Res> extends _$TempleInfoCopyWithImpl<$Res>
           ? _value.encodedPoints
           : encodedPoints // ignore: cast_nullable_to_non_nullable
               as String,
+      knowledge: knowledge == freezed
+          ? _value.knowledge
+          : knowledge // ignore: cast_nullable_to_non_nullable
+              as String,
       geoPoint: geoPoint == freezed
           ? _value.geoPoint
           : geoPoint // ignore: cast_nullable_to_non_nullable
@@ -197,6 +210,8 @@ class _$_TempleInfo extends _TempleInfo {
       required this.address,
       required this.distance,
       required this.encodedPoints,
+      this.knowledge =
+          'テストテストテストテトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストトテストテストストテストテストテストテスト',
       @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
           required this.geoPoint,
       final List<String> images = const []})
@@ -224,6 +239,10 @@ class _$_TempleInfo extends _TempleInfo {
 // 次のお寺までの経路(エンコード文字列)
   @override
   final String encodedPoints;
+// お寺のうんちく
+  @override
+  @JsonKey()
+  final String knowledge;
 // お寺の座標
   @override
   @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
@@ -238,7 +257,7 @@ class _$_TempleInfo extends _TempleInfo {
 
   @override
   String toString() {
-    return 'TempleInfo(id: $id, name: $name, prefecture: $prefecture, address: $address, distance: $distance, encodedPoints: $encodedPoints, geoPoint: $geoPoint, images: $images)';
+    return 'TempleInfo(id: $id, name: $name, prefecture: $prefecture, address: $address, distance: $distance, encodedPoints: $encodedPoints, knowledge: $knowledge, geoPoint: $geoPoint, images: $images)';
   }
 
   @override
@@ -254,6 +273,7 @@ class _$_TempleInfo extends _TempleInfo {
             const DeepCollectionEquality().equals(other.distance, distance) &&
             const DeepCollectionEquality()
                 .equals(other.encodedPoints, encodedPoints) &&
+            const DeepCollectionEquality().equals(other.knowledge, knowledge) &&
             const DeepCollectionEquality().equals(other.geoPoint, geoPoint) &&
             const DeepCollectionEquality().equals(other._images, _images));
   }
@@ -268,6 +288,7 @@ class _$_TempleInfo extends _TempleInfo {
       const DeepCollectionEquality().hash(address),
       const DeepCollectionEquality().hash(distance),
       const DeepCollectionEquality().hash(encodedPoints),
+      const DeepCollectionEquality().hash(knowledge),
       const DeepCollectionEquality().hash(geoPoint),
       const DeepCollectionEquality().hash(_images));
 
@@ -292,6 +313,7 @@ abstract class _TempleInfo extends TempleInfo {
       required final String address,
       required final int distance,
       required final String encodedPoints,
+      final String knowledge,
       @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
           required final GeoPoint geoPoint,
       final List<String> images}) = _$_TempleInfo;
@@ -312,6 +334,8 @@ abstract class _TempleInfo extends TempleInfo {
   int get distance;
   @override // 次のお寺までの経路(エンコード文字列)
   String get encodedPoints;
+  @override // お寺のうんちく
+  String get knowledge;
   @override // お寺の座標
   @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
   GeoPoint get geoPoint;

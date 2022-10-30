@@ -47,6 +47,7 @@ temples:
     geohash: string
     geopoint: [double]
   distance: int # 次のお寺までに必要な距離
+  knowledge: string
   # そのほかお寺に必要な情報（TODO）
 
 ## ランキング情報
