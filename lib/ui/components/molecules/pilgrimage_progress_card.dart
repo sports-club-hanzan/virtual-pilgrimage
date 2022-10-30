@@ -5,6 +5,7 @@ import 'package:virtualpilgrimage/domain/temple/temple_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/temple/temple_repository.dart';
 import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
+import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/ui/style/font.dart';
 
 Widget pilgrimageProgressCardProvider(
@@ -37,20 +38,34 @@ Widget pilgrimageProgressCardProvider(
       return [now, next];
     }(),
     builder: (BuildContext context, AsyncSnapshot<List<TempleInfo>> snapshot) {
+      // loading中のwidget
+      Widget childWidget = Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [SizedBox(height: 50, width: 50, child: CircularProgressIndicator())],
+      );
+
       if (snapshot.hasData) {
         final data = snapshot.requireData;
-        return SizedBox(
-          height: 170,
-          width: MediaQuery.of(context).size.width / 10 * 9,
-          child: PilgrimageProgressCard(
-            pilgrimageInfo: user.pilgrimage,
-            templeInfo: data[1],
-            nextDistance: data[0].distance,
-          ),
+        childWidget = PilgrimageProgressCard(
+          pilgrimageInfo: user.pilgrimage,
+          templeInfo: data[1],
+          nextDistance: data[0].distance,
+        );
+      } else if (snapshot.hasError) {
+        ref.read(firebaseCrashlyticsProvider).recordError(snapshot.error, null);
+        // TODO(s14t284): 取得できなかった場合のUIを改善する
+        childWidget = Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Text('お遍路の進捗状況が取得できませんでした', style: TextStyle(fontWeight: FontWeight.bold))
+          ],
         );
       }
-      // TODO(s14t284): 取得できなかった場合のUIを改善する
-      return const Text('お遍路の進捗状況が取得できませんでした');
+      return SizedBox(
+        height: 170,
+        width: MediaQuery.of(context).size.width / 10 * 9,
+        child: childWidget,
+      );
     },
   );
 }
