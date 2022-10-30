@@ -1,10 +1,12 @@
 import 'dart:async';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtualpilgrimage/analytics.dart';
 import 'package:virtualpilgrimage/domain/auth/sign_in_usecase.dart';
 import 'package:virtualpilgrimage/domain/exception/sign_in_exception.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
+import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/logger.dart';
 import 'package:virtualpilgrimage/model/form_model.codegen.dart';
 import 'package:virtualpilgrimage/ui/pages/sign_in/sign_in_state.codegen.dart';
@@ -27,6 +29,7 @@ class SignInPresenter extends StateNotifier<SignInState> {
     _userState = _ref.watch(userStateProvider.state);
     _loginState = _ref.watch(loginStateProvider.state);
     _analytics = _ref.read(analyticsProvider);
+    _crashlytics = _ref.read(firebaseCrashlyticsProvider);
   }
 
   final Ref _ref;
@@ -34,6 +37,7 @@ class SignInPresenter extends StateNotifier<SignInState> {
   late final StateController<VirtualPilgrimageUser?> _userState;
   late final StateController<UserStatus?> _loginState;
   late final Analytics _analytics;
+  late final FirebaseCrashlytics _crashlytics;
 
   void onChangeEmail(FormModel emailOrNickname) =>
       state = state.onChangeEmailOrNickname(emailOrNickname);
@@ -59,6 +63,7 @@ class SignInPresenter extends StateNotifier<SignInState> {
           parameters: {'error': e},
         ),
       );
+      unawaited(_crashlytics.recordError(e, null));
     }
   }
 
@@ -150,6 +155,8 @@ class SignInPresenter extends StateNotifier<SignInState> {
           parameters: {'error': e, 'validationStatus': e.status.name},
         ),
       );
+      unawaited(_crashlytics.recordError(e, null));
+
     } on Exception catch (e) {
       unawaited(
         _analytics.logEvent(
@@ -157,6 +164,7 @@ class SignInPresenter extends StateNotifier<SignInState> {
           parameters: {'error': e},
         ),
       );
+      unawaited(_crashlytics.recordError(e, null));
     }
   }
 
