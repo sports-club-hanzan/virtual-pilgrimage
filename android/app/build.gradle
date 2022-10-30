@@ -94,12 +94,10 @@ android {
         targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        // 環境ごとにアプリケーションの表示名を修正
+        // 環境ごとにパッケージ名を修正
         if (dartEnvironmentVariables.FLAVOR != '') {
             applicationIdSuffix ".${dartEnvironmentVariables.FLAVOR}"
         }
-        resValue "string", "app_name", "com.virtualpilgrimage" +
-                (dartEnvironmentVariables.FLAVOR == 'prod' ? '.prod' : ".${dartEnvironmentVariables.FLAVOR}")
         // firebase関連のライブラリを使うことによる64k問題の回避のための設定
         multiDexEnabled true
 
