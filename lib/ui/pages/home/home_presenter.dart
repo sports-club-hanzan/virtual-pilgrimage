@@ -9,9 +9,12 @@ import 'package:virtualpilgrimage/analytics.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/update_pilgrimage_progress_result.codegen.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/update_pilgrimage_progress_usecase.dart';
 import 'package:virtualpilgrimage/domain/temple/temple_repository.dart';
+import 'package:virtualpilgrimage/domain/user/health/update_health_result.dart';
+import 'package:virtualpilgrimage/domain/user/health/update_health_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/logger.dart';
+import 'package:virtualpilgrimage/ui/components/bottom_navigation.dart';
 
 import 'home_state.codegen.dart';
 
@@ -25,6 +28,8 @@ class HomePresenter extends StateNotifier<HomeState> {
     _analytics = _ref.read(analyticsProvider);
     _crashlytics = _ref.read(firebaseCrashlyticsProvider);
     _templeRepository = _ref.read(templeRepositoryProvider);
+    _userStateNotifier = _ref.read(userStateProvider.notifier);
+    _ref.read(pageTypeProvider.notifier).state = PageType.home;
     initialize();
   }
 
@@ -33,6 +38,7 @@ class HomePresenter extends StateNotifier<HomeState> {
   late final Analytics _analytics;
   late final FirebaseCrashlytics _crashlytics;
   late final TempleRepository _templeRepository;
+  late final StateController<VirtualPilgrimageUser?> _userStateNotifier;
 
   // 札所の数
   static const maxTempleNumber = 88;
@@ -45,7 +51,7 @@ class HomePresenter extends StateNotifier<HomeState> {
     unawaited(_analytics.logEvent(eventName: AnalyticsEvent.initializeHomePageAndGetHealth));
 
     final loginState = _ref.read(loginStateProvider);
-    final user = _ref.read(userStateProvider);
+    VirtualPilgrimageUser? user = _ref.read(userStateProvider);
     // ログインしていない状態で Home Page に遷移してきても
     // 情報を描画できずどうしようもないので crash させる
     if (loginState != UserStatus.created || user == null) {
@@ -86,7 +92,19 @@ class HomePresenter extends StateNotifier<HomeState> {
       final updatedUser = logicResult.updatedUser;
       if (updatedUser != null) {
         await setMarkerAndPolylines(updatedUser, logicResult);
-        _ref.read(userStateProvider.notifier).state = updatedUser;
+        user = updatedUser;
+        _userStateNotifier.state = updatedUser;
+      }
+
+      // 描画を更新しながら、ヘルスケア情報も更新する
+      // 先にmapの描画を更新してバックグラウンドでヘルスケア情報を更新しておくことで、UIの変更の反映を早める
+      final updateHealthResult = await _ref.read(updateHealthUsecaseProvider).execute(user);
+      if (updateHealthResult.status == UpdateHealthStatus.success) {
+        if (updateHealthResult.updatedUser != null) {
+          _userStateNotifier.state = updateHealthResult.updatedUser;
+        }
+      } else {
+        unawaited(_crashlytics.recordError(updateHealthResult.error, null));
       }
     } on Exception catch (e) {
       unawaited(_crashlytics.recordError(e, null));

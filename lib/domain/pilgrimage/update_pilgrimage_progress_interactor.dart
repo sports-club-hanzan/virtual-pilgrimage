@@ -111,8 +111,8 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
     ]);
     _logger.d(
       'got info for updating pilgrimage progress '
-      '[nowTempleInfo][$nowTempleInfo]'
-      '[health][$healthFromLastUpdatedAt]',
+      '[health][$healthFromLastUpdatedAt]'
+      '[nowTempleInfo][$nowTempleInfo]',
     );
 
     /// 2. 移動距離 > 次の札所までの距離 の間、で移動距離を減らしながら次に目指すべき札所を導出する

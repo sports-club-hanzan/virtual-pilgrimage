@@ -47,8 +47,8 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
     _usecase = _ref.read(userRegistrationUsecaseProvider);
     _analytics = _ref.read(analyticsProvider);
     _crashlytics = _ref.read(firebaseCrashlyticsProvider);
-    _userState = _ref.watch(userStateProvider.notifier);
-    _loginState = _ref.watch(loginStateProvider.state);
+    _userStateNotifier = _ref.read(userStateProvider.notifier);
+    _loginStateNotifier = _ref.read(loginStateProvider.notifier);
     isRegistered = _ref.read(userStateProvider)?.userStatus == UserStatus.created;
   }
 
@@ -56,8 +56,8 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
   late final UserRegistrationUsecase _usecase;
   late final Analytics _analytics;
   late final FirebaseCrashlytics _crashlytics;
-  late final StateController<VirtualPilgrimageUser?> _userState;
-  late final StateController<UserStatus?> _loginState;
+  late final StateController<VirtualPilgrimageUser?> _userStateNotifier;
+  late final StateController<UserStatus?> _loginStateNotifier;
   final dateFormatter = DateFormat();
 
   // 作成済みの状態から遷移してきたかどうか
@@ -123,6 +123,9 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
     final user = _ref.read(userStateProvider)!;
     final updatedUser =
         user.fromRegistrationForm(state.nickname.text, state.gender.selectedValue, birthday);
+    await (() async {
+      _userStateNotifier.state = updatedUser;
+    })();
     final result = await _usecase.execute(user: updatedUser, isRegistered: isRegistered);
 
     switch (result.status) {
@@ -132,8 +135,7 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
           // 登録済みの場合はloginStateが更新されないので、強制的にページ遷移させる
           _ref.read(routerProvider).go(RouterPath.home);
         } else {
-          _userState.state = updatedUser;
-          _loginState.state = updatedUser.userStatus;
+          _loginStateNotifier.state = updatedUser.userStatus;
         }
         break;
       case RegistrationResultStatus.alreadyExistSameNicknameUser:

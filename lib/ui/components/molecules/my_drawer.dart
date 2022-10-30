@@ -23,6 +23,7 @@ class MyDrawer extends ConsumerWidget {
       drawerChild = ListView(
         children: [
           _headerWidget(context, userState),
+          // いずれもクリックした際にページタブをリセットしておく
           _menuWidget(context, Icons.edit_outlined, 'ユーザ情報編集', () => _moveEditPage(context, ref)),
           _menuWidget(context, Icons.logout_outlined, 'ログアウト', () => _logout(context, ref)),
         ],
