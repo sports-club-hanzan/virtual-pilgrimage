@@ -18,12 +18,16 @@ class UserRegistrationInteractor extends UserRegistrationUsecase {
   final FirebaseCrashlytics _crashlytics;
 
   @override
-  Future<RegistrationResult> execute(VirtualPilgrimageUser user) async {
+  Future<RegistrationResult> execute({
+    required VirtualPilgrimageUser user,
+    required bool isRegistered,
+  }) async {
     DatabaseException? error;
     RegistrationResultStatus status = RegistrationResultStatus.fail;
 
     try {
-      if (await _userRepository.findWithNickname(user.nickname) != null) {
+      // 登録済みユーザでない場合はニックネームの重複を調べる
+      if (!isRegistered && await _userRepository.findWithNickname(user.nickname) != null) {
         return RegistrationResult(
           RegistrationResultStatus.alreadyExistSameNicknameUser,
         );

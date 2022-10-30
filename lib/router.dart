@@ -15,6 +15,7 @@ extension RouterPath on String {
   static const signIn = '/signin';
   static const registration = '/registration';
   static const profile = '/profile';
+  static const edit = '/edit';
 }
 
 // アニメーション抜きで即ページ遷移させるための設定
@@ -67,6 +68,13 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>(
             previousPagePath: previousPage ?? RouterPath.home,
           );
           return zeroTransitionPage(page, context);
+        },
+      ),
+      // ユーザ情報編集
+      GoRoute(
+        path: RouterPath.edit,
+        builder: (BuildContext context, GoRouterState state) {
+          return const RegistrationPage();
         },
       ),
     ],

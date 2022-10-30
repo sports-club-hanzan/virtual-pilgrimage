@@ -16,5 +16,5 @@ final userRegistrationUsecaseProvider = Provider.autoDispose(
 
 // ユーザ情報を登録するためのユースケース
 abstract class UserRegistrationUsecase {
-  Future<RegistrationResult> execute(VirtualPilgrimageUser user);
+  Future<RegistrationResult> execute({required VirtualPilgrimageUser user, required bool isRegistered});
 }

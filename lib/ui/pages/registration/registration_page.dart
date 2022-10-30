@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:virtualpilgrimage/router.dart';
 import 'package:virtualpilgrimage/ui/components/atoms/primary_button.dart';
 import 'package:virtualpilgrimage/ui/components/atoms/secondary_button.dart';
 import 'package:virtualpilgrimage/ui/components/gender_radio_buttons.dart';
@@ -9,7 +8,6 @@ import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
 import 'package:virtualpilgrimage/ui/components/my_text_form_field.dart';
 import 'package:virtualpilgrimage/ui/pages/registration/registration_presenter.dart';
 import 'package:virtualpilgrimage/ui/pages/registration/registration_state.codegen.dart';
-import 'package:virtualpilgrimage/ui/pages/sign_in/sign_in_presenter.dart';
 import 'package:virtualpilgrimage/ui/style/color.dart';
 import 'package:virtualpilgrimage/ui/style/font.dart';
 
@@ -19,7 +17,7 @@ class RegistrationPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: const MyAppBar(),
+      appBar: const MyAppBar(isLogin: false),
       body: RegistrationPageBody(ref),
     );
   }
@@ -61,10 +59,7 @@ class RegistrationPageBody extends StatelessWidget {
                       ),
                     ),
                     SecondaryButton(
-                      onPressed: () async {
-                        await ref.read(signInPresenterProvider.notifier).logout();
-                        ref.read(routerProvider).go(RouterPath.signIn);
-                      },
+                      onPressed: notifier.onPressedLogout,
                       text: 'ログイン画面へ戻る',
                       buttonSize: Size(MediaQuery.of(context).size.width / 5 * 3, 48),
                     ),

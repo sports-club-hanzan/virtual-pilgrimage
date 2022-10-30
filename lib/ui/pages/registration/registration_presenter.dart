@@ -4,12 +4,14 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:virtualpilgrimage/analytics.dart';
+import 'package:virtualpilgrimage/domain/auth/sign_in_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/registration/registration_result.dart';
 import 'package:virtualpilgrimage/domain/user/registration/user_registration_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/model/form_model.codegen.dart';
 import 'package:virtualpilgrimage/model/radio_button_model.codegen.dart';
+import 'package:virtualpilgrimage/router.dart';
 import 'package:virtualpilgrimage/ui/pages/registration/registration_state.codegen.dart';
 import 'package:virtualpilgrimage/ui/style/color.dart';
 
@@ -45,17 +47,21 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
     _usecase = _ref.read(userRegistrationUsecaseProvider);
     _analytics = _ref.read(analyticsProvider);
     _crashlytics = _ref.read(firebaseCrashlyticsProvider);
-    _userState = _ref.watch(userStateProvider.notifier);
-    _loginState = _ref.watch(loginStateProvider.state);
+    _userStateNotifier = _ref.read(userStateProvider.notifier);
+    _loginStateNotifier = _ref.read(loginStateProvider.notifier);
+    isRegistered = _ref.read(userStateProvider)?.userStatus == UserStatus.created;
   }
 
   final Ref _ref;
   late final UserRegistrationUsecase _usecase;
   late final Analytics _analytics;
   late final FirebaseCrashlytics _crashlytics;
-  late final StateController<VirtualPilgrimageUser?> _userState;
-  late final StateController<UserStatus?> _loginState;
+  late final StateController<VirtualPilgrimageUser?> _userStateNotifier;
+  late final StateController<UserStatus?> _loginStateNotifier;
   final dateFormatter = DateFormat();
+
+  // 作成済みの状態から遷移してきたかどうか
+  late final bool isRegistered;
 
   void onChangedNickname(FormModel nickname) {
     state = state.onChangeNickname(nickname);
@@ -117,13 +123,20 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
     final user = _ref.read(userStateProvider)!;
     final updatedUser =
         user.fromRegistrationForm(state.nickname.text, state.gender.selectedValue, birthday);
-    final result = await _usecase.execute(updatedUser);
+    await (() async {
+      _userStateNotifier.state = updatedUser;
+    })();
+    final result = await _usecase.execute(user: updatedUser, isRegistered: isRegistered);
 
     switch (result.status) {
       // ユーザ登録に成功したらユーザの state を更新
       case RegistrationResultStatus.success:
-        _userState.state = updatedUser;
-        _loginState.state = updatedUser.userStatus;
+        if (isRegistered) {
+          // 登録済みの場合はloginStateが更新されないので、強制的にページ遷移させる
+          _ref.read(routerProvider).go(RouterPath.home);
+        } else {
+          _loginStateNotifier.state = updatedUser.userStatus;
+        }
         break;
       case RegistrationResultStatus.alreadyExistSameNicknameUser:
         state = state.setExternalErrors(nicknameError: '既に使われているため別のニックネームにしてください');
@@ -145,5 +158,12 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
         unawaited(_crashlytics.recordError(result.error, null));
         break;
     }
+  }
+
+  Future<void> onPressedLogout() async {
+    await _ref.read(analyticsProvider).logEvent(eventName: AnalyticsEvent.logout);
+    await _ref.read(signInUsecaseProvider).logout();
+    _ref.read(loginStateProvider.state).state = null;
+    _ref.read(routerProvider).go(RouterPath.signIn);
   }
 }
