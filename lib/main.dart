@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtualpilgrimage/analytics.dart';
@@ -15,11 +16,15 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   const flavor = String.fromEnvironment('FLAVOR', defaultValue: 'dev');
   await Firebase.initializeApp(options: _getFirebaseOptions(flavor));
-  runApp(const ProviderScope(child: _App()));
+  // flutter側で検知されるエラーをCrashlyticsに送信
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  runApp(const ProviderScope(child: _App(flavor: flavor,)));
 }
 
 class _App extends ConsumerWidget {
-  const _App();
+  const _App({required this.flavor});
+
+  final String flavor;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -55,6 +60,7 @@ class _App extends ConsumerWidget {
       title: '巡礼ウォーク',
       locale: const Locale('ja'),
       theme: AppTheme.theme,
+      debugShowCheckedModeBanner: flavor != 'prod',
     );
   }
 }
