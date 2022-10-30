@@ -23,11 +23,14 @@ void main() {
   late HealthByPeriod healthByPeriod;
   late HealthInfo healthInfo;
 
+  setUpAll(() {
+    CustomizableDateTime.customTime = DateTime.now();
+  });
+
   setUp(() {
     final container = mockedProviderContainer();
     target = container.read(profileProvider.notifier);
 
-    CustomizableDateTime.customTime = DateTime.now();
     user = VirtualPilgrimageUser(
       id: id,
       birthDay: CustomizableDateTime.current,
@@ -70,10 +73,18 @@ void main() {
     });
 
     test('ログインユーザと同じユーザを取得する場合', () async {
+      container = mockedProviderContainer(
+        overrides: [
+          userRepositoryProvider.overrideWithValue(FakeUserRepository(loginUser)),
+          healthRepositoryProvider.overrideWithValue(healthRepository),
+        ],
+      );
+      container.read(userStateProvider.notifier).state = loginUser;
       final actualLoading = container.read(profileUserProvider('dummyLoginUserId'));
       expect(actualLoading, const AsyncValue<VirtualPilgrimageUser?>.loading());
 
       // UseCaseでの更新処理と取得処理の2つをawaitするため、2回記述
+      await Future<void>.value();
       await Future<void>.value();
       await Future<void>.value();
 
@@ -82,13 +93,7 @@ void main() {
     });
 
     test('ログインユーザと違うユーザを取得', () async {
-      final expected = VirtualPilgrimageUser(
-        id: 'dummyId',
-        birthDay: CustomizableDateTime.current,
-        createdAt: CustomizableDateTime.current,
-        updatedAt: CustomizableDateTime.current,
-        pilgrimage: PilgrimageInfo(id: 'dummyId', updatedAt: CustomizableDateTime.current),
-      );
+      final expected = user;
 
       final actualLoading = container.read(profileUserProvider('dummyId'));
       expect(actualLoading, const AsyncValue<VirtualPilgrimageUser?>.loading());
