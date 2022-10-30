@@ -18,28 +18,29 @@ import 'package:virtualpilgrimage/ui/pages/profile/profile_state.codegen.dart';
 final profileUserProvider =
     FutureProvider.family<VirtualPilgrimageUser?, String>((ref, userId) async {
   // ログイン状態でしか呼ばれないため、nullable を想定していない
-  final loginUser = ref.read(userStateProvider)!;
-  // ログインユーザ自身を指定していた場合
-  if (loginUser.id == userId) {
-    // ヘルスケア情報をとりにいく
-    final result = await ref.read(updateHealthUsecaseProvider).execute(loginUser);
-    // ヘルスケア情報が上手く取れた場合は更新後のユーザ情報を返す
-    if (result.status == UpdateHealthStatus.success) {
-      ref.read(loggerProvider).d(result);
-      ref.read(userStateProvider.notifier).state = result.updatedUser;
-      return result.updatedUser;
-    } else {
-      ref.read(loggerProvider).e(result);
-      await ref.read(firebaseCrashlyticsProvider).recordError(
-            result.error,
-            null,
-            reason: 'failed to record health information [status][${result.status}]',
-          );
-    }
-    return loginUser;
+  final loginUser = ref.watch(userStateProvider)!;
+  // 常に最新の値を取りに行くため、DBに問い合わせる
+  final user = await ref.read(userRepositoryProvider).get(userId);
+  // ログインユーザ以外を指定していた場合
+  if (loginUser.id != userId) {
+    return user;
   }
-  // そうでなければDBに問い合わせ
-  return ref.read(userRepositoryProvider).get(userId);
+  // ログインユーザ自身を指定していた場合、ヘルスケア情報をとりにいく
+  final result = await ref.read(updateHealthUsecaseProvider).execute(user!);
+  if (result.status == UpdateHealthStatus.success) {
+    // ヘルスケア情報が上手く取れた場合は更新後のユーザ情報を返す
+    // ユーザstateの更新は行わない
+    ref.read(loggerProvider).d(result);
+    return result.updatedUser;
+  } else {
+    ref.read(loggerProvider).e(result);
+    await ref.read(firebaseCrashlyticsProvider).recordError(
+          result.error,
+          null,
+          reason: 'failed to record health information [status][${result.status}][userId][$userId]',
+        );
+  }
+  return loginUser;
 });
 
 final profileProvider =

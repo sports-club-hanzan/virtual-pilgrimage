@@ -6,6 +6,7 @@ import 'package:virtualpilgrimage/analytics.dart';
 import 'package:virtualpilgrimage/domain/auth/sign_in_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/router.dart';
+import 'package:virtualpilgrimage/ui/components/bottom_navigation.dart';
 import 'package:virtualpilgrimage/ui/style/font.dart';
 
 class MyDrawer extends ConsumerWidget {
@@ -23,8 +24,15 @@ class MyDrawer extends ConsumerWidget {
       drawerChild = ListView(
         children: [
           _headerWidget(context, userState),
-          _menuWidget(context, Icons.edit_outlined, 'ユーザ情報編集', () => _moveEditPage(context, ref)),
-          _menuWidget(context, Icons.logout_outlined, 'ログアウト', () => _logout(context, ref)),
+          // いずれもクリックした際にページタブをリセットしておく
+          _menuWidget(context, Icons.edit_outlined, 'ユーザ情報編集', () {
+            ref.read(pageTypeProvider.notifier).state = PageType.home;
+            _moveEditPage(context, ref);
+          }),
+          _menuWidget(context, Icons.logout_outlined, 'ログアウト', () {
+            ref.read(pageTypeProvider.notifier).state = PageType.home;
+            _logout(context, ref);
+          }),
         ],
       );
     }
