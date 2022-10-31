@@ -18,6 +18,7 @@ class TempleDetailDialog extends StatelessWidget {
         child: SizedBox(
           // SizedBox + double.maxFinite がないと RenderViewport に関するエラーが発生する
           width: double.maxFinite,
+          height: 400,
           child: ListView(
             children: [
               Center(
@@ -31,6 +32,7 @@ class TempleDetailDialog extends StatelessWidget {
       actions: [
         Center(
           child: PrimaryButton(
+            buttonSize: Size(MediaQuery.of(context).size.width / 5 * 3, 48),
             onPressed: () => Navigator.pop(context, '閉じる'),
             text: '閉じる',
           ),
