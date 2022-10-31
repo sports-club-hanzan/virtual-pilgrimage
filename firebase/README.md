@@ -66,6 +66,7 @@ source '/opt/homebrew/share/zsh/site-functions/_google-cloud-sdk'
 
 source ~/.zshrc
 # 共用のgoogleアカウントでログイン
+gcloud config create <設定の名称>
 gcloud auth login
 ```
 
@@ -77,7 +78,8 @@ gcloud projects list
 PROJECT_ID              NAME                    PROJECT_NUMBER
 modular-rex-362205      My First Project        ***
 ...
-# プロジェクトにセット
+# プロジェクトをセット
+# 新しいプロジェクトに向けた設定を作成したい場合、gcloud config create から実施し直して新しいプロジェクトをセットする
 gcloud config set project <プロジェクト名>
 # 状況に応じて下記のようなコマンドを使う
 ## 設定一覧の確認
