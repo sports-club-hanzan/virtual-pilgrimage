@@ -15,17 +15,21 @@ class TempleDetailDialog extends StatelessWidget {
     return AlertDialog(
       content: DecoratedBox(
         decoration: const BoxDecoration(color: Colors.white),
-        child: ListView(
-          children: [
-            Center(
-              child: Image.network(templeInfo.images[0]),
-            ),
-            Text(templeInfo.knowledge),
-            PrimaryButton(
-              onPressed: () => Navigator.pop(context, '閉じる'),
-              text: '閉じる',
-            )
-          ],
+        child: SizedBox(
+          // SizedBox + double.maxFinite がないと RenderViewport に関するエラーが発生する
+          width: double.maxFinite,
+          child: ListView(
+            children: [
+              Center(
+                child: Image.network(templeInfo.images[0]),
+              ),
+              Text(templeInfo.knowledge),
+              PrimaryButton(
+                onPressed: () => Navigator.pop(context, '閉じる'),
+                text: '閉じる',
+              )
+            ],
+          ),
         ),
       ),
     );
