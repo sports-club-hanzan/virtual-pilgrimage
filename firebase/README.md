@@ -49,11 +49,50 @@ __TODO: github actions で CI/CD を構築して機能追加の Firebase の反�
 
 このユースケースの場合、このディレクトリの中で必要なデータとデータをアップロードするスクリプトを開発する
 
+### CloudStoreの更新について
+
+CloudStoreに画像をアップロードする場合、下記のコマンドを実行する
+
+#### gsutil のセットアップ
+
+初回のみ実行する
+
+```shell
+brew install --cask google-cloud-sdk
+# 以下を.zshrcなどに追加。brewの実行時に inc ファイルのパスが出力されるので適宜置き換える
+# m2macだと以下のようなパスだった
+source '/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc'
+source '/opt/homebrew/share/zsh/site-functions/_google-cloud-sdk'
+
+source ~/.zshrc
+# 共用のgoogleアカウントでログイン
+gcloud auth login
+```
+
+#### アップロードの実行
+
+```shell
+# 画像をアップロードしたいCloudStorageがあるプロジェクトを探す
+gcloud projects list
+PROJECT_ID              NAME                    PROJECT_NUMBER
+modular-rex-362205      My First Project        ***
+...
+# プロジェクトにセット
+gcloud config set project <プロジェクト名>
+# 状況に応じて下記のようなコマンドを使う
+## 設定一覧の確認
+## gcloud config configurations list
+## 設定の切り替え
+## gcloud config configurations activate <設定名>
+PROJECT_NAME=<プロジェクト名> npm run upload_temple_images
+```
+
 ### temples/temple_info.csvの経路情報の更新について
 
 お寺の経路情報（エンコードされた経路情報）を更新する場合は下記のコマンドを実行する
 
-```
+```shell
 cd ./firebase
+# API_KEY は Direction API の権限を持ったファイル
 API_KEY="AIzaSyAyPFAJTNbCbvIqyv....." npm run csv_append_temple_points
 ```

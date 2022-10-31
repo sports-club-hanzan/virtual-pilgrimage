@@ -4,6 +4,7 @@
     "description": "verify firestore rules of virtual pilgrimage project",
     "scripts": {
         "csv_append_temple_points": "node bin/csv_append_temple_points.js",
+        "upload_temple_images": "ts-node bin/upload_temple_images.ts",
         "test": "firebase emulators:exec --only firestore 'jest --detectOpenHandles'"
     },
     "repository": {
@@ -14,6 +15,7 @@
     "homepage": "https://github.com/s14t284/virtual-pilgrimage/firebase#readme",
     "devDependencies": {
         "@firebase/rules-unit-testing": "^2.0.4",
+        "@types/glob": "^8.0.0",
         "@types/jest": "^28.1.6",
         "@types/uuid": "^8.3.4",
         "jest": "^28.1.3",
@@ -44,6 +46,7 @@
     "dependencies": {
         "axios": "^1.1.3",
         "csv-parse": "^5.3.1",
-        "csv-stringify": "^6.2.0"
+        "csv-stringify": "^6.2.0",
+        "glob": "^8.0.3"
     }
 }
