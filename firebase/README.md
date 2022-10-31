@@ -93,6 +93,6 @@ PROJECT_NAME=<プロジェクト名> npm run upload_temple_images
 
 ```shell
 cd ./firebase
-# API_KEY は Direction API の権限を持ったファイル
+# API_KEY は Direction API の権限を持ったKey
 API_KEY="AIzaSyAyPFAJTNbCbvIqyv....." npm run csv_append_temple_points
 ```
