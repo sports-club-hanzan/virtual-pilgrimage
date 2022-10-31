@@ -7,17 +7,23 @@ categories:
       - 'enhancement'
   - title: '🐛 Bug Fixes'
     labels:
-      - 'fix'
       - 'bugfix'
-      - 'bug'
   - title: '🧰 Maintenance'
-    label: 'chore'
+    labels:
+      - 'enhancement'
+      - 'chore'
   - title: '📝 Document'
     labels:
-      - 'doc'
       - 'documentation'
+      - 'design-app'
   - title: '🔧 Refactoring'
     label: 'refactor'
+  - title: '🔥 Firebase'
+    label: 'Firebase'
+  - title: '🍎 iOS'
+    label: 'iOS'
+  - title: '🤖 Android'
+    label: 'Android'
 change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
 change-title-escapes: '\<*_&' # You can add # and @ to disable mentions, and add ` to disable code blocks.
 version-resolver:
@@ -35,10 +41,10 @@ version-resolver:
       - 'patch'
   default: patch
 autolabeler:
-  - label: 'feature'
+  - label: feature
     branch:
       - '/^feature\/.+/'
-  - label: 'bug'
+  - label: bugfix
     branch:
       - '/^fix\/.+/'
   - label: chore
@@ -55,6 +61,9 @@ autolabeler:
   - label: enhancement
     branch:
       - '/^(enhancement|improve|enhance)\/.+/'
+  - label: 'design-app'
+    branch:
+      - '/^design\/.+/'
 template: |
   ## Changes
 
