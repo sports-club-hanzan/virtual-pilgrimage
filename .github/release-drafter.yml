@@ -1,0 +1,70 @@
+name-template: 'v$RESOLVED_VERSION 🌈'
+tag-template: 'v$RESOLVED_VERSION'
+categories:
+  - title: '🚀 Features'
+    labels:
+      - 'feature'
+      - 'enhancement'
+  - title: '🐛 Bug Fixes'
+    labels:
+      - 'bugfix'
+  - title: '🧰 Maintenance'
+    labels:
+      - 'enhancement'
+      - 'chore'
+  - title: '📝 Document'
+    labels:
+      - 'documentation'
+      - 'design-app'
+  - title: '🔧 Refactoring'
+    label: 'refactor'
+  - title: '🔥 Firebase'
+    label: 'Firebase'
+  - title: '🍎 iOS'
+    label: 'iOS'
+  - title: '🤖 Android'
+    label: 'Android'
+change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
+change-title-escapes: '\<*_&' # You can add # and @ to disable mentions, and add ` to disable code blocks.
+version-resolver:
+  major:
+    labels:
+      - 'major'
+      - 'major-release'
+  minor:
+    labels:
+      - 'minor'
+      - 'release'
+      - 'minor-release'
+  patch:
+    labels:
+      - 'patch'
+  default: patch
+autolabeler:
+  - label: feature
+    branch:
+      - '/^feature\/.+/'
+  - label: bugfix
+    branch:
+      - '/^fix\/.+/'
+  - label: chore
+    branch:
+      - '/^chore\/.+/'
+  - label: refactor
+    branch:
+      - '/^(refactor|refactoring)\/.+/'
+  - label: doc
+    branch:
+      - '/^doc(umentation)?\/.+/'
+    files:
+      - '*.md'
+  - label: enhancement
+    branch:
+      - '/^(enhancement|improve|enhance)\/.+/'
+  - label: 'design-app'
+    branch:
+      - '/^design\/.+/'
+template: |
+  ## Changes
+
+  $CHANGES
