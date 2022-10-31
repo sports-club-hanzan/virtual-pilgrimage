@@ -13,12 +13,14 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--key_path", required=True)
     parser.add_argument("--data_path",required=True)
+    parser.add_argument("--env", default="dev", choices=["dev", "prd"])
 
     # 引数の読み込み
     args = parser.parse_args()
 
     key_path  = args.key_path
     data_path = args.data_path
+    env = args.env
 
     """
     firestoreデータにアクセス
@@ -58,8 +60,8 @@ def main():
     ids = df["お遍路の番号"].to_list()
     name = df["名前"].to_list()
     geoPoint = make_geopoint(geo_n,geo_t)
-    image_path = make_image_path(ids)
-    stamp_image_path = make_stamp_image_path(ids)
+    image_path = make_image_path(ids, env)
+    stamp_image_path = make_stamp_image_path(ids, env)
     prefecture = [add[:3] for add in address]
     encoded_points = df["経路情報（エンコード）"].to_list()
 
@@ -100,20 +102,20 @@ def make_geopoint(geo_n,geo_t):
 
 
 # storageにある.jegの画像ファイルへのパスを作成する関数
-def make_image_path(ids):
+def make_image_path(ids, env: str):
     image_list = []
 
     # TODO: 1つのパス(1.jpg)に対してのみしか対応できていないので改良必要
     for id_ in ids:
-        image_path = "https://firebasestorage.googleapis.com/v0/b/virtual-pilgrimage-dev.appspot.com/o/temples%2F"+str(id_)+"%2F1.jpg?alt=media&token=6fe4c2ed-b204-4837-9c56-3b72f24e1186"
+        image_path = f"https://firebasestorage.googleapis.com/v0/b/virtual-pilgrimage-{env}.appspot.com/o/temples%2F{id_}%2F1.jpg?alt=media&token=6fe4c2ed-b204-4837-9c56-3b72f24e1186"
         image_list.append([image_path])
 
     return image_list
 
-def make_stamp_image_path(ids):
+def make_stamp_image_path(ids, env: str):
     if len(ids) > 0:
         id_ = ids[0]
-        return "https://firebasestorage.googleapis.com/v0/b/virtual-pilgrimage-dev.appspot.com/o/temples%2F"+str(id_)+"%2Fstamp.jpg?alt=media&token=6fe4c2ed-b204-4837-9c56-3b72f24e1186"
+        return f"https://firebasestorage.googleapis.com/v0/b/virtual-pilgrimage-{env}.appspot.com/o/temples%2F{id_}%2Fstamp.jpg?alt=media&token=6fe4c2ed-b204-4837-9c56-3b72f24e1186"
 
     return ""
 
