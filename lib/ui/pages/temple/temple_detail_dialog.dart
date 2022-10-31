@@ -24,14 +24,18 @@ class TempleDetailDialog extends StatelessWidget {
                 child: Image.network(templeInfo.images[0]),
               ),
               Text(templeInfo.knowledge),
-              PrimaryButton(
-                onPressed: () => Navigator.pop(context, '閉じる'),
-                text: '閉じる',
-              )
             ],
           ),
         ),
       ),
+      actions: [
+        Center(
+          child: PrimaryButton(
+            onPressed: () => Navigator.pop(context, '閉じる'),
+            text: '閉じる',
+          ),
+        )
+      ],
     );
   }
 }
