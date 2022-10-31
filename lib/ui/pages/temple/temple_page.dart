@@ -45,18 +45,28 @@ class _TemplePageBody extends StatelessWidget {
   }
 
   Widget _buildTemple(BuildContext context, TempleInfo templeInfo, VirtualPilgrimageUser user) {
+    final bool isShowDetail = user.pilgrimage.nowPilgrimageId >= templeInfo.id || 1 < user.pilgrimage.lap;
+
     return Card(
       elevation: 6,
       margin: const EdgeInsets.all(10),
       child: ListTile(
-        leading: Image(
+        leading: isShowDetail ? Image(
           width: 100,
           height: 80,
           image: NetworkImage(
             templeInfo.images[0],
           ),
+        ) : Image(
+          width: 100,
+          height: 80,
+          image: NetworkImage(
+            templeInfo.images[0],
+          ),
+          color: Colors.black45,
+          colorBlendMode: BlendMode.xor,
         ),
-          title: Text(
+        title: Text(
             templeInfo.name,
             style: const TextStyle(
               color: Color(0xff7b61ff),
@@ -73,7 +83,7 @@ class _TemplePageBody extends StatelessWidget {
             ),
           ),
           onTap: () => {
-            if (user.pilgrimage.nowPilgrimageId >= templeInfo.id || 1 < user.pilgrimage.lap) {
+            if (isShowDetail) {
               showDialog<void>(
                 context: context,
                 builder: (BuildContext context) {

@@ -77,7 +77,7 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>(
         path: RouterPath.edit,
         builder: (BuildContext context, GoRouterState state) {
           return const RegistrationPage();
-        }
+        },
       ),
       // お寺一覧
       GoRoute(
