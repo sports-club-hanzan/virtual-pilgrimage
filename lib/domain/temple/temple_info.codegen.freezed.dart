@@ -27,7 +27,8 @@ mixin _$TempleInfo {
   String get address => throw _privateConstructorUsedError; // 次のお寺までの距離
   int get distance => throw _privateConstructorUsedError; // 次のお寺までの経路(エンコード文字列)
   String get encodedPoints => throw _privateConstructorUsedError; // お寺のうんちく
-  String get knowledge => throw _privateConstructorUsedError; // お寺の座標
+  String get knowledge => throw _privateConstructorUsedError; // スタンプの画像パス
+  String get stampImage => throw _privateConstructorUsedError; // お寺の座標
   @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
   GeoPoint get geoPoint => throw _privateConstructorUsedError;
   List<String> get images => throw _privateConstructorUsedError;
@@ -51,6 +52,7 @@ abstract class $TempleInfoCopyWith<$Res> {
       int distance,
       String encodedPoints,
       String knowledge,
+      String stampImage,
       @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
           GeoPoint geoPoint,
       List<String> images});
@@ -73,6 +75,7 @@ class _$TempleInfoCopyWithImpl<$Res> implements $TempleInfoCopyWith<$Res> {
     Object? distance = freezed,
     Object? encodedPoints = freezed,
     Object? knowledge = freezed,
+    Object? stampImage = freezed,
     Object? geoPoint = freezed,
     Object? images = freezed,
   }) {
@@ -105,6 +108,10 @@ class _$TempleInfoCopyWithImpl<$Res> implements $TempleInfoCopyWith<$Res> {
           ? _value.knowledge
           : knowledge // ignore: cast_nullable_to_non_nullable
               as String,
+      stampImage: stampImage == freezed
+          ? _value.stampImage
+          : stampImage // ignore: cast_nullable_to_non_nullable
+              as String,
       geoPoint: geoPoint == freezed
           ? _value.geoPoint
           : geoPoint // ignore: cast_nullable_to_non_nullable
@@ -132,6 +139,7 @@ abstract class _$$_TempleInfoCopyWith<$Res>
       int distance,
       String encodedPoints,
       String knowledge,
+      String stampImage,
       @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
           GeoPoint geoPoint,
       List<String> images});
@@ -156,6 +164,7 @@ class __$$_TempleInfoCopyWithImpl<$Res> extends _$TempleInfoCopyWithImpl<$Res>
     Object? distance = freezed,
     Object? encodedPoints = freezed,
     Object? knowledge = freezed,
+    Object? stampImage = freezed,
     Object? geoPoint = freezed,
     Object? images = freezed,
   }) {
@@ -188,6 +197,10 @@ class __$$_TempleInfoCopyWithImpl<$Res> extends _$TempleInfoCopyWithImpl<$Res>
           ? _value.knowledge
           : knowledge // ignore: cast_nullable_to_non_nullable
               as String,
+      stampImage: stampImage == freezed
+          ? _value.stampImage
+          : stampImage // ignore: cast_nullable_to_non_nullable
+              as String,
       geoPoint: geoPoint == freezed
           ? _value.geoPoint
           : geoPoint // ignore: cast_nullable_to_non_nullable
@@ -211,6 +224,8 @@ class _$_TempleInfo extends _TempleInfo {
       required this.distance,
       required this.encodedPoints,
       this.knowledge = 'お寺の詳細情報',
+      this.stampImage =
+          'https://firebasestorage.googleapis.com/v0/b/virtual-pilgrimage-dev.appspot.com/o/temples%2F1%2Fstamp.jpeg?alt=media&token=b3fe42f9-b94b-43f2-8a5d-b2f217be541f',
       @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
           required this.geoPoint,
       final List<String> images = const []})
@@ -242,6 +257,10 @@ class _$_TempleInfo extends _TempleInfo {
   @override
   @JsonKey()
   final String knowledge;
+// スタンプの画像パス
+  @override
+  @JsonKey()
+  final String stampImage;
 // お寺の座標
   @override
   @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
@@ -256,7 +275,7 @@ class _$_TempleInfo extends _TempleInfo {
 
   @override
   String toString() {
-    return 'TempleInfo(id: $id, name: $name, prefecture: $prefecture, address: $address, distance: $distance, encodedPoints: $encodedPoints, knowledge: $knowledge, geoPoint: $geoPoint, images: $images)';
+    return 'TempleInfo(id: $id, name: $name, prefecture: $prefecture, address: $address, distance: $distance, encodedPoints: $encodedPoints, knowledge: $knowledge, stampImage: $stampImage, geoPoint: $geoPoint, images: $images)';
   }
 
   @override
@@ -273,6 +292,8 @@ class _$_TempleInfo extends _TempleInfo {
             const DeepCollectionEquality()
                 .equals(other.encodedPoints, encodedPoints) &&
             const DeepCollectionEquality().equals(other.knowledge, knowledge) &&
+            const DeepCollectionEquality()
+                .equals(other.stampImage, stampImage) &&
             const DeepCollectionEquality().equals(other.geoPoint, geoPoint) &&
             const DeepCollectionEquality().equals(other._images, _images));
   }
@@ -288,6 +309,7 @@ class _$_TempleInfo extends _TempleInfo {
       const DeepCollectionEquality().hash(distance),
       const DeepCollectionEquality().hash(encodedPoints),
       const DeepCollectionEquality().hash(knowledge),
+      const DeepCollectionEquality().hash(stampImage),
       const DeepCollectionEquality().hash(geoPoint),
       const DeepCollectionEquality().hash(_images));
 
@@ -313,6 +335,7 @@ abstract class _TempleInfo extends TempleInfo {
       required final int distance,
       required final String encodedPoints,
       final String knowledge,
+      final String stampImage,
       @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
           required final GeoPoint geoPoint,
       final List<String> images}) = _$_TempleInfo;
@@ -335,6 +358,8 @@ abstract class _TempleInfo extends TempleInfo {
   String get encodedPoints;
   @override // お寺のうんちく
   String get knowledge;
+  @override // スタンプの画像パス
+  String get stampImage;
   @override // お寺の座標
   @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
   GeoPoint get geoPoint;

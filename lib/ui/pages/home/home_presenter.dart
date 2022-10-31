@@ -87,6 +87,9 @@ class HomePresenter extends StateNotifier<HomeState> {
       // TODO(s14t284): この中に今回到達したお寺の情報が含まれているのでUIに利用したりローカルpush通知に利用したりする
       // UIに使う例：到達した札所のスタンプを押すアニメーションなど
       // ローカルpush通知：ここで実装するのではなく、バックグラウンド処理で利用する
+      if (logicResult.reachedPilgrimageIdList.isNotEmpty) {
+        _ref.read(homeProvider.notifier).state = _ref.read(homeProvider).copyWith(stampAnimation: true);
+      }
       // ignore: avoid_print
       print(logicResult.reachedPilgrimageIdList);
       final updatedUser = logicResult.updatedUser;

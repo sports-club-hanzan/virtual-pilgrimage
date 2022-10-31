@@ -7,6 +7,7 @@ import 'package:virtualpilgrimage/ui/components/molecules/pilgrimage_progress_ca
 import 'package:virtualpilgrimage/ui/components/molecules/profile_health_card.dart';
 import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
 import 'package:virtualpilgrimage/ui/pages/home/components/google_map_view.dart';
+import 'package:virtualpilgrimage/ui/pages/home/components/stamp_animation_widget.dart';
 
 import 'home_presenter.dart';
 
@@ -38,11 +39,17 @@ class HomePageBody extends StatelessWidget {
     return ColoredBox(
       color: Theme.of(context).backgroundColor,
       child: SafeArea(
-        child: ListView(
+        child: Stack(
           children: [
-            const GoogleMapView(height: 300),
-            pilgrimageProgressCardProvider(context, userState!, _ref),
-            _healthCards(context, userState, notifier),
+            ListView(
+              children: [
+                const GoogleMapView(height: 300),
+                pilgrimageProgressCardProvider(context, userState!, _ref),
+                _healthCards(context, userState, notifier),
+              ],
+            ),
+            if(_ref.watch(homeProvider).stampAnimation)
+              const StampAnimationWidget()
           ],
         ),
       ),
