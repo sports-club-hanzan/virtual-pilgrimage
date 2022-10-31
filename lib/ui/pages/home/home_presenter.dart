@@ -88,7 +88,8 @@ class HomePresenter extends StateNotifier<HomeState> {
       // UIに使う例：到達した札所のスタンプを押すアニメーションなど
       // ローカルpush通知：ここで実装するのではなく、バックグラウンド処理で利用する
       if (logicResult.reachedPilgrimageIdList.isNotEmpty) {
-        _ref.read(homeProvider.notifier).state = _ref.read(homeProvider).copyWith(stampAnimation: true);
+        final templeId = logicResult.reachedPilgrimageIdList.first;
+        state = state.copyWith(animationTempleId: templeId);
       }
       // ignore: avoid_print
       print(logicResult.reachedPilgrimageIdList);
@@ -153,6 +154,11 @@ class HomePresenter extends StateNotifier<HomeState> {
 
     // stateを更新して、markerと経路を表示
     state = state.setupMarkers(markers, polylines);
+  }
+
+  /// AnimationWidget の閉じるを押した時に呼ばれる
+  void onAnimationClosed() {
+    state = state.copyWith(animationTempleId: 0);
   }
 
   /// GoogleMap の描画が完了した時に呼ばれる

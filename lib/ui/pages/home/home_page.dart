@@ -34,6 +34,7 @@ class HomePageBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userState = _ref.watch(userStateProvider);
+    final homeState = _ref.watch(homeProvider);
     final notifier = _ref.read(homeProvider.notifier);
 
     return ColoredBox(
@@ -48,8 +49,8 @@ class HomePageBody extends StatelessWidget {
                 _healthCards(context, userState, notifier),
               ],
             ),
-            if(_ref.watch(homeProvider).stampAnimation)
-              const StampAnimationWidget()
+            if(homeState.animationTempleId != 0)
+              StampAnimationWidget(animationTempleId: homeState.animationTempleId, notifier: notifier)
           ],
         ),
       ),
