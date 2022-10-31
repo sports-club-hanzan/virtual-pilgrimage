@@ -9,11 +9,9 @@ if (projectName === '') {
   process.exit();
 }
 
-const errors = [];
 glob(`${rootDir}*`, (err, dirs) => {
   if (err) {
     console.error(err);
-    errors.push(err);
     return;
   }
 
@@ -24,8 +22,9 @@ glob(`${rootDir}*`, (err, dirs) => {
       async (err, stdout, stderr) => {
         await setTimeout(1, '');
         if (err) {
+          console.error('===============');
           console.error(err);
-          errors.push(err);
+          console.error('===============');
           return;
         }
         if (stdout.length > 0) {
