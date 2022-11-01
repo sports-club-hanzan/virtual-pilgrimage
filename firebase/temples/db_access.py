@@ -51,6 +51,7 @@ def main():
     - name:名前
     - prefecture:住所[:3]
     - encoded_points:エンコードした札所間の経路情報
+    - knowledge:うんちく
     """
     # 各種リストの作成
     address = df["住所"].to_list()
@@ -64,6 +65,7 @@ def main():
     stamp_image_path = make_stamp_image_path(ids, env)
     prefecture = [add[:3] for add in address]
     encoded_points = df["経路情報（エンコード）"].to_list()
+    knowledge = df["うんちく"].to_list()
 
     """
     firestoreにデータを書き込む
@@ -83,6 +85,7 @@ def main():
             u'name':name[i],
             u'prefecture':prefecture[i],
             u'encodedPoints':str(encoded_points[i]),
+            u'knowledge':knowledge[i],
         })
 
     return
