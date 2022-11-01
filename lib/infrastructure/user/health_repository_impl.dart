@@ -52,10 +52,10 @@ class HealthRepositoryImpl implements HealthRepository {
     _logger.d('collect health info start [targetDateTime][$targetDateTime]');
     try {
       // 今日、昨日1日、過去一週間、過去一ヶ月間、過去全ての3パターンでヘルスケア情報を取得
-      // 今日
+      // 今日のデータは今日の00:00:00 ~ 現在時刻までを取得
       final healthOfToday = await _getHealthData(
         DateTime(targetDateTime.year, targetDateTime.month, targetDateTime.day),
-        _lastTime(targetDateTime),
+        targetDateTime,
         types,
       );
 
@@ -86,6 +86,7 @@ class HealthRepositoryImpl implements HealthRepository {
       }
 
       final totalHealth = _aggregateHealthInfo(healthOfTotal);
+      print(_aggregateHealthInfo(healthOfToday));
       final health = HealthInfo(
         today: _aggregateHealthInfo(healthOfToday),
         yesterday: _aggregateHealthInfo(healthOfYesterday),
@@ -95,6 +96,7 @@ class HealthRepositoryImpl implements HealthRepository {
         totalSteps: totalHealth.steps,
         totalDistance: totalHealth.distance,
       );
+      _aggregateHealthInfo(healthOfToday);
       _logger.d(health);
       return health;
     } on HealthException catch (e) {
@@ -194,6 +196,8 @@ class HealthRepositoryImpl implements HealthRepository {
           break;
         // 消費カロリー[kcal]
         case HealthDataType.ACTIVE_ENERGY_BURNED:
+          print(p);
+          print(val);
           burnedCalorie += val;
           break;
         // ignore: no_default_cases
