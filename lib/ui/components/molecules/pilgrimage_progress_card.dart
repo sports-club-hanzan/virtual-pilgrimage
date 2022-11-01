@@ -160,7 +160,7 @@ class PilgrimageProgressCard extends StatelessWidget {
                 _meterToKilometerString(movingDistance),
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onSecondaryContainer,
-                  fontSize: FontSize.mediumSize + 4,
+                  fontSize: FontSize.mediumSize + 2,
                   fontWeight: FontWeight.w900,
                 ),
               ),
@@ -181,7 +181,7 @@ class PilgrimageProgressCard extends StatelessWidget {
                 _meterToKilometerString(nextDistance),
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onSecondaryContainer,
-                  fontSize: FontSize.mediumSize + 4,
+                  fontSize: FontSize.mediumSize + 2,
                   fontWeight: FontWeight.w900,
                 ),
               ),
