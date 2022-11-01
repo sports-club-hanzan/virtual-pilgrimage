@@ -50,7 +50,7 @@ class HomePageBody extends StatelessWidget {
               ],
             ),
             if(homeState.animationTempleId != 0)
-              StampAnimationWidget(animationTempleId: homeState.animationTempleId, notifier: notifier)
+              StampAnimationWidget(animationTempleId: homeState.animationTempleId)
           ],
         ),
       ),

@@ -87,10 +87,6 @@ class HomePresenter extends StateNotifier<HomeState> {
       // TODO(s14t284): この中に今回到達したお寺の情報が含まれているのでUIに利用したりローカルpush通知に利用したりする
       // UIに使う例：到達した札所のスタンプを押すアニメーションなど
       // ローカルpush通知：ここで実装するのではなく、バックグラウンド処理で利用する
-      if (logicResult.reachedPilgrimageIdList.isNotEmpty) {
-        final templeId = logicResult.reachedPilgrimageIdList.first;
-        state = state.copyWith(animationTempleId: templeId);
-      }
       // ignore: avoid_print
       print(logicResult.reachedPilgrimageIdList);
       final updatedUser = logicResult.updatedUser;
@@ -109,6 +105,11 @@ class HomePresenter extends StateNotifier<HomeState> {
         }
       } else {
         unawaited(_crashlytics.recordError(updateHealthResult.error, null));
+      }
+
+      if (logicResult.reachedPilgrimageIdList.isNotEmpty) {
+        final templeId = logicResult.reachedPilgrimageIdList.first;
+        state = state.copyWith(animationTempleId: templeId);
       }
     } on Exception catch (e) {
       unawaited(_crashlytics.recordError(e, null));

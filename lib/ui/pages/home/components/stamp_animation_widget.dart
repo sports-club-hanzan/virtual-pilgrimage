@@ -2,30 +2,37 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';
+import 'package:virtualpilgrimage/domain/temple/temple_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/temple/temple_repository.dart';
 import 'package:virtualpilgrimage/ui/pages/home/home_presenter.dart';
+
+class StampAnimation {
+  late Uint8List image;
+  late TempleInfo templeInfo;
+}
 
 class StampAnimationWidget extends ConsumerWidget {
   const StampAnimationWidget({
     required this.animationTempleId,
-    required this.notifier,
     super.key,
   });
 
   final int animationTempleId;
-  final HomePresenter notifier;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return DecoratedBox(
       decoration: const BoxDecoration(color: Colors.black54),
       child: Center(
-        child: FutureBuilder<Uint8List>(
+        child: FutureBuilder<StampAnimation>(
           future: loadStampImage(ref),
           builder: (context, snapshot) {
             return snapshot.hasData ?
               ListView(
                 children: [
+                  Center(
+                    child: Text("${snapshot.data!.templeInfo.id}番 ${snapshot.data!.templeInfo.name}に到着")
+                  ),
                   TweenAnimationBuilder(
                     tween: Tween<double>(begin: 3, end: 0.5),
                     duration: const Duration(milliseconds: 750),
@@ -34,13 +41,13 @@ class StampAnimationWidget extends ConsumerWidget {
                         scale: value,
                         child: SizedBox(
                           height: 500,
-                          child: Image.memory(snapshot.data!),
+                          child: Image.memory(snapshot.data!.image),
                         ),
                       );
                     },
                   ),
                   ElevatedButton(
-                    onPressed: notifier.onAnimationClosed,
+                    onPressed: ref.read(homeProvider.notifier).onAnimationClosed,
                     child: const Text('タップして次を目指そう！'),
                   ),
                 ],
@@ -51,8 +58,13 @@ class StampAnimationWidget extends ConsumerWidget {
     );
   }
 
-  Future<Uint8List> loadStampImage(WidgetRef ref) async {
-    final templeInfo = await ref.watch(templeRepositoryProvider).getTempleInfo(animationTempleId);
-    return (await get(Uri.parse(templeInfo.stampImage))).bodyBytes;
+  Future<StampAnimation> loadStampImage(WidgetRef ref) async {
+    final StampAnimation stampAnimation = StampAnimation();
+    final TempleInfo templeInfo = await ref.read(templeRepositoryProvider).getTempleInfo(animationTempleId);
+
+    stampAnimation
+      ..templeInfo = templeInfo
+      ..image = (await get(Uri.parse(templeInfo.stampImage))).bodyBytes;
+    return stampAnimation;
   }
 }
