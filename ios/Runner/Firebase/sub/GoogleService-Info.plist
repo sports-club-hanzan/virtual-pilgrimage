@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>778612852807-r0jqpu1irccfmntn7cdt35cqsi548523.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.778612852807-r0jqpu1irccfmntn7cdt35cqsi548523</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>778612852807-nd90fdug7utp6cqaa0r1v3s73rjk6l39.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyA1MkQrcfDFCESQ7foc5SBqxUB2f7EHcgg</string>
+	<key>GCM_SENDER_ID</key>
+	<string>778612852807</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.virtualpilgrimage.prod.sub</string>
+	<key>PROJECT_ID</key>
+	<string>virtual-pilgrimage-prd-328be</string>
+	<key>STORAGE_BUCKET</key>
+	<string>virtual-pilgrimage-prd-328be.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:778612852807:ios:9f001e20d9eed352404962</string>
+</dict>
+</plist>
