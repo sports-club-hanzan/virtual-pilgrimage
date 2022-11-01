@@ -114,7 +114,7 @@ class _ProfilePageBody extends ConsumerWidget {
             icon: Icons.map_outlined,
           ),
           ProfileHealthCard(
-            title: '消費カロリー',
+            title: 'カロリー',
             value: h.burnedCalorie.toString(),
             unit: 'kcal',
             backgroundColor: Colors.orangeAccent,
@@ -124,7 +124,7 @@ class _ProfilePageBody extends ConsumerWidget {
       }
     }
     return SizedBox(
-      height: 200,
+      height: 180,
       child: Column(
         children: [
           FlutterToggleTab(
@@ -143,7 +143,7 @@ class _ProfilePageBody extends ConsumerWidget {
             ),
             selectedIndex: state.selectedTabIndex,
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
           // クラッシュ対策のため、全てのヘルスチェック情報を取得できているときに表示
           if (healthCards.length == notifier.tabLabels().length)
             Row(children: healthCards[state.selectedTabIndex]),

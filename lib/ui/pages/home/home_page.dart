@@ -38,9 +38,10 @@ class HomePageBody extends StatelessWidget {
     return ColoredBox(
       color: Theme.of(context).backgroundColor,
       child: SafeArea(
-        child: ListView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            const GoogleMapView(height: 300),
+            GoogleMapView(height: MediaQuery.of(context).size.height / 5 * 2),
             pilgrimageProgressCardProvider(context, userState!, _ref),
             _healthCards(context, userState, notifier),
           ],
