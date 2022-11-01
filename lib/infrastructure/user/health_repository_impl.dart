@@ -86,7 +86,6 @@ class HealthRepositoryImpl implements HealthRepository {
       }
 
       final totalHealth = _aggregateHealthInfo(healthOfTotal);
-      print(_aggregateHealthInfo(healthOfToday));
       final health = HealthInfo(
         today: _aggregateHealthInfo(healthOfToday),
         yesterday: _aggregateHealthInfo(healthOfYesterday),
@@ -196,8 +195,6 @@ class HealthRepositoryImpl implements HealthRepository {
           break;
         // 消費カロリー[kcal]
         case HealthDataType.ACTIVE_ENERGY_BURNED:
-          print(p);
-          print(val);
           burnedCalorie += val;
           break;
         // ignore: no_default_cases

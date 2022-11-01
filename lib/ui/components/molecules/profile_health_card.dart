@@ -25,23 +25,25 @@ class ProfileHealthCard extends StatelessWidget {
       child: Stack(
         children: [
           Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             color: backgroundColor,
             child: Padding(
-              padding: const EdgeInsetsDirectional.all(12),
+              padding: const EdgeInsetsDirectional.only(top: 8, bottom: 8, start: 12, end: 12),
               child: Column(
                 children: [
-                  const SizedBox(height: 12),
-                  Text(
-                    title,
-                    style: TextStyle(
-                      color: textColor,
-                      fontSize: FontSize.mediumSize,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
                   const SizedBox(height: 8),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Text(
+                      title,
+                      style: TextStyle(
+                        color: textColor,
+                        fontSize: FontSize.mediumSize,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                   Text(
                     value,
                     style: TextStyle(
@@ -54,7 +56,7 @@ class ProfileHealthCard extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     child: Text(
                       unit,
-                      style: TextStyle(color: textColor, fontWeight: FontWeight.w900),
+                      style: TextStyle(fontSize: FontSize.mediumSize, color: textColor, fontWeight: FontWeight.w900),
                       textAlign: TextAlign.right,
                     ),
                   )
@@ -62,7 +64,7 @@ class ProfileHealthCard extends StatelessWidget {
               ),
             ),
           ),
-          Positioned(top: 8, right: 4, child: Icon(icon, color: textColor, size: 28))
+          Positioned(top: 12, right: 8, child: Icon(icon, color: textColor, size: 20))
         ],
       ),
     );
