@@ -21,31 +21,38 @@ class StampAnimationWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return DecoratedBox(
-      decoration: const BoxDecoration(color: Colors.black54),
+    return ColoredBox(
+      color: Colors.black54,
       child: Center(
         child: FutureBuilder<StampAnimation>(
           future: loadStampImage(ref),
           builder: (context, snapshot) {
             return snapshot.hasData ?
-              ListView(
-                children: [
-                  Center(
-                    child: Text("${snapshot.data!.templeInfo.id}番 ${snapshot.data!.templeInfo.name}に到着")
+              AlertDialog(
+                backgroundColor: Colors.transparent,
+                title: Center(
+                  child: Text(
+                    '${snapshot.data!.templeInfo.id}番 ${snapshot.data!.templeInfo.name}に到着',
+                    style: const TextStyle(
+                      color: Color(0xFFeeff41),
+                    ),
                   ),
-                  TweenAnimationBuilder(
-                    tween: Tween<double>(begin: 3, end: 0.5),
-                    duration: const Duration(milliseconds: 750),
-                    builder: (BuildContext context, double value, _) {
-                      return Transform.scale(
-                        scale: value,
-                        child: SizedBox(
-                          height: 500,
-                          child: Image.memory(snapshot.data!.image),
-                        ),
-                      );
-                    },
-                  ),
+                ),
+                content: TweenAnimationBuilder(
+                  tween: Tween<double>(begin: 6, end: 1),
+                  duration: const Duration(milliseconds: 750),
+                  builder: (BuildContext context, double value, _) {
+                    return Transform.scale(
+                      scale: value,
+                      child: SizedBox(
+                        height: 500,
+                        child: Image.memory(snapshot.data!.image),
+                      ),
+                    );
+                  },
+                ),
+                actionsAlignment: MainAxisAlignment.center,
+                actions: [
                   ElevatedButton(
                     onPressed: ref.read(homeProvider.notifier).onAnimationClosed,
                     child: const Text('タップして次を目指そう！'),
