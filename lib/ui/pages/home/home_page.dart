@@ -49,7 +49,8 @@ class HomePageBody extends StatelessWidget {
                 _healthCards(context, userState, notifier),
               ],
             ),
-            if(homeState.animationTempleId != 0)
+            // スタンプが押される時、札所のIDが指定される（0より大きい値が設定される）
+            if(homeState.animationTempleId > 0)
               StampAnimationWidget(animationTempleId: homeState.animationTempleId)
           ],
         ),

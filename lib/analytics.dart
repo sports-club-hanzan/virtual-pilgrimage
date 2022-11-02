@@ -19,6 +19,10 @@ extension AnalyticsEvent on String {
   static const registrationFailed = 'registration_failed';
   static const initializeHomePageAndGetHealth = 'initialize_home_page_and_get_health';
   static const pressedUploadImage = 'pressed_upload_image';
+  static const reachTemple = 'reach_temple';
+
+  /// ボトムナビゲーションの押下
+  static const pressedBottomNavigation = 'pressed_bottom_navigation';
 }
 
 final analyticsProvider = Provider<Analytics>(
