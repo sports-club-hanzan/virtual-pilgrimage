@@ -96,7 +96,12 @@ android {
         versionName flutterVersionName
         // 環境ごとにパッケージ名を修正
         if (dartEnvironmentVariables.FLAVOR != '') {
-            applicationIdSuffix ".${dartEnvironmentVariables.FLAVOR}"
+            if (dartEnvironmentVariables.FLAVOR == 'sub') {
+                // subはストアにリリースされた後は削除される想定
+                applicationIdSuffix ".prod.sub"
+            } else {
+                applicationIdSuffix ".${dartEnvironmentVariables.FLAVOR}"
+            }
         }
         // firebase関連のライブラリを使うことによる64k問題の回避のための設定
         multiDexEnabled true

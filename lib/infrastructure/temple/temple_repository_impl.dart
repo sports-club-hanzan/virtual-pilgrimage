@@ -79,8 +79,6 @@ class TempleRepositoryImpl extends TempleRepository {
           templeInfoMap.addAll({data.id: data});
         }
       }
-      // ignore: avoid_print
-      print(templeInfoMap);
       _reader(templeInfoCache.state).state = templeInfoMap;
     } on FirebaseException catch (e) {
       throw DatabaseException(

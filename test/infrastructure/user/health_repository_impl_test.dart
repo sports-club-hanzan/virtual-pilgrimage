@@ -31,7 +31,7 @@ void main() {
   });
 
   group('HealthRepositoryImpl', () {
-    final targetDate = DateTime(2022, 9, 19, 11, 0);
+    final targetDateTime = DateTime(2022, 9, 19, 11, 0);
     final targetToDate = DateTime(2022, 9, 18, 23, 59, 59, 999, 999);
     final yesterday = DateTime(2022, 9, 18);
     final lastWeek = DateTime(2022, 9, 12);
@@ -48,11 +48,11 @@ void main() {
       when(mockHealthFactory.requestAuthorization(any)).thenAnswer((_) => Future.value(true));
 
       /// 今日
-      /// 今日の集計だけ対象時間からではなく、当日の00:00:00-23:59:59まで集計
+      /// 今日の集計だけ対象時間からではなく、当日の00:00:00-現在時刻まで集計
       when(
         mockHealthFactory.getHealthDataFromTypes(
           DateTime(2022, 9, 19),
-          DateTime(2022, 9, 19, 23, 59, 59, 999, 999),
+          targetDateTime,
           types,
         ),
       ).thenAnswer(
@@ -130,7 +130,7 @@ void main() {
 
           // when
           final actual =
-              await target.getHealthInfo(targetDateTime: targetDate, createdAt: createdAt);
+              await target.getHealthInfo(targetDateTime: targetDateTime, createdAt: createdAt);
 
           // then
           expect(actual, expected);
@@ -144,7 +144,7 @@ void main() {
 
         test('ヘルスケア情報を取得できる(ユーザ登録から24時間経過していない)', () async {
           // given
-          final createdAt = targetDate.subtract(const Duration(hours: 12));
+          final createdAt = targetDateTime.subtract(const Duration(hours: 12));
           final expected = HealthInfo(
             today: const HealthByPeriod(steps: 427, distance: 670, burnedCalorie: 468),
             yesterday: const HealthByPeriod(steps: 5427, distance: 4679, burnedCalorie: 1468),
@@ -157,7 +157,7 @@ void main() {
 
           // when
           final actual =
-              await target.getHealthInfo(targetDateTime: targetDate, createdAt: createdAt);
+              await target.getHealthInfo(targetDateTime: targetDateTime, createdAt: createdAt);
 
           // then
           expect(actual, expected);
@@ -193,7 +193,7 @@ void main() {
           when(
             mockHealthFactory.getHealthDataFromTypes(
               DateTime(2022, 9, 19),
-              DateTime(2022, 9, 19, 23, 59, 59, 999, 999),
+              targetDateTime,
               iosTypes,
             ),
           ).thenAnswer(
@@ -251,7 +251,7 @@ void main() {
 
           // when
           final actual =
-              await target.getHealthInfo(targetDateTime: targetDate, createdAt: createdAt);
+              await target.getHealthInfo(targetDateTime: targetDateTime, createdAt: createdAt);
 
           // then
           expect(actual, expected);
@@ -273,7 +273,7 @@ void main() {
         /// 今日
         when(
           mockHealthFactory.getHealthDataFromTypes(
-            targetDate,
+            targetDateTime,
             DateTime(2022, 9, 19, 23, 59, 59, 999, 999),
             types,
           ),
@@ -289,7 +289,7 @@ void main() {
 
         // when
         final actual = await target.getHealthByPeriod(
-          from: targetDate,
+          from: targetDateTime,
           to: targetToDate.add(const Duration(days: 1)),
         );
 
@@ -298,7 +298,7 @@ void main() {
         verify(mockHealthFactory.requestAuthorization(any)).called(1);
         verify(
           mockHealthFactory.getHealthDataFromTypes(
-            targetDate,
+            targetDateTime,
             targetToDate.add(const Duration(days: 1)),
             types,
           ),

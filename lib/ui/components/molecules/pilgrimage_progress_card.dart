@@ -62,8 +62,8 @@ Widget pilgrimageProgressCardProvider(
         );
       }
       return SizedBox(
-        height: 170,
-        width: MediaQuery.of(context).size.width / 10 * 9,
+        height: 140,
+        width: MediaQuery.of(context).size.width / 10 * 9.5,
         child: childWidget,
       );
     },
@@ -87,7 +87,7 @@ class PilgrimageProgressCard extends StatelessWidget {
     return Card(
       elevation: 0.5,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(12),
         side: const BorderSide(
           color: Colors.transparent,
           width: 0.5,
@@ -95,7 +95,7 @@ class PilgrimageProgressCard extends StatelessWidget {
       ),
       color: Theme.of(context).colorScheme.onSecondary,
       child: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.only(left: 8, right: 8),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -143,11 +143,11 @@ class PilgrimageProgressCard extends StatelessWidget {
     final movingDistance =
         pilgrimageInfo.movingDistance < nextDistance ? pilgrimageInfo.movingDistance : nextDistance;
     return CircularPercentIndicator(
-      radius: 64,
-      lineWidth: 18,
+      radius: 60,
+      lineWidth: 16,
+      percent: _calcPercent(pilgrimageInfo.movingDistance, nextDistance),
       backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       progressColor: Theme.of(context).colorScheme.primary,
-      percent: _calcPercent(pilgrimageInfo.movingDistance, nextDistance),
       animation: true,
       center: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -160,7 +160,7 @@ class PilgrimageProgressCard extends StatelessWidget {
                 _meterToKilometerString(movingDistance),
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onSecondaryContainer,
-                  fontSize: FontSize.largeSize - 4,
+                  fontSize: FontSize.mediumSize + 2,
                   fontWeight: FontWeight.w900,
                 ),
               ),
@@ -169,10 +169,10 @@ class PilgrimageProgressCard extends StatelessWidget {
           ),
           Divider(
             color: Theme.of(context).colorScheme.onSecondaryContainer,
-            height: 3,
-            indent: 30,
-            endIndent: 30,
-            thickness: 2,
+            height: 2,
+            indent: 25,
+            endIndent: 25,
+            thickness: 1.5,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -181,7 +181,7 @@ class PilgrimageProgressCard extends StatelessWidget {
                 _meterToKilometerString(nextDistance),
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onSecondaryContainer,
-                  fontSize: FontSize.largeSize - 4,
+                  fontSize: FontSize.mediumSize + 2,
                   fontWeight: FontWeight.w900,
                 ),
               ),
