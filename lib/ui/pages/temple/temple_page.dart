@@ -6,6 +6,7 @@ import 'package:virtualpilgrimage/infrastructure/temple/temple_repository_impl.d
 import 'package:virtualpilgrimage/ui/components/bottom_navigation.dart';
 import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
 import 'package:virtualpilgrimage/ui/pages/temple/temple_detail_dialog.dart';
+import 'package:virtualpilgrimage/ui/style/font.dart';
 
 class TemplePage extends ConsumerWidget {
   const TemplePage({
@@ -45,45 +46,49 @@ class _TemplePageBody extends StatelessWidget {
   }
 
   Widget _buildTemple(BuildContext context, TempleInfo templeInfo, VirtualPilgrimageUser user) {
-    final bool isShowDetail = user.pilgrimage.nowPilgrimageId >= templeInfo.id || 1 < user.pilgrimage.lap;
+    final bool isShowDetail =
+        user.pilgrimage.nowPilgrimageId >= templeInfo.id || 1 < user.pilgrimage.lap;
 
     return Card(
       elevation: 6,
       margin: const EdgeInsets.all(10),
       child: ListTile(
-        leading: isShowDetail ? Image(
-          width: 100,
-          height: 80,
-          image: NetworkImage(
-            templeInfo.images[0],
-          ),
-        ) : Image(
-          width: 100,
-          height: 80,
-          image: NetworkImage(
-            templeInfo.images[0],
-          ),
-          color: Colors.black45,
-          colorBlendMode: BlendMode.xor,
-        ),
+        leading: isShowDetail
+            ? Image(
+                width: 100,
+                height: 80,
+                image: NetworkImage(
+                  templeInfo.images[0],
+                ),
+              )
+            : Image(
+                width: 100,
+                height: 80,
+                image: NetworkImage(
+                  templeInfo.images[0],
+                ),
+                color: Colors.black45,
+                colorBlendMode: BlendMode.xor,
+              ),
         title: Text(
-            templeInfo.name,
-            style: const TextStyle(
-              color: Color(0xff7b61ff),
-              fontSize: 14,
-              fontFamily: 'Poppins',
-              fontWeight: FontWeight.w500,
-            ),
+          templeInfo.name,
+          style: const TextStyle(
+            color: Color(0xff7b61ff),
+            fontSize: FontSize.mediumSize,
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.w500,
           ),
-          subtitle: Text(
-            '${templeInfo.prefecture}・${templeInfo.distance}m',
-            style: const TextStyle(
-              color: Colors.black38,
-              fontSize: 12,
-            ),
+        ),
+        subtitle: Text(
+          '${templeInfo.prefecture}・${templeInfo.distance}m',
+          style: const TextStyle(
+            color: Colors.black38,
+            fontSize: FontSize.smallSize,
           ),
-          onTap: () => {
-            if (isShowDetail) {
+        ),
+        onTap: () => {
+          if (isShowDetail)
+            {
               showDialog<void>(
                 context: context,
                 builder: (BuildContext context) {
@@ -91,8 +96,8 @@ class _TemplePageBody extends StatelessWidget {
                 },
               )
             }
-          },
-        ),
-      );
+        },
+      ),
+    );
   }
 }

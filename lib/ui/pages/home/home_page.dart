@@ -8,6 +8,7 @@ import 'package:virtualpilgrimage/ui/components/molecules/profile_health_card.da
 import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
 import 'package:virtualpilgrimage/ui/pages/home/components/google_map_view.dart';
 import 'package:virtualpilgrimage/ui/pages/home/components/stamp_animation_widget.dart';
+import 'package:virtualpilgrimage/ui/wording_helper.dart';
 
 import 'home_presenter.dart';
 
@@ -77,7 +78,7 @@ class HomePageBody extends StatelessWidget {
         ),
         ProfileHealthCard(
           title: '今日の移動距離',
-          value: notifier.meterToKilometerString(health.today.distance),
+          value: WordingHelper.meterToKilometerString(health.today.distance),
           unit: 'km',
           icon: Icons.map_outlined,
           backgroundColor: Theme.of(context).colorScheme.onSecondary,

@@ -14,6 +14,7 @@ import 'package:virtualpilgrimage/ui/pages/profile/components/profile_text.dart'
 import 'package:virtualpilgrimage/ui/pages/profile/profile_presenter.dart';
 import 'package:virtualpilgrimage/ui/pages/profile/profile_state.codegen.dart';
 import 'package:virtualpilgrimage/ui/style/color.dart';
+import 'package:virtualpilgrimage/ui/wording_helper.dart';
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({
@@ -108,7 +109,7 @@ class _ProfilePageBody extends ConsumerWidget {
           ),
           ProfileHealthCard(
             title: '移動距離',
-            value: notifier.meterToKilometerString(h.distance),
+            value: WordingHelper.meterToKilometerString(h.distance),
             unit: 'km',
             backgroundColor: Colors.lightBlue,
             icon: Icons.map_outlined,

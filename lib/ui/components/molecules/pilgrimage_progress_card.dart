@@ -7,6 +7,7 @@ import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/ui/style/font.dart';
+import 'package:virtualpilgrimage/ui/wording_helper.dart';
 
 Widget pilgrimageProgressCardProvider(
   BuildContext context,
@@ -127,7 +128,7 @@ class PilgrimageProgressCard extends StatelessWidget {
           ),
         ),
         Text(
-          _templeNameFilter(templeInfo.name),
+          WordingHelper.templeNameFilter(templeInfo.name),
           style: TextStyle(
             color: Theme.of(context).colorScheme.primary,
             fontSize: FontSize.xlargeSize,
@@ -196,9 +197,7 @@ class PilgrimageProgressCard extends StatelessWidget {
   /// m単位の数値をkm単位に補正した文字列を返す
   ///
   /// [meter] m単位の数値
-  String _meterToKilometerString(int meter) {
-    return (meter / 1000).toStringAsFixed(1);
-  }
+  String _meterToKilometerString(int meter) => WordingHelper.meterToKilometerString(meter);
 
   /// 次の札所までの進捗率を計算
   double _calcPercent(int movingDistance, int nextTempleDistance) {
@@ -207,15 +206,5 @@ class PilgrimageProgressCard extends StatelessWidget {
       percent = 1;
     }
     return percent;
-  }
-
-  /// お寺の表示名をUIに合わせる
-  /// （通称）のような名称をもつデータがあるため、このメソッドで通称を表示しないようにフィルタリング
-  /// ex. 【24番札所】最御崎寺（東寺）
-  String _templeNameFilter(String templeName) {
-    if (templeName.contains('（')) {
-      return templeName.replaceRange(templeName.indexOf('（'), templeName.length, '');
-    }
-    return templeName;
   }
 }
