@@ -18,6 +18,7 @@ class HomeState with _$HomeState {
     required CameraPosition initialCameraPosition,
     @Default({}) Set<Marker> markers,
     @Default({}) Set<Polyline> polylines,
+    @Default(0) int animationTempleId,
   }) = _HomeState;
 
   const HomeState._();

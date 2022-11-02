@@ -29,6 +29,10 @@ class TempleInfo with _$TempleInfo {
     @Default('お寺の詳細情報')
     String knowledge,
 
+    // スタンプの画像パス
+    @Default('https://firebasestorage.googleapis.com/v0/b/virtual-pilgrimage-dev.appspot.com/o/temples%2F1%2Fstamp.jpeg?alt=media&token=b3fe42f9-b94b-43f2-8a5d-b2f217be541f')
+    String stampImage,
+
     // お寺の座標
     @JsonKey(
       fromJson: _geoPointFromJson,

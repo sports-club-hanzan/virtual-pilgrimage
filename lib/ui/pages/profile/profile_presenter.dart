@@ -115,11 +115,4 @@ class ProfilePresenter extends StateNotifier<ProfileState> {
     final bitmap = await _userIconRepository.loadIconImage(updatedUser.userIconUrl);
     _ref.read(userStateProvider.state).state = updatedUser.setUserIconBitmap(bitmap);
   }
-
-  /// m単位の数値をkm単位に補正した文字列を返す
-  ///
-  /// [meter] m単位の数値
-  String meterToKilometerString(int meter) {
-    return (meter / 1000).toStringAsFixed(1);
-  }
 }

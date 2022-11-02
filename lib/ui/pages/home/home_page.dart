@@ -7,6 +7,8 @@ import 'package:virtualpilgrimage/ui/components/molecules/pilgrimage_progress_ca
 import 'package:virtualpilgrimage/ui/components/molecules/profile_health_card.dart';
 import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
 import 'package:virtualpilgrimage/ui/pages/home/components/google_map_view.dart';
+import 'package:virtualpilgrimage/ui/pages/home/components/stamp_animation_widget.dart';
+import 'package:virtualpilgrimage/ui/wording_helper.dart';
 
 import 'home_presenter.dart';
 
@@ -33,17 +35,24 @@ class HomePageBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userState = _ref.watch(userStateProvider);
+    final homeState = _ref.watch(homeProvider);
     final notifier = _ref.read(homeProvider.notifier);
 
     return ColoredBox(
       color: Theme.of(context).backgroundColor,
       child: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        child: Stack(
           children: [
-            GoogleMapView(height: MediaQuery.of(context).size.height / 5 * 2),
-            pilgrimageProgressCardProvider(context, userState!, _ref),
-            _healthCards(context, userState, notifier),
+            ListView(
+              children: [
+                GoogleMapView(height: MediaQuery.of(context).size.height / 5 * 2),
+                pilgrimageProgressCardProvider(context, userState!, _ref),
+                _healthCards(context, userState, notifier),
+              ],
+            ),
+            // スタンプが押される時、札所のIDが指定される（0より大きい値が設定される）
+            if(homeState.animationTempleId > 0)
+              StampAnimationWidget(animationTempleId: homeState.animationTempleId)
           ],
         ),
       ),
@@ -69,7 +78,7 @@ class HomePageBody extends StatelessWidget {
         ),
         ProfileHealthCard(
           title: '今日の移動距離',
-          value: notifier.meterToKilometerString(health.today.distance),
+          value: WordingHelper.meterToKilometerString(health.today.distance),
           unit: 'km',
           icon: Icons.map_outlined,
           backgroundColor: Theme.of(context).colorScheme.onSecondary,

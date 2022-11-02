@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:virtualpilgrimage/analytics.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/router.dart';
 
@@ -21,6 +22,7 @@ class BottomNavigation extends ConsumerWidget {
     final pageType = ref.watch(pageTypeProvider);
     final pageTypeNotifier = ref.read(pageTypeProvider.notifier);
     final router = ref.read(routerProvider);
+    final analytics = ref.read(analyticsProvider);
 
     final destinations = <Widget>[
       NavigationDestination(
@@ -45,6 +47,10 @@ class BottomNavigation extends ConsumerWidget {
       onDestinationSelected: (int index) {
         final pageType = PageType.values[index];
         pageTypeNotifier.state = pageType;
+        analytics.logEvent(
+          eventName: AnalyticsEvent.pressedBottomNavigation,
+          parameters: {'pageType': pageType},
+        );
         switch (pageType) {
           case PageType.temple:
             router.go(RouterPath.temple);

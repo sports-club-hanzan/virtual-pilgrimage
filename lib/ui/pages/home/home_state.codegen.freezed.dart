@@ -21,6 +21,7 @@ mixin _$HomeState {
       throw _privateConstructorUsedError;
   Set<Marker> get markers => throw _privateConstructorUsedError;
   Set<Polyline> get polylines => throw _privateConstructorUsedError;
+  int get animationTempleId => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $HomeStateCopyWith<HomeState> get copyWith =>
@@ -35,7 +36,8 @@ abstract class $HomeStateCopyWith<$Res> {
       {GoogleMapModel googleMap,
       CameraPosition initialCameraPosition,
       Set<Marker> markers,
-      Set<Polyline> polylines});
+      Set<Polyline> polylines,
+      int animationTempleId});
 
   $GoogleMapModelCopyWith<$Res> get googleMap;
 }
@@ -54,6 +56,7 @@ class _$HomeStateCopyWithImpl<$Res> implements $HomeStateCopyWith<$Res> {
     Object? initialCameraPosition = freezed,
     Object? markers = freezed,
     Object? polylines = freezed,
+    Object? animationTempleId = freezed,
   }) {
     return _then(_value.copyWith(
       googleMap: googleMap == freezed
@@ -72,6 +75,10 @@ class _$HomeStateCopyWithImpl<$Res> implements $HomeStateCopyWith<$Res> {
           ? _value.polylines
           : polylines // ignore: cast_nullable_to_non_nullable
               as Set<Polyline>,
+      animationTempleId: animationTempleId == freezed
+          ? _value.animationTempleId
+          : animationTempleId // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 
@@ -93,7 +100,8 @@ abstract class _$$_HomeStateCopyWith<$Res> implements $HomeStateCopyWith<$Res> {
       {GoogleMapModel googleMap,
       CameraPosition initialCameraPosition,
       Set<Marker> markers,
-      Set<Polyline> polylines});
+      Set<Polyline> polylines,
+      int animationTempleId});
 
   @override
   $GoogleMapModelCopyWith<$Res> get googleMap;
@@ -115,6 +123,7 @@ class __$$_HomeStateCopyWithImpl<$Res> extends _$HomeStateCopyWithImpl<$Res>
     Object? initialCameraPosition = freezed,
     Object? markers = freezed,
     Object? polylines = freezed,
+    Object? animationTempleId = freezed,
   }) {
     return _then(_$_HomeState(
       googleMap: googleMap == freezed
@@ -133,6 +142,10 @@ class __$$_HomeStateCopyWithImpl<$Res> extends _$HomeStateCopyWithImpl<$Res>
           ? _value._polylines
           : polylines // ignore: cast_nullable_to_non_nullable
               as Set<Polyline>,
+      animationTempleId: animationTempleId == freezed
+          ? _value.animationTempleId
+          : animationTempleId // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -144,7 +157,8 @@ class _$_HomeState extends _HomeState {
       {required this.googleMap,
       required this.initialCameraPosition,
       final Set<Marker> markers = const {},
-      final Set<Polyline> polylines = const {}})
+      final Set<Polyline> polylines = const {},
+      this.animationTempleId = 0})
       : _markers = markers,
         _polylines = polylines,
         super._();
@@ -170,8 +184,12 @@ class _$_HomeState extends _HomeState {
   }
 
   @override
+  @JsonKey()
+  final int animationTempleId;
+
+  @override
   String toString() {
-    return 'HomeState(googleMap: $googleMap, initialCameraPosition: $initialCameraPosition, markers: $markers, polylines: $polylines)';
+    return 'HomeState(googleMap: $googleMap, initialCameraPosition: $initialCameraPosition, markers: $markers, polylines: $polylines, animationTempleId: $animationTempleId)';
   }
 
   @override
@@ -184,7 +202,9 @@ class _$_HomeState extends _HomeState {
                 .equals(other.initialCameraPosition, initialCameraPosition) &&
             const DeepCollectionEquality().equals(other._markers, _markers) &&
             const DeepCollectionEquality()
-                .equals(other._polylines, _polylines));
+                .equals(other._polylines, _polylines) &&
+            const DeepCollectionEquality()
+                .equals(other.animationTempleId, animationTempleId));
   }
 
   @override
@@ -193,7 +213,8 @@ class _$_HomeState extends _HomeState {
       const DeepCollectionEquality().hash(googleMap),
       const DeepCollectionEquality().hash(initialCameraPosition),
       const DeepCollectionEquality().hash(_markers),
-      const DeepCollectionEquality().hash(_polylines));
+      const DeepCollectionEquality().hash(_polylines),
+      const DeepCollectionEquality().hash(animationTempleId));
 
   @JsonKey(ignore: true)
   @override
@@ -206,7 +227,8 @@ abstract class _HomeState extends HomeState {
       {required final GoogleMapModel googleMap,
       required final CameraPosition initialCameraPosition,
       final Set<Marker> markers,
-      final Set<Polyline> polylines}) = _$_HomeState;
+      final Set<Polyline> polylines,
+      final int animationTempleId}) = _$_HomeState;
   const _HomeState._() : super._();
 
   @override
@@ -217,6 +239,8 @@ abstract class _HomeState extends HomeState {
   Set<Marker> get markers;
   @override
   Set<Polyline> get polylines;
+  @override
+  int get animationTempleId;
   @override
   @JsonKey(ignore: true)
   _$$_HomeStateCopyWith<_$_HomeState> get copyWith =>

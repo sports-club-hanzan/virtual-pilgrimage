@@ -74,6 +74,7 @@ class HomePresenter extends StateNotifier<HomeState> {
     }
 
     try {
+      // お遍路の進捗を確認
       final logicResult = await _updatePilgrimageProgressUsecase.execute(user.id);
       if (logicResult.status != UpdatePilgrimageProgressResultStatus.success) {
         await _crashlytics.recordError(
@@ -84,11 +85,6 @@ class HomePresenter extends StateNotifier<HomeState> {
               '[logicResult][$logicResult]',
         );
       }
-      // TODO(s14t284): この中に今回到達したお寺の情報が含まれているのでUIに利用したりローカルpush通知に利用したりする
-      // UIに使う例：到達した札所のスタンプを押すアニメーションなど
-      // ローカルpush通知：ここで実装するのではなく、バックグラウンド処理で利用する
-      // ignore: avoid_print
-      print(logicResult.reachedPilgrimageIdList);
       final updatedUser = logicResult.updatedUser;
       if (updatedUser != null) {
         await setMarkerAndPolylines(updatedUser, logicResult);
@@ -105,6 +101,15 @@ class HomePresenter extends StateNotifier<HomeState> {
         }
       } else {
         unawaited(_crashlytics.recordError(updateHealthResult.error, null));
+      }
+
+      // 最後に到達した札所があったら御朱印アニメーションを描画
+      // 最後にこのstate更新を実行することで、MAPの動作が止まっている状態でアニメーションが実行できる
+      if (logicResult.reachedPilgrimageIdList.isNotEmpty) {
+        // 複数の札所にたどり着いたら最後にたどり着いた札所の御朱印を設定
+        final templeId = logicResult.reachedPilgrimageIdList.last;
+        state = state.copyWith(animationTempleId: templeId);
+        unawaited(_analytics.logEvent(eventName: AnalyticsEvent.reachTemple));
       }
     } on Exception catch (e) {
       unawaited(_crashlytics.recordError(e, null));
@@ -152,6 +157,11 @@ class HomePresenter extends StateNotifier<HomeState> {
     state = state.setupMarkers(markers, polylines);
   }
 
+  /// AnimationWidget の閉じるを押した時に呼ばれる
+  void onAnimationClosed() {
+    state = state.copyWith(animationTempleId: 0);
+  }
+
   /// GoogleMap の描画が完了した時に呼ばれる
   /// [controller] GoogleMap の描画に使われるインスタンス
   void onMapCreated(GoogleMapController controller) => state.onGoogleMapCreated(controller);
@@ -164,12 +174,5 @@ class HomePresenter extends StateNotifier<HomeState> {
       return pilgrimageId + 1;
     }
     return 1;
-  }
-
-  /// m単位の数値をkm単位に補正した文字列を返す
-  ///
-  /// [meter] m単位の数値
-  String meterToKilometerString(int meter) {
-    return (meter / 1000).toStringAsFixed(1);
   }
 }
