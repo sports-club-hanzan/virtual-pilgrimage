@@ -195,9 +195,10 @@ class PilgrimageProgressCard extends StatelessWidget {
   }
 
   /// m単位の数値をkm単位に補正した文字列を返す
+  /// お遍路の進捗は小数点第一位までで表示する
   ///
   /// [meter] m単位の数値
-  String _meterToKilometerString(int meter) => WordingHelper.meterToKilometerString(meter);
+  String _meterToKilometerString(int meter) => (meter / 1000).toStringAsFixed(1);
 
   /// 次の札所までの進捗率を計算
   double _calcPercent(int movingDistance, int nextTempleDistance) {
