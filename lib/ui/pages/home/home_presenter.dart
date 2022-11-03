@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -61,16 +62,19 @@ class HomePresenter extends StateNotifier<HomeState> {
       return;
     }
 
-    // ヘルスケア情報取得の権限が付与されていない場合、許可を得るダイアログを開く
+    // androidの場合、ヘルスケア情報取得の権限が付与されていない場合、許可を得るダイアログを開く
     // TODO(s14t284): ヘルスケア情報を取得するダイアログで許可を押す旨をUIに表示した方が良いか検討
-    final activityPermission = await Permission.activityRecognition.request();
-    _ref.read(loggerProvider).d(activityPermission);
-    if (activityPermission.isDenied) {
-      await _crashlytics.recordError(
-        'now allowed to get health information [userId][${user.id}]',
-        null,
-      );
-      await openAppSettings();
+    if (defaultTargetPlatform.name.toLowerCase() == 'android') {
+      final activityPermission = await Permission.activityRecognition.request();
+      _ref.read(loggerProvider).d(activityPermission);
+      if (activityPermission.isDenied) {
+        await _crashlytics.recordError(
+          'now allowed to get health information [userId][${user.id}]',
+          null,
+        );
+        await openAppSettings();
+        return;
+      }
     }
 
     try {
