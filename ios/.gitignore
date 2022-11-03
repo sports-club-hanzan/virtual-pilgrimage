@@ -32,3 +32,9 @@ Runner/GeneratedPluginRegistrant.*
 !default.mode2v3
 !default.pbxuser
 !default.perspectivev3
+
+# 環境変数をアウトプットするファイルを除外
+Flutter/EnvironmentVariables.xcconfig
+# 各環境からコピーしてくるファイルを除外
+Runner/firebase_app_id_file.json
+Runner/GoogleService-Info.plist
