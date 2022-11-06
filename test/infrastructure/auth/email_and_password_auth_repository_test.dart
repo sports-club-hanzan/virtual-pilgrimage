@@ -243,5 +243,38 @@ void main() {
         });
       });
     });
+
+    group('resetPassword', () {
+      test('正常系', () async {
+        // given
+        const packageName = 'com.dummy';
+        final actionCodeSettings = ActionCodeSettings(
+          // url: 'http://dummy.com',
+          url: const String.fromEnvironment('RESET_PASSWORD_DEEPLINK',
+              defaultValue: 'http://dummy.com'),
+          handleCodeInApp: false,
+          androidInstallApp: true,
+          androidPackageName: packageName,
+          iOSBundleId: packageName,
+        );
+        when(
+          mockFirebaseAuth.sendPasswordResetEmail(
+            email: email,
+            actionCodeSettings: actionCodeSettings,
+          ),
+        ).thenAnswer((_) => Future.value());
+
+        // when
+        await target.resetPassword(email: email, packageName: packageName);
+
+        // then
+        verify(
+          mockFirebaseAuth.sendPasswordResetEmail(
+            email: anyNamed('email'),
+            actionCodeSettings: anyNamed('actionCodeSettings'),
+          ),
+        ).called(1);
+      });
+    });
   });
 }

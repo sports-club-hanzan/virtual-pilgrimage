@@ -100,4 +100,24 @@ class EmailAndPasswordAuthRepository extends AuthRepository {
       );
     }
   }
+
+  @override
+  Future<void> resetPassword({required String email, required String packageName}) async {
+    // ref. https://firebase.google.com/docs/auth/web/passing-state-in-email-actions
+    const deeplinkUrl = String.fromEnvironment(
+      'RESET_PASSWORD_DEEPLINK',
+      defaultValue: 'http://dummy.com',
+    );
+    await _firebaseAuth.sendPasswordResetEmail(
+      email: email,
+      actionCodeSettings: ActionCodeSettings(
+        url: deeplinkUrl,
+        handleCodeInApp: false,
+        androidInstallApp: true,
+        androidPackageName: packageName,
+        // TODO(s14t284): iOSでのテストを実施する
+        iOSBundleId: packageName,
+      ),
+    );
+  }
 }
