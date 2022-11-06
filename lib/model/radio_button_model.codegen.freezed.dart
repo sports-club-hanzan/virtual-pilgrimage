@@ -28,33 +28,37 @@ mixin _$ColorModel {
 abstract class $ColorModelCopyWith<$Res> {
   factory $ColorModelCopyWith(
           ColorModel value, $Res Function(ColorModel) then) =
-      _$ColorModelCopyWithImpl<$Res>;
+      _$ColorModelCopyWithImpl<$Res, ColorModel>;
+  @useResult
   $Res call({Color lightColor, Color darkColor});
 }
 
 /// @nodoc
-class _$ColorModelCopyWithImpl<$Res> implements $ColorModelCopyWith<$Res> {
+class _$ColorModelCopyWithImpl<$Res, $Val extends ColorModel>
+    implements $ColorModelCopyWith<$Res> {
   _$ColorModelCopyWithImpl(this._value, this._then);
 
-  final ColorModel _value;
   // ignore: unused_field
-  final $Res Function(ColorModel) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? lightColor = freezed,
-    Object? darkColor = freezed,
+    Object? lightColor = null,
+    Object? darkColor = null,
   }) {
     return _then(_value.copyWith(
-      lightColor: lightColor == freezed
+      lightColor: null == lightColor
           ? _value.lightColor
           : lightColor // ignore: cast_nullable_to_non_nullable
               as Color,
-      darkColor: darkColor == freezed
+      darkColor: null == darkColor
           ? _value.darkColor
           : darkColor // ignore: cast_nullable_to_non_nullable
               as Color,
-    ));
+    ) as $Val);
   }
 }
 
@@ -65,30 +69,30 @@ abstract class _$$_ColorModelCopyWith<$Res>
           _$_ColorModel value, $Res Function(_$_ColorModel) then) =
       __$$_ColorModelCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call({Color lightColor, Color darkColor});
 }
 
 /// @nodoc
-class __$$_ColorModelCopyWithImpl<$Res> extends _$ColorModelCopyWithImpl<$Res>
+class __$$_ColorModelCopyWithImpl<$Res>
+    extends _$ColorModelCopyWithImpl<$Res, _$_ColorModel>
     implements _$$_ColorModelCopyWith<$Res> {
   __$$_ColorModelCopyWithImpl(
       _$_ColorModel _value, $Res Function(_$_ColorModel) _then)
-      : super(_value, (v) => _then(v as _$_ColorModel));
+      : super(_value, _then);
 
-  @override
-  _$_ColorModel get _value => super._value as _$_ColorModel;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? lightColor = freezed,
-    Object? darkColor = freezed,
+    Object? lightColor = null,
+    Object? darkColor = null,
   }) {
     return _then(_$_ColorModel(
-      lightColor: lightColor == freezed
+      lightColor: null == lightColor
           ? _value.lightColor
           : lightColor // ignore: cast_nullable_to_non_nullable
               as Color,
-      darkColor: darkColor == freezed
+      darkColor: null == darkColor
           ? _value.darkColor
           : darkColor // ignore: cast_nullable_to_non_nullable
               as Color,
@@ -117,19 +121,18 @@ class _$_ColorModel extends _ColorModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_ColorModel &&
-            const DeepCollectionEquality()
-                .equals(other.lightColor, lightColor) &&
-            const DeepCollectionEquality().equals(other.darkColor, darkColor));
+            (identical(other.lightColor, lightColor) ||
+                other.lightColor == lightColor) &&
+            (identical(other.darkColor, darkColor) ||
+                other.darkColor == darkColor));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(lightColor),
-      const DeepCollectionEquality().hash(darkColor));
+  int get hashCode => Object.hash(runtimeType, lightColor, darkColor);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_ColorModelCopyWith<_$_ColorModel> get copyWith =>
       __$$_ColorModelCopyWithImpl<_$_ColorModel>(this, _$identity);
 }
@@ -168,7 +171,8 @@ mixin _$RadioButtonModel<T> {
 abstract class $RadioButtonModelCopyWith<T, $Res> {
   factory $RadioButtonModelCopyWith(
           RadioButtonModel<T> value, $Res Function(RadioButtonModel<T>) then) =
-      _$RadioButtonModelCopyWithImpl<T, $Res>;
+      _$RadioButtonModelCopyWithImpl<T, $Res, RadioButtonModel<T>>;
+  @useResult
   $Res call(
       {List<FocusNode> focusNodes,
       List<String> titles,
@@ -178,44 +182,46 @@ abstract class $RadioButtonModelCopyWith<T, $Res> {
 }
 
 /// @nodoc
-class _$RadioButtonModelCopyWithImpl<T, $Res>
+class _$RadioButtonModelCopyWithImpl<T, $Res, $Val extends RadioButtonModel<T>>
     implements $RadioButtonModelCopyWith<T, $Res> {
   _$RadioButtonModelCopyWithImpl(this._value, this._then);
 
-  final RadioButtonModel<T> _value;
   // ignore: unused_field
-  final $Res Function(RadioButtonModel<T>) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? focusNodes = freezed,
-    Object? titles = freezed,
-    Object? values = freezed,
-    Object? selectedValue = freezed,
-    Object? colors = freezed,
+    Object? focusNodes = null,
+    Object? titles = null,
+    Object? values = null,
+    Object? selectedValue = null,
+    Object? colors = null,
   }) {
     return _then(_value.copyWith(
-      focusNodes: focusNodes == freezed
+      focusNodes: null == focusNodes
           ? _value.focusNodes
           : focusNodes // ignore: cast_nullable_to_non_nullable
               as List<FocusNode>,
-      titles: titles == freezed
+      titles: null == titles
           ? _value.titles
           : titles // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      values: values == freezed
+      values: null == values
           ? _value.values
           : values // ignore: cast_nullable_to_non_nullable
               as List<T>,
-      selectedValue: selectedValue == freezed
+      selectedValue: null == selectedValue
           ? _value.selectedValue
           : selectedValue // ignore: cast_nullable_to_non_nullable
               as T,
-      colors: colors == freezed
+      colors: null == colors
           ? _value.colors
           : colors // ignore: cast_nullable_to_non_nullable
               as List<ColorModel>,
-    ));
+    ) as $Val);
   }
 }
 
@@ -226,6 +232,7 @@ abstract class _$$_RadioButtonModelCopyWith<T, $Res>
           $Res Function(_$_RadioButtonModel<T>) then) =
       __$$_RadioButtonModelCopyWithImpl<T, $Res>;
   @override
+  @useResult
   $Res call(
       {List<FocusNode> focusNodes,
       List<String> titles,
@@ -236,41 +243,39 @@ abstract class _$$_RadioButtonModelCopyWith<T, $Res>
 
 /// @nodoc
 class __$$_RadioButtonModelCopyWithImpl<T, $Res>
-    extends _$RadioButtonModelCopyWithImpl<T, $Res>
+    extends _$RadioButtonModelCopyWithImpl<T, $Res, _$_RadioButtonModel<T>>
     implements _$$_RadioButtonModelCopyWith<T, $Res> {
   __$$_RadioButtonModelCopyWithImpl(_$_RadioButtonModel<T> _value,
       $Res Function(_$_RadioButtonModel<T>) _then)
-      : super(_value, (v) => _then(v as _$_RadioButtonModel<T>));
+      : super(_value, _then);
 
-  @override
-  _$_RadioButtonModel<T> get _value => super._value as _$_RadioButtonModel<T>;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? focusNodes = freezed,
-    Object? titles = freezed,
-    Object? values = freezed,
-    Object? selectedValue = freezed,
-    Object? colors = freezed,
+    Object? focusNodes = null,
+    Object? titles = null,
+    Object? values = null,
+    Object? selectedValue = null,
+    Object? colors = null,
   }) {
     return _then(_$_RadioButtonModel<T>(
-      focusNodes: focusNodes == freezed
+      focusNodes: null == focusNodes
           ? _value._focusNodes
           : focusNodes // ignore: cast_nullable_to_non_nullable
               as List<FocusNode>,
-      titles: titles == freezed
+      titles: null == titles
           ? _value._titles
           : titles // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      values: values == freezed
+      values: null == values
           ? _value._values
           : values // ignore: cast_nullable_to_non_nullable
               as List<T>,
-      selectedValue: selectedValue == freezed
+      selectedValue: null == selectedValue
           ? _value.selectedValue
           : selectedValue // ignore: cast_nullable_to_non_nullable
               as T,
-      colors: colors == freezed
+      colors: null == colors
           ? _value._colors
           : colors // ignore: cast_nullable_to_non_nullable
               as List<ColorModel>,
@@ -356,6 +361,7 @@ class _$_RadioButtonModel<T> extends _RadioButtonModel<T> {
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_RadioButtonModelCopyWith<T, _$_RadioButtonModel<T>> get copyWith =>
       __$$_RadioButtonModelCopyWithImpl<T, _$_RadioButtonModel<T>>(
           this, _$identity);

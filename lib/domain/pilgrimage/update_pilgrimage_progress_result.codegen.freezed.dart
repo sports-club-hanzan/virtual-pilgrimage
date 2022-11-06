@@ -39,7 +39,9 @@ abstract class $UpdatePilgrimageProgressResultCopyWith<$Res> {
   factory $UpdatePilgrimageProgressResultCopyWith(
           UpdatePilgrimageProgressResult value,
           $Res Function(UpdatePilgrimageProgressResult) then) =
-      _$UpdatePilgrimageProgressResultCopyWithImpl<$Res>;
+      _$UpdatePilgrimageProgressResultCopyWithImpl<$Res,
+          UpdatePilgrimageProgressResult>;
+  @useResult
   $Res call(
       {UpdatePilgrimageProgressResultStatus status,
       List<int> reachedPilgrimageIdList,
@@ -52,59 +54,63 @@ abstract class $UpdatePilgrimageProgressResultCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$UpdatePilgrimageProgressResultCopyWithImpl<$Res>
+class _$UpdatePilgrimageProgressResultCopyWithImpl<$Res,
+        $Val extends UpdatePilgrimageProgressResult>
     implements $UpdatePilgrimageProgressResultCopyWith<$Res> {
   _$UpdatePilgrimageProgressResultCopyWithImpl(this._value, this._then);
 
-  final UpdatePilgrimageProgressResult _value;
   // ignore: unused_field
-  final $Res Function(UpdatePilgrimageProgressResult) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? status = freezed,
-    Object? reachedPilgrimageIdList = freezed,
-    Object? virtualPolylineLatLngs = freezed,
+    Object? status = null,
+    Object? reachedPilgrimageIdList = null,
+    Object? virtualPolylineLatLngs = null,
     Object? virtualPosition = freezed,
     Object? updatedUser = freezed,
     Object? error = freezed,
   }) {
     return _then(_value.copyWith(
-      status: status == freezed
+      status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as UpdatePilgrimageProgressResultStatus,
-      reachedPilgrimageIdList: reachedPilgrimageIdList == freezed
+      reachedPilgrimageIdList: null == reachedPilgrimageIdList
           ? _value.reachedPilgrimageIdList
           : reachedPilgrimageIdList // ignore: cast_nullable_to_non_nullable
               as List<int>,
-      virtualPolylineLatLngs: virtualPolylineLatLngs == freezed
+      virtualPolylineLatLngs: null == virtualPolylineLatLngs
           ? _value.virtualPolylineLatLngs
           : virtualPolylineLatLngs // ignore: cast_nullable_to_non_nullable
               as List<LatLng>,
-      virtualPosition: virtualPosition == freezed
+      virtualPosition: freezed == virtualPosition
           ? _value.virtualPosition
           : virtualPosition // ignore: cast_nullable_to_non_nullable
               as LatLng?,
-      updatedUser: updatedUser == freezed
+      updatedUser: freezed == updatedUser
           ? _value.updatedUser
           : updatedUser // ignore: cast_nullable_to_non_nullable
               as VirtualPilgrimageUser?,
-      error: error == freezed
+      error: freezed == error
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
               as Exception?,
-    ));
+    ) as $Val);
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $VirtualPilgrimageUserCopyWith<$Res>? get updatedUser {
     if (_value.updatedUser == null) {
       return null;
     }
 
     return $VirtualPilgrimageUserCopyWith<$Res>(_value.updatedUser!, (value) {
-      return _then(_value.copyWith(updatedUser: value));
+      return _then(_value.copyWith(updatedUser: value) as $Val);
     });
   }
 }
@@ -117,6 +123,7 @@ abstract class _$$_UpdatePilgrimageProgressResultCopyWith<$Res>
           $Res Function(_$_UpdatePilgrimageProgressResult) then) =
       __$$_UpdatePilgrimageProgressResultCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {UpdatePilgrimageProgressResultStatus status,
       List<int> reachedPilgrimageIdList,
@@ -131,48 +138,46 @@ abstract class _$$_UpdatePilgrimageProgressResultCopyWith<$Res>
 
 /// @nodoc
 class __$$_UpdatePilgrimageProgressResultCopyWithImpl<$Res>
-    extends _$UpdatePilgrimageProgressResultCopyWithImpl<$Res>
+    extends _$UpdatePilgrimageProgressResultCopyWithImpl<$Res,
+        _$_UpdatePilgrimageProgressResult>
     implements _$$_UpdatePilgrimageProgressResultCopyWith<$Res> {
   __$$_UpdatePilgrimageProgressResultCopyWithImpl(
       _$_UpdatePilgrimageProgressResult _value,
       $Res Function(_$_UpdatePilgrimageProgressResult) _then)
-      : super(_value, (v) => _then(v as _$_UpdatePilgrimageProgressResult));
+      : super(_value, _then);
 
-  @override
-  _$_UpdatePilgrimageProgressResult get _value =>
-      super._value as _$_UpdatePilgrimageProgressResult;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? status = freezed,
-    Object? reachedPilgrimageIdList = freezed,
-    Object? virtualPolylineLatLngs = freezed,
+    Object? status = null,
+    Object? reachedPilgrimageIdList = null,
+    Object? virtualPolylineLatLngs = null,
     Object? virtualPosition = freezed,
     Object? updatedUser = freezed,
     Object? error = freezed,
   }) {
     return _then(_$_UpdatePilgrimageProgressResult(
-      status: status == freezed
+      status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as UpdatePilgrimageProgressResultStatus,
-      reachedPilgrimageIdList: reachedPilgrimageIdList == freezed
+      reachedPilgrimageIdList: null == reachedPilgrimageIdList
           ? _value._reachedPilgrimageIdList
           : reachedPilgrimageIdList // ignore: cast_nullable_to_non_nullable
               as List<int>,
-      virtualPolylineLatLngs: virtualPolylineLatLngs == freezed
+      virtualPolylineLatLngs: null == virtualPolylineLatLngs
           ? _value._virtualPolylineLatLngs
           : virtualPolylineLatLngs // ignore: cast_nullable_to_non_nullable
               as List<LatLng>,
-      virtualPosition: virtualPosition == freezed
+      virtualPosition: freezed == virtualPosition
           ? _value.virtualPosition
           : virtualPosition // ignore: cast_nullable_to_non_nullable
               as LatLng?,
-      updatedUser: updatedUser == freezed
+      updatedUser: freezed == updatedUser
           ? _value.updatedUser
           : updatedUser // ignore: cast_nullable_to_non_nullable
               as VirtualPilgrimageUser?,
-      error: error == freezed
+      error: freezed == error
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
               as Exception?,
@@ -237,30 +242,31 @@ class _$_UpdatePilgrimageProgressResult
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_UpdatePilgrimageProgressResult &&
-            const DeepCollectionEquality().equals(other.status, status) &&
+            (identical(other.status, status) || other.status == status) &&
             const DeepCollectionEquality().equals(
                 other._reachedPilgrimageIdList, _reachedPilgrimageIdList) &&
             const DeepCollectionEquality().equals(
                 other._virtualPolylineLatLngs, _virtualPolylineLatLngs) &&
-            const DeepCollectionEquality()
-                .equals(other.virtualPosition, virtualPosition) &&
-            const DeepCollectionEquality()
-                .equals(other.updatedUser, updatedUser) &&
-            const DeepCollectionEquality().equals(other.error, error));
+            (identical(other.virtualPosition, virtualPosition) ||
+                other.virtualPosition == virtualPosition) &&
+            (identical(other.updatedUser, updatedUser) ||
+                other.updatedUser == updatedUser) &&
+            (identical(other.error, error) || other.error == error));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(status),
+      status,
       const DeepCollectionEquality().hash(_reachedPilgrimageIdList),
       const DeepCollectionEquality().hash(_virtualPolylineLatLngs),
-      const DeepCollectionEquality().hash(virtualPosition),
-      const DeepCollectionEquality().hash(updatedUser),
-      const DeepCollectionEquality().hash(error));
+      virtualPosition,
+      updatedUser,
+      error);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_UpdatePilgrimageProgressResultCopyWith<_$_UpdatePilgrimageProgressResult>
       get copyWith => __$$_UpdatePilgrimageProgressResultCopyWithImpl<
           _$_UpdatePilgrimageProgressResult>(this, _$identity);

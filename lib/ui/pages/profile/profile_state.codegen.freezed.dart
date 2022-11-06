@@ -27,28 +27,32 @@ mixin _$ProfileState {
 abstract class $ProfileStateCopyWith<$Res> {
   factory $ProfileStateCopyWith(
           ProfileState value, $Res Function(ProfileState) then) =
-      _$ProfileStateCopyWithImpl<$Res>;
+      _$ProfileStateCopyWithImpl<$Res, ProfileState>;
+  @useResult
   $Res call({int selectedTabIndex});
 }
 
 /// @nodoc
-class _$ProfileStateCopyWithImpl<$Res> implements $ProfileStateCopyWith<$Res> {
+class _$ProfileStateCopyWithImpl<$Res, $Val extends ProfileState>
+    implements $ProfileStateCopyWith<$Res> {
   _$ProfileStateCopyWithImpl(this._value, this._then);
 
-  final ProfileState _value;
   // ignore: unused_field
-  final $Res Function(ProfileState) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? selectedTabIndex = freezed,
+    Object? selectedTabIndex = null,
   }) {
     return _then(_value.copyWith(
-      selectedTabIndex: selectedTabIndex == freezed
+      selectedTabIndex: null == selectedTabIndex
           ? _value.selectedTabIndex
           : selectedTabIndex // ignore: cast_nullable_to_non_nullable
               as int,
-    ));
+    ) as $Val);
   }
 }
 
@@ -59,26 +63,25 @@ abstract class _$$_ProfileStateCopyWith<$Res>
           _$_ProfileState value, $Res Function(_$_ProfileState) then) =
       __$$_ProfileStateCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call({int selectedTabIndex});
 }
 
 /// @nodoc
 class __$$_ProfileStateCopyWithImpl<$Res>
-    extends _$ProfileStateCopyWithImpl<$Res>
+    extends _$ProfileStateCopyWithImpl<$Res, _$_ProfileState>
     implements _$$_ProfileStateCopyWith<$Res> {
   __$$_ProfileStateCopyWithImpl(
       _$_ProfileState _value, $Res Function(_$_ProfileState) _then)
-      : super(_value, (v) => _then(v as _$_ProfileState));
+      : super(_value, _then);
 
-  @override
-  _$_ProfileState get _value => super._value as _$_ProfileState;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? selectedTabIndex = freezed,
+    Object? selectedTabIndex = null,
   }) {
     return _then(_$_ProfileState(
-      selectedTabIndex: selectedTabIndex == freezed
+      selectedTabIndex: null == selectedTabIndex
           ? _value.selectedTabIndex
           : selectedTabIndex // ignore: cast_nullable_to_non_nullable
               as int,
@@ -104,16 +107,16 @@ class _$_ProfileState extends _ProfileState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_ProfileState &&
-            const DeepCollectionEquality()
-                .equals(other.selectedTabIndex, selectedTabIndex));
+            (identical(other.selectedTabIndex, selectedTabIndex) ||
+                other.selectedTabIndex == selectedTabIndex));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(selectedTabIndex));
+  int get hashCode => Object.hash(runtimeType, selectedTabIndex);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_ProfileStateCopyWith<_$_ProfileState> get copyWith =>
       __$$_ProfileStateCopyWithImpl<_$_ProfileState>(this, _$identity);
 }

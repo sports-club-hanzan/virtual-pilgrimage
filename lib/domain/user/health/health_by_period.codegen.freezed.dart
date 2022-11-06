@@ -35,39 +35,42 @@ mixin _$HealthByPeriod {
 abstract class $HealthByPeriodCopyWith<$Res> {
   factory $HealthByPeriodCopyWith(
           HealthByPeriod value, $Res Function(HealthByPeriod) then) =
-      _$HealthByPeriodCopyWithImpl<$Res>;
+      _$HealthByPeriodCopyWithImpl<$Res, HealthByPeriod>;
+  @useResult
   $Res call({int steps, int distance, int burnedCalorie});
 }
 
 /// @nodoc
-class _$HealthByPeriodCopyWithImpl<$Res>
+class _$HealthByPeriodCopyWithImpl<$Res, $Val extends HealthByPeriod>
     implements $HealthByPeriodCopyWith<$Res> {
   _$HealthByPeriodCopyWithImpl(this._value, this._then);
 
-  final HealthByPeriod _value;
   // ignore: unused_field
-  final $Res Function(HealthByPeriod) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? steps = freezed,
-    Object? distance = freezed,
-    Object? burnedCalorie = freezed,
+    Object? steps = null,
+    Object? distance = null,
+    Object? burnedCalorie = null,
   }) {
     return _then(_value.copyWith(
-      steps: steps == freezed
+      steps: null == steps
           ? _value.steps
           : steps // ignore: cast_nullable_to_non_nullable
               as int,
-      distance: distance == freezed
+      distance: null == distance
           ? _value.distance
           : distance // ignore: cast_nullable_to_non_nullable
               as int,
-      burnedCalorie: burnedCalorie == freezed
+      burnedCalorie: null == burnedCalorie
           ? _value.burnedCalorie
           : burnedCalorie // ignore: cast_nullable_to_non_nullable
               as int,
-    ));
+    ) as $Val);
   }
 }
 
@@ -78,36 +81,35 @@ abstract class _$$_HealthByPeriodCopyWith<$Res>
           _$_HealthByPeriod value, $Res Function(_$_HealthByPeriod) then) =
       __$$_HealthByPeriodCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call({int steps, int distance, int burnedCalorie});
 }
 
 /// @nodoc
 class __$$_HealthByPeriodCopyWithImpl<$Res>
-    extends _$HealthByPeriodCopyWithImpl<$Res>
+    extends _$HealthByPeriodCopyWithImpl<$Res, _$_HealthByPeriod>
     implements _$$_HealthByPeriodCopyWith<$Res> {
   __$$_HealthByPeriodCopyWithImpl(
       _$_HealthByPeriod _value, $Res Function(_$_HealthByPeriod) _then)
-      : super(_value, (v) => _then(v as _$_HealthByPeriod));
+      : super(_value, _then);
 
-  @override
-  _$_HealthByPeriod get _value => super._value as _$_HealthByPeriod;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? steps = freezed,
-    Object? distance = freezed,
-    Object? burnedCalorie = freezed,
+    Object? steps = null,
+    Object? distance = null,
+    Object? burnedCalorie = null,
   }) {
     return _then(_$_HealthByPeriod(
-      steps: steps == freezed
+      steps: null == steps
           ? _value.steps
           : steps // ignore: cast_nullable_to_non_nullable
               as int,
-      distance: distance == freezed
+      distance: null == distance
           ? _value.distance
           : distance // ignore: cast_nullable_to_non_nullable
               as int,
-      burnedCalorie: burnedCalorie == freezed
+      burnedCalorie: null == burnedCalorie
           ? _value.burnedCalorie
           : burnedCalorie // ignore: cast_nullable_to_non_nullable
               as int,
@@ -148,22 +150,20 @@ class _$_HealthByPeriod extends _HealthByPeriod {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_HealthByPeriod &&
-            const DeepCollectionEquality().equals(other.steps, steps) &&
-            const DeepCollectionEquality().equals(other.distance, distance) &&
-            const DeepCollectionEquality()
-                .equals(other.burnedCalorie, burnedCalorie));
+            (identical(other.steps, steps) || other.steps == steps) &&
+            (identical(other.distance, distance) ||
+                other.distance == distance) &&
+            (identical(other.burnedCalorie, burnedCalorie) ||
+                other.burnedCalorie == burnedCalorie));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(steps),
-      const DeepCollectionEquality().hash(distance),
-      const DeepCollectionEquality().hash(burnedCalorie));
+  int get hashCode => Object.hash(runtimeType, steps, distance, burnedCalorie);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_HealthByPeriodCopyWith<_$_HealthByPeriod> get copyWith =>
       __$$_HealthByPeriodCopyWithImpl<_$_HealthByPeriod>(this, _$identity);
 

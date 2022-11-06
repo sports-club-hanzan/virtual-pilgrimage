@@ -30,7 +30,8 @@ mixin _$SignInState {
 abstract class $SignInStateCopyWith<$Res> {
   factory $SignInStateCopyWith(
           SignInState value, $Res Function(SignInState) then) =
-      _$SignInStateCopyWithImpl<$Res>;
+      _$SignInStateCopyWithImpl<$Res, SignInState>;
+  @useResult
   $Res call(
       {SignInStateContext context,
       bool isLoading,
@@ -42,51 +43,56 @@ abstract class $SignInStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$SignInStateCopyWithImpl<$Res> implements $SignInStateCopyWith<$Res> {
+class _$SignInStateCopyWithImpl<$Res, $Val extends SignInState>
+    implements $SignInStateCopyWith<$Res> {
   _$SignInStateCopyWithImpl(this._value, this._then);
 
-  final SignInState _value;
   // ignore: unused_field
-  final $Res Function(SignInState) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? context = freezed,
-    Object? isLoading = freezed,
-    Object? emailOrNickname = freezed,
-    Object? password = freezed,
+    Object? context = null,
+    Object? isLoading = null,
+    Object? emailOrNickname = null,
+    Object? password = null,
   }) {
     return _then(_value.copyWith(
-      context: context == freezed
+      context: null == context
           ? _value.context
           : context // ignore: cast_nullable_to_non_nullable
               as SignInStateContext,
-      isLoading: isLoading == freezed
+      isLoading: null == isLoading
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
-      emailOrNickname: emailOrNickname == freezed
+      emailOrNickname: null == emailOrNickname
           ? _value.emailOrNickname
           : emailOrNickname // ignore: cast_nullable_to_non_nullable
               as FormModel,
-      password: password == freezed
+      password: null == password
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
               as FormModel,
-    ));
+    ) as $Val);
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $FormModelCopyWith<$Res> get emailOrNickname {
     return $FormModelCopyWith<$Res>(_value.emailOrNickname, (value) {
-      return _then(_value.copyWith(emailOrNickname: value));
+      return _then(_value.copyWith(emailOrNickname: value) as $Val);
     });
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $FormModelCopyWith<$Res> get password {
     return $FormModelCopyWith<$Res>(_value.password, (value) {
-      return _then(_value.copyWith(password: value));
+      return _then(_value.copyWith(password: value) as $Val);
     });
   }
 }
@@ -98,6 +104,7 @@ abstract class _$$_SignInStateCopyWith<$Res>
           _$_SignInState value, $Res Function(_$_SignInState) then) =
       __$$_SignInStateCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {SignInStateContext context,
       bool isLoading,
@@ -111,36 +118,35 @@ abstract class _$$_SignInStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_SignInStateCopyWithImpl<$Res> extends _$SignInStateCopyWithImpl<$Res>
+class __$$_SignInStateCopyWithImpl<$Res>
+    extends _$SignInStateCopyWithImpl<$Res, _$_SignInState>
     implements _$$_SignInStateCopyWith<$Res> {
   __$$_SignInStateCopyWithImpl(
       _$_SignInState _value, $Res Function(_$_SignInState) _then)
-      : super(_value, (v) => _then(v as _$_SignInState));
+      : super(_value, _then);
 
-  @override
-  _$_SignInState get _value => super._value as _$_SignInState;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? context = freezed,
-    Object? isLoading = freezed,
-    Object? emailOrNickname = freezed,
-    Object? password = freezed,
+    Object? context = null,
+    Object? isLoading = null,
+    Object? emailOrNickname = null,
+    Object? password = null,
   }) {
     return _then(_$_SignInState(
-      context: context == freezed
+      context: null == context
           ? _value.context
           : context // ignore: cast_nullable_to_non_nullable
               as SignInStateContext,
-      isLoading: isLoading == freezed
+      isLoading: null == isLoading
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
               as bool,
-      emailOrNickname: emailOrNickname == freezed
+      emailOrNickname: null == emailOrNickname
           ? _value.emailOrNickname
           : emailOrNickname // ignore: cast_nullable_to_non_nullable
               as FormModel,
-      password: password == freezed
+      password: null == password
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
               as FormModel,
@@ -179,23 +185,22 @@ class _$_SignInState extends _SignInState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_SignInState &&
-            const DeepCollectionEquality().equals(other.context, context) &&
-            const DeepCollectionEquality().equals(other.isLoading, isLoading) &&
-            const DeepCollectionEquality()
-                .equals(other.emailOrNickname, emailOrNickname) &&
-            const DeepCollectionEquality().equals(other.password, password));
+            (identical(other.context, context) || other.context == context) &&
+            (identical(other.isLoading, isLoading) ||
+                other.isLoading == isLoading) &&
+            (identical(other.emailOrNickname, emailOrNickname) ||
+                other.emailOrNickname == emailOrNickname) &&
+            (identical(other.password, password) ||
+                other.password == password));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(context),
-      const DeepCollectionEquality().hash(isLoading),
-      const DeepCollectionEquality().hash(emailOrNickname),
-      const DeepCollectionEquality().hash(password));
+  int get hashCode =>
+      Object.hash(runtimeType, context, isLoading, emailOrNickname, password);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_SignInStateCopyWith<_$_SignInState> get copyWith =>
       __$$_SignInStateCopyWithImpl<_$_SignInState>(this, _$identity);
 }

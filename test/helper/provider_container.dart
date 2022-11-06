@@ -15,7 +15,7 @@ final defaultOverrides = <Override>[
   firebaseAuthProvider.overrideWithValue(MockFirebaseAuth()),
   firestoreProvider.overrideWithValue(MockFirebaseFirestore()),
   storageProvider.overrideWithValue(MockFirebaseStorage()),
-  firebaseAuthUserStateProvider.overrideWithValue(StateController(MockUser())),
+  firebaseAuthUserStateProvider.overrideWith((ref) => MockUser()),
   firebaseCrashlyticsProvider.overrideWithValue(MockFirebaseCrashlytics()),
   firebaseAnalyticsProvider.overrideWithValue(MockFirebaseAnalytics()),
   // google signIn

@@ -29,7 +29,8 @@ mixin _$RegistrationState {
 abstract class $RegistrationStateCopyWith<$Res> {
   factory $RegistrationStateCopyWith(
           RegistrationState value, $Res Function(RegistrationState) then) =
-      _$RegistrationStateCopyWithImpl<$Res>;
+      _$RegistrationStateCopyWithImpl<$Res, RegistrationState>;
+  @useResult
   $Res call(
       {FormModel nickname,
       FormModel birthday,
@@ -41,54 +42,59 @@ abstract class $RegistrationStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$RegistrationStateCopyWithImpl<$Res>
+class _$RegistrationStateCopyWithImpl<$Res, $Val extends RegistrationState>
     implements $RegistrationStateCopyWith<$Res> {
   _$RegistrationStateCopyWithImpl(this._value, this._then);
 
-  final RegistrationState _value;
   // ignore: unused_field
-  final $Res Function(RegistrationState) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? nickname = freezed,
-    Object? birthday = freezed,
-    Object? gender = freezed,
+    Object? nickname = null,
+    Object? birthday = null,
+    Object? gender = null,
   }) {
     return _then(_value.copyWith(
-      nickname: nickname == freezed
+      nickname: null == nickname
           ? _value.nickname
           : nickname // ignore: cast_nullable_to_non_nullable
               as FormModel,
-      birthday: birthday == freezed
+      birthday: null == birthday
           ? _value.birthday
           : birthday // ignore: cast_nullable_to_non_nullable
               as FormModel,
-      gender: gender == freezed
+      gender: null == gender
           ? _value.gender
           : gender // ignore: cast_nullable_to_non_nullable
               as RadioButtonModel<Gender>,
-    ));
+    ) as $Val);
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $FormModelCopyWith<$Res> get nickname {
     return $FormModelCopyWith<$Res>(_value.nickname, (value) {
-      return _then(_value.copyWith(nickname: value));
+      return _then(_value.copyWith(nickname: value) as $Val);
     });
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $FormModelCopyWith<$Res> get birthday {
     return $FormModelCopyWith<$Res>(_value.birthday, (value) {
-      return _then(_value.copyWith(birthday: value));
+      return _then(_value.copyWith(birthday: value) as $Val);
     });
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $RadioButtonModelCopyWith<Gender, $Res> get gender {
     return $RadioButtonModelCopyWith<Gender, $Res>(_value.gender, (value) {
-      return _then(_value.copyWith(gender: value));
+      return _then(_value.copyWith(gender: value) as $Val);
     });
   }
 }
@@ -100,6 +106,7 @@ abstract class _$$_RegistrationStateCopyWith<$Res>
           $Res Function(_$_RegistrationState) then) =
       __$$_RegistrationStateCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {FormModel nickname,
       FormModel birthday,
@@ -115,31 +122,29 @@ abstract class _$$_RegistrationStateCopyWith<$Res>
 
 /// @nodoc
 class __$$_RegistrationStateCopyWithImpl<$Res>
-    extends _$RegistrationStateCopyWithImpl<$Res>
+    extends _$RegistrationStateCopyWithImpl<$Res, _$_RegistrationState>
     implements _$$_RegistrationStateCopyWith<$Res> {
   __$$_RegistrationStateCopyWithImpl(
       _$_RegistrationState _value, $Res Function(_$_RegistrationState) _then)
-      : super(_value, (v) => _then(v as _$_RegistrationState));
+      : super(_value, _then);
 
-  @override
-  _$_RegistrationState get _value => super._value as _$_RegistrationState;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? nickname = freezed,
-    Object? birthday = freezed,
-    Object? gender = freezed,
+    Object? nickname = null,
+    Object? birthday = null,
+    Object? gender = null,
   }) {
     return _then(_$_RegistrationState(
-      nickname: nickname == freezed
+      nickname: null == nickname
           ? _value.nickname
           : nickname // ignore: cast_nullable_to_non_nullable
               as FormModel,
-      birthday: birthday == freezed
+      birthday: null == birthday
           ? _value.birthday
           : birthday // ignore: cast_nullable_to_non_nullable
               as FormModel,
-      gender: gender == freezed
+      gender: null == gender
           ? _value.gender
           : gender // ignore: cast_nullable_to_non_nullable
               as RadioButtonModel<Gender>,
@@ -171,20 +176,19 @@ class _$_RegistrationState extends _RegistrationState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_RegistrationState &&
-            const DeepCollectionEquality().equals(other.nickname, nickname) &&
-            const DeepCollectionEquality().equals(other.birthday, birthday) &&
-            const DeepCollectionEquality().equals(other.gender, gender));
+            (identical(other.nickname, nickname) ||
+                other.nickname == nickname) &&
+            (identical(other.birthday, birthday) ||
+                other.birthday == birthday) &&
+            (identical(other.gender, gender) || other.gender == gender));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(nickname),
-      const DeepCollectionEquality().hash(birthday),
-      const DeepCollectionEquality().hash(gender));
+  int get hashCode => Object.hash(runtimeType, nickname, birthday, gender);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_RegistrationStateCopyWith<_$_RegistrationState> get copyWith =>
       __$$_RegistrationStateCopyWithImpl<_$_RegistrationState>(
           this, _$identity);
