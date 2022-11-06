@@ -4,6 +4,7 @@ import 'package:virtualpilgrimage/domain/temple/temple_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/temple/temple_repository_impl.dart';
 import 'package:virtualpilgrimage/ui/components/bottom_navigation.dart';
+import 'package:virtualpilgrimage/ui/components/molecules/my_drawer.dart';
 import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
 import 'package:virtualpilgrimage/ui/pages/temple/temple_detail_dialog.dart';
 import 'package:virtualpilgrimage/ui/style/font.dart';
@@ -16,11 +17,13 @@ class TemplePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+      key: MyDrawer.globalScaffoldKey,
       appBar: const MyAppBar(),
       body: SafeArea(
         child: _TemplePageBody(ref: ref),
       ),
       bottomNavigationBar: const BottomNavigation(),
+      endDrawer: const MyDrawer(),
     );
   }
 }
@@ -36,6 +39,9 @@ class _TemplePageBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final temples = ref.watch(templeInfoCache);
     final user = ref.watch(userStateProvider);
+    ref.read(pageTypeProvider.notifier).addListener((state) {
+      state = PageType.profile;
+    });
 
     return ListView.builder(
       itemBuilder: (BuildContext context, int index) {
