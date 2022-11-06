@@ -11,18 +11,19 @@ import 'package:virtualpilgrimage/infrastructure/firebase/firestore_collection_p
 final templeInfoCache = StateProvider<Map<int, TempleInfo>>((_) => {});
 
 class TempleRepositoryImpl extends TempleRepository {
-  TempleRepositoryImpl(this._firestore, this._reader);
+  TempleRepositoryImpl(this._firestore, this._ref);
 
   final FirebaseFirestore _firestore;
-  final Reader _reader;
+  final Ref _ref;
 
   static const templeInfoLength = 88;
 
   @override
   Future<TempleInfo> getTempleInfo(int templeId) async {
     // キャッシュに存在するならばキャッシュの値をそのまま参照する
-    if (_reader(templeInfoCache).containsKey(templeId)) {
-      return _reader(templeInfoCache)[templeId]!;
+    final templeInfoCacheMap = _ref.read(templeInfoCache);
+    if (templeInfoCacheMap.containsKey(templeId)) {
+      return templeInfoCacheMap[templeId]!;
     }
     // キャッシュに存在しないならばFirestoreに問い合わせる
     try {
@@ -59,7 +60,7 @@ class TempleRepositoryImpl extends TempleRepository {
   @override
   Future<void> getTempleInfoAll() async {
     // templeInfoCache にすでにキャッシュされた情報が含まれている場合は何もしない
-    if (_reader(templeInfoCache).length == templeInfoLength) {
+    if (_ref.read(templeInfoCache).length == templeInfoLength) {
       return;
     }
     try {
@@ -79,7 +80,7 @@ class TempleRepositoryImpl extends TempleRepository {
           templeInfoMap.addAll({data.id: data});
         }
       }
-      _reader(templeInfoCache.state).state = templeInfoMap;
+      _ref.read(templeInfoCache.notifier).state = templeInfoMap;
     } on FirebaseException catch (e) {
       throw DatabaseException(
         message: 'cause Firestore error [code][${e.code}][message][${e.message}]',

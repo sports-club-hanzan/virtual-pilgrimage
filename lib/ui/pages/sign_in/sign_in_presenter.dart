@@ -26,8 +26,8 @@ class SignInPresenter extends StateNotifier<SignInState> {
           ),
         ) {
     _signInUsecase = _ref.read(signInUsecaseProvider);
-    _userState = _ref.watch(userStateProvider.state);
-    _loginState = _ref.watch(loginStateProvider.state);
+    _userState = _ref.watch(userStateProvider.notifier);
+    _loginState = _ref.watch(loginStateProvider.notifier);
     _analytics = _ref.read(analyticsProvider);
     _crashlytics = _ref.read(firebaseCrashlyticsProvider);
   }

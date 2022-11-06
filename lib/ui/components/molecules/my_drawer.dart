@@ -88,8 +88,8 @@ class MyDrawer extends ConsumerWidget {
     Navigator.of(context).pop();
     await ref.read(analyticsProvider).logEvent(eventName: AnalyticsEvent.logout);
     await ref.read(signInUsecaseProvider).logout();
-    ref.read(userStateProvider.state).state = null;
+    ref.read(userStateProvider.notifier).state = null;
     // loginState を変更するとページが遷移するので更新順を後ろにしている
-    ref.read(loginStateProvider.state).state = null;
+    ref.read(loginStateProvider.notifier).state = null;
   }
 }

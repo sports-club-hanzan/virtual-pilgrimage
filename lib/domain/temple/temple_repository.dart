@@ -7,11 +7,12 @@ import 'temple_info.codegen.dart';
 final templeRepositoryProvider = Provider<TempleRepository>(
   (ref) => TempleRepositoryImpl(
     ref.read(firestoreProvider),
-    ref.read,
+    ref,
   ),
 );
 
 abstract class TempleRepository {
   Future<TempleInfo> getTempleInfo(int templeId);
+
   Future<void> getTempleInfoAll();
 }

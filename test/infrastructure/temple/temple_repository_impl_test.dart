@@ -74,7 +74,7 @@ void main() {
         });
         test('キャッシュからお寺の情報を取得できる', () async {
           // given
-          container.read(templeInfoCache.state).state = {11: defaultTempleInfo(11)};
+          container.read(templeInfoCache.notifier).state = {11: defaultTempleInfo(11)};
 
           // when
           final actual = await target.getTempleInfo(11);
