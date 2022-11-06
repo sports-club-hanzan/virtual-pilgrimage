@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logger/logger.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
@@ -8,15 +7,12 @@ import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen
 import 'package:virtualpilgrimage/domain/user/registration/registration_result.dart';
 import 'package:virtualpilgrimage/domain/user/registration/user_registration_interactor.dart';
 import 'package:virtualpilgrimage/domain/user/registration/user_registration_usecase.dart';
-import 'package:virtualpilgrimage/domain/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 
 import '../../../helper/default_mock_firebase_crashlytics.dart';
 import '../../../helper/mock.mocks.dart';
 import '../../../helper/provider_container.dart';
-import '../../auth/sign_in_interactor_test.mocks.dart';
 
-@GenerateMocks([UserRepository])
 void main() {
   late MockUserRepository mockUserRepository;
   late MockFirebaseCrashlytics mockFirebaseCrashlytics;
