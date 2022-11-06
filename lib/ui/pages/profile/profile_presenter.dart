@@ -113,6 +113,6 @@ class ProfilePresenter extends StateNotifier<ProfileState> {
     );
     // GoogleMap 上で表示する userIcon も更新してstateを更新
     final bitmap = await _userIconRepository.loadIconImage(updatedUser.userIconUrl);
-    _ref.read(userStateProvider.state).state = updatedUser.setUserIconBitmap(bitmap);
+    _ref.read(userStateProvider.notifier).state = updatedUser.setUserIconBitmap(bitmap);
   }
 }

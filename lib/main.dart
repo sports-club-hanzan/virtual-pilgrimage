@@ -32,8 +32,8 @@ class _App extends ConsumerWidget {
     final router = ref.watch(routerProvider);
     final firebaseAuth = ref.watch(firebaseAuthProvider);
     final analytics = ref.read(analyticsProvider);
-    final userState = ref.watch(userStateProvider.state);
-    final loginState = ref.watch(loginStateProvider.state);
+    final userState = ref.watch(userStateProvider.notifier);
+    final loginState = ref.watch(loginStateProvider.notifier);
     // final userIconRepository = ref.read(userIconRepositoryProvider);
 
     // Firebaseへのログインがキャッシュされていれば

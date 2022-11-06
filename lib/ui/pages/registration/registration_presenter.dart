@@ -163,7 +163,7 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
   Future<void> onPressedLogout() async {
     await _ref.read(analyticsProvider).logEvent(eventName: AnalyticsEvent.logout);
     await _ref.read(signInUsecaseProvider).logout();
-    _ref.read(loginStateProvider.state).state = null;
+    _ref.read(loginStateProvider.notifier).state = null;
     _ref.read(routerProvider).go(RouterPath.signIn);
   }
 }
