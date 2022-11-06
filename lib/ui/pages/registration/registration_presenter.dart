@@ -12,6 +12,7 @@ import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_p
 import 'package:virtualpilgrimage/model/form_model.codegen.dart';
 import 'package:virtualpilgrimage/model/radio_button_model.codegen.dart';
 import 'package:virtualpilgrimage/router.dart';
+import 'package:virtualpilgrimage/ui/components/bottom_navigation.dart';
 import 'package:virtualpilgrimage/ui/pages/registration/registration_state.codegen.dart';
 import 'package:virtualpilgrimage/ui/style/color.dart';
 
@@ -133,6 +134,7 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
       case RegistrationResultStatus.success:
         if (isRegistered) {
           // 登録済みの場合はloginStateが更新されないので、強制的にページ遷移させる
+          _ref.read(pageTypeProvider.notifier).state = PageType.home;
           _ref.read(routerProvider).go(RouterPath.home);
         } else {
           _loginStateNotifier.state = updatedUser.userStatus;

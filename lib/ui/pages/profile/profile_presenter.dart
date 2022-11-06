@@ -13,7 +13,6 @@ import 'package:virtualpilgrimage/domain/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/logger.dart';
-import 'package:virtualpilgrimage/ui/components/bottom_navigation.dart';
 import 'package:virtualpilgrimage/ui/pages/profile/profile_state.codegen.dart';
 
 final profileUserProvider =
@@ -52,9 +51,6 @@ class ProfilePresenter extends StateNotifier<ProfileState> {
     _updateUserProfileImageInteractor = _ref.read(updateUserProfileImageUsecaseProvider);
     _userIconRepository = _ref.read(userIconRepositoryProvider);
     _analytics = _ref.read(analyticsProvider);
-    _ref.read(pageTypeProvider.notifier).addListener((state) {
-      state = PageType.profile;
-    });
   }
 
   final Ref _ref;
