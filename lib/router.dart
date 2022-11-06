@@ -89,31 +89,26 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>(
         },
       ),
     ],
-    redirect: (state) {
+    redirect: (BuildContext context, GoRouterState state) {
       ref.read(loggerProvider).d(state.location);
+
       // サインイン状態によって遷移先を変える
       final loginState = ref.watch(loginStateProvider);
       if (loginState == null) {
-        if (state.location != RouterPath.signIn) {
-          return RouterPath.signIn;
-        }
-      } else {
-        switch (loginState) {
-          // ユーザが作成済みの時
-          // 基本的にはここにページ遷移を記載する
-          case UserStatus.created:
-            return null;
-          // ユーザ情報が登録途中の時
-          case UserStatus.temporary:
-            if (state.location != RouterPath.registration) {
-              return RouterPath.registration;
-            }
-            break;
-          // 削除済みの時
-          case UserStatus.deleted:
-            // TODO(s14t284): Handle this case.
-            break;
-        }
+        return RouterPath.signIn;
+      }
+      switch (loginState) {
+        // ユーザが作成済みの時
+        // 基本的にはここに遷移してくるので、遷移先に与えられた箇所に移動するよう null を返す
+        case UserStatus.created:
+          return null;
+        // ユーザ情報が登録途中の時
+        case UserStatus.temporary:
+          return RouterPath.registration;
+        // 削除済みの時
+        case UserStatus.deleted:
+          // TODO(s14t284): Handle this case.
+          break;
       }
 
       return null;
