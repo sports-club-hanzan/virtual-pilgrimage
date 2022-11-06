@@ -15,8 +15,8 @@ $ brew install node
 $ npm install -g firebase-tools  # https://formulae.brew.sh/formula/firebase-cli
 # 以下は flutterfire を利用する場合のみ導入
 $ brew install fvm
-$ fvm install 3.0.5
-$ fvm use 3.0.5
+$ fvm install 3.3.7
+$ fvm use 3.3.7
 $ dart pub global activate flutterfire_cli
 # .zshrc など利用しているシェルの設定に以下を追加
 # export PATH="$PATH":"$HOME/.pub-cache/bin"
