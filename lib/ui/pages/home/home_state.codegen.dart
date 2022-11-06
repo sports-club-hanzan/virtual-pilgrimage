@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:virtualpilgrimage/model/google_map_model.codegen.dart';
@@ -29,7 +31,7 @@ class HomeState with _$HomeState {
 
   // ignore: prefer_constructors_over_static_methods
   static HomeState initialize() => HomeState(
-        googleMap: GoogleMapModel.initialize(),
+        googleMap: GoogleMapModel(controller: Completer()),
         initialCameraPosition: _initialCameraPosition,
       );
 
