@@ -15,7 +15,6 @@ import 'package:virtualpilgrimage/domain/user/health/update_health_usecase.dart'
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/logger.dart';
-import 'package:virtualpilgrimage/ui/components/bottom_navigation.dart';
 
 import 'home_state.codegen.dart';
 
@@ -30,9 +29,6 @@ class HomePresenter extends StateNotifier<HomeState> {
     _crashlytics = _ref.read(firebaseCrashlyticsProvider);
     _templeRepository = _ref.read(templeRepositoryProvider);
     _userStateNotifier = _ref.read(userStateProvider.notifier);
-    _ref.read(pageTypeProvider.notifier).addListener((state) {
-      state = PageType.home;
-    });
     initialize();
   }
 

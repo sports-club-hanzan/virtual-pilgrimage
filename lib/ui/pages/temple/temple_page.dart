@@ -39,9 +39,6 @@ class _TemplePageBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final temples = ref.watch(templeInfoCache);
     final user = ref.watch(userStateProvider);
-    ref.read(pageTypeProvider.notifier).addListener((state) {
-      state = PageType.profile;
-    });
 
     return ListView.builder(
       itemBuilder: (BuildContext context, int index) {
