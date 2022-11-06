@@ -31,7 +31,8 @@ mixin _$HomeState {
 /// @nodoc
 abstract class $HomeStateCopyWith<$Res> {
   factory $HomeStateCopyWith(HomeState value, $Res Function(HomeState) then) =
-      _$HomeStateCopyWithImpl<$Res>;
+      _$HomeStateCopyWithImpl<$Res, HomeState>;
+  @useResult
   $Res call(
       {GoogleMapModel googleMap,
       CameraPosition initialCameraPosition,
@@ -43,49 +44,53 @@ abstract class $HomeStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$HomeStateCopyWithImpl<$Res> implements $HomeStateCopyWith<$Res> {
+class _$HomeStateCopyWithImpl<$Res, $Val extends HomeState>
+    implements $HomeStateCopyWith<$Res> {
   _$HomeStateCopyWithImpl(this._value, this._then);
 
-  final HomeState _value;
   // ignore: unused_field
-  final $Res Function(HomeState) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? googleMap = freezed,
-    Object? initialCameraPosition = freezed,
-    Object? markers = freezed,
-    Object? polylines = freezed,
-    Object? animationTempleId = freezed,
+    Object? googleMap = null,
+    Object? initialCameraPosition = null,
+    Object? markers = null,
+    Object? polylines = null,
+    Object? animationTempleId = null,
   }) {
     return _then(_value.copyWith(
-      googleMap: googleMap == freezed
+      googleMap: null == googleMap
           ? _value.googleMap
           : googleMap // ignore: cast_nullable_to_non_nullable
               as GoogleMapModel,
-      initialCameraPosition: initialCameraPosition == freezed
+      initialCameraPosition: null == initialCameraPosition
           ? _value.initialCameraPosition
           : initialCameraPosition // ignore: cast_nullable_to_non_nullable
               as CameraPosition,
-      markers: markers == freezed
+      markers: null == markers
           ? _value.markers
           : markers // ignore: cast_nullable_to_non_nullable
               as Set<Marker>,
-      polylines: polylines == freezed
+      polylines: null == polylines
           ? _value.polylines
           : polylines // ignore: cast_nullable_to_non_nullable
               as Set<Polyline>,
-      animationTempleId: animationTempleId == freezed
+      animationTempleId: null == animationTempleId
           ? _value.animationTempleId
           : animationTempleId // ignore: cast_nullable_to_non_nullable
               as int,
-    ));
+    ) as $Val);
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $GoogleMapModelCopyWith<$Res> get googleMap {
     return $GoogleMapModelCopyWith<$Res>(_value.googleMap, (value) {
-      return _then(_value.copyWith(googleMap: value));
+      return _then(_value.copyWith(googleMap: value) as $Val);
     });
   }
 }
@@ -96,6 +101,7 @@ abstract class _$$_HomeStateCopyWith<$Res> implements $HomeStateCopyWith<$Res> {
           _$_HomeState value, $Res Function(_$_HomeState) then) =
       __$$_HomeStateCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {GoogleMapModel googleMap,
       CameraPosition initialCameraPosition,
@@ -108,41 +114,40 @@ abstract class _$$_HomeStateCopyWith<$Res> implements $HomeStateCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_HomeStateCopyWithImpl<$Res> extends _$HomeStateCopyWithImpl<$Res>
+class __$$_HomeStateCopyWithImpl<$Res>
+    extends _$HomeStateCopyWithImpl<$Res, _$_HomeState>
     implements _$$_HomeStateCopyWith<$Res> {
   __$$_HomeStateCopyWithImpl(
       _$_HomeState _value, $Res Function(_$_HomeState) _then)
-      : super(_value, (v) => _then(v as _$_HomeState));
+      : super(_value, _then);
 
-  @override
-  _$_HomeState get _value => super._value as _$_HomeState;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? googleMap = freezed,
-    Object? initialCameraPosition = freezed,
-    Object? markers = freezed,
-    Object? polylines = freezed,
-    Object? animationTempleId = freezed,
+    Object? googleMap = null,
+    Object? initialCameraPosition = null,
+    Object? markers = null,
+    Object? polylines = null,
+    Object? animationTempleId = null,
   }) {
     return _then(_$_HomeState(
-      googleMap: googleMap == freezed
+      googleMap: null == googleMap
           ? _value.googleMap
           : googleMap // ignore: cast_nullable_to_non_nullable
               as GoogleMapModel,
-      initialCameraPosition: initialCameraPosition == freezed
+      initialCameraPosition: null == initialCameraPosition
           ? _value.initialCameraPosition
           : initialCameraPosition // ignore: cast_nullable_to_non_nullable
               as CameraPosition,
-      markers: markers == freezed
+      markers: null == markers
           ? _value._markers
           : markers // ignore: cast_nullable_to_non_nullable
               as Set<Marker>,
-      polylines: polylines == freezed
+      polylines: null == polylines
           ? _value._polylines
           : polylines // ignore: cast_nullable_to_non_nullable
               as Set<Polyline>,
-      animationTempleId: animationTempleId == freezed
+      animationTempleId: null == animationTempleId
           ? _value.animationTempleId
           : animationTempleId // ignore: cast_nullable_to_non_nullable
               as int,
@@ -197,27 +202,29 @@ class _$_HomeState extends _HomeState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_HomeState &&
-            const DeepCollectionEquality().equals(other.googleMap, googleMap) &&
-            const DeepCollectionEquality()
-                .equals(other.initialCameraPosition, initialCameraPosition) &&
+            (identical(other.googleMap, googleMap) ||
+                other.googleMap == googleMap) &&
+            (identical(other.initialCameraPosition, initialCameraPosition) ||
+                other.initialCameraPosition == initialCameraPosition) &&
             const DeepCollectionEquality().equals(other._markers, _markers) &&
             const DeepCollectionEquality()
                 .equals(other._polylines, _polylines) &&
-            const DeepCollectionEquality()
-                .equals(other.animationTempleId, animationTempleId));
+            (identical(other.animationTempleId, animationTempleId) ||
+                other.animationTempleId == animationTempleId));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(googleMap),
-      const DeepCollectionEquality().hash(initialCameraPosition),
+      googleMap,
+      initialCameraPosition,
       const DeepCollectionEquality().hash(_markers),
       const DeepCollectionEquality().hash(_polylines),
-      const DeepCollectionEquality().hash(animationTempleId));
+      animationTempleId);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_HomeStateCopyWith<_$_HomeState> get copyWith =>
       __$$_HomeStateCopyWithImpl<_$_HomeState>(this, _$identity);
 }

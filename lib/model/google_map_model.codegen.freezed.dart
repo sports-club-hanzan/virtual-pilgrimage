@@ -30,7 +30,8 @@ mixin _$GoogleMapModel {
 abstract class $GoogleMapModelCopyWith<$Res> {
   factory $GoogleMapModelCopyWith(
           GoogleMapModel value, $Res Function(GoogleMapModel) then) =
-      _$GoogleMapModelCopyWithImpl<$Res>;
+      _$GoogleMapModelCopyWithImpl<$Res, GoogleMapModel>;
+  @useResult
   $Res call(
       {Completer<GoogleMapController> controller,
       Set<Marker> markers,
@@ -38,34 +39,36 @@ abstract class $GoogleMapModelCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$GoogleMapModelCopyWithImpl<$Res>
+class _$GoogleMapModelCopyWithImpl<$Res, $Val extends GoogleMapModel>
     implements $GoogleMapModelCopyWith<$Res> {
   _$GoogleMapModelCopyWithImpl(this._value, this._then);
 
-  final GoogleMapModel _value;
   // ignore: unused_field
-  final $Res Function(GoogleMapModel) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? controller = freezed,
-    Object? markers = freezed,
-    Object? polylines = freezed,
+    Object? controller = null,
+    Object? markers = null,
+    Object? polylines = null,
   }) {
     return _then(_value.copyWith(
-      controller: controller == freezed
+      controller: null == controller
           ? _value.controller
           : controller // ignore: cast_nullable_to_non_nullable
               as Completer<GoogleMapController>,
-      markers: markers == freezed
+      markers: null == markers
           ? _value.markers
           : markers // ignore: cast_nullable_to_non_nullable
               as Set<Marker>,
-      polylines: polylines == freezed
+      polylines: null == polylines
           ? _value.polylines
           : polylines // ignore: cast_nullable_to_non_nullable
               as Set<Polyline>,
-    ));
+    ) as $Val);
   }
 }
 
@@ -76,6 +79,7 @@ abstract class _$$_GoogleMapModelCopyWith<$Res>
           _$_GoogleMapModel value, $Res Function(_$_GoogleMapModel) then) =
       __$$_GoogleMapModelCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {Completer<GoogleMapController> controller,
       Set<Marker> markers,
@@ -84,31 +88,29 @@ abstract class _$$_GoogleMapModelCopyWith<$Res>
 
 /// @nodoc
 class __$$_GoogleMapModelCopyWithImpl<$Res>
-    extends _$GoogleMapModelCopyWithImpl<$Res>
+    extends _$GoogleMapModelCopyWithImpl<$Res, _$_GoogleMapModel>
     implements _$$_GoogleMapModelCopyWith<$Res> {
   __$$_GoogleMapModelCopyWithImpl(
       _$_GoogleMapModel _value, $Res Function(_$_GoogleMapModel) _then)
-      : super(_value, (v) => _then(v as _$_GoogleMapModel));
+      : super(_value, _then);
 
-  @override
-  _$_GoogleMapModel get _value => super._value as _$_GoogleMapModel;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? controller = freezed,
-    Object? markers = freezed,
-    Object? polylines = freezed,
+    Object? controller = null,
+    Object? markers = null,
+    Object? polylines = null,
   }) {
     return _then(_$_GoogleMapModel(
-      controller: controller == freezed
+      controller: null == controller
           ? _value.controller
           : controller // ignore: cast_nullable_to_non_nullable
               as Completer<GoogleMapController>,
-      markers: markers == freezed
+      markers: null == markers
           ? _value._markers
           : markers // ignore: cast_nullable_to_non_nullable
               as Set<Marker>,
-      polylines: polylines == freezed
+      polylines: null == polylines
           ? _value._polylines
           : polylines // ignore: cast_nullable_to_non_nullable
               as Set<Polyline>,
@@ -155,8 +157,8 @@ class _$_GoogleMapModel extends _GoogleMapModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_GoogleMapModel &&
-            const DeepCollectionEquality()
-                .equals(other.controller, controller) &&
+            (identical(other.controller, controller) ||
+                other.controller == controller) &&
             const DeepCollectionEquality().equals(other._markers, _markers) &&
             const DeepCollectionEquality()
                 .equals(other._polylines, _polylines));
@@ -165,12 +167,13 @@ class _$_GoogleMapModel extends _GoogleMapModel {
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(controller),
+      controller,
       const DeepCollectionEquality().hash(_markers),
       const DeepCollectionEquality().hash(_polylines));
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_GoogleMapModelCopyWith<_$_GoogleMapModel> get copyWith =>
       __$$_GoogleMapModelCopyWithImpl<_$_GoogleMapModel>(this, _$identity);
 }

@@ -30,7 +30,8 @@ mixin _$FormModel {
 /// @nodoc
 abstract class $FormModelCopyWith<$Res> {
   factory $FormModelCopyWith(FormModel value, $Res Function(FormModel) then) =
-      _$FormModelCopyWithImpl<$Res>;
+      _$FormModelCopyWithImpl<$Res, FormModel>;
+  @useResult
   $Res call(
       {Validator validator,
       TextEditingController controller,
@@ -40,43 +41,46 @@ abstract class $FormModelCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$FormModelCopyWithImpl<$Res> implements $FormModelCopyWith<$Res> {
+class _$FormModelCopyWithImpl<$Res, $Val extends FormModel>
+    implements $FormModelCopyWith<$Res> {
   _$FormModelCopyWithImpl(this._value, this._then);
 
-  final FormModel _value;
   // ignore: unused_field
-  final $Res Function(FormModel) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? validator = freezed,
-    Object? controller = freezed,
-    Object? focusNode = freezed,
-    Object? hasEdited = freezed,
-    Object? externalErrors = freezed,
+    Object? validator = null,
+    Object? controller = null,
+    Object? focusNode = null,
+    Object? hasEdited = null,
+    Object? externalErrors = null,
   }) {
     return _then(_value.copyWith(
-      validator: validator == freezed
+      validator: null == validator
           ? _value.validator
           : validator // ignore: cast_nullable_to_non_nullable
               as Validator,
-      controller: controller == freezed
+      controller: null == controller
           ? _value.controller
           : controller // ignore: cast_nullable_to_non_nullable
               as TextEditingController,
-      focusNode: focusNode == freezed
+      focusNode: null == focusNode
           ? _value.focusNode
           : focusNode // ignore: cast_nullable_to_non_nullable
               as FocusNode,
-      hasEdited: hasEdited == freezed
+      hasEdited: null == hasEdited
           ? _value.hasEdited
           : hasEdited // ignore: cast_nullable_to_non_nullable
               as bool,
-      externalErrors: externalErrors == freezed
+      externalErrors: null == externalErrors
           ? _value.externalErrors
           : externalErrors // ignore: cast_nullable_to_non_nullable
               as List<String>,
-    ));
+    ) as $Val);
   }
 }
 
@@ -86,6 +90,7 @@ abstract class _$$_FormModelCopyWith<$Res> implements $FormModelCopyWith<$Res> {
           _$_FormModel value, $Res Function(_$_FormModel) then) =
       __$$_FormModelCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {Validator validator,
       TextEditingController controller,
@@ -95,41 +100,40 @@ abstract class _$$_FormModelCopyWith<$Res> implements $FormModelCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_FormModelCopyWithImpl<$Res> extends _$FormModelCopyWithImpl<$Res>
+class __$$_FormModelCopyWithImpl<$Res>
+    extends _$FormModelCopyWithImpl<$Res, _$_FormModel>
     implements _$$_FormModelCopyWith<$Res> {
   __$$_FormModelCopyWithImpl(
       _$_FormModel _value, $Res Function(_$_FormModel) _then)
-      : super(_value, (v) => _then(v as _$_FormModel));
+      : super(_value, _then);
 
-  @override
-  _$_FormModel get _value => super._value as _$_FormModel;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? validator = freezed,
-    Object? controller = freezed,
-    Object? focusNode = freezed,
-    Object? hasEdited = freezed,
-    Object? externalErrors = freezed,
+    Object? validator = null,
+    Object? controller = null,
+    Object? focusNode = null,
+    Object? hasEdited = null,
+    Object? externalErrors = null,
   }) {
     return _then(_$_FormModel(
-      validator: validator == freezed
+      validator: null == validator
           ? _value.validator
           : validator // ignore: cast_nullable_to_non_nullable
               as Validator,
-      controller: controller == freezed
+      controller: null == controller
           ? _value.controller
           : controller // ignore: cast_nullable_to_non_nullable
               as TextEditingController,
-      focusNode: focusNode == freezed
+      focusNode: null == focusNode
           ? _value.focusNode
           : focusNode // ignore: cast_nullable_to_non_nullable
               as FocusNode,
-      hasEdited: hasEdited == freezed
+      hasEdited: null == hasEdited
           ? _value.hasEdited
           : hasEdited // ignore: cast_nullable_to_non_nullable
               as bool,
-      externalErrors: externalErrors == freezed
+      externalErrors: null == externalErrors
           ? _value._externalErrors
           : externalErrors // ignore: cast_nullable_to_non_nullable
               as List<String>,
@@ -178,25 +182,23 @@ class _$_FormModel extends _FormModel {
             other is _$_FormModel &&
             (identical(other.validator, validator) ||
                 other.validator == validator) &&
-            const DeepCollectionEquality()
-                .equals(other.controller, controller) &&
-            const DeepCollectionEquality().equals(other.focusNode, focusNode) &&
-            const DeepCollectionEquality().equals(other.hasEdited, hasEdited) &&
+            (identical(other.controller, controller) ||
+                other.controller == controller) &&
+            (identical(other.focusNode, focusNode) ||
+                other.focusNode == focusNode) &&
+            (identical(other.hasEdited, hasEdited) ||
+                other.hasEdited == hasEdited) &&
             const DeepCollectionEquality()
                 .equals(other._externalErrors, _externalErrors));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      validator,
-      const DeepCollectionEquality().hash(controller),
-      const DeepCollectionEquality().hash(focusNode),
-      const DeepCollectionEquality().hash(hasEdited),
-      const DeepCollectionEquality().hash(_externalErrors));
+  int get hashCode => Object.hash(runtimeType, validator, controller, focusNode,
+      hasEdited, const DeepCollectionEquality().hash(_externalErrors));
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_FormModelCopyWith<_$_FormModel> get copyWith =>
       __$$_FormModelCopyWithImpl<_$_FormModel>(this, _$identity);
 }

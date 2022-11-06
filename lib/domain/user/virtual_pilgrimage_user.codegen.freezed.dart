@@ -66,7 +66,8 @@ mixin _$VirtualPilgrimageUser {
 abstract class $VirtualPilgrimageUserCopyWith<$Res> {
   factory $VirtualPilgrimageUserCopyWith(VirtualPilgrimageUser value,
           $Res Function(VirtualPilgrimageUser) then) =
-      _$VirtualPilgrimageUserCopyWithImpl<$Res>;
+      _$VirtualPilgrimageUserCopyWithImpl<$Res, VirtualPilgrimageUser>;
+  @useResult
   $Res call(
       {String id,
       String nickname,
@@ -92,96 +93,101 @@ abstract class $VirtualPilgrimageUserCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$VirtualPilgrimageUserCopyWithImpl<$Res>
+class _$VirtualPilgrimageUserCopyWithImpl<$Res,
+        $Val extends VirtualPilgrimageUser>
     implements $VirtualPilgrimageUserCopyWith<$Res> {
   _$VirtualPilgrimageUserCopyWithImpl(this._value, this._then);
 
-  final VirtualPilgrimageUser _value;
   // ignore: unused_field
-  final $Res Function(VirtualPilgrimageUser) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
-    Object? nickname = freezed,
-    Object? gender = freezed,
-    Object? birthDay = freezed,
-    Object? email = freezed,
-    Object? userIconUrl = freezed,
-    Object? userStatus = freezed,
-    Object? createdAt = freezed,
-    Object? updatedAt = freezed,
+    Object? id = null,
+    Object? nickname = null,
+    Object? gender = null,
+    Object? birthDay = null,
+    Object? email = null,
+    Object? userIconUrl = null,
+    Object? userStatus = null,
+    Object? createdAt = null,
+    Object? updatedAt = null,
     Object? health = freezed,
-    Object? pilgrimage = freezed,
-    Object? userIcon = freezed,
+    Object? pilgrimage = null,
+    Object? userIcon = null,
   }) {
     return _then(_value.copyWith(
-      id: id == freezed
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      nickname: nickname == freezed
+      nickname: null == nickname
           ? _value.nickname
           : nickname // ignore: cast_nullable_to_non_nullable
               as String,
-      gender: gender == freezed
+      gender: null == gender
           ? _value.gender
           : gender // ignore: cast_nullable_to_non_nullable
               as Gender,
-      birthDay: birthDay == freezed
+      birthDay: null == birthDay
           ? _value.birthDay
           : birthDay // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      email: email == freezed
+      email: null == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      userIconUrl: userIconUrl == freezed
+      userIconUrl: null == userIconUrl
           ? _value.userIconUrl
           : userIconUrl // ignore: cast_nullable_to_non_nullable
               as String,
-      userStatus: userStatus == freezed
+      userStatus: null == userStatus
           ? _value.userStatus
           : userStatus // ignore: cast_nullable_to_non_nullable
               as UserStatus,
-      createdAt: createdAt == freezed
+      createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      updatedAt: updatedAt == freezed
+      updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      health: health == freezed
+      health: freezed == health
           ? _value.health
           : health // ignore: cast_nullable_to_non_nullable
               as HealthInfo?,
-      pilgrimage: pilgrimage == freezed
+      pilgrimage: null == pilgrimage
           ? _value.pilgrimage
           : pilgrimage // ignore: cast_nullable_to_non_nullable
               as PilgrimageInfo,
-      userIcon: userIcon == freezed
+      userIcon: null == userIcon
           ? _value.userIcon
           : userIcon // ignore: cast_nullable_to_non_nullable
               as BitmapDescriptor,
-    ));
+    ) as $Val);
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $HealthInfoCopyWith<$Res>? get health {
     if (_value.health == null) {
       return null;
     }
 
     return $HealthInfoCopyWith<$Res>(_value.health!, (value) {
-      return _then(_value.copyWith(health: value));
+      return _then(_value.copyWith(health: value) as $Val);
     });
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $PilgrimageInfoCopyWith<$Res> get pilgrimage {
     return $PilgrimageInfoCopyWith<$Res>(_value.pilgrimage, (value) {
-      return _then(_value.copyWith(pilgrimage: value));
+      return _then(_value.copyWith(pilgrimage: value) as $Val);
     });
   }
 }
@@ -193,6 +199,7 @@ abstract class _$$_VirtualPilgrimageUserCopyWith<$Res>
           $Res Function(_$_VirtualPilgrimageUser) then) =
       __$$_VirtualPilgrimageUserCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {String id,
       String nickname,
@@ -221,77 +228,74 @@ abstract class _$$_VirtualPilgrimageUserCopyWith<$Res>
 
 /// @nodoc
 class __$$_VirtualPilgrimageUserCopyWithImpl<$Res>
-    extends _$VirtualPilgrimageUserCopyWithImpl<$Res>
+    extends _$VirtualPilgrimageUserCopyWithImpl<$Res, _$_VirtualPilgrimageUser>
     implements _$$_VirtualPilgrimageUserCopyWith<$Res> {
   __$$_VirtualPilgrimageUserCopyWithImpl(_$_VirtualPilgrimageUser _value,
       $Res Function(_$_VirtualPilgrimageUser) _then)
-      : super(_value, (v) => _then(v as _$_VirtualPilgrimageUser));
+      : super(_value, _then);
 
-  @override
-  _$_VirtualPilgrimageUser get _value =>
-      super._value as _$_VirtualPilgrimageUser;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
-    Object? nickname = freezed,
-    Object? gender = freezed,
-    Object? birthDay = freezed,
-    Object? email = freezed,
-    Object? userIconUrl = freezed,
-    Object? userStatus = freezed,
-    Object? createdAt = freezed,
-    Object? updatedAt = freezed,
+    Object? id = null,
+    Object? nickname = null,
+    Object? gender = null,
+    Object? birthDay = null,
+    Object? email = null,
+    Object? userIconUrl = null,
+    Object? userStatus = null,
+    Object? createdAt = null,
+    Object? updatedAt = null,
     Object? health = freezed,
-    Object? pilgrimage = freezed,
-    Object? userIcon = freezed,
+    Object? pilgrimage = null,
+    Object? userIcon = null,
   }) {
     return _then(_$_VirtualPilgrimageUser(
-      id: id == freezed
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      nickname: nickname == freezed
+      nickname: null == nickname
           ? _value.nickname
           : nickname // ignore: cast_nullable_to_non_nullable
               as String,
-      gender: gender == freezed
+      gender: null == gender
           ? _value.gender
           : gender // ignore: cast_nullable_to_non_nullable
               as Gender,
-      birthDay: birthDay == freezed
+      birthDay: null == birthDay
           ? _value.birthDay
           : birthDay // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      email: email == freezed
+      email: null == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
               as String,
-      userIconUrl: userIconUrl == freezed
+      userIconUrl: null == userIconUrl
           ? _value.userIconUrl
           : userIconUrl // ignore: cast_nullable_to_non_nullable
               as String,
-      userStatus: userStatus == freezed
+      userStatus: null == userStatus
           ? _value.userStatus
           : userStatus // ignore: cast_nullable_to_non_nullable
               as UserStatus,
-      createdAt: createdAt == freezed
+      createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      updatedAt: updatedAt == freezed
+      updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      health: health == freezed
+      health: freezed == health
           ? _value.health
           : health // ignore: cast_nullable_to_non_nullable
               as HealthInfo?,
-      pilgrimage: pilgrimage == freezed
+      pilgrimage: null == pilgrimage
           ? _value.pilgrimage
           : pilgrimage // ignore: cast_nullable_to_non_nullable
               as PilgrimageInfo,
-      userIcon: userIcon == freezed
+      userIcon: null == userIcon
           ? _value.userIcon
           : userIcon // ignore: cast_nullable_to_non_nullable
               as BitmapDescriptor,
@@ -395,42 +399,48 @@ class _$_VirtualPilgrimageUser extends _VirtualPilgrimageUser {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_VirtualPilgrimageUser &&
-            const DeepCollectionEquality().equals(other.id, id) &&
-            const DeepCollectionEquality().equals(other.nickname, nickname) &&
-            const DeepCollectionEquality().equals(other.gender, gender) &&
-            const DeepCollectionEquality().equals(other.birthDay, birthDay) &&
-            const DeepCollectionEquality().equals(other.email, email) &&
-            const DeepCollectionEquality()
-                .equals(other.userIconUrl, userIconUrl) &&
-            const DeepCollectionEquality()
-                .equals(other.userStatus, userStatus) &&
-            const DeepCollectionEquality().equals(other.createdAt, createdAt) &&
-            const DeepCollectionEquality().equals(other.updatedAt, updatedAt) &&
-            const DeepCollectionEquality().equals(other.health, health) &&
-            const DeepCollectionEquality()
-                .equals(other.pilgrimage, pilgrimage) &&
-            const DeepCollectionEquality().equals(other.userIcon, userIcon));
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.nickname, nickname) ||
+                other.nickname == nickname) &&
+            (identical(other.gender, gender) || other.gender == gender) &&
+            (identical(other.birthDay, birthDay) ||
+                other.birthDay == birthDay) &&
+            (identical(other.email, email) || other.email == email) &&
+            (identical(other.userIconUrl, userIconUrl) ||
+                other.userIconUrl == userIconUrl) &&
+            (identical(other.userStatus, userStatus) ||
+                other.userStatus == userStatus) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt) &&
+            (identical(other.health, health) || other.health == health) &&
+            (identical(other.pilgrimage, pilgrimage) ||
+                other.pilgrimage == pilgrimage) &&
+            (identical(other.userIcon, userIcon) ||
+                other.userIcon == userIcon));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(id),
-      const DeepCollectionEquality().hash(nickname),
-      const DeepCollectionEquality().hash(gender),
-      const DeepCollectionEquality().hash(birthDay),
-      const DeepCollectionEquality().hash(email),
-      const DeepCollectionEquality().hash(userIconUrl),
-      const DeepCollectionEquality().hash(userStatus),
-      const DeepCollectionEquality().hash(createdAt),
-      const DeepCollectionEquality().hash(updatedAt),
-      const DeepCollectionEquality().hash(health),
-      const DeepCollectionEquality().hash(pilgrimage),
-      const DeepCollectionEquality().hash(userIcon));
+      id,
+      nickname,
+      gender,
+      birthDay,
+      email,
+      userIconUrl,
+      userStatus,
+      createdAt,
+      updatedAt,
+      health,
+      pilgrimage,
+      userIcon);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_VirtualPilgrimageUserCopyWith<_$_VirtualPilgrimageUser> get copyWith =>
       __$$_VirtualPilgrimageUserCopyWithImpl<_$_VirtualPilgrimageUser>(
           this, _$identity);

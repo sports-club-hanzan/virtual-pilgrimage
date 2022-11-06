@@ -45,7 +45,8 @@ mixin _$PilgrimageInfo {
 abstract class $PilgrimageInfoCopyWith<$Res> {
   factory $PilgrimageInfoCopyWith(
           PilgrimageInfo value, $Res Function(PilgrimageInfo) then) =
-      _$PilgrimageInfoCopyWithImpl<$Res>;
+      _$PilgrimageInfoCopyWithImpl<$Res, PilgrimageInfo>;
+  @useResult
   $Res call(
       {String id,
       int nowPilgrimageId,
@@ -56,44 +57,46 @@ abstract class $PilgrimageInfoCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$PilgrimageInfoCopyWithImpl<$Res>
+class _$PilgrimageInfoCopyWithImpl<$Res, $Val extends PilgrimageInfo>
     implements $PilgrimageInfoCopyWith<$Res> {
   _$PilgrimageInfoCopyWithImpl(this._value, this._then);
 
-  final PilgrimageInfo _value;
   // ignore: unused_field
-  final $Res Function(PilgrimageInfo) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
-    Object? nowPilgrimageId = freezed,
-    Object? lap = freezed,
-    Object? movingDistance = freezed,
-    Object? updatedAt = freezed,
+    Object? id = null,
+    Object? nowPilgrimageId = null,
+    Object? lap = null,
+    Object? movingDistance = null,
+    Object? updatedAt = null,
   }) {
     return _then(_value.copyWith(
-      id: id == freezed
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      nowPilgrimageId: nowPilgrimageId == freezed
+      nowPilgrimageId: null == nowPilgrimageId
           ? _value.nowPilgrimageId
           : nowPilgrimageId // ignore: cast_nullable_to_non_nullable
               as int,
-      lap: lap == freezed
+      lap: null == lap
           ? _value.lap
           : lap // ignore: cast_nullable_to_non_nullable
               as int,
-      movingDistance: movingDistance == freezed
+      movingDistance: null == movingDistance
           ? _value.movingDistance
           : movingDistance // ignore: cast_nullable_to_non_nullable
               as int,
-      updatedAt: updatedAt == freezed
+      updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
-    ));
+    ) as $Val);
   }
 }
 
@@ -104,6 +107,7 @@ abstract class _$$_PilgrimageInfoCopyWith<$Res>
           _$_PilgrimageInfo value, $Res Function(_$_PilgrimageInfo) then) =
       __$$_PilgrimageInfoCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {String id,
       int nowPilgrimageId,
@@ -115,41 +119,39 @@ abstract class _$$_PilgrimageInfoCopyWith<$Res>
 
 /// @nodoc
 class __$$_PilgrimageInfoCopyWithImpl<$Res>
-    extends _$PilgrimageInfoCopyWithImpl<$Res>
+    extends _$PilgrimageInfoCopyWithImpl<$Res, _$_PilgrimageInfo>
     implements _$$_PilgrimageInfoCopyWith<$Res> {
   __$$_PilgrimageInfoCopyWithImpl(
       _$_PilgrimageInfo _value, $Res Function(_$_PilgrimageInfo) _then)
-      : super(_value, (v) => _then(v as _$_PilgrimageInfo));
+      : super(_value, _then);
 
-  @override
-  _$_PilgrimageInfo get _value => super._value as _$_PilgrimageInfo;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
-    Object? nowPilgrimageId = freezed,
-    Object? lap = freezed,
-    Object? movingDistance = freezed,
-    Object? updatedAt = freezed,
+    Object? id = null,
+    Object? nowPilgrimageId = null,
+    Object? lap = null,
+    Object? movingDistance = null,
+    Object? updatedAt = null,
   }) {
     return _then(_$_PilgrimageInfo(
-      id: id == freezed
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      nowPilgrimageId: nowPilgrimageId == freezed
+      nowPilgrimageId: null == nowPilgrimageId
           ? _value.nowPilgrimageId
           : nowPilgrimageId // ignore: cast_nullable_to_non_nullable
               as int,
-      lap: lap == freezed
+      lap: null == lap
           ? _value.lap
           : lap // ignore: cast_nullable_to_non_nullable
               as int,
-      movingDistance: movingDistance == freezed
+      movingDistance: null == movingDistance
           ? _value.movingDistance
           : movingDistance // ignore: cast_nullable_to_non_nullable
               as int,
-      updatedAt: updatedAt == freezed
+      updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
@@ -208,27 +210,24 @@ class _$_PilgrimageInfo extends _PilgrimageInfo {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_PilgrimageInfo &&
-            const DeepCollectionEquality().equals(other.id, id) &&
-            const DeepCollectionEquality()
-                .equals(other.nowPilgrimageId, nowPilgrimageId) &&
-            const DeepCollectionEquality().equals(other.lap, lap) &&
-            const DeepCollectionEquality()
-                .equals(other.movingDistance, movingDistance) &&
-            const DeepCollectionEquality().equals(other.updatedAt, updatedAt));
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.nowPilgrimageId, nowPilgrimageId) ||
+                other.nowPilgrimageId == nowPilgrimageId) &&
+            (identical(other.lap, lap) || other.lap == lap) &&
+            (identical(other.movingDistance, movingDistance) ||
+                other.movingDistance == movingDistance) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(id),
-      const DeepCollectionEquality().hash(nowPilgrimageId),
-      const DeepCollectionEquality().hash(lap),
-      const DeepCollectionEquality().hash(movingDistance),
-      const DeepCollectionEquality().hash(updatedAt));
+      runtimeType, id, nowPilgrimageId, lap, movingDistance, updatedAt);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_PilgrimageInfoCopyWith<_$_PilgrimageInfo> get copyWith =>
       __$$_PilgrimageInfoCopyWithImpl<_$_PilgrimageInfo>(this, _$identity);
 

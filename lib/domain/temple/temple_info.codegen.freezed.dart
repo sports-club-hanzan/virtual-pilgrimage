@@ -43,7 +43,8 @@ mixin _$TempleInfo {
 abstract class $TempleInfoCopyWith<$Res> {
   factory $TempleInfoCopyWith(
           TempleInfo value, $Res Function(TempleInfo) then) =
-      _$TempleInfoCopyWithImpl<$Res>;
+      _$TempleInfoCopyWithImpl<$Res, TempleInfo>;
+  @useResult
   $Res call(
       {int id,
       String name,
@@ -59,68 +60,71 @@ abstract class $TempleInfoCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$TempleInfoCopyWithImpl<$Res> implements $TempleInfoCopyWith<$Res> {
+class _$TempleInfoCopyWithImpl<$Res, $Val extends TempleInfo>
+    implements $TempleInfoCopyWith<$Res> {
   _$TempleInfoCopyWithImpl(this._value, this._then);
 
-  final TempleInfo _value;
   // ignore: unused_field
-  final $Res Function(TempleInfo) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
-    Object? name = freezed,
-    Object? prefecture = freezed,
-    Object? address = freezed,
-    Object? distance = freezed,
-    Object? encodedPoints = freezed,
-    Object? knowledge = freezed,
-    Object? stampImage = freezed,
-    Object? geoPoint = freezed,
-    Object? images = freezed,
+    Object? id = null,
+    Object? name = null,
+    Object? prefecture = null,
+    Object? address = null,
+    Object? distance = null,
+    Object? encodedPoints = null,
+    Object? knowledge = null,
+    Object? stampImage = null,
+    Object? geoPoint = null,
+    Object? images = null,
   }) {
     return _then(_value.copyWith(
-      id: id == freezed
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
-      name: name == freezed
+      name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      prefecture: prefecture == freezed
+      prefecture: null == prefecture
           ? _value.prefecture
           : prefecture // ignore: cast_nullable_to_non_nullable
               as String,
-      address: address == freezed
+      address: null == address
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
               as String,
-      distance: distance == freezed
+      distance: null == distance
           ? _value.distance
           : distance // ignore: cast_nullable_to_non_nullable
               as int,
-      encodedPoints: encodedPoints == freezed
+      encodedPoints: null == encodedPoints
           ? _value.encodedPoints
           : encodedPoints // ignore: cast_nullable_to_non_nullable
               as String,
-      knowledge: knowledge == freezed
+      knowledge: null == knowledge
           ? _value.knowledge
           : knowledge // ignore: cast_nullable_to_non_nullable
               as String,
-      stampImage: stampImage == freezed
+      stampImage: null == stampImage
           ? _value.stampImage
           : stampImage // ignore: cast_nullable_to_non_nullable
               as String,
-      geoPoint: geoPoint == freezed
+      geoPoint: null == geoPoint
           ? _value.geoPoint
           : geoPoint // ignore: cast_nullable_to_non_nullable
               as GeoPoint,
-      images: images == freezed
+      images: null == images
           ? _value.images
           : images // ignore: cast_nullable_to_non_nullable
               as List<String>,
-    ));
+    ) as $Val);
   }
 }
 
@@ -131,6 +135,7 @@ abstract class _$$_TempleInfoCopyWith<$Res>
           _$_TempleInfo value, $Res Function(_$_TempleInfo) then) =
       __$$_TempleInfoCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {int id,
       String name,
@@ -146,66 +151,65 @@ abstract class _$$_TempleInfoCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_TempleInfoCopyWithImpl<$Res> extends _$TempleInfoCopyWithImpl<$Res>
+class __$$_TempleInfoCopyWithImpl<$Res>
+    extends _$TempleInfoCopyWithImpl<$Res, _$_TempleInfo>
     implements _$$_TempleInfoCopyWith<$Res> {
   __$$_TempleInfoCopyWithImpl(
       _$_TempleInfo _value, $Res Function(_$_TempleInfo) _then)
-      : super(_value, (v) => _then(v as _$_TempleInfo));
+      : super(_value, _then);
 
-  @override
-  _$_TempleInfo get _value => super._value as _$_TempleInfo;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = freezed,
-    Object? name = freezed,
-    Object? prefecture = freezed,
-    Object? address = freezed,
-    Object? distance = freezed,
-    Object? encodedPoints = freezed,
-    Object? knowledge = freezed,
-    Object? stampImage = freezed,
-    Object? geoPoint = freezed,
-    Object? images = freezed,
+    Object? id = null,
+    Object? name = null,
+    Object? prefecture = null,
+    Object? address = null,
+    Object? distance = null,
+    Object? encodedPoints = null,
+    Object? knowledge = null,
+    Object? stampImage = null,
+    Object? geoPoint = null,
+    Object? images = null,
   }) {
     return _then(_$_TempleInfo(
-      id: id == freezed
+      id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
-      name: name == freezed
+      name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      prefecture: prefecture == freezed
+      prefecture: null == prefecture
           ? _value.prefecture
           : prefecture // ignore: cast_nullable_to_non_nullable
               as String,
-      address: address == freezed
+      address: null == address
           ? _value.address
           : address // ignore: cast_nullable_to_non_nullable
               as String,
-      distance: distance == freezed
+      distance: null == distance
           ? _value.distance
           : distance // ignore: cast_nullable_to_non_nullable
               as int,
-      encodedPoints: encodedPoints == freezed
+      encodedPoints: null == encodedPoints
           ? _value.encodedPoints
           : encodedPoints // ignore: cast_nullable_to_non_nullable
               as String,
-      knowledge: knowledge == freezed
+      knowledge: null == knowledge
           ? _value.knowledge
           : knowledge // ignore: cast_nullable_to_non_nullable
               as String,
-      stampImage: stampImage == freezed
+      stampImage: null == stampImage
           ? _value.stampImage
           : stampImage // ignore: cast_nullable_to_non_nullable
               as String,
-      geoPoint: geoPoint == freezed
+      geoPoint: null == geoPoint
           ? _value.geoPoint
           : geoPoint // ignore: cast_nullable_to_non_nullable
               as GeoPoint,
-      images: images == freezed
+      images: null == images
           ? _value._images
           : images // ignore: cast_nullable_to_non_nullable
               as List<String>,
@@ -283,18 +287,21 @@ class _$_TempleInfo extends _TempleInfo {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_TempleInfo &&
-            const DeepCollectionEquality().equals(other.id, id) &&
-            const DeepCollectionEquality().equals(other.name, name) &&
-            const DeepCollectionEquality()
-                .equals(other.prefecture, prefecture) &&
-            const DeepCollectionEquality().equals(other.address, address) &&
-            const DeepCollectionEquality().equals(other.distance, distance) &&
-            const DeepCollectionEquality()
-                .equals(other.encodedPoints, encodedPoints) &&
-            const DeepCollectionEquality().equals(other.knowledge, knowledge) &&
-            const DeepCollectionEquality()
-                .equals(other.stampImage, stampImage) &&
-            const DeepCollectionEquality().equals(other.geoPoint, geoPoint) &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.prefecture, prefecture) ||
+                other.prefecture == prefecture) &&
+            (identical(other.address, address) || other.address == address) &&
+            (identical(other.distance, distance) ||
+                other.distance == distance) &&
+            (identical(other.encodedPoints, encodedPoints) ||
+                other.encodedPoints == encodedPoints) &&
+            (identical(other.knowledge, knowledge) ||
+                other.knowledge == knowledge) &&
+            (identical(other.stampImage, stampImage) ||
+                other.stampImage == stampImage) &&
+            (identical(other.geoPoint, geoPoint) ||
+                other.geoPoint == geoPoint) &&
             const DeepCollectionEquality().equals(other._images, _images));
   }
 
@@ -302,19 +309,20 @@ class _$_TempleInfo extends _TempleInfo {
   @override
   int get hashCode => Object.hash(
       runtimeType,
-      const DeepCollectionEquality().hash(id),
-      const DeepCollectionEquality().hash(name),
-      const DeepCollectionEquality().hash(prefecture),
-      const DeepCollectionEquality().hash(address),
-      const DeepCollectionEquality().hash(distance),
-      const DeepCollectionEquality().hash(encodedPoints),
-      const DeepCollectionEquality().hash(knowledge),
-      const DeepCollectionEquality().hash(stampImage),
-      const DeepCollectionEquality().hash(geoPoint),
+      id,
+      name,
+      prefecture,
+      address,
+      distance,
+      encodedPoints,
+      knowledge,
+      stampImage,
+      geoPoint,
       const DeepCollectionEquality().hash(_images));
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_TempleInfoCopyWith<_$_TempleInfo> get copyWith =>
       __$$_TempleInfoCopyWithImpl<_$_TempleInfo>(this, _$identity);
 

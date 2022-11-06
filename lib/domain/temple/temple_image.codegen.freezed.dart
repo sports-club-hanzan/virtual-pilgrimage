@@ -32,28 +32,32 @@ mixin _$TempleImage {
 abstract class $TempleImageCopyWith<$Res> {
   factory $TempleImageCopyWith(
           TempleImage value, $Res Function(TempleImage) then) =
-      _$TempleImageCopyWithImpl<$Res>;
+      _$TempleImageCopyWithImpl<$Res, TempleImage>;
+  @useResult
   $Res call({String path});
 }
 
 /// @nodoc
-class _$TempleImageCopyWithImpl<$Res> implements $TempleImageCopyWith<$Res> {
+class _$TempleImageCopyWithImpl<$Res, $Val extends TempleImage>
+    implements $TempleImageCopyWith<$Res> {
   _$TempleImageCopyWithImpl(this._value, this._then);
 
-  final TempleImage _value;
   // ignore: unused_field
-  final $Res Function(TempleImage) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? path = freezed,
+    Object? path = null,
   }) {
     return _then(_value.copyWith(
-      path: path == freezed
+      path: null == path
           ? _value.path
           : path // ignore: cast_nullable_to_non_nullable
               as String,
-    ));
+    ) as $Val);
   }
 }
 
@@ -64,25 +68,25 @@ abstract class _$$_TempleImageCopyWith<$Res>
           _$_TempleImage value, $Res Function(_$_TempleImage) then) =
       __$$_TempleImageCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call({String path});
 }
 
 /// @nodoc
-class __$$_TempleImageCopyWithImpl<$Res> extends _$TempleImageCopyWithImpl<$Res>
+class __$$_TempleImageCopyWithImpl<$Res>
+    extends _$TempleImageCopyWithImpl<$Res, _$_TempleImage>
     implements _$$_TempleImageCopyWith<$Res> {
   __$$_TempleImageCopyWithImpl(
       _$_TempleImage _value, $Res Function(_$_TempleImage) _then)
-      : super(_value, (v) => _then(v as _$_TempleImage));
+      : super(_value, _then);
 
-  @override
-  _$_TempleImage get _value => super._value as _$_TempleImage;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? path = freezed,
+    Object? path = null,
   }) {
     return _then(_$_TempleImage(
-      path: path == freezed
+      path: null == path
           ? _value.path
           : path // ignore: cast_nullable_to_non_nullable
               as String,
@@ -111,16 +115,16 @@ class _$_TempleImage extends _TempleImage {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_TempleImage &&
-            const DeepCollectionEquality().equals(other.path, path));
+            (identical(other.path, path) || other.path == path));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(path));
+  int get hashCode => Object.hash(runtimeType, path);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_TempleImageCopyWith<_$_TempleImage> get copyWith =>
       __$$_TempleImageCopyWithImpl<_$_TempleImage>(this, _$identity);
 

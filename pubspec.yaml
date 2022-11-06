@@ -38,6 +38,7 @@ dependencies:
   # core以外のバージョンを指定しないことでcoreに依存したバージョンがインストールされる
   # 2022/11現在、coreの2系は安定していないらしいので、1系の最新を導入
   firebase_core: ^1.24.0
+  firebase_core_platform_interface: 4.5.1
   firebase_analytics:
   firebase_auth:
   cloud_firestore:

@@ -44,7 +44,8 @@ mixin _$HealthInfo {
 abstract class $HealthInfoCopyWith<$Res> {
   factory $HealthInfoCopyWith(
           HealthInfo value, $Res Function(HealthInfo) then) =
-      _$HealthInfoCopyWithImpl<$Res>;
+      _$HealthInfoCopyWithImpl<$Res, HealthInfo>;
+  @useResult
   $Res call(
       {HealthByPeriod today,
       HealthByPeriod yesterday,
@@ -62,80 +63,87 @@ abstract class $HealthInfoCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$HealthInfoCopyWithImpl<$Res> implements $HealthInfoCopyWith<$Res> {
+class _$HealthInfoCopyWithImpl<$Res, $Val extends HealthInfo>
+    implements $HealthInfoCopyWith<$Res> {
   _$HealthInfoCopyWithImpl(this._value, this._then);
 
-  final HealthInfo _value;
   // ignore: unused_field
-  final $Res Function(HealthInfo) _then;
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
 
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? today = freezed,
-    Object? yesterday = freezed,
-    Object? week = freezed,
-    Object? month = freezed,
-    Object? updatedAt = freezed,
-    Object? totalSteps = freezed,
-    Object? totalDistance = freezed,
+    Object? today = null,
+    Object? yesterday = null,
+    Object? week = null,
+    Object? month = null,
+    Object? updatedAt = null,
+    Object? totalSteps = null,
+    Object? totalDistance = null,
   }) {
     return _then(_value.copyWith(
-      today: today == freezed
+      today: null == today
           ? _value.today
           : today // ignore: cast_nullable_to_non_nullable
               as HealthByPeriod,
-      yesterday: yesterday == freezed
+      yesterday: null == yesterday
           ? _value.yesterday
           : yesterday // ignore: cast_nullable_to_non_nullable
               as HealthByPeriod,
-      week: week == freezed
+      week: null == week
           ? _value.week
           : week // ignore: cast_nullable_to_non_nullable
               as HealthByPeriod,
-      month: month == freezed
+      month: null == month
           ? _value.month
           : month // ignore: cast_nullable_to_non_nullable
               as HealthByPeriod,
-      updatedAt: updatedAt == freezed
+      updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      totalSteps: totalSteps == freezed
+      totalSteps: null == totalSteps
           ? _value.totalSteps
           : totalSteps // ignore: cast_nullable_to_non_nullable
               as int,
-      totalDistance: totalDistance == freezed
+      totalDistance: null == totalDistance
           ? _value.totalDistance
           : totalDistance // ignore: cast_nullable_to_non_nullable
               as int,
-    ));
+    ) as $Val);
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $HealthByPeriodCopyWith<$Res> get today {
     return $HealthByPeriodCopyWith<$Res>(_value.today, (value) {
-      return _then(_value.copyWith(today: value));
+      return _then(_value.copyWith(today: value) as $Val);
     });
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $HealthByPeriodCopyWith<$Res> get yesterday {
     return $HealthByPeriodCopyWith<$Res>(_value.yesterday, (value) {
-      return _then(_value.copyWith(yesterday: value));
+      return _then(_value.copyWith(yesterday: value) as $Val);
     });
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $HealthByPeriodCopyWith<$Res> get week {
     return $HealthByPeriodCopyWith<$Res>(_value.week, (value) {
-      return _then(_value.copyWith(week: value));
+      return _then(_value.copyWith(week: value) as $Val);
     });
   }
 
   @override
+  @pragma('vm:prefer-inline')
   $HealthByPeriodCopyWith<$Res> get month {
     return $HealthByPeriodCopyWith<$Res>(_value.month, (value) {
-      return _then(_value.copyWith(month: value));
+      return _then(_value.copyWith(month: value) as $Val);
     });
   }
 }
@@ -147,6 +155,7 @@ abstract class _$$_HealthInfoCopyWith<$Res>
           _$_HealthInfo value, $Res Function(_$_HealthInfo) then) =
       __$$_HealthInfoCopyWithImpl<$Res>;
   @override
+  @useResult
   $Res call(
       {HealthByPeriod today,
       HealthByPeriod yesterday,
@@ -168,51 +177,50 @@ abstract class _$$_HealthInfoCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_HealthInfoCopyWithImpl<$Res> extends _$HealthInfoCopyWithImpl<$Res>
+class __$$_HealthInfoCopyWithImpl<$Res>
+    extends _$HealthInfoCopyWithImpl<$Res, _$_HealthInfo>
     implements _$$_HealthInfoCopyWith<$Res> {
   __$$_HealthInfoCopyWithImpl(
       _$_HealthInfo _value, $Res Function(_$_HealthInfo) _then)
-      : super(_value, (v) => _then(v as _$_HealthInfo));
+      : super(_value, _then);
 
-  @override
-  _$_HealthInfo get _value => super._value as _$_HealthInfo;
-
+  @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? today = freezed,
-    Object? yesterday = freezed,
-    Object? week = freezed,
-    Object? month = freezed,
-    Object? updatedAt = freezed,
-    Object? totalSteps = freezed,
-    Object? totalDistance = freezed,
+    Object? today = null,
+    Object? yesterday = null,
+    Object? week = null,
+    Object? month = null,
+    Object? updatedAt = null,
+    Object? totalSteps = null,
+    Object? totalDistance = null,
   }) {
     return _then(_$_HealthInfo(
-      today: today == freezed
+      today: null == today
           ? _value.today
           : today // ignore: cast_nullable_to_non_nullable
               as HealthByPeriod,
-      yesterday: yesterday == freezed
+      yesterday: null == yesterday
           ? _value.yesterday
           : yesterday // ignore: cast_nullable_to_non_nullable
               as HealthByPeriod,
-      week: week == freezed
+      week: null == week
           ? _value.week
           : week // ignore: cast_nullable_to_non_nullable
               as HealthByPeriod,
-      month: month == freezed
+      month: null == month
           ? _value.month
           : month // ignore: cast_nullable_to_non_nullable
               as HealthByPeriod,
-      updatedAt: updatedAt == freezed
+      updatedAt: null == updatedAt
           ? _value.updatedAt
           : updatedAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      totalSteps: totalSteps == freezed
+      totalSteps: null == totalSteps
           ? _value.totalSteps
           : totalSteps // ignore: cast_nullable_to_non_nullable
               as int,
-      totalDistance: totalDistance == freezed
+      totalDistance: null == totalDistance
           ? _value.totalDistance
           : totalDistance // ignore: cast_nullable_to_non_nullable
               as int,
@@ -272,31 +280,27 @@ class _$_HealthInfo extends _HealthInfo {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_HealthInfo &&
-            const DeepCollectionEquality().equals(other.today, today) &&
-            const DeepCollectionEquality().equals(other.yesterday, yesterday) &&
-            const DeepCollectionEquality().equals(other.week, week) &&
-            const DeepCollectionEquality().equals(other.month, month) &&
-            const DeepCollectionEquality().equals(other.updatedAt, updatedAt) &&
-            const DeepCollectionEquality()
-                .equals(other.totalSteps, totalSteps) &&
-            const DeepCollectionEquality()
-                .equals(other.totalDistance, totalDistance));
+            (identical(other.today, today) || other.today == today) &&
+            (identical(other.yesterday, yesterday) ||
+                other.yesterday == yesterday) &&
+            (identical(other.week, week) || other.week == week) &&
+            (identical(other.month, month) || other.month == month) &&
+            (identical(other.updatedAt, updatedAt) ||
+                other.updatedAt == updatedAt) &&
+            (identical(other.totalSteps, totalSteps) ||
+                other.totalSteps == totalSteps) &&
+            (identical(other.totalDistance, totalDistance) ||
+                other.totalDistance == totalDistance));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(today),
-      const DeepCollectionEquality().hash(yesterday),
-      const DeepCollectionEquality().hash(week),
-      const DeepCollectionEquality().hash(month),
-      const DeepCollectionEquality().hash(updatedAt),
-      const DeepCollectionEquality().hash(totalSteps),
-      const DeepCollectionEquality().hash(totalDistance));
+  int get hashCode => Object.hash(runtimeType, today, yesterday, week, month,
+      updatedAt, totalSteps, totalDistance);
 
   @JsonKey(ignore: true)
   @override
+  @pragma('vm:prefer-inline')
   _$$_HealthInfoCopyWith<_$_HealthInfo> get copyWith =>
       __$$_HealthInfoCopyWithImpl<_$_HealthInfo>(this, _$identity);
 
