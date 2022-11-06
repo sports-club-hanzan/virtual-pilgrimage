@@ -22,9 +22,8 @@ class PrimaryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        // MEMO: Flutter3.3からは primary = backgroundColor, onPrimary = foregroundColor に変更されていることに注意
-        primary: Theme.of(context).colorScheme.primary,
-        onPrimary: Theme.of(context).colorScheme.onPrimary,
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
         minimumSize: const Size(48, 48),
         fixedSize: buttonSize,
         maximumSize: Size(MediaQuery.of(context).size.width - 24, 96),
