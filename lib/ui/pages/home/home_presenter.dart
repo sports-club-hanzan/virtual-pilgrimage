@@ -30,7 +30,9 @@ class HomePresenter extends StateNotifier<HomeState> {
     _crashlytics = _ref.read(firebaseCrashlyticsProvider);
     _templeRepository = _ref.read(templeRepositoryProvider);
     _userStateNotifier = _ref.read(userStateProvider.notifier);
-    _ref.read(pageTypeProvider.notifier).state = PageType.home;
+    _ref.read(pageTypeProvider.notifier).addListener((state) {
+      state = PageType.home;
+    });
     initialize();
   }
 

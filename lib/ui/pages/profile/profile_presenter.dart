@@ -49,10 +49,12 @@ final profileProvider =
 
 class ProfilePresenter extends StateNotifier<ProfileState> {
   ProfilePresenter(this._ref) : super(ProfileState(selectedTabIndex: 0)) {
-    _ref.read(pageTypeProvider.notifier).state = PageType.profile;
     _updateUserProfileImageInteractor = _ref.read(updateUserProfileImageUsecaseProvider);
     _userIconRepository = _ref.read(userIconRepositoryProvider);
     _analytics = _ref.read(analyticsProvider);
+    _ref.read(pageTypeProvider.notifier).addListener((state) {
+      state = PageType.profile;
+    });
   }
 
   final Ref _ref;

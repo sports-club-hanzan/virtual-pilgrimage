@@ -49,7 +49,7 @@ class BottomNavigation extends ConsumerWidget {
         pageTypeNotifier.state = pageType;
         analytics.logEvent(
           eventName: AnalyticsEvent.pressedBottomNavigation,
-          parameters: {'pageType': pageType},
+          parameters: {'pageType': pageType.name},
         );
         switch (pageType) {
           case PageType.temple:
