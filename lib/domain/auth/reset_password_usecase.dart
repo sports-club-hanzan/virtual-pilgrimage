@@ -4,7 +4,7 @@ import 'package:virtualpilgrimage/domain/auth/reset_password_interactor.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/logger.dart';
 
-final resetUserPasswordUsecaseProvider = Provider.autoDispose(
+final resetUserPasswordUsecaseProvider = Provider.autoDispose<ResetUserPasswordUsecase>(
   (ref) => ResetUserPasswordInteractor(
     ref.read(emailAndPasswordAuthRepositoryProvider),
     ref.read(loggerProvider),

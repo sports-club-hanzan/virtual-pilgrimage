@@ -100,7 +100,7 @@ class _ResetPasswordPageBody extends StatelessWidget {
           padding: const EdgeInsets.only(top: 12),
           child: SecondaryButton(
             onPressed: notifier.onSubmitBackwardSignInPage,
-            text: 'ログインページに戻る',
+            text: 'サインインページに戻る',
           ),
         ),
       );

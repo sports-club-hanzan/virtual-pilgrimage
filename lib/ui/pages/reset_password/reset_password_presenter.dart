@@ -46,6 +46,6 @@ class ResetPasswordPresenter extends StateNotifier<ResetPasswordState> {
   }
 
   Future<void> onSubmitBackwardSignInPage() async {
-    _ref.read(routerProvider).go(RouterPath.home);
+    _ref.read(routerProvider).go(RouterPath.signIn);
   }
 }
