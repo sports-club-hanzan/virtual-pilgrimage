@@ -250,8 +250,10 @@ void main() {
         const packageName = 'com.dummy';
         final actionCodeSettings = ActionCodeSettings(
           // url: 'http://dummy.com',
-          url: const String.fromEnvironment('RESET_PASSWORD_DEEPLINK',
-              defaultValue: 'http://dummy.com'),
+          url: const String.fromEnvironment(
+            'RESET_PASSWORD_DEEPLINK',
+            defaultValue: 'http://dummy.com',
+          ),
           handleCodeInApp: false,
           androidInstallApp: true,
           androidPackageName: packageName,
