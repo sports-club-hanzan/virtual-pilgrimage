@@ -8,6 +8,7 @@ import 'package:virtualpilgrimage/logger.dart';
 import 'package:virtualpilgrimage/ui/pages/home/home_page.dart';
 import 'package:virtualpilgrimage/ui/pages/profile/profile_page.dart';
 import 'package:virtualpilgrimage/ui/pages/registration/registration_page.dart';
+import 'package:virtualpilgrimage/ui/pages/reset_password/reset_password_page.dart';
 import 'package:virtualpilgrimage/ui/pages/sign_in/sign_in_page.dart';
 import 'package:virtualpilgrimage/ui/pages/temple/temple_page.dart';
 
@@ -18,6 +19,7 @@ extension RouterPath on String {
   static const registration = '/registration';
   static const profile = '/profile';
   static const edit = '/edit';
+  static const resetPassword = '/reset/password';
 }
 
 // アニメーション抜きで即ページ遷移させるための設定
@@ -88,6 +90,14 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>(
           return zeroTransitionPage(page, context);
         },
       ),
+      // パスワードリセット
+      GoRoute(
+        name: RouterPath.resetPassword,
+        path: RouterPath.resetPassword,
+        builder: (BuildContext context, GoRouterState state) {
+          return const ResetPasswordPage();
+        },
+      ),
     ],
     redirect: (BuildContext context, GoRouterState state) {
       ref.read(loggerProvider).d(state.location);
@@ -95,6 +105,9 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>(
       // サインイン状態によって遷移先を変える
       final loginState = ref.watch(loginStateProvider);
       if (loginState == null) {
+        if (state.location == RouterPath.resetPassword) {
+          return RouterPath.resetPassword;
+        }
         return RouterPath.signIn;
       }
       switch (loginState) {

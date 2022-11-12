@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:virtualpilgrimage/model/form_model.codegen.dart';
 import 'package:virtualpilgrimage/ui/components/atoms/primary_button.dart';
+import 'package:virtualpilgrimage/ui/components/atoms/secondary_button.dart';
 import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
 import 'package:virtualpilgrimage/ui/components/my_text_form_field.dart';
 import 'package:virtualpilgrimage/ui/pages/sign_in/sign_in_presenter.dart';
@@ -16,13 +17,13 @@ class SignInPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: const MyAppBar(isLogin: false),
-      body: SignInPageBody(ref),
+      body: _SignInPageBody(ref),
     );
   }
 }
 
-class SignInPageBody extends StatelessWidget {
-  const SignInPageBody(this.ref, {super.key});
+class _SignInPageBody extends StatelessWidget {
+  const _SignInPageBody(this.ref);
 
   final WidgetRef ref;
 
@@ -40,7 +41,7 @@ class SignInPageBody extends StatelessWidget {
               children: <Widget>[
                 _emailOrNicknameForm(state, notifier),
                 _passwordForm(state, notifier),
-                _signInButtons(notifier),
+                _signInButtons(context, notifier),
               ],
             ),
           ),
@@ -88,14 +89,22 @@ class SignInPageBody extends StatelessWidget {
     );
   }
 
-  Widget _signInButtons(SignInPresenter notifier) {
+  Widget _signInButtons(BuildContext context, SignInPresenter notifier) {
     return Container(
       margin: const EdgeInsets.only(top: 12),
       child: Column(
         children: [
-          PrimaryButton(
-            onPressed: () async => notifier.signInWithEmailAndPassword(),
-            text: 'サインイン・新規アカウント作成',
+          SizedBox(
+            width: MediaQuery.of(context).size.width / 10 * 7,
+            child: PrimaryButton(
+              onPressed: () async => notifier.signInWithEmailAndPassword(),
+              text: 'サインイン・新規アカウント作成',
+            ),
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: MediaQuery.of(context).size.width / 10 * 7,
+            child: SecondaryButton(onPressed: notifier.movePasswordResetPage, text: 'パスワードを忘れた場合'),
           ),
           const Padding(
             padding: EdgeInsets.only(top: 16),
