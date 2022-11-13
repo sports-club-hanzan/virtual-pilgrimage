@@ -1,9 +1,6 @@
-import * as functions from "firebase-functions";
+import {config} from "firebase-functions";
+import {initializeApp} from "firebase-admin/app";
 
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-// export const helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+initializeApp(config().firebase);
+
+export * from "./handlers";
