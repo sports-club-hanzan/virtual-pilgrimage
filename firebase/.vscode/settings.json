@@ -1,0 +1,4 @@
+{
+    "eslint.workingDirectories": [ "./functions" ],
+    "eslint.format.enable": false
+}

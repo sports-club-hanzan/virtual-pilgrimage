@@ -1,6 +1,6 @@
 {
   "projects": {
-    "default": "virtual-pilgrimage-prd",
+    "default": "virtual-pilgrimage-dev",
     "production": "virtual-pilgrimage-prd"
   },
   "targets": {},
