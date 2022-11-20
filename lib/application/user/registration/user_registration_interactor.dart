@@ -2,8 +2,8 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:logger/logger.dart';
 import 'package:virtualpilgrimage/application/user/registration/registration_result.dart';
 import 'package:virtualpilgrimage/application/user/registration/user_registration_usecase.dart';
-import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
 import 'package:virtualpilgrimage/application/user/user_repository.dart';
+import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 
 class UserRegistrationInteractor extends UserRegistrationUsecase {

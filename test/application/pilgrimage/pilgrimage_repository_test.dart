@@ -4,8 +4,8 @@ import 'package:mockito/mockito.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/pilgrimage_repository.dart';
 import 'package:virtualpilgrimage/infrastructure/pilgrimage/pilgrimage_repository_impl.dart';
 
-import '../../../helper/mock.mocks.dart';
-import '../../../helper/provider_container.dart';
+import '../../helper/mock.mocks.dart';
+import '../../helper/provider_container.dart';
 
 void main() {
   final logger = Logger(level: Level.error);
@@ -35,7 +35,8 @@ void main() {
       setUp(() {
         when(mockFirebaseStorage.ref()).thenReturn(mockReference);
         when(mockReference.child(any)).thenReturn(mockReference);
-        when(mockReference.getDownloadURL()).thenAnswer((_) => Future.value('http://exmaple.com/temples/$pilgrimageId/$filename'));
+        when(mockReference.getDownloadURL())
+            .thenAnswer((_) => Future.value('http://exmaple.com/temples/$pilgrimageId/$filename'));
       });
       group('正常系', () {
         test('画像URLが出力する', () async {

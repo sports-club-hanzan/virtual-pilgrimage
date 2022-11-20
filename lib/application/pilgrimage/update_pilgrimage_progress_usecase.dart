@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:virtualpilgrimage/application/pilgrimage/temple_repository.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_interactor.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_result.codegen.dart';
-import 'package:virtualpilgrimage/domain/pilgrimage/pilgrimage_progress_calculator.dart';
-import 'package:virtualpilgrimage/application/pilgrimage/temple_repository.dart';
 import 'package:virtualpilgrimage/application/user/health/health_repository.dart';
 import 'package:virtualpilgrimage/application/user/user_repository.dart';
+import 'package:virtualpilgrimage/domain/pilgrimage/pilgrimage_progress_calculator.dart';
 import 'package:virtualpilgrimage/logger.dart';
 
 final updatePilgrimageProgressUsecaseProvider = Provider<UpdatePilgrimageProgressUsecase>(

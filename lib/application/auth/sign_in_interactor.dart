@@ -3,9 +3,9 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:logger/logger.dart';
 import 'package:virtualpilgrimage/application/auth/auth_repository.dart';
 import 'package:virtualpilgrimage/application/auth/sign_in_usecase.dart';
+import 'package:virtualpilgrimage/application/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
 import 'package:virtualpilgrimage/domain/exception/sign_in_exception.dart';
-import 'package:virtualpilgrimage/application/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 
 enum _LoginMethod {
@@ -111,7 +111,6 @@ class SignInInteractor extends SignInUsecase {
       } else {
         user = gotUser;
       }
-
     } on DatabaseException catch (e) {
       _logger.e(e.message, [e]);
       await _crashlytics.log(e.message);
