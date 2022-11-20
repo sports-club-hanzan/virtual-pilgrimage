@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_interactor.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_result.codegen.dart';
+import 'package:virtualpilgrimage/domain/pilgrimage/pilgrimage_progress_calculator.dart';
 import 'package:virtualpilgrimage/domain/temple/temple_repository.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_repository.dart';
 import 'package:virtualpilgrimage/domain/user/user_repository.dart';
@@ -11,6 +12,7 @@ final updatePilgrimageProgressUsecaseProvider = Provider<UpdatePilgrimageProgres
     ref.read(templeRepositoryProvider),
     ref.read(healthRepositoryProvider),
     ref.read(userRepositoryProvider),
+    ref.read(virtualPositionCalculatorProvider),
     ref.read(loggerProvider),
   ),
 );

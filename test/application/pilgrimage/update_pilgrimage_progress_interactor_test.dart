@@ -8,6 +8,7 @@ import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progr
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_result.codegen.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_usecase.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
+import 'package:virtualpilgrimage/domain/pilgrimage/pilgrimage_progress_calculator.dart';
 import 'package:virtualpilgrimage/domain/temple/temple_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/temple/temple_repository.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_by_period.codegen.dart';
@@ -26,6 +27,7 @@ void main() {
   late HealthRepository healthRepository;
   final user = defaultUser();
   final userRepository = FakeUserRepository(user);
+  final virtualPositionCalculator = VirtualPositionCalculator();
   final logger = Logger(level: Level.nothing);
 
   final container = mockedProviderContainer();
@@ -37,6 +39,7 @@ void main() {
       templeRepository,
       healthRepository,
       userRepository,
+      virtualPositionCalculator,
       logger,
     );
 

@@ -178,8 +178,17 @@ class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
   VirtualPilgrimageUser updateHealth(HealthInfo health) => copyWith(health: health);
 
   /// お遍路の進捗を更新
-  VirtualPilgrimageUser updatePilgrimageProgress(PilgrimageInfo pilgrimage, DateTime now) =>
-      copyWith(pilgrimage: pilgrimage, updatedAt: now);
+  VirtualPilgrimageUser updatePilgrimageProgress(
+    int pilgrimageId,
+    int lap,
+    int movingDistance,
+    DateTime updatedAt,
+  ) =>
+      copyWith(
+        pilgrimage:
+            pilgrimage.updatePilgrimageProgress(pilgrimageId, lap, movingDistance, updatedAt),
+        updatedAt: updatedAt,
+      );
 
   /// プロフィール画像のURLを更新
   VirtualPilgrimageUser updateUserIconUrl(String userIconUrl) => copyWith(

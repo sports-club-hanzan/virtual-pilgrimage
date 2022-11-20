@@ -45,16 +45,17 @@ class PilgrimageInfo with _$PilgrimageInfo {
 
   factory PilgrimageInfo.fromJson(Map<String, dynamic> json) => _$PilgrimageInfoFromJson(json);
 
+  /// お遍路に関する進捗を更新
   PilgrimageInfo updatePilgrimageProgress(
     int pilgrimageId,
     int lap,
     int movingDistance,
-    DateTime now,
+    DateTime updatedAt,
   ) =>
       copyWith(
         nowPilgrimageId: pilgrimageId,
         lap: lap,
         movingDistance: movingDistance,
-        updatedAt: now,
+        updatedAt: updatedAt,
       );
 }
