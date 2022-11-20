@@ -6,6 +6,12 @@ import 'package:google_polyline_algorithm/google_polyline_algorithm.dart';
 part 'temple_info.codegen.freezed.dart';
 part 'temple_info.codegen.g.dart';
 
+class _GeoPointConverter {
+  static GeoPoint geoPointFromJson(GeoPoint json) => json;
+
+  static GeoPoint geoPointToJson(GeoPoint geoPoint) => geoPoint;
+}
+
 @freezed
 class TempleInfo with _$TempleInfo {
   const factory TempleInfo({
@@ -37,8 +43,8 @@ class TempleInfo with _$TempleInfo {
 
     // お寺の座標
     @JsonKey(
-      fromJson: _geoPointFromJson,
-      toJson: _geoPointToJson,
+      fromJson: _GeoPointConverter.geoPointFromJson,
+      toJson: _GeoPointConverter.geoPointToJson,
     )
         required GeoPoint geoPoint,
     @Default([])
@@ -56,7 +62,3 @@ class TempleInfo with _$TempleInfo {
           .map((ep) => LatLng(ep.first.toDouble(), ep.last.toDouble()))
           .toList();
 }
-
-GeoPoint _geoPointFromJson(GeoPoint json) => json;
-
-GeoPoint _geoPointToJson(GeoPoint geoPoint) => geoPoint;

@@ -68,6 +68,7 @@ class _UserStatusConverter {
   static int userStatusToInt(UserStatus userStatus) => userStatus.index;
 }
 
+// Bitmapへの変換用クラス
 class _BitmapConverter {
   static BitmapDescriptor stringToBitmap(String string) =>
       BitmapDescriptor.fromBytes(Uint8List.fromList(string.codeUnits));
