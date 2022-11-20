@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:virtualpilgrimage/domain/auth/reset_password_usecase.dart';
+import 'package:virtualpilgrimage/application/auth/reset_password_usecase.dart';
 import 'package:virtualpilgrimage/model/form_model.codegen.dart';
 import 'package:virtualpilgrimage/router.dart';
 import 'package:virtualpilgrimage/ui/pages/reset_password/components/success_reset_password_dialog.dart';

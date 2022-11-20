@@ -10,7 +10,7 @@ import 'package:health/health.dart';
 import 'package:http/http.dart' as http;
 import 'package:mockito/annotations.dart';
 import 'package:package_info/package_info.dart';
-import 'package:virtualpilgrimage/domain/auth/reset_password_usecase.dart';
+import 'package:virtualpilgrimage/application/auth/reset_password_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_repository.dart';
 import 'package:virtualpilgrimage/domain/user/profile/user_profile_image_repository.dart';
 import 'package:virtualpilgrimage/domain/user/user_icon_repository.dart';

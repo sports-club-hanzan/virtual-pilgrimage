@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:virtualpilgrimage/domain/auth/auth_repository.dart';
-import 'package:virtualpilgrimage/domain/auth/sign_in_interactor.dart';
+import 'package:virtualpilgrimage/application/auth/auth_repository.dart';
+import 'package:virtualpilgrimage/application/auth/sign_in_interactor.dart';
 import 'package:virtualpilgrimage/domain/user/user_icon_repository.dart';
 import 'package:virtualpilgrimage/domain/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';

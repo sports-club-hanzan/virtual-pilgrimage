@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logger/logger.dart';
 import 'package:mockito/mockito.dart';
-import 'package:virtualpilgrimage/domain/auth/reset_password_interactor.dart';
-import 'package:virtualpilgrimage/domain/auth/reset_password_usecase.dart';
+import 'package:virtualpilgrimage/application/auth/reset_password_interactor.dart';
+import 'package:virtualpilgrimage/application/auth/reset_password_usecase.dart';
 
 import '../../helper/fakes/fake_package_info.dart';
 import '../../helper/mock.mocks.dart';

@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:logger/logger.dart';
-import 'package:virtualpilgrimage/domain/auth/auth_repository.dart';
-import 'package:virtualpilgrimage/domain/auth/sign_in_usecase.dart';
+import 'package:virtualpilgrimage/application/auth/auth_repository.dart';
+import 'package:virtualpilgrimage/application/auth/sign_in_usecase.dart';
 import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
 import 'package:virtualpilgrimage/domain/exception/sign_in_exception.dart';
 import 'package:virtualpilgrimage/domain/user/user_icon_repository.dart';

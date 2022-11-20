@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:virtualpilgrimage/domain/auth/auth_repository.dart';
+import 'package:virtualpilgrimage/application/auth/auth_repository.dart';
 import 'package:virtualpilgrimage/domain/exception/sign_in_exception.dart';
 
 class GoogleAuthRepository extends AuthRepository {

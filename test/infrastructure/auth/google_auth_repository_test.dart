@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:virtualpilgrimage/domain/auth/auth_repository.dart';
+import 'package:virtualpilgrimage/application/auth/auth_repository.dart';
 import 'package:virtualpilgrimage/domain/exception/sign_in_exception.dart';
 import 'package:virtualpilgrimage/infrastructure/auth/google_auth_repository.dart';
 

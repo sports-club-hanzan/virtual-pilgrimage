@@ -4,8 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info/package_info.dart';
-import 'package:virtualpilgrimage/domain/auth/auth_repository.dart';
-import 'package:virtualpilgrimage/domain/auth/reset_password_usecase.dart';
+import 'package:virtualpilgrimage/application/auth/auth_repository.dart';
+import 'package:virtualpilgrimage/application/auth/reset_password_usecase.dart';
 
 class ResetUserPasswordInteractor extends ResetUserPasswordUsecase {
   ResetUserPasswordInteractor(this._authRepository, this._logger, this._crashlytics);
