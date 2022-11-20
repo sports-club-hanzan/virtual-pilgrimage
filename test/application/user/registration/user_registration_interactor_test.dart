@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logger/logger.dart';
 import 'package:mockito/mockito.dart';
+import 'package:virtualpilgrimage/application/user/registration/registration_result.dart';
+import 'package:virtualpilgrimage/application/user/registration/user_registration_interactor.dart';
+import 'package:virtualpilgrimage/application/user/registration/user_registration_usecase.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
 import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen.dart';
-import 'package:virtualpilgrimage/domain/user/registration/registration_result.dart';
-import 'package:virtualpilgrimage/domain/user/registration/user_registration_interactor.dart';
-import 'package:virtualpilgrimage/domain/user/registration/user_registration_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 
 import '../../../helper/default_mock_firebase_crashlytics.dart';
