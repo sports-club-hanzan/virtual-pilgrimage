@@ -2,9 +2,9 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_polyline_algorithm/google_polyline_algorithm.dart';
 import 'package:logger/logger.dart';
 import 'package:maps_toolkit/maps_toolkit.dart' as maps;
+import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_result.codegen.dart';
+import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_usecase.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
-import 'package:virtualpilgrimage/domain/pilgrimage/update_pilgrimage_progress_result.codegen.dart';
-import 'package:virtualpilgrimage/domain/pilgrimage/update_pilgrimage_progress_usecase.dart';
 import 'package:virtualpilgrimage/domain/temple/temple_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/temple/temple_repository.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_by_period.codegen.dart';
@@ -89,9 +89,6 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
     // ロジックに利用する変数群
     late TempleInfo nowTempleInfo;
     late HealthByPeriod healthFromLastUpdatedAt;
-    // 次の札所に向かうまでの移動距離を格納する変数
-    // お遍路の進捗の更新のために利用
-    int movingDistance;
 
     _logger.d(
       'update pilgrimage progress start '
@@ -116,7 +113,9 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
     );
 
     /// 2. 移動距離 > 次の札所までの距離 の間、で移動距離を減らしながら次に目指すべき札所を導出する
-    movingDistance = user.pilgrimage.movingDistance + healthFromLastUpdatedAt.distance;
+    // 次の札所に向かうまでの移動距離を格納する変数
+    // お遍路の進捗の更新のために利用
+    int movingDistance = user.pilgrimage.movingDistance + healthFromLastUpdatedAt.distance;
     _logger.d(
       'calc pilgrimage progress '
       '[movingDistance][$movingDistance]'
