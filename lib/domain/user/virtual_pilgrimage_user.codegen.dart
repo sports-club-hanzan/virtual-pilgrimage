@@ -7,8 +7,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/helper/firestore_timestamp_converter.dart';
+import 'package:virtualpilgrimage/domain/pilgrimage/pilgrimage_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_info.codegen.dart';
-import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen.dart';
 
 part 'virtual_pilgrimage_user.codegen.freezed.dart';
 part 'virtual_pilgrimage_user.codegen.g.dart';
@@ -68,6 +68,7 @@ class _UserStatusConverter {
   static int userStatusToInt(UserStatus userStatus) => userStatus.index;
 }
 
+// Bitmapへの変換用クラス
 class _BitmapConverter {
   static BitmapDescriptor stringToBitmap(String string) =>
       BitmapDescriptor.fromBytes(Uint8List.fromList(string.codeUnits));
@@ -96,7 +97,7 @@ class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
     // メールアドレス
     @Default('')
         String email,
-    // ユーザアイコンのURL
+    // ユーザのプロフィール画像のURL
     @Default('https://maps.google.com/mapfiles/kml/shapes/info-i_maps.png')
         String userIconUrl,
     @Default(UserStatus.temporary)
@@ -123,13 +124,14 @@ class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
     // 現在地のお遍路で巡っているお寺の情報
     required PilgrimageInfo pilgrimage,
 
-    // 以下は json に変換した時に含めないパラメータ
+    // 以下に json に変換した時に含めないパラメータを定義する
     // DB で管理されずアプリ上で値がセットされる
+    // 設定する場合は @JsonKey(ignore: true) のようなアノテーションをつける
 
-    // ユーザアイコン。ログイン時に userIconUrl から GoogleMap に描画できる形式に変換される
+    // map上のアイコン。ログイン時に userIconUrl から GoogleMap に描画できる形式に変換される
     @JsonKey(ignore: true, fromJson: _BitmapConverter.stringToBitmap)
     @Default(BitmapDescriptor.defaultMarker)
-        BitmapDescriptor userIcon,
+    BitmapDescriptor mapIcon,
   }) = _VirtualPilgrimageUser;
 
   const VirtualPilgrimageUser._();
@@ -178,15 +180,21 @@ class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
   VirtualPilgrimageUser updateHealth(HealthInfo health) => copyWith(health: health);
 
   /// お遍路の進捗を更新
-  VirtualPilgrimageUser updatePilgrimageProgress(PilgrimageInfo pilgrimage, DateTime now) =>
-      copyWith(pilgrimage: pilgrimage, updatedAt: now);
+  VirtualPilgrimageUser updatePilgrimageProgress(
+    int pilgrimageId,
+    int lap,
+    int movingDistance,
+    DateTime updatedAt,
+  ) =>
+      copyWith(
+        pilgrimage:
+            pilgrimage.updatePilgrimageProgress(pilgrimageId, lap, movingDistance, updatedAt),
+        updatedAt: updatedAt,
+      );
 
   /// プロフィール画像のURLを更新
   VirtualPilgrimageUser updateUserIconUrl(String userIconUrl) => copyWith(
         userIconUrl: userIconUrl,
         updatedAt: CustomizableDateTime.current,
       );
-
-  /// MAP上のピンを設定
-  VirtualPilgrimageUser setUserIconBitmap(BitmapDescriptor bitmap) => copyWith(userIcon: bitmap);
 }

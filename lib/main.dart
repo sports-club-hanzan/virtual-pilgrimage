@@ -11,7 +11,7 @@ import 'package:virtualpilgrimage/infrastructure/firebase/firebase_auth_provider
 import 'package:virtualpilgrimage/router.dart';
 import 'package:virtualpilgrimage/ui/style/theme.dart';
 
-import 'domain/user/user_repository.dart';
+import 'application/user/user_repository.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

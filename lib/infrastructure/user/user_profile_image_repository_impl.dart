@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:logger/logger.dart';
-import 'package:virtualpilgrimage/domain/user/profile/user_profile_image_repository.dart';
+import 'package:virtualpilgrimage/application/user/profile/user_profile_image_repository.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/cloudstorage_collection_path.dart';
 
 class UserProfileImageRepositoryImpl extends UserProfileImageRepository {

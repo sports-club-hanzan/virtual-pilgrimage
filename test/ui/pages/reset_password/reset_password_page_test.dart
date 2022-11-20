@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:virtualpilgrimage/domain/auth/reset_password_usecase.dart';
+import 'package:virtualpilgrimage/application/auth/reset_password_usecase.dart';
 import 'package:virtualpilgrimage/ui/components/atoms/primary_button.dart';
 import 'package:virtualpilgrimage/ui/components/atoms/secondary_button.dart';
 import 'package:virtualpilgrimage/ui/components/my_text_form_field.dart';

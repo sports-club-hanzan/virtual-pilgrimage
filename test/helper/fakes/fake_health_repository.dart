@@ -1,6 +1,6 @@
+import 'package:virtualpilgrimage/application/user/health/health_repository.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_by_period.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_info.codegen.dart';
-import 'package:virtualpilgrimage/domain/user/health/health_repository.dart';
 
 class FakeHealthRepository extends HealthRepository {
   FakeHealthRepository({required this.healthByPeriod, required this.healthInfo});

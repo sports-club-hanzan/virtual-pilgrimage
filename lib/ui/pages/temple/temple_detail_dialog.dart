@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:virtualpilgrimage/domain/temple/temple_info.codegen.dart';
+import 'package:virtualpilgrimage/domain/pilgrimage/temple_info.codegen.dart';
 import 'package:virtualpilgrimage/ui/components/atoms/primary_button.dart';
 
 class TempleDetailDialog extends StatelessWidget {

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:virtualpilgrimage/model/google_map_model.codegen.dart';
+import 'package:virtualpilgrimage/ui/model/google_map_model.codegen.dart';
 
 part 'home_state.codegen.freezed.dart';
 

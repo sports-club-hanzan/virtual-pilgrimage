@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logger/logger.dart';
 import 'package:mockito/mockito.dart';
-import 'package:virtualpilgrimage/domain/user/profile/user_profile_image_repository.dart';
+import 'package:virtualpilgrimage/application/user/profile/user_profile_image_repository.dart';
 import 'package:virtualpilgrimage/infrastructure/user/user_profile_image_repository_impl.dart';
 
 import '../../helper/mock.mocks.dart';

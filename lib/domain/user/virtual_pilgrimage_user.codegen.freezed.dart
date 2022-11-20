@@ -32,7 +32,7 @@ mixin _$VirtualPilgrimageUser {
       fromJson: FirestoreTimestampConverter.timestampToDateTime,
       toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
   DateTime get birthDay => throw _privateConstructorUsedError; // メールアドレス
-  String get email => throw _privateConstructorUsedError; // ユーザアイコンのURL
+  String get email => throw _privateConstructorUsedError; // ユーザのプロフィール画像のURL
   String get userIconUrl => throw _privateConstructorUsedError;
   @JsonKey(
       fromJson: _UserStatusConverter.intToUserStatus,
@@ -50,11 +50,12 @@ mixin _$VirtualPilgrimageUser {
   HealthInfo? get health =>
       throw _privateConstructorUsedError; // 現在地のお遍路で巡っているお寺の情報
   PilgrimageInfo get pilgrimage =>
-      throw _privateConstructorUsedError; // 以下は json に変換した時に含めないパラメータ
+      throw _privateConstructorUsedError; // 以下に json に変換した時に含めないパラメータを定義する
 // DB で管理されずアプリ上で値がセットされる
-// ユーザアイコン。ログイン時に userIconUrl から GoogleMap に描画できる形式に変換される
+// 設定する場合は @JsonKey(ignore: true) のようなアノテーションをつける
+// map上のアイコン。ログイン時に userIconUrl から GoogleMap に描画できる形式に変換される
   @JsonKey(ignore: true, fromJson: _BitmapConverter.stringToBitmap)
-  BitmapDescriptor get userIcon => throw _privateConstructorUsedError;
+  BitmapDescriptor get mapIcon => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -86,7 +87,7 @@ abstract class $VirtualPilgrimageUserCopyWith<$Res> {
       HealthInfo? health,
       PilgrimageInfo pilgrimage,
       @JsonKey(ignore: true, fromJson: _BitmapConverter.stringToBitmap)
-          BitmapDescriptor userIcon});
+          BitmapDescriptor mapIcon});
 
   $HealthInfoCopyWith<$Res>? get health;
   $PilgrimageInfoCopyWith<$Res> get pilgrimage;
@@ -117,7 +118,7 @@ class _$VirtualPilgrimageUserCopyWithImpl<$Res,
     Object? updatedAt = null,
     Object? health = freezed,
     Object? pilgrimage = null,
-    Object? userIcon = null,
+    Object? mapIcon = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -164,9 +165,9 @@ class _$VirtualPilgrimageUserCopyWithImpl<$Res,
           ? _value.pilgrimage
           : pilgrimage // ignore: cast_nullable_to_non_nullable
               as PilgrimageInfo,
-      userIcon: null == userIcon
-          ? _value.userIcon
-          : userIcon // ignore: cast_nullable_to_non_nullable
+      mapIcon: null == mapIcon
+          ? _value.mapIcon
+          : mapIcon // ignore: cast_nullable_to_non_nullable
               as BitmapDescriptor,
     ) as $Val);
   }
@@ -218,7 +219,7 @@ abstract class _$$_VirtualPilgrimageUserCopyWith<$Res>
       HealthInfo? health,
       PilgrimageInfo pilgrimage,
       @JsonKey(ignore: true, fromJson: _BitmapConverter.stringToBitmap)
-          BitmapDescriptor userIcon});
+          BitmapDescriptor mapIcon});
 
   @override
   $HealthInfoCopyWith<$Res>? get health;
@@ -248,7 +249,7 @@ class __$$_VirtualPilgrimageUserCopyWithImpl<$Res>
     Object? updatedAt = null,
     Object? health = freezed,
     Object? pilgrimage = null,
-    Object? userIcon = null,
+    Object? mapIcon = null,
   }) {
     return _then(_$_VirtualPilgrimageUser(
       id: null == id
@@ -295,9 +296,9 @@ class __$$_VirtualPilgrimageUserCopyWithImpl<$Res>
           ? _value.pilgrimage
           : pilgrimage // ignore: cast_nullable_to_non_nullable
               as PilgrimageInfo,
-      userIcon: null == userIcon
-          ? _value.userIcon
-          : userIcon // ignore: cast_nullable_to_non_nullable
+      mapIcon: null == mapIcon
+          ? _value.mapIcon
+          : mapIcon // ignore: cast_nullable_to_non_nullable
               as BitmapDescriptor,
     ));
   }
@@ -325,7 +326,7 @@ class _$_VirtualPilgrimageUser extends _VirtualPilgrimageUser {
       this.health,
       required this.pilgrimage,
       @JsonKey(ignore: true, fromJson: _BitmapConverter.stringToBitmap)
-          this.userIcon = BitmapDescriptor.defaultMarker})
+          this.mapIcon = BitmapDescriptor.defaultMarker})
       : super._();
 
   factory _$_VirtualPilgrimageUser.fromJson(Map<String, dynamic> json) =>
@@ -355,7 +356,7 @@ class _$_VirtualPilgrimageUser extends _VirtualPilgrimageUser {
   @override
   @JsonKey()
   final String email;
-// ユーザアイコンのURL
+// ユーザのプロフィール画像のURL
   @override
   @JsonKey()
   final String userIconUrl;
@@ -382,16 +383,17 @@ class _$_VirtualPilgrimageUser extends _VirtualPilgrimageUser {
 // 現在地のお遍路で巡っているお寺の情報
   @override
   final PilgrimageInfo pilgrimage;
-// 以下は json に変換した時に含めないパラメータ
+// 以下に json に変換した時に含めないパラメータを定義する
 // DB で管理されずアプリ上で値がセットされる
-// ユーザアイコン。ログイン時に userIconUrl から GoogleMap に描画できる形式に変換される
+// 設定する場合は @JsonKey(ignore: true) のようなアノテーションをつける
+// map上のアイコン。ログイン時に userIconUrl から GoogleMap に描画できる形式に変換される
   @override
   @JsonKey(ignore: true, fromJson: _BitmapConverter.stringToBitmap)
-  final BitmapDescriptor userIcon;
+  final BitmapDescriptor mapIcon;
 
   @override
   String toString() {
-    return 'VirtualPilgrimageUser(id: $id, nickname: $nickname, gender: $gender, birthDay: $birthDay, email: $email, userIconUrl: $userIconUrl, userStatus: $userStatus, createdAt: $createdAt, updatedAt: $updatedAt, health: $health, pilgrimage: $pilgrimage, userIcon: $userIcon)';
+    return 'VirtualPilgrimageUser(id: $id, nickname: $nickname, gender: $gender, birthDay: $birthDay, email: $email, userIconUrl: $userIconUrl, userStatus: $userStatus, createdAt: $createdAt, updatedAt: $updatedAt, health: $health, pilgrimage: $pilgrimage, mapIcon: $mapIcon)';
   }
 
   @override
@@ -417,8 +419,7 @@ class _$_VirtualPilgrimageUser extends _VirtualPilgrimageUser {
             (identical(other.health, health) || other.health == health) &&
             (identical(other.pilgrimage, pilgrimage) ||
                 other.pilgrimage == pilgrimage) &&
-            (identical(other.userIcon, userIcon) ||
-                other.userIcon == userIcon));
+            (identical(other.mapIcon, mapIcon) || other.mapIcon == mapIcon));
   }
 
   @JsonKey(ignore: true)
@@ -436,7 +437,7 @@ class _$_VirtualPilgrimageUser extends _VirtualPilgrimageUser {
       updatedAt,
       health,
       pilgrimage,
-      userIcon);
+      mapIcon);
 
   @JsonKey(ignore: true)
   @override
@@ -472,7 +473,7 @@ abstract class _VirtualPilgrimageUser extends VirtualPilgrimageUser {
       final HealthInfo? health,
       required final PilgrimageInfo pilgrimage,
       @JsonKey(ignore: true, fromJson: _BitmapConverter.stringToBitmap)
-          final BitmapDescriptor userIcon}) = _$_VirtualPilgrimageUser;
+          final BitmapDescriptor mapIcon}) = _$_VirtualPilgrimageUser;
   const _VirtualPilgrimageUser._() : super._();
 
   factory _VirtualPilgrimageUser.fromJson(Map<String, dynamic> json) =
@@ -494,7 +495,7 @@ abstract class _VirtualPilgrimageUser extends VirtualPilgrimageUser {
   DateTime get birthDay;
   @override // メールアドレス
   String get email;
-  @override // ユーザアイコンのURL
+  @override // ユーザのプロフィール画像のURL
   String get userIconUrl;
   @override
   @JsonKey(
@@ -515,11 +516,12 @@ abstract class _VirtualPilgrimageUser extends VirtualPilgrimageUser {
   HealthInfo? get health;
   @override // 現在地のお遍路で巡っているお寺の情報
   PilgrimageInfo get pilgrimage;
-  @override // 以下は json に変換した時に含めないパラメータ
+  @override // 以下に json に変換した時に含めないパラメータを定義する
 // DB で管理されずアプリ上で値がセットされる
-// ユーザアイコン。ログイン時に userIconUrl から GoogleMap に描画できる形式に変換される
+// 設定する場合は @JsonKey(ignore: true) のようなアノテーションをつける
+// map上のアイコン。ログイン時に userIconUrl から GoogleMap に描画できる形式に変換される
   @JsonKey(ignore: true, fromJson: _BitmapConverter.stringToBitmap)
-  BitmapDescriptor get userIcon;
+  BitmapDescriptor get mapIcon;
   @override
   @JsonKey(ignore: true)
   _$$_VirtualPilgrimageUserCopyWith<_$_VirtualPilgrimageUser> get copyWith =>

@@ -1,5 +1,5 @@
-import 'package:virtualpilgrimage/domain/temple/temple_info.codegen.dart';
-import 'package:virtualpilgrimage/domain/temple/temple_repository.dart';
+import 'package:virtualpilgrimage/application/pilgrimage/temple_repository.dart';
+import 'package:virtualpilgrimage/domain/pilgrimage/temple_info.codegen.dart';
 
 class FakeTempleRepository extends TempleRepository {
   FakeTempleRepository(this.templeInfo);

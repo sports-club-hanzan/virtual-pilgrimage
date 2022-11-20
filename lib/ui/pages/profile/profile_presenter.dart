@@ -4,12 +4,11 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:virtualpilgrimage/analytics.dart';
+import 'package:virtualpilgrimage/application/user/health/update_health_result.codegen.dart';
+import 'package:virtualpilgrimage/application/user/health/update_health_usecase.dart';
+import 'package:virtualpilgrimage/application/user/profile/update_user_profile_image_usecase.dart';
+import 'package:virtualpilgrimage/application/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
-import 'package:virtualpilgrimage/domain/user/health/update_health_result.dart';
-import 'package:virtualpilgrimage/domain/user/health/update_health_usecase.dart';
-import 'package:virtualpilgrimage/domain/user/profile/update_user_profile_image_usecase.dart';
-import 'package:virtualpilgrimage/domain/user/user_icon_repository.dart';
-import 'package:virtualpilgrimage/domain/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/logger.dart';
@@ -31,7 +30,7 @@ final profileUserProvider =
     // ヘルスケア情報が上手く取れた場合は更新後のユーザ情報を返す
     // ユーザstateの更新は行わない
     ref.read(loggerProvider).d(result);
-    return result.updatedUser;
+    return result.user;
   } else {
     ref.read(loggerProvider).e(result);
     await ref.read(firebaseCrashlyticsProvider).recordError(
@@ -49,13 +48,11 @@ final profileProvider =
 class ProfilePresenter extends StateNotifier<ProfileState> {
   ProfilePresenter(this._ref) : super(ProfileState(selectedTabIndex: 0)) {
     _updateUserProfileImageInteractor = _ref.read(updateUserProfileImageUsecaseProvider);
-    _userIconRepository = _ref.read(userIconRepositoryProvider);
     _analytics = _ref.read(analyticsProvider);
   }
 
   final Ref _ref;
   late final UpdateUserProfileImageUsecase _updateUserProfileImageInteractor;
-  late final UserIconRepository _userIconRepository;
   late final Analytics _analytics;
 
   final _selectedTabs = ['今日', '昨日', '週間', '月間'];
@@ -105,12 +102,6 @@ class ProfilePresenter extends StateNotifier<ProfileState> {
       return;
     }
 
-    final updatedUser = await _updateUserProfileImageInteractor.execute(
-      user: loginUser,
-      imageFile: File(image.path),
-    );
-    // GoogleMap 上で表示する userIcon も更新してstateを更新
-    final bitmap = await _userIconRepository.loadIconImage(updatedUser.userIconUrl);
-    _ref.read(userStateProvider.notifier).state = updatedUser.setUserIconBitmap(bitmap);
+    await _updateUserProfileImageInteractor.execute(user: loginUser, imageFile: File(image.path));
   }
 }
