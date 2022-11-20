@@ -29,7 +29,9 @@ mixin _$TempleInfo {
   String get encodedPoints => throw _privateConstructorUsedError; // お寺のうんちく
   String get knowledge => throw _privateConstructorUsedError; // スタンプの画像パス
   String get stampImage => throw _privateConstructorUsedError; // お寺の座標
-  @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
+  @JsonKey(
+      fromJson: _GeoPointConverter.geoPointFromJson,
+      toJson: _GeoPointConverter.geoPointToJson)
   GeoPoint get geoPoint => throw _privateConstructorUsedError;
   List<String> get images => throw _privateConstructorUsedError;
 
@@ -54,7 +56,7 @@ abstract class $TempleInfoCopyWith<$Res> {
       String encodedPoints,
       String knowledge,
       String stampImage,
-      @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
+      @JsonKey(fromJson: _GeoPointConverter.geoPointFromJson, toJson: _GeoPointConverter.geoPointToJson)
           GeoPoint geoPoint,
       List<String> images});
 }
@@ -145,7 +147,7 @@ abstract class _$$_TempleInfoCopyWith<$Res>
       String encodedPoints,
       String knowledge,
       String stampImage,
-      @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
+      @JsonKey(fromJson: _GeoPointConverter.geoPointFromJson, toJson: _GeoPointConverter.geoPointToJson)
           GeoPoint geoPoint,
       List<String> images});
 }
@@ -230,7 +232,7 @@ class _$_TempleInfo extends _TempleInfo {
       this.knowledge = 'お寺の詳細情報',
       this.stampImage =
           'https://firebasestorage.googleapis.com/v0/b/virtual-pilgrimage-dev.appspot.com/o/temples%2F1%2Fstamp.jpeg?alt=media&token=b3fe42f9-b94b-43f2-8a5d-b2f217be541f',
-      @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
+      @JsonKey(fromJson: _GeoPointConverter.geoPointFromJson, toJson: _GeoPointConverter.geoPointToJson)
           required this.geoPoint,
       final List<String> images = const []})
       : _images = images,
@@ -267,7 +269,9 @@ class _$_TempleInfo extends _TempleInfo {
   final String stampImage;
 // お寺の座標
   @override
-  @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
+  @JsonKey(
+      fromJson: _GeoPointConverter.geoPointFromJson,
+      toJson: _GeoPointConverter.geoPointToJson)
   final GeoPoint geoPoint;
   final List<String> _images;
   @override
@@ -344,7 +348,7 @@ abstract class _TempleInfo extends TempleInfo {
       required final String encodedPoints,
       final String knowledge,
       final String stampImage,
-      @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
+      @JsonKey(fromJson: _GeoPointConverter.geoPointFromJson, toJson: _GeoPointConverter.geoPointToJson)
           required final GeoPoint geoPoint,
       final List<String> images}) = _$_TempleInfo;
   const _TempleInfo._() : super._();
@@ -369,7 +373,9 @@ abstract class _TempleInfo extends TempleInfo {
   @override // スタンプの画像パス
   String get stampImage;
   @override // お寺の座標
-  @JsonKey(fromJson: _geoPointFromJson, toJson: _geoPointToJson)
+  @JsonKey(
+      fromJson: _GeoPointConverter.geoPointFromJson,
+      toJson: _GeoPointConverter.geoPointToJson)
   GeoPoint get geoPoint;
   @override
   List<String> get images;
