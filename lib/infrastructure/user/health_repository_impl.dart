@@ -5,7 +5,7 @@ import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/exception/get_health_exception.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_by_period.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_info.codegen.dart';
-import 'package:virtualpilgrimage/domain/user/health/health_repository.dart';
+import 'package:virtualpilgrimage/application/user/health/health_repository.dart';
 
 class HealthRepositoryImpl implements HealthRepository {
   HealthRepositoryImpl(this._healthFactory, this._logger);

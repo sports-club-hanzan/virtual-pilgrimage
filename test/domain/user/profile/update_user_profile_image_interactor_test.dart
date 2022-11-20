@@ -5,7 +5,7 @@ import 'package:virtualpilgrimage/domain/pilgrimage/pilgrimage_info.codegen.dart
 import 'package:virtualpilgrimage/application/user/profile/update_user_profile_image_interactor.dart';
 import 'package:virtualpilgrimage/application/user/profile/update_user_profile_image_usecase.dart';
 import 'package:virtualpilgrimage/application/user/profile/user_profile_image_repository.dart';
-import 'package:virtualpilgrimage/domain/user/user_repository.dart';
+import 'package:virtualpilgrimage/application/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 
 import '../../../helper/mock.mocks.dart';

@@ -5,7 +5,7 @@ import 'package:virtualpilgrimage/application/auth/auth_repository.dart';
 import 'package:virtualpilgrimage/application/auth/sign_in_usecase.dart';
 import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
 import 'package:virtualpilgrimage/domain/exception/sign_in_exception.dart';
-import 'package:virtualpilgrimage/domain/user/user_repository.dart';
+import 'package:virtualpilgrimage/application/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 
 enum _LoginMethod {

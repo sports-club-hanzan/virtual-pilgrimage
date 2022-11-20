@@ -1,12 +1,12 @@
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:logger/logger.dart';
+import 'package:virtualpilgrimage/application/user/health/health_repository.dart';
+import 'package:virtualpilgrimage/application/user/health/update_health_result.codegen.dart';
+import 'package:virtualpilgrimage/application/user/health/update_health_usecase.dart';
+import 'package:virtualpilgrimage/application/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
 import 'package:virtualpilgrimage/domain/exception/get_health_exception.dart';
-import 'package:virtualpilgrimage/domain/user/health/health_repository.dart';
-import 'package:virtualpilgrimage/domain/user/health/update_health_result.dart';
-import 'package:virtualpilgrimage/domain/user/health/update_health_usecase.dart';
-import 'package:virtualpilgrimage/domain/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 
 class UpdateHealthInteractor implements UpdateHealthUsecase {
@@ -60,6 +60,6 @@ class UpdateHealthInteractor implements UpdateHealthUsecase {
       error = e;
     }
 
-    return UpdateHealthResult(status, updatedUser, error);
+    return UpdateHealthResult(status: status, user: updatedUser, error: error);
   }
 }

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtualpilgrimage/application/user/profile/update_user_profile_image_interactor.dart';
 import 'package:virtualpilgrimage/application/user/profile/user_profile_image_repository.dart';
-import 'package:virtualpilgrimage/domain/user/user_repository.dart';
+import 'package:virtualpilgrimage/application/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 
 final updateUserProfileImageUsecaseProvider = Provider<UpdateUserProfileImageUsecase>(

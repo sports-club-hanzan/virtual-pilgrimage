@@ -7,11 +7,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:virtualpilgrimage/analytics.dart';
+import 'package:virtualpilgrimage/application/pilgrimage/temple_repository.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_result.codegen.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_usecase.dart';
-import 'package:virtualpilgrimage/application/pilgrimage/temple_repository.dart';
-import 'package:virtualpilgrimage/domain/user/health/update_health_result.dart';
-import 'package:virtualpilgrimage/domain/user/health/update_health_usecase.dart';
+import 'package:virtualpilgrimage/application/user/health/update_health_result.codegen.dart';
+import 'package:virtualpilgrimage/application/user/health/update_health_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/logger.dart';
@@ -98,8 +98,8 @@ class HomePresenter extends StateNotifier<HomeState> {
       // 先にmapの描画を更新してバックグラウンドでヘルスケア情報を更新しておくことで、UIの変更の反映を早める
       final updateHealthResult = await _ref.read(updateHealthUsecaseProvider).execute(user);
       if (updateHealthResult.status == UpdateHealthStatus.success) {
-        if (updateHealthResult.updatedUser != null) {
-          _userStateNotifier.state = updateHealthResult.updatedUser;
+        if (updateHealthResult.user != null) {
+          _userStateNotifier.state = updateHealthResult.user;
         }
       } else {
         unawaited(_crashlytics.recordError(updateHealthResult.error, null));
