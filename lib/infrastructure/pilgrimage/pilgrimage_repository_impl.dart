@@ -1,6 +1,6 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:logger/logger.dart';
-import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_repository.dart';
+import 'package:virtualpilgrimage/application/pilgrimage/pilgrimage_repository.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/cloudstorage_collection_path.dart';
 
 class PilgrimageRepositoryImpl implements PilgrimageRepository {

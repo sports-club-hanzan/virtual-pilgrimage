@@ -8,7 +8,7 @@ import 'package:virtualpilgrimage/application/auth/sign_in_usecase.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
 import 'package:virtualpilgrimage/domain/exception/sign_in_exception.dart';
-import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen.dart';
+import 'package:virtualpilgrimage/domain/pilgrimage/pilgrimage_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 
 import '../../helper/default_mock_firebase_crashlytics.dart';

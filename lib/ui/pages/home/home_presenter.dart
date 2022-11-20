@@ -9,7 +9,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:virtualpilgrimage/analytics.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_result.codegen.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_usecase.dart';
-import 'package:virtualpilgrimage/domain/temple/temple_repository.dart';
+import 'package:virtualpilgrimage/application/pilgrimage/temple_repository.dart';
 import 'package:virtualpilgrimage/domain/user/health/update_health_result.dart';
 import 'package:virtualpilgrimage/domain/user/health/update_health_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';

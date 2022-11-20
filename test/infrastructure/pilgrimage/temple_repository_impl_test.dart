@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:virtualpilgrimage/domain/temple/temple_info.codegen.dart';
-import 'package:virtualpilgrimage/domain/temple/temple_repository.dart';
+import 'package:virtualpilgrimage/application/pilgrimage/temple_repository.dart';
+import 'package:virtualpilgrimage/domain/pilgrimage/temple_info.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firestore_provider.dart';
-import 'package:virtualpilgrimage/infrastructure/temple/temple_repository_impl.dart';
+import 'package:virtualpilgrimage/infrastructure/pilgrimage/temple_repository_impl.dart';
 
 import '../../helper/mock.mocks.dart';
 import '../../helper/mock_query_document_snapshot.dart';
@@ -119,6 +119,7 @@ TempleInfo defaultTempleInfo([
     name: 'お寺',
     prefecture: '徳島県',
     distance: 1000,
-    encodedPoints: 'mwnoEuc}sXJ?z@Z\\D?h@@|@TtBPx@rAtD\\pALh@X|B\\hDHtABf@Jf@Bh@HTBTRtBl@hFRdA\\lAHPx@vCl@xBx@vB^l@bAxAx@v@GHC|@?\\Cn@e@Ny@TOx@O?E@In@',
+    encodedPoints:
+        'mwnoEuc}sXJ?z@Z\\D?h@@|@TtBPx@rAtD\\pALh@X|B\\hDHtABf@Jf@Bh@HTBTRtBl@hFRdA\\lAHPx@vCl@xBx@vB^l@bAxAx@v@GHC|@?\\Cn@e@Ny@TOx@O?E@In@',
   );
 }

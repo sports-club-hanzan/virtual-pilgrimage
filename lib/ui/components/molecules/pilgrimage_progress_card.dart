@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:virtualpilgrimage/domain/temple/temple_info.codegen.dart';
-import 'package:virtualpilgrimage/domain/temple/temple_repository.dart';
-import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen.dart';
+import 'package:virtualpilgrimage/domain/pilgrimage/temple_info.codegen.dart';
+import 'package:virtualpilgrimage/application/pilgrimage/temple_repository.dart';
+import 'package:virtualpilgrimage/domain/pilgrimage/pilgrimage_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/ui/style/font.dart';

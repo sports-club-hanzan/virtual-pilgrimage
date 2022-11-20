@@ -7,8 +7,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/helper/firestore_timestamp_converter.dart';
+import 'package:virtualpilgrimage/domain/pilgrimage/pilgrimage_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_info.codegen.dart';
-import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen.dart';
 
 part 'virtual_pilgrimage_user.codegen.freezed.dart';
 part 'virtual_pilgrimage_user.codegen.g.dart';

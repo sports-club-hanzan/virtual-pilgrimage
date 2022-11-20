@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:virtualpilgrimage/application/pilgrimage/temple_repository.dart';
 import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
-import 'package:virtualpilgrimage/domain/temple/temple_info.codegen.dart';
-import 'package:virtualpilgrimage/domain/temple/temple_repository.dart';
+import 'package:virtualpilgrimage/domain/pilgrimage/temple_info.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firestore_collection_path.dart';
 
 // Firestoreに格納しているお寺の情報のキャッシュ

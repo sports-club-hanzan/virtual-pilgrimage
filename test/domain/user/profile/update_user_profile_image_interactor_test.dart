@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
-import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen.dart';
+import 'package:virtualpilgrimage/domain/pilgrimage/pilgrimage_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/profile/update_user_profile_image_interactor.dart';
 import 'package:virtualpilgrimage/domain/user/profile/update_user_profile_image_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/profile/user_profile_image_repository.dart';

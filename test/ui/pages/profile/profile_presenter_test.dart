@@ -4,7 +4,7 @@ import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_by_period.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_repository.dart';
-import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen.dart';
+import 'package:virtualpilgrimage/domain/pilgrimage/pilgrimage_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/ui/pages/profile/profile_presenter.dart';

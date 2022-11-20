@@ -9,11 +9,11 @@ import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progr
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_usecase.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/pilgrimage_progress_calculator.dart';
-import 'package:virtualpilgrimage/domain/temple/temple_info.codegen.dart';
-import 'package:virtualpilgrimage/domain/temple/temple_repository.dart';
+import 'package:virtualpilgrimage/domain/pilgrimage/temple_info.codegen.dart';
+import 'package:virtualpilgrimage/application/pilgrimage/temple_repository.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_by_period.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_repository.dart';
-import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen.dart';
+import 'package:virtualpilgrimage/domain/pilgrimage/pilgrimage_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 
 import '../../helper/fakes/fake_user_repository.dart';

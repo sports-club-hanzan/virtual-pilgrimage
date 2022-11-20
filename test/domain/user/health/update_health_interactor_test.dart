@@ -10,7 +10,7 @@ import 'package:virtualpilgrimage/domain/user/health/health_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/health/update_health_interactor.dart';
 import 'package:virtualpilgrimage/domain/user/health/update_health_result.dart';
 import 'package:virtualpilgrimage/domain/user/health/update_health_usecase.dart';
-import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen.dart';
+import 'package:virtualpilgrimage/domain/pilgrimage/pilgrimage_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 
 import '../../../helper/default_mock_firebase_crashlytics.dart';

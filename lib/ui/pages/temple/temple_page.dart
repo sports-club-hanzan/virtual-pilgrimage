@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:virtualpilgrimage/domain/temple/temple_info.codegen.dart';
+import 'package:virtualpilgrimage/domain/pilgrimage/temple_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
-import 'package:virtualpilgrimage/infrastructure/temple/temple_repository_impl.dart';
+import 'package:virtualpilgrimage/infrastructure/pilgrimage/temple_repository_impl.dart';
 import 'package:virtualpilgrimage/ui/components/bottom_navigation.dart';
 import 'package:virtualpilgrimage/ui/components/molecules/my_drawer.dart';
 import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
