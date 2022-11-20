@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
-import 'package:virtualpilgrimage/model/form_model.codegen.dart';
-import 'package:virtualpilgrimage/model/radio_button_model.codegen.dart';
+import 'package:virtualpilgrimage/ui/model/form_model.codegen.dart';
+import 'package:virtualpilgrimage/ui/model/radio_button_model.codegen.dart';
 
 part 'registration_state.codegen.freezed.dart';
 

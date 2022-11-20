@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:virtualpilgrimage/model/form_model.codegen.dart';
+import 'package:virtualpilgrimage/ui/model/form_model.codegen.dart';
 
 part 'reset_password_state.codegen.freezed.dart';
 

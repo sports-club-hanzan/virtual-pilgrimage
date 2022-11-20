@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:virtualpilgrimage/model/form_model.codegen.dart';
 import 'package:virtualpilgrimage/ui/components/my_text_form_field.dart';
+import 'package:virtualpilgrimage/ui/model/form_model.codegen.dart';
 
 import '../../helper/wrap_material_app.dart';
 
@@ -21,7 +21,7 @@ void main() {
       );
       expect(find.byKey(key), findsOneWidget);
     });
-    
+
     testWidgets('フォームを編集できる', (widgetTester) async {
       final formModel = FormModel.of((value) => null);
       await widgetTester.pumpWidget(

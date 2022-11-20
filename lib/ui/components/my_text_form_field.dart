@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:virtualpilgrimage/model/form_model.codegen.dart';
+import 'package:virtualpilgrimage/ui/model/form_model.codegen.dart';
 
 class MyTextFormField extends StatefulWidget {
   MyTextFormField({

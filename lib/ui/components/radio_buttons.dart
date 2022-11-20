@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:virtualpilgrimage/model/radio_button_model.codegen.dart';
+import 'package:virtualpilgrimage/ui/model/radio_button_model.codegen.dart';
 
 // ラジオボタンの定義に利用
 // MEMO: generics を State に渡しても build に型をうまく渡せないので、継承して利用

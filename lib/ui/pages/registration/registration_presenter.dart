@@ -9,10 +9,10 @@ import 'package:virtualpilgrimage/application/user/registration/registration_res
 import 'package:virtualpilgrimage/application/user/registration/user_registration_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
-import 'package:virtualpilgrimage/model/form_model.codegen.dart';
-import 'package:virtualpilgrimage/model/radio_button_model.codegen.dart';
 import 'package:virtualpilgrimage/router.dart';
 import 'package:virtualpilgrimage/ui/components/bottom_navigation.dart';
+import 'package:virtualpilgrimage/ui/model/form_model.codegen.dart';
+import 'package:virtualpilgrimage/ui/model/radio_button_model.codegen.dart';
 import 'package:virtualpilgrimage/ui/pages/registration/registration_state.codegen.dart';
 import 'package:virtualpilgrimage/ui/style/color.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:virtualpilgrimage/model/radio_button_model.codegen.dart';
+import 'package:virtualpilgrimage/ui/model/radio_button_model.codegen.dart';
 
 void main() {
   group('RadioButtonModel', () {
