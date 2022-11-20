@@ -22,4 +22,6 @@ final googleAuthRepositoryProvider = Provider<AuthRepository>(
 
 abstract class AuthRepository {
   Future<UserCredential?> signIn({String? email, String? password});
+
+  Future<void> resetPassword({required String email, required String packageName});
 }

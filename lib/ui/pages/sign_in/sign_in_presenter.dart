@@ -9,6 +9,7 @@ import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.da
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/logger.dart';
 import 'package:virtualpilgrimage/model/form_model.codegen.dart';
+import 'package:virtualpilgrimage/router.dart';
 import 'package:virtualpilgrimage/ui/pages/sign_in/sign_in_state.codegen.dart';
 
 final signInPresenterProvider = StateNotifierProvider.autoDispose<SignInPresenter, SignInState>(
@@ -156,7 +157,6 @@ class SignInPresenter extends StateNotifier<SignInState> {
         ),
       );
       unawaited(_crashlytics.recordError(e, null));
-
     } on Exception catch (e) {
       unawaited(
         _analytics.logEvent(
@@ -177,6 +177,11 @@ class SignInPresenter extends StateNotifier<SignInState> {
       case UserStatus.deleted:
         return SignInStateContext.failed;
     }
+  }
+
+  /// パスワードリセットページに遷移
+  void movePasswordResetPage() {
+    _ref.read(routerProvider).push(RouterPath.resetPassword);
   }
 
   void _updateState(VirtualPilgrimageUser? user, UserStatus? loginStatus) {

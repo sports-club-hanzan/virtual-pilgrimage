@@ -59,4 +59,10 @@ class GoogleAuthRepository extends AuthRepository {
     }
     return null;
   }
+
+  @override
+  Future<void> resetPassword({required String email, required String packageName}) {
+    // Google認証はパスワードのリセットは必要ないため呼び出されたら例外
+    throw UnimplementedError();
+  }
 }

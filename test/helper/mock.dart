@@ -9,6 +9,14 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:health/health.dart';
 import 'package:http/http.dart' as http;
 import 'package:mockito/annotations.dart';
+import 'package:package_info/package_info.dart';
+import 'package:virtualpilgrimage/domain/auth/reset_password_usecase.dart';
+import 'package:virtualpilgrimage/domain/user/health/health_repository.dart';
+import 'package:virtualpilgrimage/domain/user/profile/user_profile_image_repository.dart';
+import 'package:virtualpilgrimage/domain/user/user_icon_repository.dart';
+import 'package:virtualpilgrimage/domain/user/user_repository.dart';
+import 'package:virtualpilgrimage/infrastructure/auth/email_and_password_auth_repository.dart';
+import 'package:virtualpilgrimage/infrastructure/auth/google_auth_repository.dart';
 
 @GenerateMocks([
   // Firebase 関連
@@ -44,5 +52,17 @@ import 'package:mockito/annotations.dart';
   // Others
   File,
   http.Client,
+  PackageInfo,
+
+  /// Repository
+  EmailAndPasswordAuthRepository,
+  GoogleAuthRepository,
+  UserIconRepository,
+  UserRepository,
+  HealthRepository,
+  UserProfileImageRepository,
+
+  /// UseCases
+  ResetUserPasswordUsecase,
 ])
 void main() {}

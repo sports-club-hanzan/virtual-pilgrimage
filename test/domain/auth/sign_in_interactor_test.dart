@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:logger/logger.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:virtualpilgrimage/domain/auth/sign_in_interactor.dart';
 import 'package:virtualpilgrimage/domain/auth/sign_in_usecase.dart';
@@ -10,23 +9,12 @@ import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
 import 'package:virtualpilgrimage/domain/exception/sign_in_exception.dart';
 import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen.dart';
-import 'package:virtualpilgrimage/domain/user/user_icon_repository.dart';
-import 'package:virtualpilgrimage/domain/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
-import 'package:virtualpilgrimage/infrastructure/auth/email_and_password_auth_repository.dart';
-import 'package:virtualpilgrimage/infrastructure/auth/google_auth_repository.dart';
 
 import '../../helper/default_mock_firebase_crashlytics.dart';
 import '../../helper/mock.mocks.dart';
 import '../../helper/provider_container.dart';
-import 'sign_in_interactor_test.mocks.dart';
 
-@GenerateMocks([
-  EmailAndPasswordAuthRepository,
-  GoogleAuthRepository,
-  UserIconRepository,
-  UserRepository,
-])
 void main() {
   MockEmailAndPasswordAuthRepository mockEmailAndPasswordAuthRepository =
       MockEmailAndPasswordAuthRepository();

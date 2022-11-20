@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/user/pilgrimage/pilgrimage_info.codegen.dart';
@@ -11,9 +10,7 @@ import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.da
 
 import '../../../helper/mock.mocks.dart';
 import '../../../helper/provider_container.dart';
-import 'update_user_profile_image_interactor_test.mocks.dart';
 
-@GenerateMocks([UserRepository, UserProfileImageRepository])
 void main() {
   late UpdateUserProfileImageInteractor target;
   late UserRepository userRepository;
