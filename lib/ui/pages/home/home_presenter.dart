@@ -142,7 +142,7 @@ class HomePresenter extends StateNotifier<HomeState> {
         Marker(
           markerId: MarkerId(user.nickname),
           position: virtualPosition,
-          icon: user.userIcon,
+          icon: user.mapIcon,
           infoWindow: InfoWindow(title: '現在: ${user.health?.totalSteps ?? 0}歩'),
         )
       };

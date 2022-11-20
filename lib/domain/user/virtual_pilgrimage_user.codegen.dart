@@ -96,7 +96,7 @@ class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
     // メールアドレス
     @Default('')
         String email,
-    // ユーザアイコンのURL
+    // ユーザのプロフィール画像のURL
     @Default('https://maps.google.com/mapfiles/kml/shapes/info-i_maps.png')
         String userIconUrl,
     @Default(UserStatus.temporary)
@@ -123,13 +123,14 @@ class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
     // 現在地のお遍路で巡っているお寺の情報
     required PilgrimageInfo pilgrimage,
 
-    // 以下は json に変換した時に含めないパラメータ
+    // 以下に json に変換した時に含めないパラメータを定義する
     // DB で管理されずアプリ上で値がセットされる
+    // 設定する場合は @JsonKey(ignore: true) のようなアノテーションをつける
 
-    // ユーザアイコン。ログイン時に userIconUrl から GoogleMap に描画できる形式に変換される
+    // map上のアイコン。ログイン時に userIconUrl から GoogleMap に描画できる形式に変換される
     @JsonKey(ignore: true, fromJson: _BitmapConverter.stringToBitmap)
     @Default(BitmapDescriptor.defaultMarker)
-        BitmapDescriptor userIcon,
+    BitmapDescriptor mapIcon,
   }) = _VirtualPilgrimageUser;
 
   const VirtualPilgrimageUser._();
@@ -195,7 +196,4 @@ class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
         userIconUrl: userIconUrl,
         updatedAt: CustomizableDateTime.current,
       );
-
-  /// MAP上のピンを設定
-  VirtualPilgrimageUser setUserIconBitmap(BitmapDescriptor bitmap) => copyWith(userIcon: bitmap);
 }

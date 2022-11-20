@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:mockito/mockito.dart';
 import 'package:virtualpilgrimage/application/auth/sign_in_interactor.dart';
@@ -19,7 +18,6 @@ void main() {
   MockEmailAndPasswordAuthRepository mockEmailAndPasswordAuthRepository =
       MockEmailAndPasswordAuthRepository();
   MockGoogleAuthRepository mockGoogleAuthRepository = MockGoogleAuthRepository();
-  MockUserIconRepository mockUserIconRepository = MockUserIconRepository();
   MockUserRepository mockUserRepository = MockUserRepository();
   MockFirebaseCrashlytics mockFirebaseCrashlytics = MockFirebaseCrashlytics();
   MockFirebaseAuth mockFirebaseAuth = MockFirebaseAuth();
@@ -29,7 +27,6 @@ void main() {
     mockEmailAndPasswordAuthRepository,
     mockGoogleAuthRepository,
     mockUserRepository,
-    mockUserIconRepository,
     logger,
     mockFirebaseCrashlytics,
     mockFirebaseAuth,
@@ -43,7 +40,6 @@ void main() {
   setUp(() {
     mockEmailAndPasswordAuthRepository = MockEmailAndPasswordAuthRepository();
     mockGoogleAuthRepository = MockGoogleAuthRepository();
-    mockUserIconRepository = MockUserIconRepository();
     mockUserRepository = MockUserRepository();
     mockFirebaseCrashlytics = MockFirebaseCrashlytics();
     mockFirebaseAuth = MockFirebaseAuth();
@@ -51,7 +47,6 @@ void main() {
       mockEmailAndPasswordAuthRepository,
       mockGoogleAuthRepository,
       mockUserRepository,
-      mockUserIconRepository,
       logger,
       mockFirebaseCrashlytics,
       mockFirebaseAuth,
@@ -77,8 +72,6 @@ void main() {
         when(mockUser.displayName).thenReturn('dummyName');
         when(mockUser.photoURL).thenReturn('http://example.com');
         when(mockUserCredential.user).thenReturn(mockUser);
-        when(mockUserIconRepository.loadIconImage(''))
-            .thenAnswer((_) async => Future.value(BitmapDescriptor.defaultMarker));
         when(mockGoogleAuthRepository.signIn()).thenAnswer((_) => Future.value(mockUserCredential));
         defaultMockSignInWithCredentialUser(
           mockUserRepository,
@@ -100,15 +93,12 @@ void main() {
           verify(mockGoogleAuthRepository.signIn()).called(1);
           verify(mockFirebaseCrashlytics.setUserIdentifier(userId)).called(1);
           verify(mockUserRepository.get(userId)).called(1);
-          verifyNever(mockUserIconRepository.loadIconImage(''));
           verifyNever(mockUserRepository.update(any)).called(0); // ユーザが存在していたので更新は実行されない
         });
 
         test('ユーザが存在しないため、作成してサインインできる', () async {
           // given
           when(mockUserRepository.get(userId)).thenAnswer((_) => Future.value(null));
-          when(mockUserIconRepository.loadIconImage('http://example.com'))
-              .thenAnswer((_) async => Future.value(BitmapDescriptor.defaultMarker));
 
           final expected = defaultUser(id: userId).copyWith(
             nickname: '',
@@ -206,8 +196,6 @@ void main() {
       const password = 'Passw0rd123';
       group('正常系', () {
         setUp(() {
-          when(mockUserIconRepository.loadIconImage(''))
-              .thenAnswer((_) async => Future.value(BitmapDescriptor.defaultMarker));
           defaultMockSignInWithEmailAndPassword(
             mockEmailAndPasswordAuthRepository,
             mockUserRepository,
@@ -233,7 +221,6 @@ void main() {
               .called(1);
           verify(mockFirebaseCrashlytics.setUserIdentifier(userId)).called(1);
           verify(mockUserRepository.get(userId)).called(1);
-          verifyNever(mockUserIconRepository.loadIconImage(''));
           verifyNever(mockUserRepository.update(any)).called(0); // ユーザが存在していたので更新は実行されない
         });
       });
@@ -264,8 +251,6 @@ void main() {
       const password = 'Passw0rd123';
       group('正常系', () {
         setUp(() {
-          when(mockUserIconRepository.loadIconImage(''))
-              .thenAnswer((_) async => Future.value(BitmapDescriptor.defaultMarker));
           defaultMockSignInWithEmailAndPassword(
             mockEmailAndPasswordAuthRepository,
             mockUserRepository,
@@ -298,7 +283,6 @@ void main() {
               .called(1);
           verify(mockFirebaseCrashlytics.setUserIdentifier(userId)).called(1);
           verify(mockUserRepository.get(userId)).called(1);
-          verifyNever(mockUserIconRepository.loadIconImage(''));
           verifyNever(mockUserRepository.update(any)).called(0); // ユーザが存在していたので更新は実行されない
         });
       });

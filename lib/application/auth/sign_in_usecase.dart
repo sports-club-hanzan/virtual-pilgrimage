@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtualpilgrimage/application/auth/auth_repository.dart';
 import 'package:virtualpilgrimage/application/auth/sign_in_interactor.dart';
-import 'package:virtualpilgrimage/domain/user/user_icon_repository.dart';
 import 'package:virtualpilgrimage/domain/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_auth_provider.dart';
@@ -13,7 +12,6 @@ final signInUsecaseProvider = Provider.autoDispose<SignInUsecase>(
     ref.watch(emailAndPasswordAuthRepositoryProvider),
     ref.watch(googleAuthRepositoryProvider),
     ref.watch(userRepositoryProvider),
-    ref.watch(userIconRepositoryProvider),
     ref.watch(loggerProvider),
     ref.watch(firebaseCrashlyticsProvider),
     ref.watch(firebaseAuthProvider),
