@@ -36,5 +36,5 @@ Runner/GeneratedPluginRegistrant.*
 # 環境変数をアウトプットするファイルを除外
 Flutter/EnvironmentVariables.xcconfig
 # 各環境からコピーしてくるファイルを除外
-./firebase_app_id_file.json
+firebase_app_id_file.json
 Runner/GoogleService-Info.plist
