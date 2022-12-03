@@ -33,6 +33,7 @@ void main() {
           ),
         ),
       );
+      expect(find.text('1番札所'), findsOneWidget);
       expect(find.text('霊山寺'), findsOneWidget);
       // スクロールしないと見えないはず
       expect(find.text('大窪寺'), findsNothing);
@@ -42,7 +43,7 @@ void main() {
 
     testWidgets('スクロールすると次の札所情報が表示される', (widgetTester) async {
       await mockNetworkImagesFor(
-            () => widgetTester.pumpWidget(
+        () => widgetTester.pumpWidget(
           wrapMaterialApp(
             mockedProviderScope(
               const TemplePage(),
@@ -64,6 +65,8 @@ void main() {
       // 末尾のお寺情報が見えているはず
       expect(itemFinder, findsOneWidget);
       // 期待する情報が見えているか検証
+      expect(find.text('28番札所'), findsOneWidget);
+      expect(find.text('41番札所'), findsOneWidget);
       expect(find.text('長尾寺'), findsOneWidget);
       expect(find.text('高知県・1400m'), findsOneWidget);
       expect(find.text('愛媛県・1400m'), findsOneWidget);
