@@ -37,7 +37,7 @@ class _TemplePageBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final temples = ref.watch(templeInfoCache);
+    final temples = ref.read(templeInfoCache);
     final user = ref.watch(userStateProvider);
 
     return ListView.builder(
@@ -73,14 +73,28 @@ class _TemplePageBody extends StatelessWidget {
                 color: Colors.black45,
                 colorBlendMode: BlendMode.xor,
               ),
-        title: Text(
-          templeInfo.name,
-          style: const TextStyle(
-            color: Color(0xff7b61ff),
-            fontSize: FontSize.mediumSize,
-            fontFamily: 'Poppins',
-            fontWeight: FontWeight.w500,
-          ),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${templeInfo.id}番札所',
+              style: const TextStyle(
+                color: Colors.black87,
+                fontSize: FontSize.smallSize,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w200,
+              ),
+            ),
+            Text(
+              templeInfo.name,
+              style: const TextStyle(
+                color: Color(0xff7b61ff),
+                fontSize: FontSize.mediumSize,
+                fontFamily: 'Poppins',
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
         ),
         subtitle: Text(
           '${templeInfo.prefecture}・${templeInfo.distance}m',
