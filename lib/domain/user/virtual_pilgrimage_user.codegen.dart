@@ -197,4 +197,6 @@ class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
         userIconUrl: userIconUrl,
         updatedAt: CustomizableDateTime.current,
       );
+
+  VirtualPilgrimageUser toDelete() => copyWith(userStatus: UserStatus.deleted);
 }

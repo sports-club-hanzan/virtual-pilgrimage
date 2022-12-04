@@ -221,12 +221,23 @@ void main() {
     });
 
     group('delete', () {
-      final user = DeletedUser(id: 'dummyId', deletedAt: CustomizableDateTime.current);
-      final MockDocumentReference<Map<String, dynamic>> mockDeletedUserMapDocumentReference = MockDocumentReference();
+      final user = defaultUser();
+      final deletedUser = DeletedUser(id: 'dummyId', deletedAt: CustomizableDateTime.current);
+      final MockCollectionReference<Map<String, dynamic>> mockDeletedUserCollectionReference =
+          MockCollectionReference();
+      final MockDocumentReference<Map<String, dynamic>> mockDeletedUserMapDocumentReference =
+          MockDocumentReference();
       setUp(() {
-        when(mockFirebaseFirestore.collection('deleted_users')).thenReturn(mockCollectionReference);
-        when(mockCollectionReference.doc(user.id)).thenReturn(mockDeletedUserMapDocumentReference);
-        when(mockDeletedUserMapDocumentReference.set(user.toJson())).thenAnswer((_) => Future.value());
+        when(mockFirebaseFirestore.runTransaction<void>(any)).thenAnswer((_) => Future.value());
+        when(mockFirebaseFirestore.collection('users')).thenReturn(mockCollectionReference);
+        when(mockCollectionReference.doc(user.id)).thenReturn(mockMapDocumentReference);
+        when(mockMapDocumentReference.set(user.toJson())).thenAnswer((_) => Future.value());
+        when(mockFirebaseFirestore.collection('deleted_users'))
+            .thenReturn(mockDeletedUserCollectionReference);
+        when(mockDeletedUserCollectionReference.doc(deletedUser.id))
+            .thenReturn(mockDeletedUserMapDocumentReference);
+        when(mockDeletedUserMapDocumentReference.set(deletedUser.toJson()))
+            .thenAnswer((_) => Future.value());
         when(
           mockDeletedUserMapDocumentReference.withConverter<DeletedUser>(
             fromFirestore: anyNamed('fromFirestore'),
@@ -241,8 +252,9 @@ void main() {
           await target.delete(user);
 
           // then
+          verify(mockFirebaseFirestore.collection('users')).called(1);
           verify(mockFirebaseFirestore.collection('deleted_users')).called(1);
-          verify(mockDeletedUserMapDocumentReference.set(user.toJson())).called(1);
+          verify(mockFirebaseFirestore.runTransaction<void>(any)).called(1);
         });
       });
     });
