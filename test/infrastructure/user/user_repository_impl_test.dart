@@ -7,6 +7,7 @@ import 'package:virtualpilgrimage/application/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/pilgrimage_info.codegen.dart';
+import 'package:virtualpilgrimage/domain/user/deleted_user.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/user/user_repository_impl.dart';
 
@@ -23,6 +24,7 @@ void main() {
   late MockDocumentSnapshot<VirtualPilgrimageUser> mockDocumentSnapshot;
   late MockCollectionReference<Map<String, dynamic>> mockCollectionReference;
   late MockDocumentReference<VirtualPilgrimageUser> mockUserDocumentReference;
+  late MockDocumentReference<DeletedUser> mockDeletedUserDocumentReference;
   late MockDocumentReference<Map<String, dynamic>> mockMapDocumentReference;
   late MockQuery<Map<String, dynamic>> mockQuery;
   late MockQuery<VirtualPilgrimageUser> mockQueryDomainUser;
@@ -38,6 +40,7 @@ void main() {
     mockDocumentSnapshot = MockDocumentSnapshot();
     mockCollectionReference = MockCollectionReference();
     mockUserDocumentReference = MockDocumentReference();
+    mockDeletedUserDocumentReference = MockDocumentReference();
     mockMapDocumentReference = MockDocumentReference();
     mockQuery = MockQuery();
     mockQueryDomainUser = MockQuery();
@@ -213,6 +216,33 @@ void main() {
 
           // then
           expect(actual, null);
+        });
+      });
+    });
+
+    group('delete', () {
+      final user = DeletedUser(id: 'dummyId', deletedAt: CustomizableDateTime.current);
+      final MockDocumentReference<Map<String, dynamic>> mockDeletedUserMapDocumentReference = MockDocumentReference();
+      setUp(() {
+        when(mockFirebaseFirestore.collection('deleted_users')).thenReturn(mockCollectionReference);
+        when(mockCollectionReference.doc(user.id)).thenReturn(mockDeletedUserMapDocumentReference);
+        when(mockDeletedUserMapDocumentReference.set(user.toJson())).thenAnswer((_) => Future.value());
+        when(
+          mockDeletedUserMapDocumentReference.withConverter<DeletedUser>(
+            fromFirestore: anyNamed('fromFirestore'),
+            toFirestore: anyNamed('toFirestore'),
+          ),
+        ).thenReturn(mockDeletedUserDocumentReference);
+      });
+
+      group('正常系', () {
+        test('削除したいユーザ情報を作成', () async {
+          // when
+          await target.delete(user);
+
+          // then
+          verify(mockFirebaseFirestore.collection('deleted_users')).called(1);
+          verify(mockDeletedUserMapDocumentReference.set(user.toJson())).called(1);
         });
       });
     });

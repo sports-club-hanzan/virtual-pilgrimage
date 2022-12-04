@@ -1,4 +1,5 @@
 import 'package:virtualpilgrimage/application/user/user_repository.dart';
+import 'package:virtualpilgrimage/domain/user/deleted_user.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 
 /// テストで利用する UserRepository の Fake
@@ -19,6 +20,11 @@ class FakeUserRepository implements UserRepository {
 
   @override
   Future<void> update(VirtualPilgrimageUser user) {
+    return Future.value();
+  }
+
+  @override
+  Future<void> delete(DeletedUser user) {
     return Future.value();
   }
 }

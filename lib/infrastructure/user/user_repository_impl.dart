@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:logger/logger.dart';
 import 'package:virtualpilgrimage/application/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
+import 'package:virtualpilgrimage/domain/user/deleted_user.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firestore_collection_path.dart';
 
@@ -81,5 +82,27 @@ class UserRepositoryImpl extends UserRepository {
       return null;
     }
     return snapshot.docs.first.data();
+  }
+
+  @override
+  Future<void> delete(DeletedUser user) async {
+    try {
+      // 削除済みユーザ一覧のcollectionを新規作成するだけ
+      // cloud function側でデータが作成されたhookを受け取ってユーザ情報を削除する
+      await _firestoreClient
+          .collection(FirestoreCollectionPath.deletedUsers)
+          .doc(user.id)
+          .set(user.toJson());
+    } on FirebaseException catch (e) {
+      throw DatabaseException(
+        message: 'Failed with error [code][${e.code}][message][${e.message}]',
+        cause: e,
+      );
+    } on Exception catch (e) {
+      throw DatabaseException(
+        message: 'unexpected error ${e.toString()}',
+        cause: e,
+      );
+    }
   }
 }
