@@ -12,6 +12,11 @@ class TempleDetailDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 画像が表示できない時にエラーとならないよう適当な画像を表示できるようにしておく
+    final imagePath = templeInfo.images.isNotEmpty
+        ? templeInfo.images[0]
+        : 'https://firebasestorage.googleapis.com/v0/b/virtual-pilgrimage-dev.appspot.com/o/temples%2F1%2F1.jpeg?alt=media&token=b3fe42f9-b94b-43f2-8a5d-b2f217be541f';
+
     return AlertDialog(
       content: DecoratedBox(
         decoration: const BoxDecoration(color: Colors.white),
@@ -21,9 +26,7 @@ class TempleDetailDialog extends StatelessWidget {
           height: 400,
           child: ListView(
             children: [
-              Center(
-                child: Image.network(templeInfo.images[0]),
-              ),
+              Center(child: Image.network(imagePath)),
               Text(templeInfo.knowledge),
             ],
           ),
