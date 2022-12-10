@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 
 part 'delete_user_result.codegen.freezed.dart';
 

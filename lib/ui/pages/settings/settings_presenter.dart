@@ -13,6 +13,7 @@ import 'package:virtualpilgrimage/application/user/delete/delete_user_usecase.da
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/router.dart';
+import 'package:virtualpilgrimage/ui/components/bottom_navigation.dart';
 import 'package:virtualpilgrimage/ui/pages/settings/settings_state.codegen.dart';
 
 import 'components/delete_user_dialog.dart';
@@ -42,8 +43,10 @@ class SettingsPresenter extends StateNotifier<SettingsState> {
   Future<void> openMailerForInquiry() async {
     String? encodeQueryParameters(Map<String, String> params) {
       return params.entries
-          .map((MapEntry<String, String> e) =>
-              '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+          .map(
+            (MapEntry<String, String> e) =>
+                '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}',
+          )
           .join('&');
     }
 
@@ -72,6 +75,8 @@ class SettingsPresenter extends StateNotifier<SettingsState> {
   Future<void> logout() async {
     unawaited(_analytics.logEvent(eventName: AnalyticsEvent.logout));
     await _ref.read(signInUsecaseProvider).logout();
+    // 再ログインした時にpageTypeがずれるので、矯正しておく
+    _ref.read(pageTypeProvider.notifier).state = PageType.home;
     _ref.read(loginStateProvider.notifier).state = null;
     _ref.read(routerProvider).go(RouterPath.signIn);
   }
@@ -91,6 +96,8 @@ class SettingsPresenter extends StateNotifier<SettingsState> {
     unawaited(_analytics.logEvent(eventName: AnalyticsEvent.successDeleteUser));
     unawaited(_crashlytics.log('success delete user [id][${user.id}]'));
     await _ref.read(signInUsecaseProvider).logout();
+    // 再ログインした時にpageTypeがずれるので、矯正しておく
+    _ref.read(pageTypeProvider.notifier).state = PageType.home;
     _ref.read(loginStateProvider.notifier).state = null;
     _router.go(RouterPath.signIn);
   }
