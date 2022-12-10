@@ -24,9 +24,46 @@ final settingsProvider = StateNotifierProvider.autoDispose<SettingsPresenter, Se
 );
 
 class SettingsPresenter extends StateNotifier<SettingsState> {
-  SettingsPresenter(this._ref) : super(const SettingsState());
+  SettingsPresenter(this._ref) : super(const SettingsState()) {
+    _analytics = _ref.read(analyticsProvider);
+    _crashlytics = _ref.read(firebaseCrashlyticsProvider);
+    _router = _ref.read(routerProvider);
+  }
 
   final Ref _ref;
+  late final Analytics _analytics;
+  late final FirebaseCrashlytics _crashlytics;
+  late final GoRouter _router;
+
+  /// 問い合わせのためのメーラーを開く
+  Future<void> openMailerForInquiry() async {
+    String? encodeQueryParameters(Map<String, String> params) {
+      return params.entries
+          .map((MapEntry<String, String> e) =>
+              '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+          .join('&');
+    }
+
+    const address = 'pilgrimage.virtual@gmail.com';
+    final Uri uri = Uri(
+      scheme: 'mailto',
+      path: address,
+      query: encodeQueryParameters(<String, String>{
+        'subject': '巡礼ウォークについての問い合わせ',
+      }),
+    );
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      // エラー処理
+    }
+  }
+
+  /// ユーザ情報編集ページに遷移
+  Future<void> moveEditUserInfoPage() async {
+    unawaited(_analytics.logEvent(eventName: AnalyticsEvent.moveEditPage));
+    _ref.read(routerProvider).push(RouterPath.edit);
+  }
 
   /// ログアウト処理を行う
   Future<void> logout() async {

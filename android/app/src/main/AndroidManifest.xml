@@ -37,6 +37,12 @@
             android:value="${GOOGLE_MAP_API_KEY}" />
 
     </application>
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="mailto" />
+        </intent>
+    </queries>
 
     <!-- permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
