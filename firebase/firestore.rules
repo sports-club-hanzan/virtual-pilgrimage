@@ -25,7 +25,7 @@ service cloud.firestore {
 
         match /users/{userId} {
             allow create: if isUserAuthenticated(userId)
-                && (!isContainKeyInResourceData('nickname') || (request.resource.data.nickname is string && 6 <= request.resource.data.nickname.size() && request.resource.data.nickname.size() <= 16))
+                && (isContainKeyInResourceData('nickname') || (request.resource.data.nickname is string && 6 <= request.resource.data.nickname.size() && request.resource.data.nickname.size() <= 16))
                 && (isContainKeyInResourceData('email') && request.resource.data.email is string && isEmail(request.resource.data.email))
                 && (isContainKeyInResourceData('gender') && request.resource.data.gender is int && 0 <= request.resource.data.gender && request.resource.data.gender <= 3)
                 ;
@@ -35,6 +35,16 @@ service cloud.firestore {
 
         match /users/{document=**} {
             allow list: if true;
+        }
+
+        match /temples/{document=**} {
+            allow get: if true;
+            allow list: if true;
+            allow update: if true;
+        }
+
+        match /deleted_users/{userId} {
+            allow create: if isUserAuthenticated(userId);
         }
     }
 }

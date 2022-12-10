@@ -8,7 +8,7 @@ export const deleteUser = defaultFunctions()
     .firestore.document("deleted_users/{docId}")
     .onCreate(async (snap) => {
       const doc = snap.data();
-      const uid = doc.uid as string;
+      const uid = doc.id as string;
 
       const db = getFirestore();
       const storage = getStorage();
@@ -16,7 +16,7 @@ export const deleteUser = defaultFunctions()
       // firestore上のデータ、cloudstorage上のデータ、firebase authentication 上のデータが削除される
       await Promise.all([
         db.doc(`users/${uid}`).delete(),
-        storage.bucket(`users/${uid}`).delete(),
+        storage.bucket(`users/${uid}`).delete({ignoreNotFound: false}),
         auth().deleteUser(uid),
       ]);
     })
