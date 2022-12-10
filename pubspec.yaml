@@ -65,6 +65,7 @@ dependencies:
   google_polyline_algorithm: ^3.1.0
   flutter_toggle_tab: ^1.2.0
   percent_indicator: ^4.2.2
+  settings_ui: ^2.0.2
 
   # health
   health: ^4.3.0

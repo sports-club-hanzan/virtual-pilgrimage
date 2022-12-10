@@ -23,6 +23,12 @@ extension AnalyticsEvent on String {
 
   /// ボトムナビゲーションの押下
   static const pressedBottomNavigation = 'pressed_bottom_navigation';
+
+  /// ユーザ削除の押下
+  static const openDeleteUserDialog = 'open_delete_user_dialog';
+
+  /// ユーザ情報の削除に成功
+  static const successDeleteUser = 'success_delete_user';
 }
 
 final analyticsProvider = Provider<Analytics>(

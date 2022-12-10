@@ -11,6 +11,7 @@ enum PageType {
   home,
   profile,
   // ranking,
+  setting,
 }
 
 class BottomNavigation extends ConsumerWidget {
@@ -37,6 +38,7 @@ class BottomNavigation extends ConsumerWidget {
         icon: const Icon(Icons.account_circle_outlined),
         label: PageType.profile.name,
       ),
+      NavigationDestination(icon: const Icon(Icons.settings_outlined), label: PageType.setting.name)
       // 下記はランキングページ用の設定
       // NavigationDestination(icon: const Icon(Icons.emoji_events_outlined), label: ''),
     ];
@@ -68,6 +70,9 @@ class BottomNavigation extends ConsumerWidget {
                 'previousPagePath': RouterPath.home,
               },
             );
+            break;
+          case PageType.setting:
+            router.goNamed(RouterPath.settings);
             break;
         }
       },
