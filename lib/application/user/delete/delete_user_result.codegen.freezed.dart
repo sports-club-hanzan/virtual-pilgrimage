@@ -17,7 +17,6 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$DeleteUserResult {
   DeleteUserStatus get status => throw _privateConstructorUsedError;
-  VirtualPilgrimageUser? get user => throw _privateConstructorUsedError;
   Exception? get error => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -31,10 +30,7 @@ abstract class $DeleteUserResultCopyWith<$Res> {
           DeleteUserResult value, $Res Function(DeleteUserResult) then) =
       _$DeleteUserResultCopyWithImpl<$Res, DeleteUserResult>;
   @useResult
-  $Res call(
-      {DeleteUserStatus status, VirtualPilgrimageUser? user, Exception? error});
-
-  $VirtualPilgrimageUserCopyWith<$Res>? get user;
+  $Res call({DeleteUserStatus status, Exception? error});
 }
 
 /// @nodoc
@@ -51,7 +47,6 @@ class _$DeleteUserResultCopyWithImpl<$Res, $Val extends DeleteUserResult>
   @override
   $Res call({
     Object? status = null,
-    Object? user = freezed,
     Object? error = freezed,
   }) {
     return _then(_value.copyWith(
@@ -59,27 +54,11 @@ class _$DeleteUserResultCopyWithImpl<$Res, $Val extends DeleteUserResult>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as DeleteUserStatus,
-      user: freezed == user
-          ? _value.user
-          : user // ignore: cast_nullable_to_non_nullable
-              as VirtualPilgrimageUser?,
       error: freezed == error
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
               as Exception?,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $VirtualPilgrimageUserCopyWith<$Res>? get user {
-    if (_value.user == null) {
-      return null;
-    }
-
-    return $VirtualPilgrimageUserCopyWith<$Res>(_value.user!, (value) {
-      return _then(_value.copyWith(user: value) as $Val);
-    });
   }
 }
 
@@ -91,11 +70,7 @@ abstract class _$$_DeleteUserResultCopyWith<$Res>
       __$$_DeleteUserResultCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {DeleteUserStatus status, VirtualPilgrimageUser? user, Exception? error});
-
-  @override
-  $VirtualPilgrimageUserCopyWith<$Res>? get user;
+  $Res call({DeleteUserStatus status, Exception? error});
 }
 
 /// @nodoc
@@ -110,7 +85,6 @@ class __$$_DeleteUserResultCopyWithImpl<$Res>
   @override
   $Res call({
     Object? status = null,
-    Object? user = freezed,
     Object? error = freezed,
   }) {
     return _then(_$_DeleteUserResult(
@@ -118,10 +92,6 @@ class __$$_DeleteUserResultCopyWithImpl<$Res>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as DeleteUserStatus,
-      user: freezed == user
-          ? _value.user
-          : user // ignore: cast_nullable_to_non_nullable
-              as VirtualPilgrimageUser?,
       error: freezed == error
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
@@ -133,19 +103,16 @@ class __$$_DeleteUserResultCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_DeleteUserResult extends _DeleteUserResult {
-  const _$_DeleteUserResult({required this.status, this.user, this.error})
-      : super._();
+  const _$_DeleteUserResult({required this.status, this.error}) : super._();
 
   @override
   final DeleteUserStatus status;
-  @override
-  final VirtualPilgrimageUser? user;
   @override
   final Exception? error;
 
   @override
   String toString() {
-    return 'DeleteUserResult(status: $status, user: $user, error: $error)';
+    return 'DeleteUserResult(status: $status, error: $error)';
   }
 
   @override
@@ -154,12 +121,11 @@ class _$_DeleteUserResult extends _DeleteUserResult {
         (other.runtimeType == runtimeType &&
             other is _$_DeleteUserResult &&
             (identical(other.status, status) || other.status == status) &&
-            (identical(other.user, user) || other.user == user) &&
             (identical(other.error, error) || other.error == error));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, status, user, error);
+  int get hashCode => Object.hash(runtimeType, status, error);
 
   @JsonKey(ignore: true)
   @override
@@ -171,14 +137,11 @@ class _$_DeleteUserResult extends _DeleteUserResult {
 abstract class _DeleteUserResult extends DeleteUserResult {
   const factory _DeleteUserResult(
       {required final DeleteUserStatus status,
-      final VirtualPilgrimageUser? user,
       final Exception? error}) = _$_DeleteUserResult;
   const _DeleteUserResult._() : super._();
 
   @override
   DeleteUserStatus get status;
-  @override
-  VirtualPilgrimageUser? get user;
   @override
   Exception? get error;
   @override
