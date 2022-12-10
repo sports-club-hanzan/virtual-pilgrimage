@@ -103,9 +103,8 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>(
       GoRoute(
         name: RouterPath.settings,
         path: RouterPath.settings,
-        builder: (BuildContext context, GoRouterState state) {
-          return const SettingsPage();
-        },
+        pageBuilder: (BuildContext context, GoRouterState state) =>
+            zeroTransitionPage(const SettingsPage(), context),
       ),
     ],
     redirect: (BuildContext context, GoRouterState state) {

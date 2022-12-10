@@ -38,9 +38,14 @@ class DeleteUserDialog extends ConsumerWidget {
                   style: Theme.of(context).textTheme.headline5,
                 ),
                 const SizedBox(height: 16),
+                // MEMO: '''で改行を表現しているので、歪だがこのままにしておく必要がある
                 Text(
-                  '元に戻せませんがよろしいでしょうか？',
-                  style: Theme.of(context).textTheme.bodyText1,
+                  '''以下の情報を削除します。
+元に戻せませんがよろしいでしょうか？''',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.error,
+                    fontWeight: FontWeight.bold,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 16),
