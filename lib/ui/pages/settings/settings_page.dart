@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:virtualpilgrimage/ui/components/bottom_navigation.dart';
-import 'package:virtualpilgrimage/ui/components/molecules/my_drawer.dart';
 import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
 import 'package:virtualpilgrimage/ui/pages/settings/settings_presenter.dart';
 
@@ -12,11 +11,9 @@ class SettingsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      key: MyDrawer.globalScaffoldKey,
       appBar: const MyAppBar(),
       body: _SettingsPageBody(ref),
       bottomNavigationBar: const BottomNavigation(),
-      endDrawer: const MyDrawer(),
     );
   }
 }

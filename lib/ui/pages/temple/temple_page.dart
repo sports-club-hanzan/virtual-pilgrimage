@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/temple_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/ui/components/bottom_navigation.dart';
-import 'package:virtualpilgrimage/ui/components/molecules/my_drawer.dart';
 import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
 import 'package:virtualpilgrimage/ui/pages/temple/temple_detail_dialog.dart';
 import 'package:virtualpilgrimage/ui/pages/temple/temple_presenter.dart';
@@ -17,13 +16,11 @@ class TemplePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      key: MyDrawer.globalScaffoldKey,
       appBar: const MyAppBar(),
       body: SafeArea(
         child: _TemplePageBody(ref: ref),
       ),
       bottomNavigationBar: const BottomNavigation(),
-      endDrawer: const MyDrawer(),
     );
   }
 }

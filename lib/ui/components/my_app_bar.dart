@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
-import 'package:virtualpilgrimage/ui/components/molecules/my_drawer.dart';
 
 class MyAppBar extends ConsumerWidget with PreferredSizeWidget {
   const MyAppBar({this.isLogin = true, super.key});
@@ -13,16 +11,7 @@ class MyAppBar extends ConsumerWidget with PreferredSizeWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final color = Theme.of(context).colorScheme.onPrimaryContainer;
     final textStyle = TextStyle(color: color);
-    return AppBar(
-      title: Text(appTitle, style: textStyle),
-      actions: [
-        if (isLogin)
-          userIcon(
-            ref.watch(userStateProvider)?.userIconUrl,
-            () => MyDrawer.globalScaffoldKey.currentState?.openEndDrawer(),
-          ),
-      ],
-    );
+    return AppBar(title: Text(appTitle, style: textStyle));
   }
 
   Widget userIcon(String? iconUrl, VoidCallback onPressed) {

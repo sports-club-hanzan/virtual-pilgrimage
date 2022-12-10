@@ -5,7 +5,6 @@ import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.da
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/router.dart';
 import 'package:virtualpilgrimage/ui/components/bottom_navigation.dart';
-import 'package:virtualpilgrimage/ui/components/molecules/my_drawer.dart';
 import 'package:virtualpilgrimage/ui/components/molecules/pilgrimage_progress_card.dart';
 import 'package:virtualpilgrimage/ui/components/molecules/profile_health_card.dart';
 import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
@@ -38,7 +37,6 @@ class ProfilePage extends ConsumerWidget {
     final user = ref.watch(profileUserProvider(userId));
 
     return Scaffold(
-      key: MyDrawer.globalScaffoldKey,
       appBar: const MyAppBar(),
       body: SafeArea(
         // TODO(s14t284): loading, error 周りを整理する
@@ -60,7 +58,6 @@ class ProfilePage extends ConsumerWidget {
         ),
       ),
       bottomNavigationBar: const BottomNavigation(),
-      endDrawer: const MyDrawer(),
     );
   }
 }
