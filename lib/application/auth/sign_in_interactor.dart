@@ -11,12 +11,14 @@ import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.da
 enum _LoginMethod {
   emailAndPassword,
   google,
+  apple,
 }
 
 class SignInInteractor extends SignInUsecase {
   SignInInteractor(
     this._emailAndPasswordAuthRepository,
     this._googleAuthRepository,
+    this._appleAuthRepository,
     this._userRepository,
     this._logger,
     this._crashlytics,
@@ -25,6 +27,7 @@ class SignInInteractor extends SignInUsecase {
 
   final AuthRepository _emailAndPasswordAuthRepository;
   final AuthRepository _googleAuthRepository;
+  final AuthRepository _appleAuthRepository;
   final UserRepository _userRepository;
   final Logger _logger;
   final FirebaseCrashlytics _crashlytics;
@@ -36,9 +39,7 @@ class SignInInteractor extends SignInUsecase {
     // Firebase から取得した Credential 情報の null check
     if (credential == null || credential.user == null) {
       const message = 'signin with google result is null';
-      _logger.e(
-        message,
-      );
+      _logger.e(message);
       await _crashlytics.log(message);
       throw SignInException(
         message: message,
@@ -55,6 +56,28 @@ class SignInInteractor extends SignInUsecase {
   }
 
   @override
+  Future<VirtualPilgrimageUser> signInWithApple() async {
+    final credential = await _appleAuthRepository.signIn();
+    // Firebase から取得した Credential 情報の null check
+    if (credential == null || credential.user == null) {
+      const message = 'signin with apple result is null';
+      _logger.e(message);
+      await _crashlytics.log(message);
+      throw SignInException(
+        message: message,
+        status: SignInExceptionStatus.credentialIsNull,
+      );
+    }
+    final credentialUser = credential.user!;
+
+    await _crashlytics.setUserIdentifier(credentialUser.uid);
+    return _signInWithCredentialUser(
+      credentialUser,
+      _LoginMethod.apple,
+    );
+  }
+
+  @override
   Future<VirtualPilgrimageUser> signInWithEmailAndPassword(
     String email,
     String password,
@@ -66,9 +89,7 @@ class SignInInteractor extends SignInUsecase {
     // Firebase から取得した Credential 情報の null check
     if (credential == null || credential.user == null) {
       const message = 'signin with google result is null';
-      _logger.e(
-        message,
-      );
+      _logger.e(message);
       await _crashlytics.log(message);
       throw SignInException(
         message: message,
