@@ -36,11 +36,10 @@ class _SettingsPageBody extends StatelessWidget {
         SettingsSection(
           title: const Text('基本設定'),
           tiles: <SettingsTile>[
-            if (version.value != null)
-              SettingsTile(
-                title: const Text('バージョン'),
-                value: Text(version.value!),
-              ),
+            SettingsTile(
+              title: const Text('バージョン'),
+              value: Text(version.value ?? '読み込み中'),
+            ),
           ],
         ),
         SettingsSection(
