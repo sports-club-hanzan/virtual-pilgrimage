@@ -8,11 +8,13 @@ import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
 import 'package:virtualpilgrimage/domain/exception/sign_in_exception.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 
-enum _LoginMethod {
+enum LoginMethod {
   emailAndPassword,
   google,
   apple,
 }
+
+typedef SignInMethodType = Future<UserCredential?> Function({String? email, String? password});
 
 class SignInInteractor extends SignInUsecase {
   SignInInteractor(
@@ -35,46 +37,12 @@ class SignInInteractor extends SignInUsecase {
 
   @override
   Future<VirtualPilgrimageUser> signInWithGoogle() async {
-    final credential = await _googleAuthRepository.signIn();
-    // Firebase から取得した Credential 情報の null check
-    if (credential == null || credential.user == null) {
-      const message = 'signin with google result is null';
-      _logger.e(message);
-      await _crashlytics.log(message);
-      throw SignInException(
-        message: message,
-        status: SignInExceptionStatus.credentialIsNull,
-      );
-    }
-    final credentialUser = credential.user!;
-
-    await _crashlytics.setUserIdentifier(credentialUser.uid);
-    return _signInWithCredentialUser(
-      credentialUser,
-      _LoginMethod.google,
-    );
+    return _signIn(_googleAuthRepository.signIn, LoginMethod.google);
   }
 
   @override
   Future<VirtualPilgrimageUser> signInWithApple() async {
-    final credential = await _appleAuthRepository.signIn();
-    // Firebase から取得した Credential 情報の null check
-    if (credential == null || credential.user == null) {
-      const message = 'signin with apple result is null';
-      _logger.e(message);
-      await _crashlytics.log(message);
-      throw SignInException(
-        message: message,
-        status: SignInExceptionStatus.credentialIsNull,
-      );
-    }
-    final credentialUser = credential.user!;
-
-    await _crashlytics.setUserIdentifier(credentialUser.uid);
-    return _signInWithCredentialUser(
-      credentialUser,
-      _LoginMethod.apple,
-    );
+    return _signIn(_appleAuthRepository.signIn, LoginMethod.apple);
   }
 
   @override
@@ -82,26 +50,11 @@ class SignInInteractor extends SignInUsecase {
     String email,
     String password,
   ) async {
-    final credential = await _emailAndPasswordAuthRepository.signIn(
+    return _signIn(
+      _emailAndPasswordAuthRepository.signIn,
+      LoginMethod.emailAndPassword,
       email: email,
       password: password,
-    );
-    // Firebase から取得した Credential 情報の null check
-    if (credential == null || credential.user == null) {
-      const message = 'signin with google result is null';
-      _logger.e(message);
-      await _crashlytics.log(message);
-      throw SignInException(
-        message: message,
-        status: SignInExceptionStatus.credentialIsNull,
-      );
-    }
-    final credentialUser = credential.user!;
-
-    await _crashlytics.setUserIdentifier(credentialUser.uid);
-    return _signInWithCredentialUser(
-      credentialUser,
-      _LoginMethod.emailAndPassword,
     );
   }
 
@@ -111,9 +64,29 @@ class SignInInteractor extends SignInUsecase {
     await _firebaseAuth.signOut();
   }
 
+  Future<VirtualPilgrimageUser> _signIn(
+    SignInMethodType f,
+    LoginMethod method, {
+    String? email,
+    String? password,
+  }) async {
+    final credential = await f(email: email, password: password);
+    // Firebase から取得した Credential 情報の null check
+    if (credential == null || credential.user == null) {
+      final message = 'signin with ${method.name} result is null';
+      _logger.e(message);
+      await _crashlytics.log(message);
+      throw SignInException(message: message, status: SignInExceptionStatus.credentialIsNull);
+    }
+    final credentialUser = credential.user!;
+
+    await _crashlytics.setUserIdentifier(credentialUser.uid);
+    return _signInWithCredentialUser(credentialUser, method);
+  }
+
   Future<VirtualPilgrimageUser> _signInWithCredentialUser(
     User credentialUser,
-    _LoginMethod loginMethod,
+    LoginMethod loginMethod,
   ) async {
     final signInMessage = 'signin with $loginMethod'
         '[userId][${credentialUser.uid}]'
