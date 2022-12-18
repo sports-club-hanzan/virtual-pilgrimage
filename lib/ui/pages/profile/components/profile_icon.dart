@@ -31,7 +31,7 @@ class ProfileIcon extends StatelessWidget {
               child: ProfileIconWidget(
                 iconUrl: user.userIconUrl,
                 size: 128,
-                onTap: notifier.updateProfileImage,
+                onTap: () => notifier.updateProfileImage(context),
               ),
             ),
             // ユーザアイコンの編集ボタン

@@ -14,6 +14,7 @@ import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.da
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/router.dart';
 import 'package:virtualpilgrimage/ui/components/bottom_navigation.dart';
+import 'package:virtualpilgrimage/ui/pages/profile/profile_presenter.dart';
 import 'package:virtualpilgrimage/ui/pages/settings/settings_state.codegen.dart';
 
 import 'components/delete_user_dialog.dart';
@@ -69,6 +70,12 @@ class SettingsPresenter extends StateNotifier<SettingsState> {
   Future<void> moveEditUserInfoPage() async {
     unawaited(_analytics.logEvent(eventName: AnalyticsEvent.moveEditPage));
     _ref.read(routerProvider).push(RouterPath.edit);
+  }
+
+  /// プロフィール画像を更新する
+  Future<void> updateProfileImage(BuildContext context) async {
+    // profile_presenter の実装を流用する
+    await _ref.read(profileProvider.notifier).updateProfileImage(context);
   }
 
   /// ログアウト処理を行う
