@@ -51,6 +51,11 @@ class _SettingsPageBody extends StatelessWidget {
               leading: const Icon(Icons.edit_outlined),
             ),
             SettingsTile(
+              title: const Text('プロフィール画像変更'),
+              onPressed: notifier.updateProfileImage,
+              leading: const Icon(Icons.image_outlined),
+            ),
+            SettingsTile(
               title: const Text('ログアウト'),
               onPressed: (BuildContext context) => notifier.logout(),
               leading: const Icon(Icons.logout_outlined),
