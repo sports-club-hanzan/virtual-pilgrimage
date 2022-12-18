@@ -21,4 +21,9 @@ class FakeUserRepository implements UserRepository {
   Future<void> update(VirtualPilgrimageUser user) {
     return Future.value();
   }
+
+  @override
+  Future<void> delete(VirtualPilgrimageUser user) {
+    return Future.value();
+  }
 }

@@ -2,6 +2,7 @@
 extension FirestoreCollectionPath on String {
   static const String users = 'users';
   static const String temples = 'temples';
+  static const String deletedUsers = 'deleted_users';
 
   static String health(String userId) => '$users/$userId/health';
 }

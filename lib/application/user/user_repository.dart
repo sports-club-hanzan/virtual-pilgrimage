@@ -17,4 +17,6 @@ abstract class UserRepository {
   Future<VirtualPilgrimageUser?> findWithNickname(String nickname);
 
   Future<void> update(VirtualPilgrimageUser user);
+
+  Future<void> delete(VirtualPilgrimageUser user);
 }
