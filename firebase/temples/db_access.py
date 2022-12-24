@@ -81,7 +81,7 @@ def main():
             u'geoPoint':geoPoint[i],
             u'id':id_,
             u'images':image_path[i],
-            u'stamp_image':stamp_image_path,
+            u'stamp_image':stamp_image_path[i],
             u'name':name[i],
             u'prefecture':prefecture[i],
             u'encodedPoints':str(encoded_points[i]),
@@ -116,10 +116,11 @@ def make_image_path(ids, env: str):
     return image_list
 
 def make_stamp_image_path(ids, env: str):
-    if len(ids) > 0:
-        id_ = ids[0]
-        return f"https://firebasestorage.googleapis.com/v0/b/virtual-pilgrimage-{env}.appspot.com/o/temples%2F{id_}%2Fstamp.jpg?alt=media&token=6fe4c2ed-b204-4837-9c56-3b72f24e1186"
+    image_paths = []
 
-    return ""
+    for id_ in ids:
+        image_paths.append(f"https://firebasestorage.googleapis.com/v0/b/virtual-pilgrimage-{env}.appspot.com/o/temples%2F{id_}%2Fstamp.jpg?alt=media&token=6fe4c2ed-b204-4837-9c56-3b72f24e1186")
+
+    return image_paths
 
 main()
