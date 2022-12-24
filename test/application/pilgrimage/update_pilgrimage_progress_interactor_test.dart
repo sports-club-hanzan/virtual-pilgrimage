@@ -67,11 +67,11 @@ void main() {
 
         final expected = UpdatePilgrimageProgressResult(
           status: UpdatePilgrimageProgressResultStatus.success,
-          reachedPilgrimageIdList: [86, 87, 1],
+          reachedPilgrimageIdList: [87, 88, 2],
           updatedUser: user.copyWith(
             updatedAt: CustomizableDateTime.current,
             pilgrimage: user.pilgrimage.copyWith(
-              nowPilgrimageId: 2, // 86 -> 87 -> 88(スタート地点がリセットされて1) -> 2
+              nowPilgrimageId: 2, // 87 -> 88(スタート地点がリセットされて1) -> 2
               lap: 2, // 88にたどり着いたのでlap++
               movingDistance: 1600 + 100, // (27000 - (7000 + 17000 + 1400)) + 100(元々ユーザ情報に保持していた距離)
               updatedAt: CustomizableDateTime.current,
@@ -140,6 +140,7 @@ void setupTempleRepositoryMock(TempleRepository templeRepository) {
         prefecture: '香川県',
         encodedPoints:
             'k}npE{`~qXCAGOESICuAJIHIPQJNn@N|@n@vEDRHl@XC`CUjAMrCStFEfB?L??IBGPBfBBhB?tD?xBKn@G~@ORMRATIxAq@t@WdAg@bAg@`@Y|@_@\\MTGfBc@pDo@jIoAbBOv@Kj@Ij@OXBd@Ib@@tCGnFOfAA`@@zAPn@RdAd@lBn@bAXnE`AzCn@dCj@f@Pt@Z`A\\~@PfAB|CApDAbKOzBEnBOzBEbADfBPnDn@zAVvD`AtCt@|Cz@`Cv@`NlEfEvAz@T|AVlAJ|ADjHTl@FPCf@@p@Dj@@tABxCJdFN`ABbAAj@Gh@MPIZOBHDN@N|@Hh@FDFCl@AxAPx@N^^^H@ZA|Cd@TH@D`AN`@Df@`DNnADbBn@E`AA|@@d@BhBVnAHrBJ`AJZD?Pt@Ft@HlBD~@D~AIpA?n@ElE?r@@JAHGLa@bAEbAE`ABRATEr@YJCbACV?@a@|AJb@@lAKpDBH??LAb@AbBA^w@GUAAA@m@',
+        stampImage: '1.jpg',
       ),
     ),
   );
@@ -155,6 +156,7 @@ void setupTempleRepositoryMock(TempleRepository templeRepository) {
         prefecture: '香川県',
         encodedPoints:
             'utcpE{k|qX?n@lAH?Rb@?dABn@E^@HD|BDzDA`CAvCHtEPp@WbBATC~BLn@?n@GTKfAONAFi@?}AzEs@pBDnABxASb@Cn@F~Cb@`CLfFa@jGYtFz@dALr@@|@GlAUfO}EtIoC`EkAhBa@bBUfFi@pI{@v@El@Dr@JvA\\fElBfPdIhJxElAj@n@P~@Lv@?|@K~Ac@~DmAnA[rA@~@TbAh@|A|@~@XnAPpBGvCE`DQlDQn@Yt@g@l@Wv@Kh@?h@Kd@UVUd@e@\\Sf@Oh@Gz@ETGZQLMJBf@Dn@ETOf@OH?HJTz@NHTGBMW_BQyAIg@DKNCFP?VJX~@hAR@XE^HZ?ZYLCv@Db@Eb@Dn@Rv@D`@Gj@Gf@Bj@EPCp@Df@Df@ZzAG|AOTUXk@n@k@FYIi@Sk@Ca@Rc@RULGLBBNCZI`@d@l@l@b@x@^LV?ZELWPMRDRTT~@z@^P^F`BEZNRRZDfAYjAGl@DVFP@DGCUu@_@w@sBG_@@ILEDBFTBNTZ^V\\LTAZKTU?i@Es@BWJIXAl@Pd@Bj@GREl@Y\\WPe@l@aAPsAZu@F[XS\\WNSnAY`@HHJLTNHZKr@c@^Mf@D^DNLRb@TJf@HXNTVn@F`A@|@Xj@X`@Hz@BrANhBPxBVnAEdAG|@FpABj@@TLj@\\x@Fl@Hf@E^Hp@XdAp@`@Nn@_AVWRw@b@k@p@}@HSXRpA^hBVf@A^Kj@c@xCkD|AcBx@_@n@Et@Hh@RrDvB~@\\nAJhBJ`@Fd@PhGtCvBhA^Zz@dAHb@RVNIZG~@B?fA?v@JhAp@rBXp@HHVL~@LXAbA[r@Ux@?tBhAZJLJPPn@?`BDl@EdA]LYPuBTy@|@yA\\i@^[LKBQ?QNSPi@VsAPo@rA{BZk@Je@BkGXuIJkBZqA\\k@`@c@~Ay@lBs@jEgBjA_A`@i@j@sAVmAHaA@yDPy@Ru@T[j@[fBSz@Kd@Ov@e@jA]b@Ov@o@NULeA^iER_AZy@jAuBDcBIo@s@uA[i@IIa@Ym@i@k@O{@i@wAsAwAk@yEqBuC{@SO{A_DoBmCgCwEo@cAG[Eo@MW}Au@KMMeAMUUGk@W[k@I{@MWiBwAw@q@UE]KMQQs@MYaAc@k@c@Q]CQGQeAo@sAiAOUOo@Iw@B_@Cq@OiAa@w@kBwCmBmBi@m@Uk@EQMEgACe@Is@_@WYy@{@q@g@KOO_Aa@{A]u@Qm@@e@DIAOK_@Iw@Gu@i@eF[sAUq@c@?G??F?JNb@LXEC][_@IIBMV?JJDL@',
+        stampImage: '1.jpg',
       ),
     ),
   );
@@ -170,6 +172,7 @@ void setupTempleRepositoryMock(TempleRepository templeRepository) {
         prefecture: '徳島県',
         encodedPoints:
             'mwnoEuc}sXJ?z@Z\\D?h@@|@TtBPx@rAtD\\pALh@X|B\\hDHtABf@Jf@Bh@HTBTRtBl@hFRdA\\lAHPx@vCl@xBx@vB^l@bAxAx@v@GHC|@?\\Cn@e@Ny@TOx@O?E@In@',
+        stampImage: '1.jpg',
       ),
     ),
   );
@@ -185,6 +188,7 @@ void setupTempleRepositoryMock(TempleRepository templeRepository) {
         prefecture: '徳島県',
         encodedPoints:
             '{bnoEmszsXLq@H?F?@CLw@~Aa@By@BsAFITPZVn@^dAf@~@\\jExANF?DPn@Xl@rAxCN`@Fj@@t@FnABNLd@z@xB\\hAR\\^Tf@T^\\r@|@lB~C~@hBx@~ARv@Ph@r@vANj@Bh@@jATrC?dAOrAG\\?^F\\Lb@h@bAHZB`@`AjBnA`CTzAJ~@?f@Cr@OlBA`APfC@f@HPFHMLQV_@v@Sr@If@Et@ClA@d@Fr@f@hDRnANfBL`CHh@BLHNl@VPL|AhAHARf@FTDr@Dj@Hh@h@vAj@lAQ@oAMG@ABElAAfAALSAm@CSCc@SOI',
+        stampImage: '1.jpg',
       ),
     ),
   );

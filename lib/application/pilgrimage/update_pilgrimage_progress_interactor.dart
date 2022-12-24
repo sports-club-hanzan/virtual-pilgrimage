@@ -126,7 +126,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
       );
       while (movingDistance >= nowTempleInfo.distance) {
         // 引数で与えた到達した札所をもらうid
-        reachedPilgrimageIdList.add(nowTempleInfo.id);
+        reachedPilgrimageIdList.add(_nextPilgrimageNumber(nowTempleInfo.id));
         // 札所までの距離を移動距離から引いて、札所を更新
         movingDistance -= nowTempleInfo.distance;
         nextPilgrimageId = _nextPilgrimageNumber(nextPilgrimageId);

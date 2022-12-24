@@ -21,6 +21,7 @@ void main() {
       distance: 75400,
       geoPoint: GeoPoint(33.73244444, 134.5274722),
       encodedPoints: '',
+      stampImage: '1.png',
     );
     templeRepository = FakeTempleRepository(templeInfo);
     final container = mockedProviderContainer(

@@ -121,5 +121,6 @@ TempleInfo defaultTempleInfo([
     distance: 1000,
     encodedPoints:
         'mwnoEuc}sXJ?z@Z\\D?h@@|@TtBPx@rAtD\\pALh@X|B\\hDHtABf@Jf@Bh@HTBTRtBl@hFRdA\\lAHPx@vCl@xBx@vB^l@bAxAx@v@GHC|@?\\Cn@e@Ny@TOx@O?E@In@',
+    stampImage: '1.png',
   );
 }

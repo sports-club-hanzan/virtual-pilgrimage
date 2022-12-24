@@ -98,5 +98,6 @@ TempleInfo createTempleInfo({required int id, required String name, String prefe
     distance: 1400,
     encodedPoints: '',
     geoPoint: const GeoPoint(34, 134),
+    stampImage: '1.png',
   );
 }
