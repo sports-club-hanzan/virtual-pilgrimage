@@ -19,7 +19,7 @@ Future<void> main() async {
   await Firebase.initializeApp(options: _getFirebaseOptions(flavor));
   // flutter側で検知されるエラーをCrashlyticsに送信
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
-  runApp(const ProviderScope(child: _App(flavor: flavor,)));
+  runApp(const ProviderScope(child: _App(flavor: flavor)));
 }
 
 class _App extends ConsumerWidget {
