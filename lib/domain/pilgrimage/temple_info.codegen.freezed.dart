@@ -230,8 +230,7 @@ class _$_TempleInfo extends _TempleInfo {
       required this.distance,
       required this.encodedPoints,
       this.knowledge = 'お寺の詳細情報',
-      this.stampImage =
-          'https://firebasestorage.googleapis.com/v0/b/virtual-pilgrimage-dev.appspot.com/o/temples%2F1%2Fstamp.jpeg?alt=media&token=b3fe42f9-b94b-43f2-8a5d-b2f217be541f',
+      required this.stampImage,
       @JsonKey(fromJson: _GeoPointConverter.geoPointFromJson, toJson: _GeoPointConverter.geoPointToJson)
           required this.geoPoint,
       final List<String> images = const []})
@@ -265,7 +264,6 @@ class _$_TempleInfo extends _TempleInfo {
   final String knowledge;
 // スタンプの画像パス
   @override
-  @JsonKey()
   final String stampImage;
 // お寺の座標
   @override
@@ -347,7 +345,7 @@ abstract class _TempleInfo extends TempleInfo {
       required final int distance,
       required final String encodedPoints,
       final String knowledge,
-      final String stampImage,
+      required final String stampImage,
       @JsonKey(fromJson: _GeoPointConverter.geoPointFromJson, toJson: _GeoPointConverter.geoPointToJson)
           required final GeoPoint geoPoint,
       final List<String> images}) = _$_TempleInfo;
