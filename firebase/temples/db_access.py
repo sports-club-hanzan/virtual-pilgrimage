@@ -81,7 +81,7 @@ def main():
             u'geoPoint':geoPoint[i],
             u'id':id_,
             u'images':image_path[i],
-            u'stamp_image':stamp_image_path[i],
+            u'stampImage':stamp_image_path[i],
             u'name':name[i],
             u'prefecture':prefecture[i],
             u'encodedPoints':str(encoded_points[i]),
@@ -110,7 +110,7 @@ def make_image_path(ids, env: str):
 
     # TODO: 1つのパス(1.jpg)に対してのみしか対応できていないので改良必要
     for id_ in ids:
-        image_path = f"https://firebasestorage.googleapis.com/v0/b/virtual-pilgrimage-{env}.appspot.com/o/temples%2F{id_}%2F1.jpg?alt=media&token=6fe4c2ed-b204-4837-9c56-3b72f24e1186"
+        image_path = f"https://firebasestorage.googleapis.com/v0/b/virtual-pilgrimage-{env}.appspot.com/o/temples%2F{id_}%2F1.jpg?alt=media"
         image_list.append([image_path])
 
     return image_list
@@ -119,7 +119,7 @@ def make_stamp_image_path(ids, env: str):
     image_paths = []
 
     for id_ in ids:
-        image_paths.append(f"https://firebasestorage.googleapis.com/v0/b/virtual-pilgrimage-{env}.appspot.com/o/temples%2F{id_}%2Fstamp.jpg?alt=media&token=6fe4c2ed-b204-4837-9c56-3b72f24e1186")
+        image_paths.append(f"https://firebasestorage.googleapis.com/v0/b/virtual-pilgrimage-{env}.appspot.com/o/temples%2F{id_}%2Fstamp.jpg?alt=media")
 
     return image_paths
 
