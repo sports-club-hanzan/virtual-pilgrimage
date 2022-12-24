@@ -1,5 +1,5 @@
-import {config} from "firebase-functions";
-import {initializeApp} from "firebase-admin/app";
+import { initializeApp } from "firebase-admin/app";
+import { config } from "firebase-functions";
 
 initializeApp(config().firebase);
 
