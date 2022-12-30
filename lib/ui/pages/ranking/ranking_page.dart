@@ -1,20 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:virtualpilgrimage/application/raning/ranking_repository.dart';
 import 'package:virtualpilgrimage/domain/ranking/ranking.codegen.dart';
-import 'package:virtualpilgrimage/domain/ranking/ranking_user.codegen.dart';
-import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/ui/components/bottom_navigation.dart';
 import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
-import 'package:virtualpilgrimage/ui/components/profile_icon.dart';
+import 'package:virtualpilgrimage/ui/pages/ranking/components/ranking_records.dart';
 import 'package:virtualpilgrimage/ui/pages/ranking/components/ranking_tab_bars.dart';
 import 'package:virtualpilgrimage/ui/pages/ranking/ranking_presenter.dart';
-
-final rankingProvider = FutureProvider<Ranking>((ref) async {
-  final repository = ref.read(rankingRepositoryProvider);
-  return repository.get();
-});
 
 class RankingPage extends ConsumerStatefulWidget {
   const RankingPage({super.key});
@@ -36,28 +28,32 @@ class _RankingPageState extends ConsumerState<RankingPage> with TickerProviderSt
 
   @override
   Widget build(BuildContext context) {
+    final tabColor = Theme.of(context).colorScheme.onPrimaryContainer;
+
+    // 集計項目に関するTabBar
     final kindTabBar = TabBar(
       controller: _rankingKindTabController,
-      labelColor: Theme.of(context).colorScheme.onPrimaryContainer,
-      indicatorColor: Theme.of(context).colorScheme.onPrimaryContainer,
+      labelColor: tabColor,
+      unselectedLabelColor: tabColor,
+      indicatorColor: tabColor,
       indicatorSize: TabBarIndicatorSize.label,
-      unselectedLabelColor: Theme.of(context).colorScheme.onPrimaryContainer,
       tabs: const [
         Tab(text: '歩数', icon: Icon(Icons.directions_run_rounded)),
         Tab(text: '距離', icon: Icon(Icons.map_outlined)),
       ],
     );
+    // 集計期間に関するTabBar
     final periodTabBar = TabBar(
       controller: _periodTabController,
-      labelColor: Theme.of(context).colorScheme.onSecondaryContainer,
-      unselectedLabelColor: Theme.of(context).colorScheme.onSecondaryContainer,
+      labelColor: tabColor,
+      unselectedLabelColor: tabColor,
+      indicatorColor: tabColor,
+      indicatorSize: TabBarIndicatorSize.label,
       tabs: ref
           .read(rankingPresenterProvider.notifier)
           .periodTabLabels
           .map((l) => Tab(text: l))
           .toList(),
-      indicatorColor: Theme.of(context).colorScheme.secondary,
-      indicatorWeight: 2,
     );
 
     return DefaultTabController(
@@ -107,7 +103,7 @@ class _RankingPageBody extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.only(left: 8, top: 8),
+          padding: const EdgeInsets.all(8),
           child: Text(
             '最終更新日: ${notifier.convertUpdatedTimeToDisplayFormat(ranking.value, RankingPeriod.values[periodTabController.index])} (毎日4時頃更新予定)',
             style: const TextStyle(fontWeight: FontWeight.bold),
@@ -117,9 +113,9 @@ class _RankingPageBody extends StatelessWidget {
           child: TabBarView(
             controller: periodTabController,
             children: [
-              _buildRankingList(context, ref, ranking, kind, RankingPeriod.daily),
-              _buildRankingList(context, ref, ranking, kind, RankingPeriod.weekly),
-              _buildRankingList(context, ref, ranking, kind, RankingPeriod.monthly),
+              _buildRankingRecords(context, ref, ranking, kind, RankingPeriod.daily),
+              _buildRankingRecords(context, ref, ranking, kind, RankingPeriod.weekly),
+              _buildRankingRecords(context, ref, ranking, kind, RankingPeriod.monthly),
             ],
           ),
         ),
@@ -127,44 +123,17 @@ class _RankingPageBody extends StatelessWidget {
     );
   }
 
-  Column _buildRankingList(
+  Column _buildRankingRecords(
     BuildContext context,
     WidgetRef ref,
     AsyncValue<Ranking> ranking,
     RankingKind kind,
     RankingPeriod period,
   ) {
-    final loginUserState = ref.watch(userStateProvider);
     return Column(
       children: [
         ranking.when(
-          data: (ranking) {
-            final viewableRanking =
-                ref.read(rankingPresenterProvider.notifier).selectRanking(ranking, kind, period);
-            return Expanded(
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height / 10 * 6,
-                child: SingleChildScrollView(
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (BuildContext context, int index) {
-                      final isLoginUser = viewableRanking.users[index].userId == loginUserState?.id;
-                      return _buildRankingUser(
-                        context,
-                        ref,
-                        viewableRanking.users,
-                        isLoginUser,
-                        index,
-                        kind,
-                      );
-                    },
-                    itemCount: viewableRanking.users.length,
-                  ),
-                ),
-              ),
-            );
-          },
+          data: (ranking) => RankingRecords(ranking: ranking, kind: kind, period: period),
           // TODO(s14t284): error 時のUIを整理する
           error: (Object error, StackTrace stackTrace) {
             ref.read(firebaseCrashlyticsProvider).recordError(error, stackTrace);
@@ -185,40 +154,6 @@ class _RankingPageBody extends StatelessWidget {
           },
         )
       ],
-    );
-  }
-
-  Widget _buildRankingUser(
-    BuildContext context,
-    WidgetRef ref,
-    List<RankingUser> users,
-    bool isLoginUser,
-    int rank,
-    RankingKind kind,
-  ) {
-    final user = users[rank];
-    final notifier = ref.read(rankingPresenterProvider.notifier);
-    return ListTile(
-      tileColor: isLoginUser ? Theme.of(context).colorScheme.primaryContainer : Colors.white,
-      leading: SizedBox(
-        width: 90,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Text('${rank + 1} 位', style: const TextStyle(fontWeight: FontWeight.bold)),
-            ProfileIconWidget(
-              iconUrl: user.userIconUrl != '' ? user.userIconUrl : notifier.defaultProfileImageUrl,
-              size: 48,
-            ),
-          ],
-        ),
-      ),
-      title: Text(user.nickname),
-      trailing: Text(
-        notifier.convertRankingValueDisplayFormat(user.value, kind),
-        style: const TextStyle(fontWeight: FontWeight.bold),
-      ),
-      onTap: () => notifier.moveProfilePage(user.userId),
     );
   }
 }

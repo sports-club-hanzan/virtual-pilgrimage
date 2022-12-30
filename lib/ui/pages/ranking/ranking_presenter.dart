@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:virtualpilgrimage/application/ranking/ranking_repository.dart';
 import 'package:virtualpilgrimage/domain/ranking/ranking.codegen.dart';
 import 'package:virtualpilgrimage/domain/ranking/ranking_by_period.codegen.dart';
 import 'package:virtualpilgrimage/domain/ranking/ranking_user.codegen.dart';
@@ -13,6 +14,13 @@ enum RankingKind { steps, distances }
 /// ランキングを集計する期間
 enum RankingPeriod { daily, weekly, monthly }
 
+/// ランキング情報を外部通信によって取得するprovider
+final rankingProvider = FutureProvider<Ranking>((ref) async {
+  final repository = ref.read(rankingRepositoryProvider);
+  return repository.get();
+});
+
+/// ランキング情報表示に利用するUIのprovider
 final rankingPresenterProvider =
     StateNotifierProvider.autoDispose<RankingPresenter, RankingState>(RankingPresenter.new);
 
@@ -31,14 +39,14 @@ class RankingPresenter extends StateNotifier<RankingState> {
   RankingUsers selectRanking(Ranking ranking, RankingKind kind, RankingPeriod period) {
     switch (kind) {
       case RankingKind.steps:
-        return selectRankingByPeriod(ranking, period).step;
+        return _selectRankingByPeriod(ranking, period).step;
       case RankingKind.distances:
-        return selectRankingByPeriod(ranking, period).distance;
+        return _selectRankingByPeriod(ranking, period).distance;
     }
   }
 
   /// 参照しているランキング情報の期間を選択する
-  RankingByPeriod selectRankingByPeriod(Ranking ranking, RankingPeriod period) {
+  RankingByPeriod _selectRankingByPeriod(Ranking ranking, RankingPeriod period) {
     switch (period) {
       case RankingPeriod.daily:
         return ranking.daily;
@@ -54,7 +62,7 @@ class RankingPresenter extends StateNotifier<RankingState> {
     if (ranking == null) {
       return '不明';
     }
-    final rankingByPeriod = selectRankingByPeriod(ranking, period);
+    final rankingByPeriod = _selectRankingByPeriod(ranking, period);
     final dateTime = DateTime.fromMillisecondsSinceEpoch(rankingByPeriod.updatedTime);
     return dateFormat.format(dateTime);
   }

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:logger/logger.dart';
-import 'package:virtualpilgrimage/application/raning/ranking_repository.dart';
+import 'package:virtualpilgrimage/application/ranking/ranking_repository.dart';
 import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
 import 'package:virtualpilgrimage/domain/ranking/ranking.codegen.dart';
 import 'package:virtualpilgrimage/domain/ranking/ranking_by_period.codegen.dart';
