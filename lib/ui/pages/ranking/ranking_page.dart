@@ -69,9 +69,15 @@ class _RankingPageState extends ConsumerState<RankingPage> with TickerProviderSt
             controller: _rankingKindTabController,
             children: [
               _RankingPageBody(
-                  ref: ref, periodTabController: _periodTabController, kind: RankingKind.steps),
+                ref: ref,
+                periodTabController: _periodTabController,
+                kind: RankingKind.steps,
+              ),
               _RankingPageBody(
-                  ref: ref, periodTabController: _periodTabController, kind: RankingKind.distances),
+                ref: ref,
+                periodTabController: _periodTabController,
+                kind: RankingKind.distances,
+              ),
             ],
           ),
         ),
@@ -145,7 +151,13 @@ class _RankingPageBody extends StatelessWidget {
                     itemBuilder: (BuildContext context, int index) {
                       final isLoginUser = viewableRanking.users[index].userId == loginUserState?.id;
                       return _buildRankingUser(
-                          context, ref, viewableRanking.users, isLoginUser, index, kind);
+                        context,
+                        ref,
+                        viewableRanking.users,
+                        isLoginUser,
+                        index,
+                        kind,
+                      );
                     },
                     itemCount: viewableRanking.users.length,
                   ),
