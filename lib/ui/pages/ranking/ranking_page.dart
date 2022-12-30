@@ -103,7 +103,7 @@ class _RankingPageBody extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 8, top: 8),
           child: Text(
-            '最終更新日: ${notifier.convertAggregationDate(ranking.value, RankingPeriod.values[periodTabController.index])} (毎日4時頃更新予定)',
+            '最終更新日: ${notifier.convertUpdatedTimeToDisplayFormat(ranking.value, RankingPeriod.values[periodTabController.index])} (毎日4時頃更新予定)',
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
@@ -203,7 +203,7 @@ class _RankingPageBody extends StatelessWidget {
       ),
       title: Text(user.nickname),
       trailing: Text(
-        user.value.toString() + (kind == RankingKind.steps ? ' 歩' : ' m'),
+        notifier.convertRankingValueDisplayFormat(user.value, kind),
         style: const TextStyle(fontWeight: FontWeight.bold),
       ),
       onTap: () => notifier.moveProfilePage(user.userId),

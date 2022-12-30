@@ -5,6 +5,7 @@ import 'package:virtualpilgrimage/domain/ranking/ranking_by_period.codegen.dart'
 import 'package:virtualpilgrimage/domain/ranking/ranking_user.codegen.dart';
 import 'package:virtualpilgrimage/router.dart';
 import 'package:virtualpilgrimage/ui/pages/ranking/ranking_state.codegen.dart';
+import 'package:virtualpilgrimage/ui/wording_helper.dart';
 
 /// ランキングを集計する項目
 enum RankingKind { steps, distances }
@@ -16,8 +17,7 @@ final rankingPresenterProvider =
     StateNotifierProvider.autoDispose<RankingPresenter, RankingState>(RankingPresenter.new);
 
 class RankingPresenter extends StateNotifier<RankingState> {
-  RankingPresenter(this._ref)
-      : super(RankingState(selectedPeriodTabIndex: RankingPeriod.daily.index));
+  RankingPresenter(this._ref) : super(RankingState());
 
   final Ref _ref;
 
@@ -26,9 +26,6 @@ class RankingPresenter extends StateNotifier<RankingState> {
   List<String> get periodTabLabels => _periodTabLabels;
 
   final dateFormat = DateFormat('yyyy/MM/dd');
-
-  /// 期間のタブ選択の切り替えを行う
-  Future<void> setSelectedPeriodTabIndex(int index) async => state = state.setPeriodTabIndex(index);
 
   /// 表示するランキング情報を選択する
   RankingUsers selectRanking(Ranking ranking, RankingKind kind, RankingPeriod period) {
@@ -52,14 +49,24 @@ class RankingPresenter extends StateNotifier<RankingState> {
     }
   }
 
-  /// 集計した時間を取得する
-  String convertAggregationDate(Ranking? ranking, RankingPeriod period) {
+  /// 集計した時間を表示形式に変換する
+  String convertUpdatedTimeToDisplayFormat(Ranking? ranking, RankingPeriod period) {
     if (ranking == null) {
       return '不明';
     }
     final rankingByPeriod = selectRankingByPeriod(ranking, period);
     final dateTime = DateTime.fromMillisecondsSinceEpoch(rankingByPeriod.updatedTime);
     return dateFormat.format(dateTime);
+  }
+
+  /// 歩数または距離を表示形式に変換する
+  String convertRankingValueDisplayFormat(int value, RankingKind kind) {
+    switch (kind) {
+      case RankingKind.steps:
+        return '$value 歩';
+      case RankingKind.distances:
+        return '${WordingHelper.meterToKilometerString(value)} km';
+    }
   }
 
   /// プロフィールページに遷移する
