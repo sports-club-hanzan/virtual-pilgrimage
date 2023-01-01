@@ -54,9 +54,10 @@ class RankingRecords extends ConsumerWidget {
     final isLoginUser = user.userId == loginUser?.id;
 
     return ListTile(
+      key: Key('ranking_${rank + 1}'),
       tileColor: isLoginUser ? Theme.of(context).colorScheme.primaryContainer : Colors.white,
       leading: SizedBox(
-        width: 90,
+        width: 110,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
