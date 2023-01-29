@@ -4,6 +4,7 @@ import 'package:virtualpilgrimage/analytics.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/router.dart';
 
+/// 参照しているページの種類を表すprovider
 final pageTypeProvider = StateProvider<PageType>((_) => PageType.home);
 
 enum PageType {
