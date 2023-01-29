@@ -38,7 +38,7 @@ void main() {
       // スクロールしないと見えないはず
       expect(find.text('大窪寺'), findsNothing);
       // スクロールしないと6件までしか見えないはず
-      expect(find.text('徳島県・1400m'), findsNWidgets(6));
+      expect(find.text('徳島県・次の札所まで1.40km'), findsNWidgets(7));
     });
 
     testWidgets('スクロールすると次の札所情報が表示される', (widgetTester) async {
@@ -60,7 +60,7 @@ void main() {
       final listFinder = find.byType(Scrollable);
       final itemFinder = find.byKey(const ValueKey('temple_88'));
 
-      await widgetTester.scrollUntilVisible(itemFinder, 500, scrollable: listFinder);
+      await widgetTester.scrollUntilVisible(itemFinder, 1000, scrollable: listFinder);
 
       // 末尾のお寺情報が見えているはず
       expect(itemFinder, findsOneWidget);
@@ -68,9 +68,9 @@ void main() {
       expect(find.text('28番札所'), findsOneWidget);
       expect(find.text('41番札所'), findsOneWidget);
       expect(find.text('長尾寺'), findsOneWidget);
-      expect(find.text('高知県・1400m'), findsOneWidget);
-      expect(find.text('愛媛県・1400m'), findsOneWidget);
-      expect(find.text('香川県・1400m'), findsNWidgets(2));
+      expect(find.text('高知県・次の札所まで1.40km'), findsOneWidget);
+      expect(find.text('愛媛県・次の札所まで1.40km'), findsOneWidget);
+      expect(find.text('香川県・次の札所まで1.40km'), findsNWidgets(2));
     });
   });
 }
