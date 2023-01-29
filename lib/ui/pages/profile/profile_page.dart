@@ -40,21 +40,24 @@ class ProfilePage extends ConsumerWidget {
       appBar: const MyAppBar(),
       body: SafeArea(
         // TODO(s14t284): error 時のUIを整理する
-        child: user.when(
-          data: (data) {
-            if (data != null) {
-              return _ProfilePageBody(user: data, canEdit: canEdit);
-            }
-            // TODO(s14t284): 他ユーザの情報を参照できるようになったら　null の場合の UI も実装する
-            return const Text('そのユーザは存在しませんでした');
-          },
-          error: (e, s) {
-            ref.read(firebaseCrashlyticsProvider).recordError(e, s);
-            return const Text('ユーザのヘルスケア情報の取得に失敗しました');
-          },
-          loading: () {
-            return ProfilePageLoadingBody(user: userState!);
-          },
+        child: ColoredBox(
+          color: Theme.of(context).backgroundColor,
+          child: user.when(
+            data: (data) {
+              if (data != null) {
+                return _ProfilePageBody(user: data, canEdit: canEdit);
+              }
+              // TODO(s14t284): 他ユーザの情報を参照できるようになったら　null の場合の UI も実装する
+              return const Text('そのユーザは存在しませんでした');
+            },
+            error: (e, s) {
+              ref.read(firebaseCrashlyticsProvider).recordError(e, s);
+              return const Text('ユーザのヘルスケア情報の取得に失敗しました');
+            },
+            loading: () {
+              return ProfilePageLoadingBody(user: userState!);
+            },
+          ),
         ),
       ),
       bottomNavigationBar: const BottomNavigation(),
@@ -75,16 +78,13 @@ class _ProfilePageBody extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(profileProvider);
     final notifier = ref.read(profileProvider.notifier);
-    return ColoredBox(
-      color: Theme.of(context).backgroundColor,
-      child: ListView(
-        children: [
-          ProfileIcon(user: user, canEdit: canEdit, context: context, notifier: notifier),
-          ProfileText(user: user, context: context, notifier: notifier),
-          _healthCards(context, user, notifier, state),
-          pilgrimageProgressCardProvider(context, user, ref),
-        ],
-      ),
+    return ListView(
+      children: [
+        ProfileIcon(user: user, canEdit: canEdit, context: context, notifier: notifier),
+        ProfileText(user: user, context: context, notifier: notifier),
+        _healthCards(context, user, notifier, state),
+        pilgrimageProgressCardProvider(context, user, ref),
+      ],
     );
   }
 
