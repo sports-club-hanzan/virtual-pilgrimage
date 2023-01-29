@@ -7,6 +7,7 @@ import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
 import 'package:virtualpilgrimage/ui/pages/temple/temple_detail_dialog.dart';
 import 'package:virtualpilgrimage/ui/pages/temple/temple_presenter.dart';
 import 'package:virtualpilgrimage/ui/style/font.dart';
+import 'package:virtualpilgrimage/ui/wording_helper.dart';
 
 class TemplePage extends ConsumerWidget {
   const TemplePage({
@@ -65,16 +66,18 @@ class _TemplePageBody extends StatelessWidget {
       elevation: 0,
       margin: const EdgeInsets.all(4),
       child: ListTile(
-        leading: isShowDetail
-            ? Image(width: 120, height: 120, image: NetworkImage(imagePath))
-            : Image(
-                width: 120,
-                height: 120,
-                image: NetworkImage(imagePath),
-                color: Colors.black45,
-                colorBlendMode: BlendMode.xor,
-              ),
+        dense: true,
+        visualDensity: const VisualDensity(vertical: 4),
+        enabled: isShowDetail,
+        leading: Image(
+          width: 100,
+          image: NetworkImage(imagePath),
+          fit: BoxFit.fitHeight,
+          color: isShowDetail ? null : Colors.black45,
+          colorBlendMode: isShowDetail ? null : BlendMode.xor,
+        ),
         title: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -88,18 +91,20 @@ class _TemplePageBody extends StatelessWidget {
             ),
             Text(
               templeInfo.name,
-              style: const TextStyle(
-                color: Color(0xff7b61ff),
+              style: TextStyle(
+                color: isShowDetail
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.primaryContainer,
                 fontSize: FontSize.mediumLargeSize,
                 fontFamily: 'Poppins',
                 fontWeight: FontWeight.bold,
               ),
             ),
+            Text(
+              '${templeInfo.prefecture}・次の札所まで${WordingHelper.meterToKilometerString(templeInfo.distance)}km',
+              style: const TextStyle(color: Colors.black38, fontSize: FontSize.mediumSize),
+            ),
           ],
-        ),
-        subtitle: Text(
-          '${templeInfo.prefecture}・${templeInfo.distance}m',
-          style: const TextStyle(color: Colors.black38, fontSize: FontSize.mediumSize),
         ),
         onTap: () => {
           if (isShowDetail)
