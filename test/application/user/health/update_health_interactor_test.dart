@@ -39,16 +39,27 @@ void main() {
 
   group('UpdateHealthInteractor', () {
     final user = defaultUser();
+    CustomizableDateTime.customTime = DateTime.now();
     final health = HealthInfo(
       today: defaultHealthByPeriod(steps: 10, distance: 10, burnedCalorie: 10),
       yesterday: defaultHealthByPeriod(steps: 100, distance: 100, burnedCalorie: 100),
-      week: defaultHealthByPeriod(steps: 1000, distance: 1000, burnedCalorie: 1000),
+      week: defaultHealthByPeriod(steps: 0, distance: 1000, burnedCalorie: 1000),
       month: defaultHealthByPeriod(steps: 1000, distance: 10000, burnedCalorie: 10000),
-      totalSteps: 0,
+      totalSteps: 1000,
       totalDistance: 0,
       updatedAt: CustomizableDateTime.current,
     );
-    final updatedUser = user.copyWith(health: health);
+    final updatedUser = user.copyWith(
+      health: HealthInfo(
+        today: defaultHealthByPeriod(steps: 10, distance: 10, burnedCalorie: 10),
+        yesterday: defaultHealthByPeriod(steps: 100, distance: 100, burnedCalorie: 100),
+        week: defaultHealthByPeriod(),
+        month: defaultHealthByPeriod(steps: 1000, distance: 10000, burnedCalorie: 10000),
+        totalSteps: 1000,
+        totalDistance: 100,
+        updatedAt: CustomizableDateTime.current,
+      ),
+    );
 
     setUp(() {
       CustomizableDateTime.customTime = DateTime.now();
@@ -180,14 +191,14 @@ VirtualPilgrimageUser defaultUser() {
       yesterday: defaultHealthByPeriod(),
       week: defaultHealthByPeriod(),
       month: defaultHealthByPeriod(),
-      totalSteps: 0,
-      totalDistance: 0,
+      totalSteps: 100,
+      totalDistance: 100,
       updatedAt: CustomizableDateTime.current,
     ),
     pilgrimage: PilgrimageInfo(id: 'dummyId', updatedAt: CustomizableDateTime.current),
   );
 }
 
-HealthByPeriod defaultHealthByPeriod({int steps = 0, int distance = 0, int burnedCalorie = 0}) {
+HealthByPeriod defaultHealthByPeriod({int steps = 10, int distance = 10, int burnedCalorie = 10}) {
   return HealthByPeriod(steps: steps, distance: distance, burnedCalorie: burnedCalorie);
 }

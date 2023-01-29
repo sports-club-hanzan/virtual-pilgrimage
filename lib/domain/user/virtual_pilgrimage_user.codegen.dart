@@ -197,7 +197,7 @@ class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
       yesterday: health.yesterday.validate() ? health.yesterday : nowHealth.yesterday,
       week: health.week.validate() ? health.week : nowHealth.week,
       month: health.month.validate() ? health.month : nowHealth.month,
-      updatedAt: updatedAt,
+      updatedAt: health.updatedAt,
       totalSteps: health.totalSteps > 0 ? health.totalSteps : nowHealth.totalSteps,
       totalDistance: health.totalDistance > 0 ? health.totalDistance : nowHealth.totalDistance,
     );
