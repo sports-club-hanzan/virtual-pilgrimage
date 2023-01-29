@@ -5,7 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/temple_repository.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/temple_info.codegen.dart';
+import 'package:virtualpilgrimage/ui/components/atoms/secondary_button.dart';
 import 'package:virtualpilgrimage/ui/pages/home/home_presenter.dart';
+import 'package:virtualpilgrimage/ui/style/font.dart';
 import 'package:virtualpilgrimage/ui/wording_helper.dart';
 
 class StampAnimation {
@@ -29,14 +31,17 @@ class StampAnimationWidget extends ConsumerWidget {
         child: FutureBuilder<StampAnimation>(
           future: loadStampImage(ref),
           builder: (context, snapshot) {
-            return snapshot.hasData
+            final data = snapshot.data;
+            return snapshot.hasData && data != null
                 ? AlertDialog(
                     backgroundColor: Colors.transparent,
                     title: Center(
                       child: Text(
-                        '${snapshot.data!.templeInfo.id}番 ${WordingHelper.templeNameFilter(snapshot.data!.templeInfo.name)}に到着',
-                        style: const TextStyle(
-                          color: Color(0xFFeeff41),
+                        '${data.templeInfo.id}番 ${WordingHelper.templeNameFilter(data.templeInfo.name)}に到着',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          fontWeight: FontWeight.bold,
+                          fontSize: FontSize.largeSize,
                         ),
                       ),
                     ),
@@ -48,16 +53,16 @@ class StampAnimationWidget extends ConsumerWidget {
                           scale: value,
                           child: SizedBox(
                             height: 500,
-                            child: Image.memory(snapshot.data!.image),
+                            child: Image.memory(data.image),
                           ),
                         );
                       },
                     ),
                     actionsAlignment: MainAxisAlignment.center,
                     actions: [
-                      ElevatedButton(
+                      SecondaryButton(
                         onPressed: ref.read(homeProvider.notifier).onAnimationClosed,
-                        child: const Text('タップして次を目指そう！'),
+                        text: 'タップして次を目指そう！',
                       ),
                     ],
                   )

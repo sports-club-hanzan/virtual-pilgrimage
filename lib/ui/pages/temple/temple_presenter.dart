@@ -33,13 +33,13 @@ class TemplePresenter extends StateNotifier<TempleState> {
   int loadedTempleImageIdSnapshot = 0;
 
   // 一度に読み込む情報の数
-  final int fetchOnceLoadingNumber = 10;
+  final int fetchOnceLoadingNumber = 8;
 
   /// 札所の情報を一部読み込む
   ///
   /// 実際に読み込む情報はcacheされているので、次にページで読み込みたい札所の数を取得して、キャッシュから情報を返すだけ
   Future<void> fetchTempleInfo() async {
-    // min(現在の読み込み件数 + 10, 札所情報の上限)
+    // min(現在の読み込み件数 + 8, 札所情報の上限)
     final int maxLoadingNumber =
         min(loadedTempleImageIdSnapshot + fetchOnceLoadingNumber, _temples.length);
     loadedTempleImageIdSnapshot = maxLoadingNumber;

@@ -12,7 +12,11 @@ class MyAppBar extends ConsumerWidget with PreferredSizeWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final color = Theme.of(context).colorScheme.onPrimaryContainer;
     final textStyle = TextStyle(color: color);
-    return AppBar(title: Text(appTitle, style: textStyle), bottom: tabBar);
+    return AppBar(
+      title: Text(appTitle, style: textStyle),
+      bottom: tabBar,
+      backgroundColor: Theme.of(context).backgroundColor,
+    );
   }
 
   @override

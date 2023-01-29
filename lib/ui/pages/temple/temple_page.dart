@@ -7,6 +7,7 @@ import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
 import 'package:virtualpilgrimage/ui/pages/temple/temple_detail_dialog.dart';
 import 'package:virtualpilgrimage/ui/pages/temple/temple_presenter.dart';
 import 'package:virtualpilgrimage/ui/style/font.dart';
+import 'package:virtualpilgrimage/ui/wording_helper.dart';
 
 class TemplePage extends ConsumerWidget {
   const TemplePage({
@@ -38,12 +39,15 @@ class _TemplePageBody extends StatelessWidget {
     final scrollController = ref.read(templeProvider).scrollController;
     final user = ref.watch(userStateProvider);
 
-    return ListView.builder(
-      controller: scrollController,
-      itemBuilder: (BuildContext context, int index) {
-        return _buildTemple(context, state[index], user);
-      },
-      itemCount: state.length,
+    return ColoredBox(
+      color: Theme.of(context).backgroundColor,
+      child: ListView.builder(
+        controller: scrollController,
+        itemBuilder: (BuildContext context, int index) {
+          return _buildTemple(context, state[index], user);
+        },
+        itemCount: state.length,
+      ),
     );
   }
 
@@ -59,44 +63,48 @@ class _TemplePageBody extends StatelessWidget {
 
     return Card(
       key: Key('temple_${templeInfo.id}'),
-      elevation: 6,
-      margin: const EdgeInsets.all(10),
+      elevation: 0,
+      margin: const EdgeInsets.all(4),
       child: ListTile(
-        leading: isShowDetail
-            ? Image(width: 100, height: 80, image: NetworkImage(imagePath))
-            : Image(
-                width: 100,
-                height: 80,
-                image: NetworkImage(imagePath),
-                color: Colors.black45,
-                colorBlendMode: BlendMode.xor,
-              ),
+        dense: true,
+        visualDensity: const VisualDensity(vertical: 4),
+        enabled: isShowDetail,
+        leading: Image(
+          width: 100,
+          image: NetworkImage(imagePath),
+          fit: BoxFit.fitHeight,
+          color: isShowDetail ? null : Colors.black45,
+          colorBlendMode: isShowDetail ? null : BlendMode.xor,
+        ),
         title: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               '${templeInfo.id}番札所',
               style: const TextStyle(
                 color: Colors.black38,
-                fontSize: FontSize.smallSize,
+                fontSize: FontSize.mediumSize,
                 fontFamily: 'Poppins',
                 fontWeight: FontWeight.w500,
               ),
             ),
             Text(
               templeInfo.name,
-              style: const TextStyle(
-                color: Color(0xff7b61ff),
-                fontSize: FontSize.mediumSize,
+              style: TextStyle(
+                color: isShowDetail
+                    ? Theme.of(context).colorScheme.primary
+                    : Theme.of(context).colorScheme.primaryContainer,
+                fontSize: FontSize.mediumLargeSize,
                 fontFamily: 'Poppins',
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.bold,
               ),
             ),
+            Text(
+              '${templeInfo.prefecture}・次の札所まで${WordingHelper.meterToKilometerString(templeInfo.distance)}km',
+              style: const TextStyle(color: Colors.black38, fontSize: FontSize.mediumSize),
+            ),
           ],
-        ),
-        subtitle: Text(
-          '${templeInfo.prefecture}・${templeInfo.distance}m',
-          style: const TextStyle(color: Colors.black38, fontSize: FontSize.smallSize),
         ),
         onTap: () => {
           if (isShowDetail)
