@@ -75,13 +75,16 @@ class _ProfilePageBody extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(profileProvider);
     final notifier = ref.read(profileProvider.notifier);
-    return ListView(
-      children: [
-        ProfileIcon(user: user, canEdit: canEdit, context: context, notifier: notifier),
-        ProfileText(user: user, context: context, notifier: notifier),
-        _healthCards(context, user, notifier, state),
-        pilgrimageProgressCardProvider(context, user, ref),
-      ],
+    return ColoredBox(
+      color: Theme.of(context).backgroundColor,
+      child: ListView(
+        children: [
+          ProfileIcon(user: user, canEdit: canEdit, context: context, notifier: notifier),
+          ProfileText(user: user, context: context, notifier: notifier),
+          _healthCards(context, user, notifier, state),
+          pilgrimageProgressCardProvider(context, user, ref),
+        ],
+      ),
     );
   }
 
