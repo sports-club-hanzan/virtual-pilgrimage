@@ -25,6 +25,7 @@ final homeProvider = StateNotifierProvider.autoDispose<HomePresenter, HomeState>
 class HomePresenter extends StateNotifier<HomeState> {
   HomePresenter(this._ref) : super(HomeState.initialize()) {
     _updatePilgrimageProgressUsecase = _ref.read(updatePilgrimageProgressUsecaseProvider);
+    _updateHealthUsecase = _ref.read(updateHealthUsecaseProvider);
     _analytics = _ref.read(analyticsProvider);
     _crashlytics = _ref.read(firebaseCrashlyticsProvider);
     _templeRepository = _ref.read(templeRepositoryProvider);
@@ -34,6 +35,7 @@ class HomePresenter extends StateNotifier<HomeState> {
 
   final Ref _ref;
   late final UpdatePilgrimageProgressUsecase _updatePilgrimageProgressUsecase;
+  late final UpdateHealthUsecase _updateHealthUsecase;
   late final Analytics _analytics;
   late final FirebaseCrashlytics _crashlytics;
   late final TempleRepository _templeRepository;
@@ -46,7 +48,7 @@ class HomePresenter extends StateNotifier<HomeState> {
   /// 初期化時にユーザのヘルスケア情報を読み取ってDBに書き込む
   Future<void> initialize() async {
     // ログインした時点でお寺の情報を取得する。初回のみこの処理で時間がかかる
-    unawaited(_templeRepository.getTempleInfoAll());
+    final futureGetTempleInfoAllResult = _templeRepository.getTempleInfoAll();
     unawaited(_analytics.logEvent(eventName: AnalyticsEvent.initializeHomePageAndGetHealth));
 
     final loginState = _ref.read(loginStateProvider);
@@ -89,14 +91,18 @@ class HomePresenter extends StateNotifier<HomeState> {
       }
       final updatedUser = logicResult.updatedUser;
       if (updatedUser != null) {
-        await setMarkerAndPolylines(updatedUser, logicResult);
+        await setMarkerAndPolylines(
+          user: updatedUser,
+          logicResult: logicResult,
+          updatePastPolylines: false,
+        );
         user = updatedUser;
         _userStateNotifier.state = updatedUser;
       }
 
       // 描画を更新しながら、ヘルスケア情報も更新する
       // 先にmapの描画を更新してバックグラウンドでヘルスケア情報を更新しておくことで、UIの変更の反映を早める
-      final updateHealthResult = await _ref.read(updateHealthUsecaseProvider).execute(user);
+      final updateHealthResult = await _updateHealthUsecase.execute(user);
       if (updateHealthResult.status == UpdateHealthStatus.success) {
         if (updateHealthResult.user != null) {
           _userStateNotifier.state = updateHealthResult.user;
@@ -105,34 +111,60 @@ class HomePresenter extends StateNotifier<HomeState> {
         unawaited(_crashlytics.recordError(updateHealthResult.error, null));
       }
 
-      // 最後に到達した札所があったら御朱印アニメーションを描画
-      // 最後にこのstate更新を実行することで、MAPの動作が止まっている状態でアニメーションが実行できる
+      // 到達した札所があったら御朱印アニメーションを描画
+      // このstate更新をGoogleMapのカメラポジションが移動した後に実行することで、MAPの動作が止まっている状態でアニメーションが実行できる
       if (logicResult.reachedPilgrimageIdList.isNotEmpty) {
         // 複数の札所にたどり着いたら最後にたどり着いた札所の御朱印を設定
         final templeId = logicResult.reachedPilgrimageIdList.last;
         state = state.copyWith(animationTempleId: templeId);
         unawaited(_analytics.logEvent(eventName: AnalyticsEvent.reachTemple));
       }
+
+      // むやみやたらにFirestoreに問い合わせないようにお寺情報取得が完了するのを待つ
+      await Future.wait([futureGetTempleInfoAllResult]);
+      // 最後に過去の移動経路を可視化する
+      await setMarkerAndPolylines(user: user, logicResult: logicResult, updatePastPolylines: true);
     } on Exception catch (e) {
       unawaited(_crashlytics.recordError(e, null));
     }
   }
 
   /// ユーザ情報を利用して GoogleMap 上に描画するユーザ情報のマーカーを追加
-  Future<void> setMarkerAndPolylines(
-    VirtualPilgrimageUser user,
-    UpdatePilgrimageProgressResult logicResult,
-  ) async {
+  Future<void> setMarkerAndPolylines({
+    required VirtualPilgrimageUser user,
+    required UpdatePilgrimageProgressResult logicResult,
+    required bool updatePastPolylines,
+  }) async {
     final nextPilgrimage = await _templeRepository
         .getTempleInfo(_nextPilgrimageNumber(user.pilgrimage.nowPilgrimageId));
     final polylines = {
+      // 現在通過している経路
       Polyline(
         polylineId: PolylineId('${nextPilgrimage.id}番札所:${nextPilgrimage.name}の経路'),
         points: logicResult.virtualPolylineLatLngs,
         color: Colors.pinkAccent,
         width: 5,
-      )
+      ),
     };
+
+    // 過去の仮想的な移動経路を可視化したい時
+    if (updatePastPolylines) {
+      final List<LatLng> pastLatLngList = [];
+      for (int id = 1; id < user.pilgrimage.nowPilgrimageId; id++) {
+        // repositoryを経由して札所情報を取得しているため
+        // 札所情報のキャッシュが取れていないとFirestoreに大量の問い合わせがいくことに注意
+        final pastLatLngs = (await _templeRepository.getTempleInfo(id)).decodeGeoPoint();
+        pastLatLngList.addAll(pastLatLngs);
+      }
+      polylines.add(
+        Polyline(
+          polylineId: const PolylineId('仮想的に通過した経路'),
+          points: pastLatLngList,
+          color: const Color(0xfff69eb9),
+          width: 4,
+        ),
+      );
+    }
 
     Set<Marker> markers = state.markers;
     final virtualPosition = logicResult.virtualPosition;

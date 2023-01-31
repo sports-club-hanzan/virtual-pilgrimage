@@ -35,7 +35,7 @@ class TempleRepositoryImpl extends TempleRepository {
             toFirestore: (TempleInfo templeInfo, _) => templeInfo.toJson(),
           );
 
-      final templeSnapshot = await ref.get(const GetOptions(source: Source.server));
+      final templeSnapshot = await ref.get(const GetOptions(source: Source.serverAndCache));
       final data = templeSnapshot.data();
       if (templeSnapshot.exists && data != null) {
         return data;
@@ -65,7 +65,7 @@ class TempleRepositoryImpl extends TempleRepository {
     }
     try {
       // firebase からすベてのお寺情報を取得
-      final snapshot = await _firestore.collection(FirestoreCollectionPath.temples).get(const GetOptions(source: Source.server));
+      final snapshot = await _firestore.collection(FirestoreCollectionPath.temples).get(const GetOptions(source: Source.serverAndCache));
       final Map<int, TempleInfo> templeInfoMap = {};
       // domain entity に convert して id ごとに情報を詰める
       for (final doc in snapshot.docs) {
@@ -74,7 +74,7 @@ class TempleRepositoryImpl extends TempleRepository {
               fromFirestore: (snapshot, _) => TempleInfo.fromJson(snapshot.data()!),
               toFirestore: (TempleInfo templeInfo, _) => templeInfo.toJson(),
             )
-            .get(const GetOptions(source: Source.server));
+            .get(const GetOptions(source: Source.serverAndCache));
         final data = templeInfoSnapshot.data();
         if (templeInfoSnapshot.exists && data != null) {
           templeInfoMap.addAll({data.id: data});

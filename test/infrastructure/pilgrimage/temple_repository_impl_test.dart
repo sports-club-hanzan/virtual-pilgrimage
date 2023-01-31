@@ -52,7 +52,7 @@ void main() {
           toFirestore: anyNamed('toFirestore'),
         ),
       ).thenReturn(mockTempleInfoDocumentReference);
-      when(mockTempleInfoDocumentReference.get(const GetOptions(source: Source.server))).thenAnswer(
+      when(mockTempleInfoDocumentReference.get(const GetOptions(source: Source.serverAndCache))).thenAnswer(
         (_) => Future.value(mockDocumentSnapshot),
       );
     });
@@ -89,7 +89,7 @@ void main() {
       final QuerySnapshot<Map<String, dynamic>> querySnapshot = MockQuerySnapshot();
       test('正常系', () async {
         // given
-        when(mockCollectionReference.get(const GetOptions(source: Source.server))).thenAnswer((_) => Future.value(querySnapshot));
+        when(mockCollectionReference.get(const GetOptions(source: Source.serverAndCache))).thenAnswer((_) => Future.value(querySnapshot));
         when(querySnapshot.docs).thenReturn([snapshot1, snapshot2]);
         when(mockDocumentSnapshot.exists).thenReturn(true);
         when(mockDocumentSnapshot.data()).thenReturn(defaultTempleInfo());
@@ -101,7 +101,7 @@ void main() {
         expect(container.read(templeInfoCache), {1: defaultTempleInfo()});
         verify(mockFirebaseFirestore.collection('temples')).called(1);
         verify(querySnapshot.docs).called(1);
-        verify(mockTempleInfoDocumentReference.get(const GetOptions(source: Source.server))).called(2);
+        verify(mockTempleInfoDocumentReference.get(const GetOptions(source: Source.serverAndCache))).called(2);
         verify(mockDocumentSnapshot.exists).called(2);
         verify(mockDocumentSnapshot.data()).called(2);
       });

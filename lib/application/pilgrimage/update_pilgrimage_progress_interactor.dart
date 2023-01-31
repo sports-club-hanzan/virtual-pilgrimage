@@ -47,6 +47,8 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
     final List<int> reachedPilgrimageIdList = [];
     try {
       final updatedProgressUser = await _calcPilgrimageProgress(user, now, reachedPilgrimageIdList);
+
+      // 現在経路の緯度経度を取得
       final nextTargetTempleInfo =
           await _templeRepository.getTempleInfo(updatedProgressUser.pilgrimage.nowPilgrimageId);
       final latlngs = nextTargetTempleInfo.decodeGeoPoint();
