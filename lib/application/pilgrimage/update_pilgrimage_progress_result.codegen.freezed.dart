@@ -22,8 +22,6 @@ mixin _$UpdatePilgrimageProgressResult {
   List<int> get reachedPilgrimageIdList =>
       throw _privateConstructorUsedError; // 現在、仮想的に移動している経路の緯度・経路のリスト
   List<LatLng> get virtualPolylineLatLngs =>
-      throw _privateConstructorUsedError; // 過去に仮想的に移動した経路の緯度・経度のリスト
-  List<LatLng> get pastPolylineLatLngs =>
       throw _privateConstructorUsedError; // 現在の仮想的なユーザの緯度・軽度
   LatLng? get virtualPosition =>
       throw _privateConstructorUsedError; // ロジックによって更新されたときのユーザの情報
@@ -48,7 +46,6 @@ abstract class $UpdatePilgrimageProgressResultCopyWith<$Res> {
       {UpdatePilgrimageProgressResultStatus status,
       List<int> reachedPilgrimageIdList,
       List<LatLng> virtualPolylineLatLngs,
-      List<LatLng> pastPolylineLatLngs,
       LatLng? virtualPosition,
       VirtualPilgrimageUser? updatedUser,
       Exception? error});
@@ -73,7 +70,6 @@ class _$UpdatePilgrimageProgressResultCopyWithImpl<$Res,
     Object? status = null,
     Object? reachedPilgrimageIdList = null,
     Object? virtualPolylineLatLngs = null,
-    Object? pastPolylineLatLngs = null,
     Object? virtualPosition = freezed,
     Object? updatedUser = freezed,
     Object? error = freezed,
@@ -90,10 +86,6 @@ class _$UpdatePilgrimageProgressResultCopyWithImpl<$Res,
       virtualPolylineLatLngs: null == virtualPolylineLatLngs
           ? _value.virtualPolylineLatLngs
           : virtualPolylineLatLngs // ignore: cast_nullable_to_non_nullable
-              as List<LatLng>,
-      pastPolylineLatLngs: null == pastPolylineLatLngs
-          ? _value.pastPolylineLatLngs
-          : pastPolylineLatLngs // ignore: cast_nullable_to_non_nullable
               as List<LatLng>,
       virtualPosition: freezed == virtualPosition
           ? _value.virtualPosition
@@ -136,7 +128,6 @@ abstract class _$$_UpdatePilgrimageProgressResultCopyWith<$Res>
       {UpdatePilgrimageProgressResultStatus status,
       List<int> reachedPilgrimageIdList,
       List<LatLng> virtualPolylineLatLngs,
-      List<LatLng> pastPolylineLatLngs,
       LatLng? virtualPosition,
       VirtualPilgrimageUser? updatedUser,
       Exception? error});
@@ -161,7 +152,6 @@ class __$$_UpdatePilgrimageProgressResultCopyWithImpl<$Res>
     Object? status = null,
     Object? reachedPilgrimageIdList = null,
     Object? virtualPolylineLatLngs = null,
-    Object? pastPolylineLatLngs = null,
     Object? virtualPosition = freezed,
     Object? updatedUser = freezed,
     Object? error = freezed,
@@ -178,10 +168,6 @@ class __$$_UpdatePilgrimageProgressResultCopyWithImpl<$Res>
       virtualPolylineLatLngs: null == virtualPolylineLatLngs
           ? _value._virtualPolylineLatLngs
           : virtualPolylineLatLngs // ignore: cast_nullable_to_non_nullable
-              as List<LatLng>,
-      pastPolylineLatLngs: null == pastPolylineLatLngs
-          ? _value._pastPolylineLatLngs
-          : pastPolylineLatLngs // ignore: cast_nullable_to_non_nullable
               as List<LatLng>,
       virtualPosition: freezed == virtualPosition
           ? _value.virtualPosition
@@ -207,13 +193,11 @@ class _$_UpdatePilgrimageProgressResult
       {required this.status,
       required final List<int> reachedPilgrimageIdList,
       final List<LatLng> virtualPolylineLatLngs = const [],
-      final List<LatLng> pastPolylineLatLngs = const [],
       this.virtualPosition,
       this.updatedUser,
       this.error})
       : _reachedPilgrimageIdList = reachedPilgrimageIdList,
         _virtualPolylineLatLngs = virtualPolylineLatLngs,
-        _pastPolylineLatLngs = pastPolylineLatLngs,
         super._();
 
 // お遍路の進捗更新結果の状態
@@ -238,16 +222,6 @@ class _$_UpdatePilgrimageProgressResult
     return EqualUnmodifiableListView(_virtualPolylineLatLngs);
   }
 
-// 過去に仮想的に移動した経路の緯度・経度のリスト
-  final List<LatLng> _pastPolylineLatLngs;
-// 過去に仮想的に移動した経路の緯度・経度のリスト
-  @override
-  @JsonKey()
-  List<LatLng> get pastPolylineLatLngs {
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_pastPolylineLatLngs);
-  }
-
 // 現在の仮想的なユーザの緯度・軽度
   @override
   final LatLng? virtualPosition;
@@ -260,7 +234,7 @@ class _$_UpdatePilgrimageProgressResult
 
   @override
   String toString() {
-    return 'UpdatePilgrimageProgressResult(status: $status, reachedPilgrimageIdList: $reachedPilgrimageIdList, virtualPolylineLatLngs: $virtualPolylineLatLngs, pastPolylineLatLngs: $pastPolylineLatLngs, virtualPosition: $virtualPosition, updatedUser: $updatedUser, error: $error)';
+    return 'UpdatePilgrimageProgressResult(status: $status, reachedPilgrimageIdList: $reachedPilgrimageIdList, virtualPolylineLatLngs: $virtualPolylineLatLngs, virtualPosition: $virtualPosition, updatedUser: $updatedUser, error: $error)';
   }
 
   @override
@@ -273,8 +247,6 @@ class _$_UpdatePilgrimageProgressResult
                 other._reachedPilgrimageIdList, _reachedPilgrimageIdList) &&
             const DeepCollectionEquality().equals(
                 other._virtualPolylineLatLngs, _virtualPolylineLatLngs) &&
-            const DeepCollectionEquality()
-                .equals(other._pastPolylineLatLngs, _pastPolylineLatLngs) &&
             (identical(other.virtualPosition, virtualPosition) ||
                 other.virtualPosition == virtualPosition) &&
             (identical(other.updatedUser, updatedUser) ||
@@ -288,7 +260,6 @@ class _$_UpdatePilgrimageProgressResult
       status,
       const DeepCollectionEquality().hash(_reachedPilgrimageIdList),
       const DeepCollectionEquality().hash(_virtualPolylineLatLngs),
-      const DeepCollectionEquality().hash(_pastPolylineLatLngs),
       virtualPosition,
       updatedUser,
       error);
@@ -307,7 +278,6 @@ abstract class _UpdatePilgrimageProgressResult
       {required final UpdatePilgrimageProgressResultStatus status,
       required final List<int> reachedPilgrimageIdList,
       final List<LatLng> virtualPolylineLatLngs,
-      final List<LatLng> pastPolylineLatLngs,
       final LatLng? virtualPosition,
       final VirtualPilgrimageUser? updatedUser,
       final Exception? error}) = _$_UpdatePilgrimageProgressResult;
@@ -319,8 +289,6 @@ abstract class _UpdatePilgrimageProgressResult
   List<int> get reachedPilgrimageIdList;
   @override // 現在、仮想的に移動している経路の緯度・経路のリスト
   List<LatLng> get virtualPolylineLatLngs;
-  @override // 過去に仮想的に移動した経路の緯度・経度のリスト
-  List<LatLng> get pastPolylineLatLngs;
   @override // 現在の仮想的なユーザの緯度・軽度
   LatLng? get virtualPosition;
   @override // ロジックによって更新されたときのユーザの情報
