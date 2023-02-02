@@ -1,4 +1,4 @@
-import { getFirestore } from "firebase-admin/firestore";
+import { getFirestore, Timestamp } from "firebase-admin/firestore";
 import { defaultFunctions } from "../function";
 
 // 期間ごとのヘルスケア情報
@@ -11,10 +11,12 @@ type HealthByPeriod = {
 // ユーザに紐ずくヘルスケア情報
 type Health = {
   today: HealthByPeriod;
+  yesterday: HealthByPeriod;
   week: HealthByPeriod;
   month: HealthByPeriod;
   totalSteps: number;
   totalDistance: number;
+  updatedAt: Timestamp;
 }
 
 // ユーザ情報
@@ -83,6 +85,8 @@ const updateRankingHandler = async () => {
 
   const todaySteps: Array<IntermediateUserInfo> = []
   const todayDistances: Array<IntermediateUserInfo> = []
+  const yesterdaySteps: Array<IntermediateUserInfo> = []
+  const yesterdayDistances: Array<IntermediateUserInfo> = []
   const weekSteps: Array<IntermediateUserInfo> = []
   const weekDistances: Array<IntermediateUserInfo> = []
   const monthSteps: Array<IntermediateUserInfo> = []
@@ -104,12 +108,55 @@ const updateRankingHandler = async () => {
         userIconUrl: user.userIconUrl,
       }
     };
-    todaySteps.push({ id: doc.id, value: user.health.today.steps, ...userInfoForRanking });
-    todayDistances.push({ id: doc.id, value: user.health.today.distance, ...userInfoForRanking });
-    weekSteps.push({ id: doc.id, value: user.health.week.steps, ...userInfoForRanking });
-    weekDistances.push({ id: doc.id, value: user.health.week.distance, ...userInfoForRanking });
-    monthSteps.push({ id: doc.id, value: user.health.month.steps, ...userInfoForRanking });
-    monthDistances.push({ id: doc.id, value: user.health.month.distance, ...userInfoForRanking });
+    {
+      const targetDate = new Date();
+      targetDate.setDate(targetDate.getDate() - 1);
+      targetDate.setHours(0);
+      targetDate.setMinutes(0);
+      targetDate.setSeconds(0);
+      // 昨日更新されているユーザだけ計測した歩数と距離を詰める
+      if (user.health.updatedAt.seconds > Math.floor(targetDate.getTime() / 1000)) {
+        todaySteps.push({ id: doc.id, value: user.health.today.steps, ...userInfoForRanking });
+        todayDistances.push({ id: doc.id, value: user.health.today.distance, ...userInfoForRanking });
+        yesterdaySteps.push({ id: doc.id, value: user.health.yesterday.steps, ...userInfoForRanking });
+        yesterdayDistances.push({ id: doc.id, value: user.health.yesterday.distance, ...userInfoForRanking });
+      } else {
+        todaySteps.push({ id: doc.id, value: 0, ...userInfoForRanking });
+        todayDistances.push({ id: doc.id, value: 0, ...userInfoForRanking });
+        yesterdaySteps.push({ id: doc.id, value: 0, ...userInfoForRanking });
+        yesterdayDistances.push({ id: doc.id, value: 0, ...userInfoForRanking });
+      }
+    }
+    {
+      const targetDate = new Date();
+      targetDate.setDate(targetDate.getDate() - 7);
+      targetDate.setHours(0);
+      targetDate.setMinutes(0);
+      targetDate.setSeconds(0);
+      // 先週に1度でも更新されているユーザだけ計測した歩数と距離を詰める
+      if (user.health.updatedAt.seconds > Math.floor(targetDate.getTime() / 1000)) {
+        weekSteps.push({ id: doc.id, value: user.health.week.steps, ...userInfoForRanking });
+        weekDistances.push({ id: doc.id, value: user.health.week.distance, ...userInfoForRanking });
+      } else {
+        weekSteps.push({ id: doc.id, value: 0, ...userInfoForRanking });
+        weekDistances.push({ id: doc.id, value: 0, ...userInfoForRanking });
+      }
+    }
+    {
+      const targetDate = new Date();
+      targetDate.setDate(targetDate.getDate() - 7);
+      targetDate.setHours(0);
+      targetDate.setMinutes(0);
+      targetDate.setSeconds(0);
+      // 1ヶ月以内に1度でも更新されているユーザだけ計測した歩数と距離を詰める
+      if (user.health.updatedAt.seconds > Math.floor(targetDate.getTime() / 1000)) {
+        monthSteps.push({ id: doc.id, value: user.health.month.steps, ...userInfoForRanking });
+        monthDistances.push({ id: doc.id, value: user.health.month.distance, ...userInfoForRanking });
+      } else {
+        monthSteps.push({ id: doc.id, value: 0, ...userInfoForRanking });
+        monthDistances.push({ id: doc.id, value: 0, ...userInfoForRanking });
+      }
+    }
   });
 
   /**
@@ -130,14 +177,19 @@ const updateRankingHandler = async () => {
   }
 
   // 期間ごとにランキングテーブルを更新
-  await updateRankingWithStepsAndDistances(todaySteps, todayDistances, "daily");
+  // 9:00以降であれば昨日の歩数を9:00以前であれば今日の歩数を日次のランキングとして保存
+  if (datetime.getUTCDate() === datetime.getDate()) {
+    await updateRankingWithStepsAndDistances(yesterdaySteps, yesterdayDistances, "daily");
+  } else {
+    await updateRankingWithStepsAndDistances(todaySteps, todayDistances, "daily");
+  }
   await updateRankingWithStepsAndDistances(weekSteps, weekDistances, "weekly");
   await updateRankingWithStepsAndDistances(monthSteps, monthDistances, "monthly");
 }
 
 export const updateRanking = defaultFunctions()
   .runWith({ memory: "512MB", timeoutSeconds: 9 * 60 })
-  .pubsub.schedule("0 4 * * *")
+  .pubsub.schedule("0 * * * *")
   .timeZone("Asia/Tokyo")
   .onRun(updateRankingHandler)
   ;
