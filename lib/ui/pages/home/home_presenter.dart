@@ -168,7 +168,7 @@ class HomePresenter extends StateNotifier<HomeState> {
 
     Set<Marker> markers = state.markers;
     final virtualPosition = logicResult.virtualPosition;
-    if (virtualPosition != null) {
+    if (!updatePastPolylines && virtualPosition != null) {
       markers = {
         ...state.markers,
         Marker(

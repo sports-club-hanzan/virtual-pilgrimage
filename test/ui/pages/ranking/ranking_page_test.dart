@@ -64,7 +64,7 @@ void main() {
       expect(find.text('dummyName3'), findsOneWidget);
       expect(find.text('5000 歩'), findsOneWidget);
       // デフォルトで表示されている情報
-      expect(find.text('最終更新日: 2022/12/31 (毎日4時頃更新予定)'), findsOneWidget);
+      expect(find.textContaining('最終更新日: 2022/12/31'), findsOneWidget);
       for (final kind in ['歩数', '距離']) {
         expect(find.text(kind), findsOneWidget);
       }

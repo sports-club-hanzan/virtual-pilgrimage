@@ -6,7 +6,12 @@ import 'package:virtualpilgrimage/infrastructure/auth/google_auth_repository.dar
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_auth_provider.dart';
 
 final googleSignInProvider = Provider(
-  (_) => GoogleSignIn(),
+  (_) => GoogleSignIn(
+    scopes: [
+      'email',
+    ],
+    hostedDomain: '',
+  ),
 );
 
 final emailAndPasswordAuthRepositoryProvider = Provider<AuthRepository>(

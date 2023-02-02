@@ -33,7 +33,7 @@ class RankingPresenter extends StateNotifier<RankingState> {
 
   List<String> get periodTabLabels => _periodTabLabels;
 
-  final dateFormat = DateFormat('yyyy/MM/dd');
+  final dateFormat = DateFormat('yyyy/MM/dd hh時');
 
   /// 表示するランキング情報を選択する
   RankingUsers selectRanking(Ranking ranking, RankingKind kind, RankingPeriod period) {

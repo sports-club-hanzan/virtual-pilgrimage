@@ -105,7 +105,7 @@ class _RankingPageBody extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(8),
           child: Text(
-            '最終更新日: ${notifier.convertUpdatedTimeToDisplayFormat(ranking.value, RankingPeriod.values[periodTabController.index])} (毎日4時頃更新予定)',
+            '最終更新日: ${notifier.convertUpdatedTimeToDisplayFormat(ranking.value, RankingPeriod.values[periodTabController.index])}',
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
