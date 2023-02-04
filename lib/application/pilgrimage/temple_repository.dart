@@ -5,14 +5,11 @@ import 'package:virtualpilgrimage/infrastructure/pilgrimage/temple_repository_im
 import '../../domain/pilgrimage/temple_info.codegen.dart';
 
 final templeRepositoryProvider = Provider<TempleRepository>(
-  (ref) => TempleRepositoryImpl(
-    ref.read(firestoreProvider),
-    ref,
-  ),
+  (ref) => TempleRepositoryImpl(ref.read(firestoreProvider)),
 );
 
 abstract class TempleRepository {
   Future<TempleInfo> getTempleInfo(int templeId);
 
-  Future<void> getTempleInfoAll();
+  Future<List<TempleInfo>> getTempleInfoWithPaging({required int limit});
 }

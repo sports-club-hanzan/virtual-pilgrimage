@@ -34,7 +34,6 @@ class _App extends ConsumerWidget {
     final analytics = ref.read(analyticsProvider);
     final userState = ref.watch(userStateProvider.notifier);
     final loginState = ref.watch(loginStateProvider.notifier);
-    // final userIconRepository = ref.read(userIconRepositoryProvider);
 
     // Firebaseへのログインがキャッシュされていれば
     // Firestoreからユーザ情報を詰める
@@ -43,11 +42,6 @@ class _App extends ConsumerWidget {
       ref.read(userRepositoryProvider).get(firebaseAuth.currentUser!.uid).then((value) {
         if (value != null) {
           analytics.setUserProperties(user: value);
-          // 一旦、ピン画像は更新しないようにしている
-          // userIconRepository.loadIconImage(value.userIconUrl).then((bitmap) {
-          //   value = value!.setUserIconBitmap(bitmap);
-          //   userState.state = value;
-          // });
           userState.state = value;
           loginState.state = value.userStatus;
         }

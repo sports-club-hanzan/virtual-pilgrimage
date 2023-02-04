@@ -9,11 +9,16 @@ class TempleState with _$TempleState {
   const factory TempleState({
     @Default([]) List<TempleInfo> temples,
     required ScrollController scrollController,
+    @Default(false) bool loading,
   }) = _TempleState;
 
   const TempleState._();
 
   TempleState updateTemples(List<TempleInfo> temples) => copyWith(temples: temples);
+
+  TempleState toLoading() => copyWith(loading: true);
+
+  TempleState endLoading() => copyWith(loading: false);
 
   void addListener(VoidCallback listener) => scrollController.addListener(listener);
 }
