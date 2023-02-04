@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:logger/logger.dart';
 import 'package:virtualpilgrimage/application/user/health/health_repository.dart';
@@ -34,19 +36,27 @@ class UpdateHealthInteractor implements UpdateHealthUsecase {
         createdAt: user.createdAt,
       );
       updatedUser = user.updateHealth(health);
+      // 更新内容のhealthと取得したhealthが不一致の場合は Google Fit や ヘルスケアから情報をうまく取得できていないので、ログ出力しておく
+      if (updatedUser.health != health) {
+        unawaited(
+          _crashlytics.log(
+            'Getting Health Info may be failed [gotHealth][${health}][updateHealth][${updatedUser.health}]',
+          ),
+        );
+      }
       await _userRepository.update(updatedUser);
     } on GetHealthException catch (e) {
       final message = 'get user health information error [user][$user][error][$e]';
       _logger.e(message);
-      await _crashlytics.log(message);
-      await _crashlytics.recordError(e, null);
+      unawaited(_crashlytics.log(message));
+      unawaited(_crashlytics.recordError(e, null));
       status = UpdateHealthStatus.getHealthError;
       error = e;
     } on DatabaseException catch (e) {
       final message = 'update user health information error [user][$user][error][$e]';
       _logger.e(message, e);
-      await _crashlytics.log(message);
-      await _crashlytics.recordError(e, null);
+      unawaited(_crashlytics.log(message));
+      unawaited(_crashlytics.recordError(e, null));
       status = UpdateHealthStatus.updateUserError;
       error = e;
     } on Exception catch (e) {
@@ -54,8 +64,8 @@ class UpdateHealthInteractor implements UpdateHealthUsecase {
           '[user][$user]'
           '[error][${e.toString()}]';
       _logger.e(message, e);
-      await _crashlytics.log(message);
-      await _crashlytics.recordError(e, null);
+      unawaited(_crashlytics.log(message));
+      unawaited(_crashlytics.recordError(e, null));
       status = UpdateHealthStatus.unknownError;
       error = e;
     }

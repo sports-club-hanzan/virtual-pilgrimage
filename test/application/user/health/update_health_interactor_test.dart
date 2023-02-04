@@ -144,7 +144,7 @@ void main() {
           ),
         ).called(1);
         verify(mockUserRepository.update(any)).called(1);
-        verify(mockFirebaseCrashlytics.log(any)).called(1);
+        verify(mockFirebaseCrashlytics.log(any)).called(2);
         verify(mockFirebaseCrashlytics.recordError(any, null)).called(1);
       });
 
