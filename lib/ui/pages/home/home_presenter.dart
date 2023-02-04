@@ -47,8 +47,6 @@ class HomePresenter extends StateNotifier<HomeState> {
   /// 初期化処理
   /// 初期化時にユーザのヘルスケア情報を読み取ってDBに書き込む
   Future<void> initialize() async {
-    // ログインした時点でお寺の情報を取得する。初回のみこの処理で時間がかかる
-    final futureGetTempleInfoAllResult = _templeRepository.getTempleInfoAll();
     unawaited(_analytics.logEvent(eventName: AnalyticsEvent.initializeHomePageAndGetHealth));
 
     final loginState = _ref.read(loginStateProvider);
@@ -120,8 +118,6 @@ class HomePresenter extends StateNotifier<HomeState> {
         unawaited(_analytics.logEvent(eventName: AnalyticsEvent.reachTemple));
       }
 
-      // むやみやたらにFirestoreに問い合わせないようにお寺情報取得が完了するのを待つ
-      await Future.wait([futureGetTempleInfoAllResult]);
       // 最後に過去の移動経路を可視化する
       await setMarkerAndPolylines(user: user, logicResult: logicResult, updatePastPolylines: true);
     } on Exception catch (e) {

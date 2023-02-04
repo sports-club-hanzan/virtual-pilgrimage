@@ -173,7 +173,7 @@ void main() {
         setUp(() {
           when(mockQuerySnapshot.docs).thenReturn(mockQueryDocumentSnapshots);
           when(mockQuerySnapshot.size).thenReturn(users.length);
-          when(mockQueryDomainUser.get(const GetOptions(source: Source.server))).thenAnswer(
+          when(mockQueryDomainUser.get(const GetOptions(source: Source.serverAndCache))).thenAnswer(
             (_) => Future.value(mockQuerySnapshot),
           );
           when(
