@@ -2,17 +2,18 @@ import 'package:virtualpilgrimage/application/pilgrimage/temple_repository.dart'
 import 'package:virtualpilgrimage/domain/pilgrimage/temple_info.codegen.dart';
 
 class FakeTempleRepository extends TempleRepository {
-  FakeTempleRepository(this.templeInfo);
+  FakeTempleRepository(this.temples);
 
-  final TempleInfo templeInfo;
+  final Map<int, TempleInfo> temples;
 
   @override
   Future<TempleInfo> getTempleInfo(int templeId) {
-    return Future.value(templeInfo);
+    final temple = temples[templeId];
+    return Future.value(temple ?? temples.values.first);
   }
 
   @override
-  Future<void> getTempleInfoAll() {
-    return Future.value();
+  Future<List<TempleInfo>> getTempleInfoWithPaging({required int limit}) {
+    return Future.value(temples.values.toList());
   }
 }

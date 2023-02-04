@@ -23,7 +23,7 @@ void main() {
       encodedPoints: '',
       stampImage: '1.png',
     );
-    templeRepository = FakeTempleRepository(templeInfo);
+    templeRepository = FakeTempleRepository({23: templeInfo});
     final container = mockedProviderContainer(
       overrides: [templeRepositoryProvider.overrideWithValue(templeRepository)],
     );

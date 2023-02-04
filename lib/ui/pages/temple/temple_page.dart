@@ -37,16 +37,45 @@ class _TemplePageBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = ref.watch(templeProvider).temples;
     final scrollController = ref.read(templeProvider).scrollController;
+    final isLoading = ref.watch(templeProvider).loading;
     final user = ref.watch(userStateProvider);
 
     return ColoredBox(
       color: Theme.of(context).backgroundColor,
-      child: ListView.builder(
-        controller: scrollController,
-        itemBuilder: (BuildContext context, int index) {
-          return _buildTemple(context, state[index], user);
-        },
-        itemCount: state.length,
+      child: SizedBox(
+        width: double.maxFinite,
+        height: double.maxFinite,
+        child: Stack(
+          children: [
+            Opacity(
+              // 読み込み中は背景を透過させてローディングを目立たせる
+              opacity: isLoading ? 0.25 : 1,
+              child: SizedBox(
+                height: double.maxFinite,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  controller: scrollController,
+                  itemBuilder: (BuildContext context, int index) {
+                    return _buildTemple(context, state[index], user);
+                  },
+                  itemCount: state.length,
+                ),
+              ),
+            ),
+            if (isLoading)
+              Center(
+                child: SizedBox(
+                  height: 120,
+                  width: 120,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 16,
+                    color: Theme.of(context).colorScheme.primary,
+                    backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                  ),
+                ),
+              )
+          ],
+        ),
       ),
     );
   }

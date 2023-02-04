@@ -1,31 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/temple_repository.dart';
 import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/temple_info.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firestore_collection_path.dart';
 
-// Firestoreに格納しているお寺の情報のキャッシュ
-// お寺の情報は不変であるため、一度取得したら更新する必要はないためキャッシュしておく
-// アプリの起動時は空だが、Firestore からデータを詰めて利用する
-final templeInfoCache = StateProvider<Map<int, TempleInfo>>((_) => {});
-
 class TempleRepositoryImpl extends TempleRepository {
-  TempleRepositoryImpl(this._firestore, this._ref);
+  TempleRepositoryImpl(this._firestore);
 
   final FirebaseFirestore _firestore;
-  final Ref _ref;
 
   static const templeInfoLength = 88;
 
+  DocumentSnapshot? fetchedLastDoc;
+
   @override
   Future<TempleInfo> getTempleInfo(int templeId) async {
-    // キャッシュに存在するならばキャッシュの値をそのまま参照する
-    final templeInfoCacheMap = _ref.read(templeInfoCache);
-    if (templeInfoCacheMap.containsKey(templeId)) {
-      return templeInfoCacheMap[templeId]!;
-    }
-    // キャッシュに存在しないならばFirestoreに問い合わせる
     try {
       final ref = _firestore
           .collection(FirestoreCollectionPath.temples)
@@ -58,17 +47,36 @@ class TempleRepositoryImpl extends TempleRepository {
   /// アプリの起動時にお寺情報を取得しておくことで、毎回お寺の情報を参照しなくて済む
   /// アプリの初回ログイン時にのみFirebaseに問い合わせるような仕様になるはず
   @override
-  Future<void> getTempleInfoAll() async {
-    // templeInfoCache にすでにキャッシュされた情報が含まれている場合は何もしない
-    if (_ref.read(templeInfoCache).length == templeInfoLength) {
-      return;
+  Future<List<TempleInfo>> getTempleInfoWithPaging({required int limit}) async {
+    if (limit > templeInfoLength) {
+      throw ArgumentError('取得件数は$templeInfoLengthまでに絞ってください');
     }
     try {
       // firebase からすベてのお寺情報を取得
-      final snapshot = await _firestore.collection(FirestoreCollectionPath.temples).get(const GetOptions(source: Source.serverAndCache));
-      final Map<int, TempleInfo> templeInfoMap = {};
+      QuerySnapshot<Map<String, dynamic>> snapshots;
+      // 初回のデータ取得時は先頭から limit 件取得
+      if (fetchedLastDoc == null) {
+        snapshots = await _firestore
+            .collection(FirestoreCollectionPath.temples)
+            .orderBy('id')
+            .limit(limit)
+            .get(const GetOptions(source: Source.serverAndCache));
+      }
+      // 2回目以降はページネーションを使って limit 件取得
+      else {
+        snapshots = await _firestore
+            .collection(FirestoreCollectionPath.temples)
+            .orderBy('id')
+            .startAfterDocument(fetchedLastDoc!)
+            .limit(limit)
+            .get(const GetOptions(source: Source.serverAndCache));
+      }
+      // 取得できたドキュメントの最後尾を保存
+      fetchedLastDoc = snapshots.docs.last;
+
+      final List<TempleInfo> temples = [];
       // domain entity に convert して id ごとに情報を詰める
-      for (final doc in snapshot.docs) {
+      for (final doc in snapshots.docs) {
         final templeInfoSnapshot = await doc.reference
             .withConverter<TempleInfo>(
               fromFirestore: (snapshot, _) => TempleInfo.fromJson(snapshot.data()!),
@@ -77,10 +85,10 @@ class TempleRepositoryImpl extends TempleRepository {
             .get(const GetOptions(source: Source.serverAndCache));
         final data = templeInfoSnapshot.data();
         if (templeInfoSnapshot.exists && data != null) {
-          templeInfoMap.addAll({data.id: data});
+          temples.add(data);
         }
       }
-      _ref.read(templeInfoCache.notifier).state = templeInfoMap;
+      return temples;
     } on FirebaseException catch (e) {
       throw DatabaseException(
         message: 'cause Firestore error [code][${e.code}][message][${e.message}]',

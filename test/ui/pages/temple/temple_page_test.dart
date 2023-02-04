@@ -1,20 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/temple_repository.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/temple_info.codegen.dart';
-import 'package:virtualpilgrimage/infrastructure/pilgrimage/temple_repository_impl.dart';
 import 'package:virtualpilgrimage/ui/pages/temple/temple_page.dart';
 
-import '../../../application/pilgrimage/update_pilgrimage_progress_interactor_test.mocks.dart';
+import '../../../helper/fakes/fake_temple_repository.dart';
 import '../../../helper/provider_container.dart';
 import '../../../helper/wrap_material_app.dart';
 
 void main() {
-  final templeRepository = MockTempleRepository();
-  when(templeRepository.getTempleInfoAll()).thenAnswer((_) => Future.value());
+  final templeRepository = FakeTempleRepository(createTempleInfoMap());
 
   // ダイアログの表示テストはwidgetテストの範囲に収まらないので、実装していない
   group('TemplePage', () {
@@ -27,12 +24,14 @@ void main() {
               const TemplePage(),
               overrides: [
                 templeRepositoryProvider.overrideWithValue(templeRepository),
-                templeInfoCache.overrideWith((_) => createTempleInfoMap()),
               ],
             ),
           ),
         ),
       );
+
+      await mockNetworkImagesFor(() => widgetTester.pump());
+
       expect(find.text('1番札所'), findsOneWidget);
       expect(find.text('霊山寺'), findsOneWidget);
       // スクロールしないと見えないはず
@@ -49,7 +48,6 @@ void main() {
               const TemplePage(),
               overrides: [
                 templeRepositoryProvider.overrideWithValue(templeRepository),
-                templeInfoCache.overrideWith((_) => createTempleInfoMap()),
               ],
             ),
           ),
@@ -61,6 +59,8 @@ void main() {
       final itemFinder = find.byKey(const ValueKey('temple_88'));
 
       await widgetTester.scrollUntilVisible(itemFinder, 1000, scrollable: listFinder);
+
+      await mockNetworkImagesFor(() => widgetTester.pump());
 
       // 末尾のお寺情報が見えているはず
       expect(itemFinder, findsOneWidget);
