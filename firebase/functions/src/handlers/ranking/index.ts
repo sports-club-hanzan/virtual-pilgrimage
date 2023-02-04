@@ -79,18 +79,28 @@ const convertRanking = (sortedSteps: Array<IntermediateUserInfo>): Ranking => {
   };
 }
 
+const toStartTime = (targetDate: Date): Date => {
+    targetDate.setHours(0);
+    targetDate.setMinutes(0);
+    targetDate.setSeconds(0);
+    return targetDate;
+}
+
+const isOverTargetDate = (userUpdatedAt: Timestamp, targetDate: Date): boolean => {
+  const targetDateStartTime = toStartTime(targetDate);
+      return userUpdatedAt.seconds > Math.floor(targetDateStartTime.getTime() / 1000);
+}
+
 const updateRankingHandler = async () => {
   const db = getFirestore();
   const querySnapshot = await db.collection("users").get();
 
-  const todaySteps: Array<IntermediateUserInfo> = []
-  const todayDistances: Array<IntermediateUserInfo> = []
-  const yesterdaySteps: Array<IntermediateUserInfo> = []
-  const yesterdayDistances: Array<IntermediateUserInfo> = []
-  const weekSteps: Array<IntermediateUserInfo> = []
-  const weekDistances: Array<IntermediateUserInfo> = []
-  const monthSteps: Array<IntermediateUserInfo> = []
-  const monthDistances: Array<IntermediateUserInfo> = []
+  const dailySteps: Array<IntermediateUserInfo> = []
+  const dailyDistances: Array<IntermediateUserInfo> = []
+  const weeklySteps: Array<IntermediateUserInfo> = []
+  const weeklyDistances: Array<IntermediateUserInfo> = []
+  const monthlySteps: Array<IntermediateUserInfo> = []
+  const monthlyDistances: Array<IntermediateUserInfo> = []
 
   // 日付(yyyymmdd形式で取得)
   const datetime = new Date();
@@ -108,53 +118,48 @@ const updateRankingHandler = async () => {
         userIconUrl: user.userIconUrl,
       }
     };
+    const today = new Date();
     {
       const targetDate = new Date();
-      targetDate.setDate(targetDate.getDate() - 1);
-      targetDate.setHours(0);
-      targetDate.setMinutes(0);
-      targetDate.setSeconds(0);
-      // 昨日更新されているユーザだけ計測した歩数と距離を詰める
-      if (user.health.updatedAt.seconds > Math.floor(targetDate.getTime() / 1000)) {
-        todaySteps.push({ id: doc.id, value: user.health.today.steps, ...userInfoForRanking });
-        todayDistances.push({ id: doc.id, value: user.health.today.distance, ...userInfoForRanking });
-        yesterdaySteps.push({ id: doc.id, value: user.health.yesterday.steps, ...userInfoForRanking });
-        yesterdayDistances.push({ id: doc.id, value: user.health.yesterday.distance, ...userInfoForRanking });
-      } else {
-        todaySteps.push({ id: doc.id, value: 0, ...userInfoForRanking });
-        todayDistances.push({ id: doc.id, value: 0, ...userInfoForRanking });
-        yesterdaySteps.push({ id: doc.id, value: 0, ...userInfoForRanking });
-        yesterdayDistances.push({ id: doc.id, value: 0, ...userInfoForRanking });
+      targetDate.setDate(today.getDate() - 1);
+      // 当日、すでに歩数・距離が更新されているユーザは前日のデータを参照する(前日のデータに昨日の歩数が格納されている)
+      if (isOverTargetDate(user.health.updatedAt, today)) {
+        dailySteps.push({ id: doc.id, value: user.health.yesterday.steps, ...userInfoForRanking });
+        dailyDistances.push({ id: doc.id, value: user.health.yesterday.distance, ...userInfoForRanking });
+      }
+      // 昨日更新されているユーザは当日に計測した歩数と距離を詰める(当日のデータに昨日の歩数が格納されている)
+      else if (isOverTargetDate(user.health.updatedAt, targetDate)) {
+        dailySteps.push({ id: doc.id, value: user.health.today.steps, ...userInfoForRanking });
+        dailyDistances.push({ id: doc.id, value: user.health.today.distance, ...userInfoForRanking });
+      }
+      // 一昨日以前に更新されたユーザは0歩、0km扱い
+      else {
+        dailySteps.push({ id: doc.id, value: 0, ...userInfoForRanking });
+        dailyDistances.push({ id: doc.id, value: 0, ...userInfoForRanking });
       }
     }
     {
       const targetDate = new Date();
       targetDate.setDate(targetDate.getDate() - 7);
-      targetDate.setHours(0);
-      targetDate.setMinutes(0);
-      targetDate.setSeconds(0);
       // 先週に1度でも更新されているユーザだけ計測した歩数と距離を詰める
-      if (user.health.updatedAt.seconds > Math.floor(targetDate.getTime() / 1000)) {
-        weekSteps.push({ id: doc.id, value: user.health.week.steps, ...userInfoForRanking });
-        weekDistances.push({ id: doc.id, value: user.health.week.distance, ...userInfoForRanking });
+      if (isOverTargetDate(user.health.updatedAt, targetDate)) {
+        weeklySteps.push({ id: doc.id, value: user.health.week.steps, ...userInfoForRanking });
+        weeklyDistances.push({ id: doc.id, value: user.health.week.distance, ...userInfoForRanking });
       } else {
-        weekSteps.push({ id: doc.id, value: 0, ...userInfoForRanking });
-        weekDistances.push({ id: doc.id, value: 0, ...userInfoForRanking });
+        weeklySteps.push({ id: doc.id, value: 0, ...userInfoForRanking });
+        weeklyDistances.push({ id: doc.id, value: 0, ...userInfoForRanking });
       }
     }
     {
       const targetDate = new Date();
-      targetDate.setDate(targetDate.getDate() - 7);
-      targetDate.setHours(0);
-      targetDate.setMinutes(0);
-      targetDate.setSeconds(0);
+      targetDate.setDate(targetDate.getDate() - 31);
       // 1ヶ月以内に1度でも更新されているユーザだけ計測した歩数と距離を詰める
-      if (user.health.updatedAt.seconds > Math.floor(targetDate.getTime() / 1000)) {
-        monthSteps.push({ id: doc.id, value: user.health.month.steps, ...userInfoForRanking });
-        monthDistances.push({ id: doc.id, value: user.health.month.distance, ...userInfoForRanking });
+      if (isOverTargetDate(user.health.updatedAt, targetDate)) {
+        monthlySteps.push({ id: doc.id, value: user.health.month.steps, ...userInfoForRanking });
+        monthlyDistances.push({ id: doc.id, value: user.health.month.distance, ...userInfoForRanking });
       } else {
-        monthSteps.push({ id: doc.id, value: 0, ...userInfoForRanking });
-        monthDistances.push({ id: doc.id, value: 0, ...userInfoForRanking });
+        monthlySteps.push({ id: doc.id, value: 0, ...userInfoForRanking });
+        monthlyDistances.push({ id: doc.id, value: 0, ...userInfoForRanking });
       }
     }
   });
@@ -178,13 +183,9 @@ const updateRankingHandler = async () => {
 
   // 期間ごとにランキングテーブルを更新
   // 9:00以降であれば昨日の歩数を9:00以前であれば今日の歩数を日次のランキングとして保存
-  if (datetime.getUTCDate() === datetime.getDate()) {
-    await updateRankingWithStepsAndDistances(yesterdaySteps, yesterdayDistances, "daily");
-  } else {
-    await updateRankingWithStepsAndDistances(todaySteps, todayDistances, "daily");
-  }
-  await updateRankingWithStepsAndDistances(weekSteps, weekDistances, "weekly");
-  await updateRankingWithStepsAndDistances(monthSteps, monthDistances, "monthly");
+  await updateRankingWithStepsAndDistances(dailySteps, dailyDistances, "daily");
+  await updateRankingWithStepsAndDistances(weeklySteps, weeklyDistances, "weekly");
+  await updateRankingWithStepsAndDistances(monthlySteps, monthlyDistances, "monthly");
 }
 
 export const updateRanking = defaultFunctions()
