@@ -40,7 +40,7 @@ class UpdateHealthInteractor implements UpdateHealthUsecase {
       if (updatedUser.health != health) {
         unawaited(
           _crashlytics.log(
-            'Getting Health Info may be failed [gotHealth][${health}][updateHealth][${updatedUser.health}]',
+            'Getting Health Info may be failed [gotHealth][$health][updateHealth][${updatedUser.health}]',
           ),
         );
       }
