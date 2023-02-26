@@ -68,7 +68,7 @@ android {
     // https://firebase.google.com/docs/android/setup?hl=ja#register-app => 31
     // 2022/10現在、最新のバージョン（Android13）
     compileSdkVersion 33
-    ndkVersion flutter.ndkVersion
+    ndkVersion "25.2.9519653"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -132,6 +132,9 @@ android {
     buildTypes {
         release {
             signingConfig signingConfigs.release
+            ndk {
+                debugSymbolLevel 'SYMBOL_TABLE'
+            }
         }
     }
 }
