@@ -78,7 +78,7 @@ class _SettingsPageBody extends StatelessWidget {
               title: const Text('プライバシーポリシー'),
               onPressed: (BuildContext context) => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyWebView(url: policyUrl)),
+                MaterialPageRoute<dynamic>(builder: (context) => _PolicyWebView(url: policyUrl)),
               ),
             ),
             SettingsTile(
@@ -94,9 +94,8 @@ class _SettingsPageBody extends StatelessWidget {
   }
 }
 
-class MyWebView extends StatelessWidget {
-
-  MyWebView({super.key, required this.url}) {
+class _PolicyWebView extends StatelessWidget {
+  _PolicyWebView({required this.url}) {
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(const Color(0x00000000))
@@ -118,6 +117,7 @@ class MyWebView extends StatelessWidget {
       )
       ..loadRequest(Uri.parse(url));
   }
+
   final String url;
 
   late final WebViewController controller;
