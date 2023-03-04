@@ -4,6 +4,7 @@ import 'package:settings_ui/settings_ui.dart';
 import 'package:virtualpilgrimage/ui/components/bottom_navigation.dart';
 import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
 import 'package:virtualpilgrimage/ui/pages/settings/settings_presenter.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
@@ -20,6 +21,8 @@ class SettingsPage extends ConsumerWidget {
 
 class _SettingsPageBody extends StatelessWidget {
   const _SettingsPageBody(this._ref);
+
+  static const policyUrl = 'https://courageous-gumption-d7fd12.netlify.app/policy/';
 
   final WidgetRef _ref;
 
@@ -51,6 +54,11 @@ class _SettingsPageBody extends StatelessWidget {
               leading: const Icon(Icons.edit_outlined),
             ),
             SettingsTile(
+              title: const Text('プロフィール画像変更'),
+              onPressed: notifier.updateProfileImage,
+              leading: const Icon(Icons.image_outlined),
+            ),
+            SettingsTile(
               title: const Text('ログアウト'),
               onPressed: (BuildContext context) => notifier.logout(),
               leading: const Icon(Icons.logout_outlined),
@@ -66,6 +74,14 @@ class _SettingsPageBody extends StatelessWidget {
           title: const Text('その他'),
           tiles: <SettingsTile>[
             SettingsTile(
+              leading: const Icon(Icons.account_circle_outlined),
+              title: const Text('プライバシーポリシー'),
+              onPressed: (BuildContext context) => Navigator.push(
+                context,
+                MaterialPageRoute<dynamic>(builder: (context) => _PolicyWebView(url: policyUrl)),
+              ),
+            ),
+            SettingsTile(
               leading: const Icon(Icons.mail_outline),
               title: const Text('問い合わせ'),
               description: const Text('メールで担当者に問い合わせできます'),
@@ -74,6 +90,43 @@ class _SettingsPageBody extends StatelessWidget {
           ],
         ),
       ],
+    );
+  }
+}
+
+class _PolicyWebView extends StatelessWidget {
+  _PolicyWebView({required this.url}) {
+    controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0x00000000))
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onProgress: (int progress) {
+            // Update loading bar.
+          },
+          onPageStarted: (String url) {},
+          onPageFinished: (String url) {},
+          onWebResourceError: (WebResourceError error) {},
+          onNavigationRequest: (NavigationRequest request) {
+            if (request.url.startsWith(url)) {
+              return NavigationDecision.prevent;
+            }
+            return NavigationDecision.navigate;
+          },
+        ),
+      )
+      ..loadRequest(Uri.parse(url));
+  }
+
+  final String url;
+
+  late final WebViewController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: const MyAppBar(),
+      body: SafeArea(child: WebViewWidget(controller: controller)),
     );
   }
 }

@@ -46,5 +46,13 @@ service cloud.firestore {
         match /deleted_users/{userId} {
             allow create: if isUserAuthenticated(userId);
         }
+
+        match /rankings {
+            allow list: if true;
+        }
+
+        match /rankings/{document=**} {
+            allow list: if true;
+        }
     }
 }

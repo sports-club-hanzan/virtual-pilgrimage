@@ -4,15 +4,24 @@ import 'package:virtualpilgrimage/analytics.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/router.dart';
 
+/// 参照しているページの種類を表すprovider
 final pageTypeProvider = StateProvider<PageType>((_) => PageType.home);
 
 enum PageType {
+  ranking,
   temple,
   home,
   profile,
-  // ranking,
   setting,
 }
+
+final Map<PageType, String> pageTypePathMapping = {
+  PageType.ranking: RouterPath.ranking,
+  PageType.temple: RouterPath.temple,
+  PageType.home: RouterPath.home,
+  PageType.profile: RouterPath.profile,
+  PageType.setting: RouterPath.settings,
+};
 
 class BottomNavigation extends ConsumerWidget {
   const BottomNavigation({super.key});
@@ -27,6 +36,10 @@ class BottomNavigation extends ConsumerWidget {
 
     final destinations = <Widget>[
       NavigationDestination(
+        icon: const Icon(Icons.emoji_events_outlined),
+        label: PageType.ranking.name,
+      ),
+      NavigationDestination(
         icon: const Icon(Icons.temple_hindu),
         label: PageType.temple.name,
       ),
@@ -39,8 +52,6 @@ class BottomNavigation extends ConsumerWidget {
         label: PageType.profile.name,
       ),
       NavigationDestination(icon: const Icon(Icons.settings_outlined), label: PageType.setting.name)
-      // 下記はランキングページ用の設定
-      // NavigationDestination(icon: const Icon(Icons.emoji_events_outlined), label: ''),
     ];
     return NavigationBar(
       selectedIndex: pageType.index,
@@ -54,11 +65,11 @@ class BottomNavigation extends ConsumerWidget {
           parameters: {'pageType': pageType.name},
         );
         switch (pageType) {
-          case PageType.temple:
-            router.go(RouterPath.temple);
-            break;
           case PageType.home:
-            router.go(RouterPath.home);
+          case PageType.temple:
+          case PageType.ranking:
+          case PageType.setting:
+            router.go(pageTypePathMapping[pageType]!);
             break;
           case PageType.profile:
             // ボトムナビゲーションから遷移する場合はログインユーザのプロフィールを表示
@@ -70,9 +81,6 @@ class BottomNavigation extends ConsumerWidget {
                 'previousPagePath': RouterPath.home,
               },
             );
-            break;
-          case PageType.setting:
-            router.goNamed(RouterPath.settings);
             break;
         }
       },

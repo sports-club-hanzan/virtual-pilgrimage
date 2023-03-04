@@ -18,6 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$TempleState {
   List<TempleInfo> get temples => throw _privateConstructorUsedError;
   ScrollController get scrollController => throw _privateConstructorUsedError;
+  bool get loading => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $TempleStateCopyWith<TempleState> get copyWith =>
@@ -30,7 +31,10 @@ abstract class $TempleStateCopyWith<$Res> {
           TempleState value, $Res Function(TempleState) then) =
       _$TempleStateCopyWithImpl<$Res, TempleState>;
   @useResult
-  $Res call({List<TempleInfo> temples, ScrollController scrollController});
+  $Res call(
+      {List<TempleInfo> temples,
+      ScrollController scrollController,
+      bool loading});
 }
 
 /// @nodoc
@@ -48,6 +52,7 @@ class _$TempleStateCopyWithImpl<$Res, $Val extends TempleState>
   $Res call({
     Object? temples = null,
     Object? scrollController = null,
+    Object? loading = null,
   }) {
     return _then(_value.copyWith(
       temples: null == temples
@@ -58,6 +63,10 @@ class _$TempleStateCopyWithImpl<$Res, $Val extends TempleState>
           ? _value.scrollController
           : scrollController // ignore: cast_nullable_to_non_nullable
               as ScrollController,
+      loading: null == loading
+          ? _value.loading
+          : loading // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -70,7 +79,10 @@ abstract class _$$_TempleStateCopyWith<$Res>
       __$$_TempleStateCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<TempleInfo> temples, ScrollController scrollController});
+  $Res call(
+      {List<TempleInfo> temples,
+      ScrollController scrollController,
+      bool loading});
 }
 
 /// @nodoc
@@ -86,6 +98,7 @@ class __$$_TempleStateCopyWithImpl<$Res>
   $Res call({
     Object? temples = null,
     Object? scrollController = null,
+    Object? loading = null,
   }) {
     return _then(_$_TempleState(
       temples: null == temples
@@ -96,6 +109,10 @@ class __$$_TempleStateCopyWithImpl<$Res>
           ? _value.scrollController
           : scrollController // ignore: cast_nullable_to_non_nullable
               as ScrollController,
+      loading: null == loading
+          ? _value.loading
+          : loading // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -105,7 +122,8 @@ class __$$_TempleStateCopyWithImpl<$Res>
 class _$_TempleState extends _TempleState {
   const _$_TempleState(
       {final List<TempleInfo> temples = const [],
-      required this.scrollController})
+      required this.scrollController,
+      this.loading = false})
       : _temples = temples,
         super._();
 
@@ -119,10 +137,13 @@ class _$_TempleState extends _TempleState {
 
   @override
   final ScrollController scrollController;
+  @override
+  @JsonKey()
+  final bool loading;
 
   @override
   String toString() {
-    return 'TempleState(temples: $temples, scrollController: $scrollController)';
+    return 'TempleState(temples: $temples, scrollController: $scrollController, loading: $loading)';
   }
 
   @override
@@ -132,12 +153,13 @@ class _$_TempleState extends _TempleState {
             other is _$_TempleState &&
             const DeepCollectionEquality().equals(other._temples, _temples) &&
             (identical(other.scrollController, scrollController) ||
-                other.scrollController == scrollController));
+                other.scrollController == scrollController) &&
+            (identical(other.loading, loading) || other.loading == loading));
   }
 
   @override
   int get hashCode => Object.hash(runtimeType,
-      const DeepCollectionEquality().hash(_temples), scrollController);
+      const DeepCollectionEquality().hash(_temples), scrollController, loading);
 
   @JsonKey(ignore: true)
   @override
@@ -149,13 +171,16 @@ class _$_TempleState extends _TempleState {
 abstract class _TempleState extends TempleState {
   const factory _TempleState(
       {final List<TempleInfo> temples,
-      required final ScrollController scrollController}) = _$_TempleState;
+      required final ScrollController scrollController,
+      final bool loading}) = _$_TempleState;
   const _TempleState._() : super._();
 
   @override
   List<TempleInfo> get temples;
   @override
   ScrollController get scrollController;
+  @override
+  bool get loading;
   @override
   @JsonKey(ignore: true)
   _$$_TempleStateCopyWith<_$_TempleState> get copyWith =>

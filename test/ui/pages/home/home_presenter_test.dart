@@ -21,8 +21,9 @@ void main() {
       distance: 75400,
       geoPoint: GeoPoint(33.73244444, 134.5274722),
       encodedPoints: '',
+      stampImage: '1.png',
     );
-    templeRepository = FakeTempleRepository(templeInfo);
+    templeRepository = FakeTempleRepository({23: templeInfo});
     final container = mockedProviderContainer(
       overrides: [templeRepositoryProvider.overrideWithValue(templeRepository)],
     );

@@ -25,7 +25,8 @@ class UserRepositoryImpl extends UserRepository {
                 VirtualPilgrimageUser.fromJson(snapshot.data()!),
             toFirestore: (VirtualPilgrimageUser user, _) => user.toJson(),
           );
-      final userSnapshot = await ref.get();
+      // よくデータが更新されるので、キャッシュを使わないようにsourceをserverだけにしている
+      final userSnapshot = await ref.get(const GetOptions(source: Source.server));
       final user = userSnapshot.data();
       if (userSnapshot.exists && user != null) {
         _logger.d(user);
@@ -78,7 +79,8 @@ class UserRepositoryImpl extends UserRepository {
               VirtualPilgrimageUser.fromJson(snapshot.data()!),
           toFirestore: (VirtualPilgrimageUser user, _) => user.toJson(),
         );
-    final snapshot = await ref.get();
+    // 存在可否にしか使っていないので、キャッシュが使える場合はキャッシュを使う
+    final snapshot = await ref.get(const GetOptions(source: Source.serverAndCache));
     if (snapshot.size == 0) {
       return null;
     }

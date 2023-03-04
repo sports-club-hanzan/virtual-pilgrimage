@@ -5,10 +5,8 @@ import 'package:mockito/mockito.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/temple_repository.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/temple_info.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firestore_provider.dart';
-import 'package:virtualpilgrimage/infrastructure/pilgrimage/temple_repository_impl.dart';
 
 import '../../helper/mock.mocks.dart';
-import '../../helper/mock_query_document_snapshot.dart';
 import '../../helper/provider_container.dart';
 
 void main() {
@@ -20,8 +18,6 @@ void main() {
   late MockCollectionReference<Map<String, dynamic>> mockCollectionReference;
   late MockDocumentReference<TempleInfo> mockTempleInfoDocumentReference;
   late MockDocumentReference<Map<String, dynamic>> mockMapDocumentReference;
-  late QueryDocumentSnapshot<Map<String, dynamic>> snapshot1;
-  late QueryDocumentSnapshot<Map<String, dynamic>> snapshot2;
 
   setUp(() {
     mockFirebaseFirestore = MockFirebaseFirestore();
@@ -35,8 +31,6 @@ void main() {
     mockCollectionReference = MockCollectionReference();
     mockMapDocumentReference = MockDocumentReference();
     mockTempleInfoDocumentReference = MockDocumentReference();
-    snapshot1 = MockQueryDocumentSnapshot({}, mockMapDocumentReference);
-    snapshot2 = MockQueryDocumentSnapshot({}, mockMapDocumentReference);
   });
 
   group('TempleRepositoryImpl', () {
@@ -52,7 +46,8 @@ void main() {
           toFirestore: anyNamed('toFirestore'),
         ),
       ).thenReturn(mockTempleInfoDocumentReference);
-      when(mockTempleInfoDocumentReference.get()).thenAnswer(
+      when(mockTempleInfoDocumentReference.get(const GetOptions(source: Source.serverAndCache)))
+          .thenAnswer(
         (_) => Future.value(mockDocumentSnapshot),
       );
     });
@@ -72,38 +67,6 @@ void main() {
           expect(actual, expected);
           verify(mockFirebaseFirestore.collection('temples')).called(1);
         });
-        test('キャッシュからお寺の情報を取得できる', () async {
-          // given
-          container.read(templeInfoCache.notifier).state = {11: defaultTempleInfo(11)};
-
-          // when
-          final actual = await target.getTempleInfo(11);
-          expect(actual, defaultTempleInfo(11));
-          // Firestoreへの問い合わせを行なっていない
-          verifyNever(mockFirebaseFirestore.collection('temples')).called(0);
-        });
-      });
-    });
-
-    group('getTempleInfoAll', () {
-      final QuerySnapshot<Map<String, dynamic>> querySnapshot = MockQuerySnapshot();
-      test('正常系', () async {
-        // given
-        when(mockCollectionReference.get()).thenAnswer((_) => Future.value(querySnapshot));
-        when(querySnapshot.docs).thenReturn([snapshot1, snapshot2]);
-        when(mockDocumentSnapshot.exists).thenReturn(true);
-        when(mockDocumentSnapshot.data()).thenReturn(defaultTempleInfo());
-
-        // when
-        await target.getTempleInfoAll();
-
-        // then
-        expect(container.read(templeInfoCache), {1: defaultTempleInfo()});
-        verify(mockFirebaseFirestore.collection('temples')).called(1);
-        verify(querySnapshot.docs).called(1);
-        verify(mockTempleInfoDocumentReference.get()).called(2);
-        verify(mockDocumentSnapshot.exists).called(2);
-        verify(mockDocumentSnapshot.data()).called(2);
       });
     });
   });
@@ -121,5 +84,6 @@ TempleInfo defaultTempleInfo([
     distance: 1000,
     encodedPoints:
         'mwnoEuc}sXJ?z@Z\\D?h@@|@TtBPx@rAtD\\pALh@X|B\\hDHtABf@Jf@Bh@HTBTRtBl@hFRdA\\lAHPx@vCl@xBx@vB^l@bAxAx@v@GHC|@?\\Cn@e@Ny@TOx@O?E@In@',
+    stampImage: '1.png',
   );
 }

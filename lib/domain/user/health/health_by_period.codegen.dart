@@ -25,4 +25,8 @@ class HealthByPeriod with _$HealthByPeriod {
 
   factory HealthByPeriod.fromJson(Map<String, dynamic> json) =>
       _$HealthByPeriodFromJson(json);
+
+  bool validate() {
+    return steps > 0 && distance > 0 && burnedCalorie > 0;
+  }
 }

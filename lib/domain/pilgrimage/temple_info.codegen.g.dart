@@ -15,8 +15,7 @@ _$_TempleInfo _$$_TempleInfoFromJson(Map<String, dynamic> json) =>
       distance: json['distance'] as int,
       encodedPoints: json['encodedPoints'] as String,
       knowledge: json['knowledge'] as String? ?? 'お寺の詳細情報',
-      stampImage: json['stampImage'] as String? ??
-          'https://firebasestorage.googleapis.com/v0/b/virtual-pilgrimage-dev.appspot.com/o/temples%2F1%2Fstamp.jpeg?alt=media&token=b3fe42f9-b94b-43f2-8a5d-b2f217be541f',
+      stampImage: json['stampImage'] as String,
       geoPoint:
           _GeoPointConverter.geoPointFromJson(json['geoPoint'] as GeoPoint),
       images: (json['images'] as List<dynamic>?)

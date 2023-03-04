@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:virtualpilgrimage/analytics.dart';
@@ -9,9 +11,11 @@ import 'package:virtualpilgrimage/application/user/health/update_health_usecase.
 import 'package:virtualpilgrimage/application/user/profile/update_user_profile_image_usecase.dart';
 import 'package:virtualpilgrimage/application/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
+import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/logger.dart';
+import 'package:virtualpilgrimage/ui/components/molecules/fail_upload_image_dialog.dart';
 import 'package:virtualpilgrimage/ui/pages/profile/profile_state.codegen.dart';
 
 final profileUserProvider =
@@ -49,11 +53,13 @@ class ProfilePresenter extends StateNotifier<ProfileState> {
   ProfilePresenter(this._ref) : super(ProfileState(selectedTabIndex: 0)) {
     _updateUserProfileImageInteractor = _ref.read(updateUserProfileImageUsecaseProvider);
     _analytics = _ref.read(analyticsProvider);
+    _crashlytics = _ref.read(firebaseCrashlyticsProvider);
   }
 
   final Ref _ref;
   late final UpdateUserProfileImageUsecase _updateUserProfileImageInteractor;
   late final Analytics _analytics;
+  late final FirebaseCrashlytics _crashlytics;
 
   final _selectedTabs = ['今日', '昨日', '週間', '月間'];
   final _genderString = ['', '男性', '女性'];
@@ -89,19 +95,32 @@ class ProfilePresenter extends StateNotifier<ProfileState> {
   }
 
   /// プロフィール画像を更新する
-  Future<void> updateProfileImage() async {
+  Future<void> updateProfileImage(BuildContext context) async {
     unawaited(_analytics.logEvent(eventName: AnalyticsEvent.pressedUploadImage));
     final loginUser = _ref.watch(userStateProvider)!;
 
     // カメラロールから画像を選択させる
     final picker = ImagePicker();
-    final image = await picker.pickImage(source: ImageSource.gallery, maxHeight: 64, maxWidth: 64);
-    // 空だったら更新しない
-    // FIXME: ユーザに画像が保存できなかった旨のpopupを見せたい
+    final image =
+        await picker.pickImage(source: ImageSource.gallery, maxHeight: 128, maxWidth: 128);
+    // 取得できた画像情報が空だったら更新しない
     if (image == null) {
+      unawaited(_crashlytics.log('failed to open image for upload profile image'));
+      await showDialog<void>(
+        context: context,
+        builder: (BuildContext context) => const FailUploadImageDialog(),
+      );
       return;
     }
 
-    await _updateUserProfileImageInteractor.execute(user: loginUser, imageFile: File(image.path));
+    try {
+      await _updateUserProfileImageInteractor.execute(user: loginUser, imageFile: File(image.path));
+    } on DatabaseException catch (e) {
+      unawaited(_crashlytics.recordError(e, null));
+      await showDialog<void>(
+        context: context,
+        builder: (BuildContext context) => const FailUploadImageDialog(),
+      );
+    }
   }
 }
