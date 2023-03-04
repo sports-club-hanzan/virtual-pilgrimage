@@ -14,10 +14,15 @@ class AppleAuthRepository extends AuthRepository {
     try {
       // MEMO: getAppleIDCredential は static method なので、DI で SignInWithApple クラスを埋め込むことができない
       // -> unit test ができない
-      final appleCredential =
-          await SignInWithApple.getAppleIDCredential(scopes: AppleIDAuthorizationScopes.values);
-      final oAuthCredential = AppleAuthProvider.credential(appleCredential.authorizationCode);
-      return _firebaseAuth.signInWithCredential(oAuthCredential);
+      // final appleCredential =
+      //     await SignInWithApple.getAppleIDCredential(scopes: AppleIDAuthorizationScopes.values);
+      // final oAuthCredential = AppleAuthProvider.credential(
+      //     appleCredential.identityToken, appleCredential.authorizationCode);
+      // return _firebaseAuth.signInWithCredential(oAuthCredential);
+      final appleProvider = AppleAuthProvider()
+        ..addScope('email')
+        ..addScope('name');
+      return _firebaseAuth.signInWithProvider(appleProvider);
     } on SignInWithAppleException catch (e) {
       throw SignInException(
         message: 'cause apple sign-in exception [exception][$e]',
