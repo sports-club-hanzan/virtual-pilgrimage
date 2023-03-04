@@ -15,6 +15,7 @@ import 'package:virtualpilgrimage/application/ranking/ranking_repository.dart';
 import 'package:virtualpilgrimage/application/user/health/health_repository.dart';
 import 'package:virtualpilgrimage/application/user/profile/user_profile_image_repository.dart';
 import 'package:virtualpilgrimage/application/user/user_repository.dart';
+import 'package:virtualpilgrimage/infrastructure/auth/apple_auth_repository.dart';
 import 'package:virtualpilgrimage/infrastructure/auth/email_and_password_auth_repository.dart';
 import 'package:virtualpilgrimage/infrastructure/auth/google_auth_repository.dart';
 
@@ -57,6 +58,7 @@ import 'package:virtualpilgrimage/infrastructure/auth/google_auth_repository.dar
   /// Repository
   EmailAndPasswordAuthRepository,
   GoogleAuthRepository,
+  AppleAuthRepository,
   UserRepository,
   HealthRepository,
   UserProfileImageRepository,
