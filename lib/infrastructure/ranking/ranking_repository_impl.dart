@@ -36,10 +36,7 @@ class RankingRepositoryImpl extends RankingRepository {
         cause: e,
       );
     } on Exception catch (e) {
-      throw DatabaseException(
-        message: 'unexpected Firestore error ${e.toString()}',
-        cause: e,
-      );
+      throw DatabaseException(message: 'unexpected Firestore error [error][$e]', cause: e);
     }
   }
 }

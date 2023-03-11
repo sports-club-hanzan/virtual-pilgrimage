@@ -59,10 +59,7 @@ class UserRepositoryImpl extends UserRepository {
         cause: e,
       );
     } on Exception catch (e) {
-      throw DatabaseException(
-        message: 'unexpected error ${e.toString()}',
-        cause: e,
-      );
+      throw DatabaseException(message: 'unexpected error [error][$e]', cause: e);
     }
   }
 
@@ -108,10 +105,7 @@ class UserRepositoryImpl extends UserRepository {
         cause: e,
       );
     } on Exception catch (e) {
-      throw DatabaseException(
-        message: 'unexpected error ${e.toString()}',
-        cause: e,
-      );
+      throw DatabaseException(message: 'unexpected error [error][$e]', cause: e);
     }
   }
 }
