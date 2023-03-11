@@ -4,8 +4,12 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "lib/**/*.dart"
   pull_request:
     types: [opened, synchronize]
+    paths:
+      - "lib/**/*.dart"
 
 jobs:
   # ユニットテストを実行
