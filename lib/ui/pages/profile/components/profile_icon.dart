@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
+import 'package:virtualpilgrimage/ui/components/molecules/fail_upload_image_dialog.dart';
 import 'package:virtualpilgrimage/ui/components/profile_icon.dart';
 import 'package:virtualpilgrimage/ui/pages/profile/profile_presenter.dart';
 import 'package:virtualpilgrimage/ui/style/color.dart';
 
-class ProfileIcon extends StatelessWidget {
+class ProfileIcon extends StatefulWidget {
   const ProfileIcon({
     super.key,
     required this.user,
@@ -19,6 +20,11 @@ class ProfileIcon extends StatelessWidget {
   final ProfilePresenter notifier;
 
   @override
+  State<StatefulWidget> createState() => ProfileIconState();
+}
+
+class ProfileIconState extends State<ProfileIcon> {
+  @override
   Widget build(BuildContext context) {
     return Center(
       child: SizedBox(
@@ -29,13 +35,26 @@ class ProfileIcon extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 24),
               child: ProfileIconWidget(
-                iconUrl: user.userIconUrl,
+                iconUrl: widget.user.userIconUrl,
                 size: 128,
-                onTap: () => notifier.updateProfileImage(context),
+                onTap: () async {
+                  final result = await widget.notifier.updateProfileImage(context);
+                  // 更新できなかった場合、ダイアログを出す
+                  if (!result) {
+                    // すでにマウントが終わっている場合はスキップ
+                    if (!mounted) {
+                      return;
+                    }
+                    await showDialog<void>(
+                      context: context,
+                      builder: (BuildContext context) => const FailUploadImageDialog(),
+                    );
+                  }
+                },
               ),
             ),
             // ユーザアイコンの編集ボタン
-            if (canEdit)
+            if (widget.canEdit)
               Positioned(
                 bottom: 0,
                 right: 4,
