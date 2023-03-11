@@ -56,7 +56,10 @@ class ProfileHealthCard extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     child: Text(
                       unit,
-                      style: TextStyle(fontSize: FontSize.mediumSize, color: textColor, fontWeight: FontWeight.w900),
+                      style: TextStyle(
+                          fontSize: FontSize.mediumSize,
+                          color: textColor,
+                          fontWeight: FontWeight.w900),
                       textAlign: TextAlign.right,
                     ),
                   )
