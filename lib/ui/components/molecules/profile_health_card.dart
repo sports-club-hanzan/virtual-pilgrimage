@@ -48,7 +48,7 @@ class ProfileHealthCard extends StatelessWidget {
                     value,
                     style: TextStyle(
                       color: textColor,
-                      fontSize: FontSize.largeSize,
+                      fontSize: FontSize.mediumLargeSize,
                       fontWeight: FontWeight.w900,
                     ),
                   ),

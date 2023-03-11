@@ -17,7 +17,7 @@ class HealthCards extends ConsumerWidget {
       return Container();
     }
 
-    final state = ref.read(profileProvider);
+    final state = ref.watch(profileProvider);
     final notifier = ref.read(profileProvider.notifier);
 
     final health = user.health;
