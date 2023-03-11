@@ -41,7 +41,7 @@ class _TemplePageBody extends StatelessWidget {
     final user = ref.watch(userStateProvider);
 
     return ColoredBox(
-      color: Theme.of(context).backgroundColor,
+      color: Theme.of(context).colorScheme.background,
       child: SizedBox(
         width: double.maxFinite,
         height: double.maxFinite,

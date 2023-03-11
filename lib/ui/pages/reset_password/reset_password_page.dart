@@ -8,29 +8,27 @@ import 'package:virtualpilgrimage/ui/pages/reset_password/reset_password_present
 import 'package:virtualpilgrimage/ui/pages/reset_password/reset_password_state.codegen.dart';
 import 'package:virtualpilgrimage/ui/style/font.dart';
 
-class ResetPasswordPage extends ConsumerWidget {
+class ResetPasswordPage extends ConsumerStatefulWidget {
   const ResetPasswordPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: const MyAppBar(isLogin: false),
-      body: _ResetPasswordPageBody(ref),
-    );
-  }
+  ConsumerState<ConsumerStatefulWidget> createState() => _ResetPasswordPageState();
 }
 
-class _ResetPasswordPageBody extends StatelessWidget {
-  const _ResetPasswordPageBody(this._ref);
-
-  final WidgetRef _ref;
-
+class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
   String get buttonTitle => 'パスワードをリセットする';
 
   @override
   Widget build(BuildContext context) {
-    final state = _ref.watch(resetPasswordProvider);
-    final notifier = _ref.read(resetPasswordProvider.notifier);
+    return Scaffold(
+      appBar: const MyAppBar(isLogin: false),
+      body: resetPasswordPageBody(),
+    );
+  }
+
+  Widget resetPasswordPageBody() {
+    final state = ref.watch(resetPasswordProvider);
+    final notifier = ref.read(resetPasswordProvider.notifier);
 
     return Padding(
       padding: const EdgeInsets.all(12),
@@ -87,7 +85,18 @@ class _ResetPasswordPageBody extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.only(top: 12),
           child: PrimaryButton(
-            onPressed: () => notifier.onSubmitResetPassword(context),
+            onPressed: () async {
+              final dialogWidget = await notifier.onSubmitResetPassword(context);
+              if (dialogWidget != null) {
+                if (!mounted) {
+                  return;
+                }
+                await showDialog<void>(
+                  context: context,
+                  builder: (BuildContext context) => dialogWidget,
+                );
+              }
+            },
             text: buttonTitle,
           ),
         ),

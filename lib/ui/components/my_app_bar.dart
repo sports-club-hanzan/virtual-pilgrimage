@@ -15,7 +15,7 @@ class MyAppBar extends ConsumerWidget with PreferredSizeWidget {
     return AppBar(
       title: Text(appTitle, style: textStyle),
       bottom: tabBar,
-      backgroundColor: Theme.of(context).backgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.background,
     );
   }
 

@@ -27,7 +27,7 @@ class ResetUserPasswordInteractor extends ResetUserPasswordUsecase {
       _logger.e('$errorMsg [email][$email][code][${e.code}][message][${e.message}]');
       unawaited(_crashlytics.recordError(e, e.stackTrace));
     } on Exception catch (e) {
-      _logger.e('$errorMsg [email][$email][error][${e.toString()}]');
+      _logger.e('$errorMsg [email][$email][error][$e]');
       unawaited(_crashlytics.recordError(e, null));
     }
     return status;

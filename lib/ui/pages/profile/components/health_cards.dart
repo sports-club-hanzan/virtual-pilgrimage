@@ -8,16 +8,13 @@ import 'package:virtualpilgrimage/ui/style/color.dart';
 import 'package:virtualpilgrimage/ui/wording_helper.dart';
 
 class HealthCards extends ConsumerWidget {
-  const HealthCards({super.key});
+  const HealthCards({super.key, required this.user});
+
+  final VirtualPilgrimageUser user;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(userStateProvider);
-    if (user == null) {
-      return Container();
-    }
-
-    final state = ref.read(profileProvider);
+    final state = ref.watch(profileProvider);
     final notifier = ref.read(profileProvider.notifier);
 
     final health = user.health;

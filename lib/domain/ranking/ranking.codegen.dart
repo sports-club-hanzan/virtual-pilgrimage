@@ -1,4 +1,3 @@
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:virtualpilgrimage/domain/ranking/ranking_by_period.codegen.dart';
 
@@ -34,9 +33,9 @@ class Ranking with _$Ranking {
   ///
   // ignore: prefer_constructors_over_static_methods
   static Ranking fromRankingByPeriodMap(Map<String, RankingByPeriod> map) {
-    if(map.containsKey('daily') && map.containsKey('weekly') && map.containsKey('monthly')) {
+    if (map.containsKey('daily') && map.containsKey('weekly') && map.containsKey('monthly')) {
       return Ranking(daily: map['daily']!, weekly: map['weekly']!, monthly: map['monthly']!);
     }
-    throw NullThrownError();
+    throw TypeError();
   }
 }

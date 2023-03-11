@@ -15,7 +15,6 @@ import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/logger.dart';
-import 'package:virtualpilgrimage/ui/components/molecules/fail_upload_image_dialog.dart';
 import 'package:virtualpilgrimage/ui/pages/profile/profile_state.codegen.dart';
 
 final profileUserProvider =
@@ -95,7 +94,9 @@ class ProfilePresenter extends StateNotifier<ProfileState> {
   }
 
   /// プロフィール画像を更新する
-  Future<void> updateProfileImage(BuildContext context) async {
+  ///
+  /// 更新できない時 false
+  Future<bool> updateProfileImage(BuildContext context) async {
     unawaited(_analytics.logEvent(eventName: AnalyticsEvent.pressedUploadImage));
     final loginUser = _ref.watch(userStateProvider)!;
 
@@ -106,21 +107,15 @@ class ProfilePresenter extends StateNotifier<ProfileState> {
     // 取得できた画像情報が空だったら更新しない
     if (image == null) {
       unawaited(_crashlytics.log('failed to open image for upload profile image'));
-      await showDialog<void>(
-        context: context,
-        builder: (BuildContext context) => const FailUploadImageDialog(),
-      );
-      return;
+      return false;
     }
 
     try {
       await _updateUserProfileImageInteractor.execute(user: loginUser, imageFile: File(image.path));
     } on DatabaseException catch (e) {
       unawaited(_crashlytics.recordError(e, null));
-      await showDialog<void>(
-        context: context,
-        builder: (BuildContext context) => const FailUploadImageDialog(),
-      );
+      return false;
     }
+    return true;
   }
 }

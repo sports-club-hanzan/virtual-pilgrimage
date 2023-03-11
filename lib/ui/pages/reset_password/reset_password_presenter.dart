@@ -26,23 +26,16 @@ class ResetPasswordPresenter extends StateNotifier<ResetPasswordState> {
     state = state.onChangeEmail(form);
   }
 
-  Future<void> onSubmitResetPassword(BuildContext context) async {
+  Future<Widget?> onSubmitResetPassword(BuildContext context) async {
     state = state.onSubmit();
     if (!state.isValidAll()) {
-      return;
+      return null;
     }
     final result = await _resetUserPasswordUsecase.execute(email: state.email.text);
     if (result) {
-      await showDialog<void>(
-        context: context,
-        builder: (BuildContext context) => const SuccessResetPasswordDialog(),
-      );
-    } else {
-      await showDialog<void>(
-        context: context,
-        builder: (BuildContext context) => const FailResetPasswordDialog(),
-      );
+      return const SuccessResetPasswordDialog();
     }
+    return const FailResetPasswordDialog();
   }
 
   Future<void> onSubmitBackwardSignInPage() async {

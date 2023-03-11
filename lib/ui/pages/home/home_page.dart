@@ -32,7 +32,7 @@ class HomePageBody extends StatelessWidget {
     final homeState = _ref.watch(homeProvider);
 
     return ColoredBox(
-      color: Theme.of(context).backgroundColor,
+      color: Theme.of(context).colorScheme.background,
       child: SafeArea(
         child: Stack(
           children: [

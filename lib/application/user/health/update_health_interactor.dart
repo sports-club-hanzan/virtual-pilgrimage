@@ -61,8 +61,7 @@ class UpdateHealthInteractor implements UpdateHealthUsecase {
       error = e;
     } on Exception catch (e) {
       final message = 'unexpected error when update user health information'
-          '[user][$user]'
-          '[error][${e.toString()}]';
+          ' [user][$user][error][$e]';
       _logger.e(message, e);
       unawaited(_crashlytics.log(message));
       unawaited(_crashlytics.recordError(e, null));

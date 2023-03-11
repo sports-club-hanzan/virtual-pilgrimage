@@ -7,7 +7,6 @@ extension AppTheme on ThemeData {
     useMaterial3: true,
     colorSchemeSeed: ColorStyle.primary,
     unselectedWidgetColor: ColorStyle.grey,
-    backgroundColor: ColorStyle.lightGrey,
     iconTheme: const IconThemeData(color: ColorStyle.primary),
     // ref. https://zenn.dev/pressedkonbu/articles/copy-paste-text-form-field
     inputDecorationTheme: InputDecorationTheme(

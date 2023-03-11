@@ -13,5 +13,5 @@ class GetHealthException implements Exception {
 
   @override
   String toString() =>
-      'GetHealthException: [message][$message][status][$status][cause][${cause.toString()}]';
+      'GetHealthException: [message][$message][status][$status][cause][$cause]';
 }

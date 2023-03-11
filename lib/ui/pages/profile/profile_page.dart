@@ -37,7 +37,7 @@ class ProfilePage extends ConsumerWidget {
       body: SafeArea(
         // TODO(s14t284): error 時のUIを整理する
         child: ColoredBox(
-          color: Theme.of(context).backgroundColor,
+          color: Theme.of(context).colorScheme.background,
           child: user.when(
             data: (data) {
               if (data != null) {
@@ -78,7 +78,7 @@ class _ProfilePageBody extends ConsumerWidget {
       children: [
         ProfileIcon(user: user, canEdit: canEdit, context: context, notifier: notifier),
         ProfileText(user: user, context: context, notifier: notifier),
-        const HealthCards(),
+        HealthCards(user: user),
         pilgrimageProgressCardProvider(context, ref),
       ],
     );
