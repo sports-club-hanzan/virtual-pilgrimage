@@ -118,11 +118,14 @@ class _SignInPageBody extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 16),
             child: Center(
-              child: SignInButton(
-                Buttons.GoogleDark,
-                text: 'Google でサインイン',
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                onPressed: () => notifier.signInWithGoogle(),
+              child: Semantics(
+                label: 'googleSignInButton',
+                child: SignInButton(
+                  Buttons.GoogleDark,
+                  text: 'Google でサインイン',
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  onPressed: () => notifier.signInWithGoogle(),
+                ),
               ),
             ),
           ),
@@ -130,11 +133,14 @@ class _SignInPageBody extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 16),
               child: Center(
-                child: SignInButton(
-                  Buttons.AppleDark,
-                  text: 'AppleID でサインイン',
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  onPressed: () => notifier.signInWithApple(),
+                child: Semantics(
+                  label: 'appleSignInButton',
+                  child: SignInButton(
+                    Buttons.AppleDark,
+                    text: 'AppleID でサインイン',
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    onPressed: () => notifier.signInWithApple(),
+                  ),
                 ),
               ),
             )
