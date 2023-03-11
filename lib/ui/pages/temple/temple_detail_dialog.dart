@@ -19,38 +19,34 @@ class TempleDetailDialog extends StatelessWidget {
         : 'https://firebasestorage.googleapis.com/v0/b/virtual-pilgrimage-dev.appspot.com/o/temples%2F1%2F1.jpeg?alt=media&token=b3fe42f9-b94b-43f2-8a5d-b2f217be541f';
 
     return AlertDialog(
-      content: DecoratedBox(
-        decoration: const BoxDecoration(color: Colors.white),
-        child: SizedBox(
-          // SizedBox + double.maxFinite がないと RenderViewport に関するエラーが発生する
-          width: double.maxFinite,
-          height: 400,
-          child: ListView(
-            children: [
-              Center(
-                child: Text(
-                  '${templeInfo.id}番札所: ${templeInfo.name}',
-                  style: TextStyle(
-                    fontSize: FontSize.mediumLargeSize,
-                    color: Theme.of(context).colorScheme.primary,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: 'Poppins',
-                  ),
+      content: SizedBox(
+        // SizedBox + double.maxFinite がないと RenderViewport に関するエラーが発生する
+        width: double.maxFinite,
+        height: 400,
+        child: ListView(
+          children: [
+            Center(
+              child: Text(
+                '${templeInfo.id}番札所: ${templeInfo.name}',
+                style: const TextStyle(
+                  fontSize: FontSize.mediumLargeSize,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: 'Poppins',
                 ),
               ),
-              const SizedBox(height: 16),
-              Center(child: Image.network(templeImagePath)),
-              const SizedBox(height: 16),
-              Center(
-                child: Image(
-                  height: 300,
-                  image: NetworkImage(templeInfo.stampImage),
-                ),
+            ),
+            const SizedBox(height: 16),
+            Text(templeInfo.knowledge),
+            const SizedBox(height: 16),
+            Center(child: Image.network(templeImagePath)),
+            const SizedBox(height: 16),
+            Center(
+              child: Image(
+                height: 300,
+                image: NetworkImage(templeInfo.stampImage),
               ),
-              const SizedBox(height: 16),
-              Text(templeInfo.knowledge),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       actions: [

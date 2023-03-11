@@ -78,7 +78,7 @@ class _ProfilePageBody extends ConsumerWidget {
       children: [
         ProfileIcon(user: user, canEdit: canEdit, context: context, notifier: notifier),
         ProfileText(user: user, context: context, notifier: notifier),
-        const HealthCards(),
+        HealthCards(user: user),
         pilgrimageProgressCardProvider(context, ref),
       ],
     );
