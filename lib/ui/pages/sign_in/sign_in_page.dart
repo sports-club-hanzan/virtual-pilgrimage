@@ -37,7 +37,7 @@ class _SignInPageBody extends StatelessWidget {
     return Builder(
       builder: (context) {
         return ColoredBox(
-          color: Theme.of(context).backgroundColor,
+          color: Theme.of(context).colorScheme.background,
           child: SafeArea(
             child: Column(
               children: <Widget>[

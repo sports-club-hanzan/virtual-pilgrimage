@@ -40,7 +40,7 @@ class UserRepositoryImpl extends UserRepository {
       );
     } on Exception catch (e) {
       throw DatabaseException(
-        message: 'unexpected Firestore error ${e.toString()}',
+        message: 'unexpected Firestore error [error][$e]',
         cause: e,
       );
     }
@@ -91,7 +91,8 @@ class UserRepositoryImpl extends UserRepository {
   Future<void> delete(VirtualPilgrimageUser user) async {
     try {
       final userDocRef = _firestoreClient.collection(FirestoreCollectionPath.users).doc(user.id);
-      final deletedUserDocRef = _firestoreClient.collection(FirestoreCollectionPath.deletedUsers).doc(user.id);
+      final deletedUserDocRef =
+          _firestoreClient.collection(FirestoreCollectionPath.deletedUsers).doc(user.id);
       // ユーザのステータスをdeletedに変更し、削除済みユーザ一覧のcollectionを新規作成するだけ
       // cloud function側でデータが作成されたhookを受け取ってユーザ情報を削除する
       // transactionを使うことによって、ステータスの変更と削除済みユーザ情報の作成の両方が成功することを担保する
@@ -99,8 +100,7 @@ class UserRepositoryImpl extends UserRepository {
         final deletedUser = DeletedUser(id: user.id, deletedAt: CustomizableDateTime.current);
         transaction
             .set(deletedUserDocRef, deletedUser.toJson())
-            .update(userDocRef, user.toDelete().toJson())
-        ;
+            .update(userDocRef, user.toDelete().toJson());
       });
     } on FirebaseException catch (e) {
       throw DatabaseException(

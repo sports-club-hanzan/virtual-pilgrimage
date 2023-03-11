@@ -43,9 +43,7 @@ class UserRegistrationInteractor extends UserRegistrationUsecase {
       await _crashlytics.recordError(e, null);
       error = e;
     } on Exception catch (e) {
-      final message = 'unexpected error when registration user'
-          '[user][$user]'
-          '[error][${e.toString()}]';
+      final message = 'unexpected error when registration user [user][$user][error][$e]';
       _logger.e(message, e);
       await _crashlytics.log(message);
       await _crashlytics.recordError(e, null);

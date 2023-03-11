@@ -37,7 +37,7 @@ class TempleRepositoryImpl extends TempleRepository {
       );
     } on Exception catch (e) {
       throw DatabaseException(
-        message: 'unexpected Firestore error ${e.toString()}',
+        message: 'unexpected Firestore error $e',
         cause: e,
       );
     }
@@ -96,7 +96,7 @@ class TempleRepositoryImpl extends TempleRepository {
       );
     } on Exception catch (e) {
       throw DatabaseException(
-        message: 'unexpected Firestore error ${e.toString()}',
+        message: 'unexpected Firestore error $e',
         cause: e,
       );
     }

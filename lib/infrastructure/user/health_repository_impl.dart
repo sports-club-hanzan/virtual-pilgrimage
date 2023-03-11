@@ -200,7 +200,7 @@ class HealthRepositoryImpl implements HealthRepository {
         // ignore: no_default_cases
         default:
           // 想定していない値が入ってきたときは開発中に気づけるようにログに出力する
-          _logger.w('got unexpected Health Data Type [type][${p.type.toString()}]');
+          _logger.w('got unexpected Health Data Type [type][$p.type]');
           break;
       }
     }

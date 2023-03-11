@@ -37,7 +37,7 @@ class ProfilePage extends ConsumerWidget {
       body: SafeArea(
         // TODO(s14t284): error 時のUIを整理する
         child: ColoredBox(
-          color: Theme.of(context).backgroundColor,
+          color: Theme.of(context).colorScheme.background,
           child: user.when(
             data: (data) {
               if (data != null) {

@@ -11,5 +11,5 @@ class DatabaseException implements Exception {
   final Exception? cause;
 
   @override
-  String toString() => 'DatabaseException: [message][$message][cause][${cause?.toString()}]';
+  String toString() => 'DatabaseException: [message][$message][cause][$cause]';
 }

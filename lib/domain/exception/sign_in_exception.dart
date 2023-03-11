@@ -24,5 +24,5 @@ class SignInException implements Exception {
 
   @override
   String toString() =>
-      'SignInException: [message][$message][status][$status][cause][${cause?.toString()}]';
+      'SignInException: [message][$message][status][$status][cause][$cause]';
 }

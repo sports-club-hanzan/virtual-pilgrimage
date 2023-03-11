@@ -13,7 +13,7 @@ class DeleteUserDialog extends ConsumerWidget {
         .map(
           (e) => Text(
             '・$e',
-            style: Theme.of(context).textTheme.bodyText2,
+            style: Theme.of(context).textTheme.bodyMedium,
             textAlign: TextAlign.center,
           ),
         )
@@ -35,7 +35,7 @@ class DeleteUserDialog extends ConsumerWidget {
               children: <Widget>[
                 Text(
                   'ユーザ情報を削除します',
-                  style: Theme.of(context).textTheme.headline5,
+                  style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 const SizedBox(height: 16),
                 // MEMO: '''で改行を表現しているので、歪だがこのままにしておく必要がある
