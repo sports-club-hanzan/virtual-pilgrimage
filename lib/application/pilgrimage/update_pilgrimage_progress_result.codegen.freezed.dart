@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'update_pilgrimage_progress_result.codegen.dart';
 
@@ -208,6 +208,8 @@ class _$_UpdatePilgrimageProgressResult
 // 新たに到達した札所の番号一覧
   @override
   List<int> get reachedPilgrimageIdList {
+    if (_reachedPilgrimageIdList is EqualUnmodifiableListView)
+      return _reachedPilgrimageIdList;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_reachedPilgrimageIdList);
   }
@@ -218,6 +220,8 @@ class _$_UpdatePilgrimageProgressResult
   @override
   @JsonKey()
   List<LatLng> get virtualPolylineLatLngs {
+    if (_virtualPolylineLatLngs is EqualUnmodifiableListView)
+      return _virtualPolylineLatLngs;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_virtualPolylineLatLngs);
   }

@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'radio_button_model.codegen.dart';
 
@@ -197,7 +197,7 @@ class _$RadioButtonModelCopyWithImpl<T, $Res, $Val extends RadioButtonModel<T>>
     Object? focusNodes = null,
     Object? titles = null,
     Object? values = null,
-    Object? selectedValue = null,
+    Object? selectedValue = freezed,
     Object? colors = null,
   }) {
     return _then(_value.copyWith(
@@ -213,7 +213,7 @@ class _$RadioButtonModelCopyWithImpl<T, $Res, $Val extends RadioButtonModel<T>>
           ? _value.values
           : values // ignore: cast_nullable_to_non_nullable
               as List<T>,
-      selectedValue: null == selectedValue
+      selectedValue: freezed == selectedValue
           ? _value.selectedValue
           : selectedValue // ignore: cast_nullable_to_non_nullable
               as T,
@@ -255,7 +255,7 @@ class __$$_RadioButtonModelCopyWithImpl<T, $Res>
     Object? focusNodes = null,
     Object? titles = null,
     Object? values = null,
-    Object? selectedValue = null,
+    Object? selectedValue = freezed,
     Object? colors = null,
   }) {
     return _then(_$_RadioButtonModel<T>(
@@ -271,7 +271,7 @@ class __$$_RadioButtonModelCopyWithImpl<T, $Res>
           ? _value._values
           : values // ignore: cast_nullable_to_non_nullable
               as List<T>,
-      selectedValue: null == selectedValue
+      selectedValue: freezed == selectedValue
           ? _value.selectedValue
           : selectedValue // ignore: cast_nullable_to_non_nullable
               as T,
@@ -303,6 +303,7 @@ class _$_RadioButtonModel<T> extends _RadioButtonModel<T> {
 // TODO(s14t284): focusNode がラジオボタンにおいて複数必要なのか調べる
   @override
   List<FocusNode> get focusNodes {
+    if (_focusNodes is EqualUnmodifiableListView) return _focusNodes;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_focusNodes);
   }
@@ -310,6 +311,7 @@ class _$_RadioButtonModel<T> extends _RadioButtonModel<T> {
   final List<String> _titles;
   @override
   List<String> get titles {
+    if (_titles is EqualUnmodifiableListView) return _titles;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_titles);
   }
@@ -317,6 +319,7 @@ class _$_RadioButtonModel<T> extends _RadioButtonModel<T> {
   final List<T> _values;
   @override
   List<T> get values {
+    if (_values is EqualUnmodifiableListView) return _values;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_values);
   }
@@ -327,6 +330,7 @@ class _$_RadioButtonModel<T> extends _RadioButtonModel<T> {
   @override
   @JsonKey()
   List<ColorModel> get colors {
+    if (_colors is EqualUnmodifiableListView) return _colors;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_colors);
   }
