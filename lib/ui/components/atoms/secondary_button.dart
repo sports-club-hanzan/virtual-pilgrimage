@@ -30,7 +30,10 @@ class SecondaryButton extends StatelessWidget {
       ).copyWith(elevation: ButtonStyleButton.allOrNull(0)),
       onPressed: onPressed,
       // TODO(s14t284): custom font を導入 ref. https://zenn.dev/susatthi/articles/20220419-143426-flutter-custom-fonts
-      child: Text(text, style: TextStyle(fontSize: textSize, fontWeight: FontWeight.w300)),
+      child: Semantics(
+        label: text,
+        child: Text(text, style: TextStyle(fontSize: textSize, fontWeight: FontWeight.w500)),
+      ),
     );
   }
 }
