@@ -31,4 +31,14 @@ abstract class HealthRepository {
     required DateTime from,
     required DateTime to,
   });
+
+  /// 昨日、今日のヘルスケア情報を各OSの仕組みから取得
+  /// home page で利用
+  ///
+  /// [targetDateTime] ヘルスケア情報を取得する起点となる時間
+  /// [createdAt] ユーザの作成時刻。アプリケーションに登録されてからの情報を取得するために利用
+  Future<RecentlyHealthInfo> getRecentlyHealthInfo({
+    required DateTime targetDateTime,
+    required DateTime createdAt,
+  });
 }

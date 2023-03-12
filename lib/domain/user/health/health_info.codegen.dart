@@ -32,13 +32,28 @@ class HealthInfo with _$HealthInfo {
       toJson: FirestoreTimestampConverter.dateTimeToTimestamp,
     )
         required DateTime updatedAt,
-    // 総歩数
+    // [deprecated] 総歩数
     required int totalSteps,
-    // 総歩行距離[m]
+    // [deprecated] 総歩行距離[m]
     required int totalDistance,
   }) = _HealthInfo;
 
   const HealthInfo._();
 
   factory HealthInfo.fromJson(Map<String, dynamic> json) => _$HealthInfoFromJson(json);
+}
+
+@freezed
+class RecentlyHealthInfo with _$RecentlyHealthInfo {
+  @JsonSerializable(explicitToJson: true)
+  const factory RecentlyHealthInfo({
+    // 当日のヘルスケア情報
+    required HealthByPeriod today,
+    // 昨日のヘルスケア情報
+    required HealthByPeriod yesterday,
+  }) = _RecentlyHealthInfo;
+
+  const RecentlyHealthInfo._();
+
+  factory RecentlyHealthInfo.fromJson(Map<String, dynamic> json) => _$RecentlyHealthInfoFromJson(json);
 }

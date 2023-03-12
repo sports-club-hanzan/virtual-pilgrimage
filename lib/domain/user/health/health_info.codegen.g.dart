@@ -30,3 +30,18 @@ Map<String, dynamic> _$$_HealthInfoToJson(_$_HealthInfo instance) =>
       'totalSteps': instance.totalSteps,
       'totalDistance': instance.totalDistance,
     };
+
+_$_RecentlyHealthInfo _$$_RecentlyHealthInfoFromJson(
+        Map<String, dynamic> json) =>
+    _$_RecentlyHealthInfo(
+      today: HealthByPeriod.fromJson(json['today'] as Map<String, dynamic>),
+      yesterday:
+          HealthByPeriod.fromJson(json['yesterday'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$$_RecentlyHealthInfoToJson(
+        _$_RecentlyHealthInfo instance) =>
+    <String, dynamic>{
+      'today': instance.today.toJson(),
+      'yesterday': instance.yesterday.toJson(),
+    };
