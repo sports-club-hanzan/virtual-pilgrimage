@@ -20,19 +20,15 @@ class SecondaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-        foregroundColor: Theme.of(context).colorScheme.onSecondaryContainer,
-        minimumSize: const Size(48, 48),
-        fixedSize: buttonSize,
-        maximumSize: Size(MediaQuery.of(context).size.width - 24, 96),
-      ).copyWith(elevation: ButtonStyleButton.allOrNull(0)),
-      onPressed: onPressed,
-      // TODO(s14t284): custom font を導入 ref. https://zenn.dev/susatthi/articles/20220419-143426-flutter-custom-fonts
-      child: Semantics(
-        label: text,
-        child: Text(text, style: TextStyle(fontSize: textSize, fontWeight: FontWeight.w500)),
+    return SizedBox(
+      width: buttonSize?.width,
+      height: buttonSize?.height,
+      child: FilledButton.tonal(
+        onPressed: onPressed,
+        child: Semantics(
+          label: text,
+          child: Text(text, style: TextStyle(fontSize: textSize, fontWeight: FontWeight.w500)),
+        ),
       ),
     );
   }
