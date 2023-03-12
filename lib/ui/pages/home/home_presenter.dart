@@ -98,9 +98,9 @@ class HomePresenter extends StateNotifier<HomeState> {
         _userStateNotifier.state = updatedUser;
       }
 
-      // 描画を更新しながら、ヘルスケア情報も更新する
+      // 描画を更新しながら、必要なヘルスケア情報だけ更新する
       // 先にmapの描画を更新してバックグラウンドでヘルスケア情報を更新しておくことで、UIの変更の反映を早める
-      final updateHealthResult = await _updateHealthUsecase.execute(user);
+      final updateHealthResult = await _updateHealthUsecase.executeForRecentlyInfo(user);
       if (updateHealthResult.status == UpdateHealthStatus.success) {
         if (updateHealthResult.user != null) {
           _userStateNotifier.state = updateHealthResult.user;

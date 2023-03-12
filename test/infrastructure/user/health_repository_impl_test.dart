@@ -112,20 +112,8 @@ void main() {
             week: const HealthByPeriod(steps: 15427, distance: 14679, burnedCalorie: 11468),
             month: const HealthByPeriod(steps: 105427, distance: 104679, burnedCalorie: 101468),
             updatedAt: CustomizableDateTime.current,
-            totalSteps: 1005427,
-            totalDistance: 1004679,
-          );
-
-          /// total単位
-          when(mockHealthFactory.getHealthDataFromTypes(createdAt, targetToDate, types)).thenAnswer(
-            (_) => Future.value([
-              ...defaultHealthDataPoint(),
-                  // @formatter:off
-              HealthDataPoint(NumericHealthValue(1000000), HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataUnit.KILOCALORIE, DateTime(2022), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
-              HealthDataPoint(NumericHealthValue(1000000), HealthDataType.STEPS, HealthDataUnit.COUNT, DateTime(2022), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
-              HealthDataPoint(NumericHealthValue(1000000), HealthDataType.DISTANCE_DELTA, HealthDataUnit.METER, DateTime(2022), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
-              // @formatter:on
-            ]),
+            totalSteps: 0,
+            totalDistance: 0,
           );
 
           // when
@@ -135,7 +123,7 @@ void main() {
           // then
           expect(actual, expected);
           verify(mockHealthFactory.requestAuthorization(any)).called(1);
-          for (final from in [yesterday, lastWeek, lastMonth, createdAt]) {
+          for (final from in [yesterday, lastWeek, lastMonth]) {
             verify(
               mockHealthFactory.getHealthDataFromTypes(from, targetToDate, types),
             ).called(1);
@@ -185,8 +173,8 @@ void main() {
             week: const HealthByPeriod(steps: 15427, distance: 14679, burnedCalorie: 11468),
             month: const HealthByPeriod(steps: 105427, distance: 104679, burnedCalorie: 101468),
             updatedAt: CustomizableDateTime.current,
-            totalSteps: 1005427,
-            totalDistance: 1004679,
+            totalSteps: 0,
+            totalDistance: 0,
           );
 
           /// 今日
@@ -236,19 +224,6 @@ void main() {
             ]),
           );
 
-          /// total単位
-          when(mockHealthFactory.getHealthDataFromTypes(createdAt, targetToDate, iosTypes))
-              .thenAnswer(
-            (_) => Future.value([
-              ...defaultHealthDataPoint(),
-                  // @formatter:off
-              HealthDataPoint(NumericHealthValue(1000000), HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataUnit.KILOCALORIE, DateTime(2022), DateTime(2022, 9, 18), PlatformType.IOS, defaultDeviceId, defaultSourceId, defaultSourceName),
-              HealthDataPoint(NumericHealthValue(1000000), HealthDataType.STEPS, HealthDataUnit.COUNT, DateTime(2022), DateTime(2022, 9, 18), PlatformType.IOS, defaultDeviceId, defaultSourceId, defaultSourceName),
-              HealthDataPoint(NumericHealthValue(1000000), HealthDataType.DISTANCE_WALKING_RUNNING, HealthDataUnit.METER, DateTime(2022), DateTime(2022, 9, 18), PlatformType.IOS, defaultDeviceId, defaultSourceId, defaultSourceName),
-              // @formatter:on
-            ]),
-          );
-
           // when
           final actual =
               await target.getHealthInfo(targetDateTime: targetDateTime, createdAt: createdAt);
@@ -256,7 +231,7 @@ void main() {
           // then
           expect(actual, expected);
           verify(mockHealthFactory.requestAuthorization(any)).called(1);
-          for (final from in [yesterday, lastWeek, lastMonth, createdAt]) {
+          for (final from in [yesterday, lastWeek, lastMonth]) {
             verify(
               mockHealthFactory.getHealthDataFromTypes(from, targetToDate, iosTypes),
             ).called(1);

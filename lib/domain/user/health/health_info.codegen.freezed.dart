@@ -30,8 +30,10 @@ mixin _$HealthInfo {
   @JsonKey(
       fromJson: FirestoreTimestampConverter.timestampToDateTime,
       toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
-  DateTime get updatedAt => throw _privateConstructorUsedError; // 総歩数
-  int get totalSteps => throw _privateConstructorUsedError; // 総歩行距離[m]
+  DateTime get updatedAt =>
+      throw _privateConstructorUsedError; // [deprecated] 総歩数
+  int get totalSteps =>
+      throw _privateConstructorUsedError; // [deprecated] 総歩行距離[m]
   int get totalDistance => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -263,10 +265,10 @@ class _$_HealthInfo extends _HealthInfo {
       fromJson: FirestoreTimestampConverter.timestampToDateTime,
       toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
   final DateTime updatedAt;
-// 総歩数
+// [deprecated] 総歩数
   @override
   final int totalSteps;
-// 総歩行距離[m]
+// [deprecated] 総歩行距離[m]
   @override
   final int totalDistance;
 
@@ -340,12 +342,198 @@ abstract class _HealthInfo extends HealthInfo {
       fromJson: FirestoreTimestampConverter.timestampToDateTime,
       toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
   DateTime get updatedAt;
-  @override // 総歩数
+  @override // [deprecated] 総歩数
   int get totalSteps;
-  @override // 総歩行距離[m]
+  @override // [deprecated] 総歩行距離[m]
   int get totalDistance;
   @override
   @JsonKey(ignore: true)
   _$$_HealthInfoCopyWith<_$_HealthInfo> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+RecentlyHealthInfo _$RecentlyHealthInfoFromJson(Map<String, dynamic> json) {
+  return _RecentlyHealthInfo.fromJson(json);
+}
+
+/// @nodoc
+mixin _$RecentlyHealthInfo {
+// 当日のヘルスケア情報
+  HealthByPeriod get today => throw _privateConstructorUsedError; // 昨日のヘルスケア情報
+  HealthByPeriod get yesterday => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $RecentlyHealthInfoCopyWith<RecentlyHealthInfo> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $RecentlyHealthInfoCopyWith<$Res> {
+  factory $RecentlyHealthInfoCopyWith(
+          RecentlyHealthInfo value, $Res Function(RecentlyHealthInfo) then) =
+      _$RecentlyHealthInfoCopyWithImpl<$Res, RecentlyHealthInfo>;
+  @useResult
+  $Res call({HealthByPeriod today, HealthByPeriod yesterday});
+
+  $HealthByPeriodCopyWith<$Res> get today;
+  $HealthByPeriodCopyWith<$Res> get yesterday;
+}
+
+/// @nodoc
+class _$RecentlyHealthInfoCopyWithImpl<$Res, $Val extends RecentlyHealthInfo>
+    implements $RecentlyHealthInfoCopyWith<$Res> {
+  _$RecentlyHealthInfoCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? today = null,
+    Object? yesterday = null,
+  }) {
+    return _then(_value.copyWith(
+      today: null == today
+          ? _value.today
+          : today // ignore: cast_nullable_to_non_nullable
+              as HealthByPeriod,
+      yesterday: null == yesterday
+          ? _value.yesterday
+          : yesterday // ignore: cast_nullable_to_non_nullable
+              as HealthByPeriod,
+    ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $HealthByPeriodCopyWith<$Res> get today {
+    return $HealthByPeriodCopyWith<$Res>(_value.today, (value) {
+      return _then(_value.copyWith(today: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $HealthByPeriodCopyWith<$Res> get yesterday {
+    return $HealthByPeriodCopyWith<$Res>(_value.yesterday, (value) {
+      return _then(_value.copyWith(yesterday: value) as $Val);
+    });
+  }
+}
+
+/// @nodoc
+abstract class _$$_RecentlyHealthInfoCopyWith<$Res>
+    implements $RecentlyHealthInfoCopyWith<$Res> {
+  factory _$$_RecentlyHealthInfoCopyWith(_$_RecentlyHealthInfo value,
+          $Res Function(_$_RecentlyHealthInfo) then) =
+      __$$_RecentlyHealthInfoCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({HealthByPeriod today, HealthByPeriod yesterday});
+
+  @override
+  $HealthByPeriodCopyWith<$Res> get today;
+  @override
+  $HealthByPeriodCopyWith<$Res> get yesterday;
+}
+
+/// @nodoc
+class __$$_RecentlyHealthInfoCopyWithImpl<$Res>
+    extends _$RecentlyHealthInfoCopyWithImpl<$Res, _$_RecentlyHealthInfo>
+    implements _$$_RecentlyHealthInfoCopyWith<$Res> {
+  __$$_RecentlyHealthInfoCopyWithImpl(
+      _$_RecentlyHealthInfo _value, $Res Function(_$_RecentlyHealthInfo) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? today = null,
+    Object? yesterday = null,
+  }) {
+    return _then(_$_RecentlyHealthInfo(
+      today: null == today
+          ? _value.today
+          : today // ignore: cast_nullable_to_non_nullable
+              as HealthByPeriod,
+      yesterday: null == yesterday
+          ? _value.yesterday
+          : yesterday // ignore: cast_nullable_to_non_nullable
+              as HealthByPeriod,
+    ));
+  }
+}
+
+/// @nodoc
+
+@JsonSerializable(explicitToJson: true)
+class _$_RecentlyHealthInfo extends _RecentlyHealthInfo {
+  const _$_RecentlyHealthInfo({required this.today, required this.yesterday})
+      : super._();
+
+  factory _$_RecentlyHealthInfo.fromJson(Map<String, dynamic> json) =>
+      _$$_RecentlyHealthInfoFromJson(json);
+
+// 当日のヘルスケア情報
+  @override
+  final HealthByPeriod today;
+// 昨日のヘルスケア情報
+  @override
+  final HealthByPeriod yesterday;
+
+  @override
+  String toString() {
+    return 'RecentlyHealthInfo(today: $today, yesterday: $yesterday)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$_RecentlyHealthInfo &&
+            (identical(other.today, today) || other.today == today) &&
+            (identical(other.yesterday, yesterday) ||
+                other.yesterday == yesterday));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, today, yesterday);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$_RecentlyHealthInfoCopyWith<_$_RecentlyHealthInfo> get copyWith =>
+      __$$_RecentlyHealthInfoCopyWithImpl<_$_RecentlyHealthInfo>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$_RecentlyHealthInfoToJson(
+      this,
+    );
+  }
+}
+
+abstract class _RecentlyHealthInfo extends RecentlyHealthInfo {
+  const factory _RecentlyHealthInfo(
+      {required final HealthByPeriod today,
+      required final HealthByPeriod yesterday}) = _$_RecentlyHealthInfo;
+  const _RecentlyHealthInfo._() : super._();
+
+  factory _RecentlyHealthInfo.fromJson(Map<String, dynamic> json) =
+      _$_RecentlyHealthInfo.fromJson;
+
+  @override // 当日のヘルスケア情報
+  HealthByPeriod get today;
+  @override // 昨日のヘルスケア情報
+  HealthByPeriod get yesterday;
+  @override
+  @JsonKey(ignore: true)
+  _$$_RecentlyHealthInfoCopyWith<_$_RecentlyHealthInfo> get copyWith =>
       throw _privateConstructorUsedError;
 }

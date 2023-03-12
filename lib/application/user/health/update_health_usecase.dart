@@ -21,4 +21,9 @@ abstract class UpdateHealthUsecase {
   ///
   /// [user] 更新対象のユーザ
   Future<UpdateHealthResult> execute(VirtualPilgrimageUser user);
+
+  /// 昨日・今日のユーザのヘルスケア情報を更新
+  ///
+  /// [user] 更新対象のユーザ
+  Future<UpdateHealthResult> executeForRecentlyInfo(VirtualPilgrimageUser user);
 }

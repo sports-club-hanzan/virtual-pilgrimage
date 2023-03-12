@@ -71,4 +71,57 @@ class UpdateHealthInteractor implements UpdateHealthUsecase {
 
     return UpdateHealthResult(status: status, user: updatedUser, error: error);
   }
+
+  @override
+  Future<UpdateHealthResult> executeForRecentlyInfo(VirtualPilgrimageUser user) async {
+    UpdateHealthStatus status = UpdateHealthStatus.success;
+    VirtualPilgrimageUser? updatedUser;
+    Exception? error;
+    final now = CustomizableDateTime.current;
+    try {
+      final healthByPeriod = await _healthRepository.getRecentlyHealthInfo(
+        targetDateTime: now,
+        createdAt: user.createdAt,
+      );
+      final health = user.health?.copyWith(
+        today: healthByPeriod.today,
+        yesterday: healthByPeriod.yesterday,
+      );
+      updatedUser = user.updateHealth(health!);
+      // 更新内容のhealthと取得したhealthが不一致の場合は Google Fit や ヘルスケアから情報をうまく取得できていないので、ログ出力しておく
+      if (updatedUser.health != health) {
+        unawaited(
+          _crashlytics.log(
+            'Getting Health Info may be failed [gotHealth][$healthByPeriod][updateHealth][${updatedUser.health}]',
+          ),
+        );
+      }
+      await _userRepository.update(updatedUser);
+    } on GetHealthException catch (e) {
+      final message = 'get user health information error [user][$user][error][$e]';
+      _logger.e(message);
+      unawaited(_crashlytics.log(message));
+      unawaited(_crashlytics.recordError(e, null));
+      status = UpdateHealthStatus.getHealthError;
+      error = e;
+    } on DatabaseException catch (e) {
+      final message = 'update user health information error [user][$user][error][$e]';
+      _logger.e(message, e);
+      unawaited(_crashlytics.log(message));
+      unawaited(_crashlytics.recordError(e, null));
+      status = UpdateHealthStatus.updateUserError;
+      error = e;
+    } on Exception catch (e) {
+      final message = 'unexpected error when update user health information'
+          ' [user][$user][error][$e]';
+      _logger.e(message, e);
+      unawaited(_crashlytics.log(message));
+      unawaited(_crashlytics.recordError(e, null));
+      status = UpdateHealthStatus.unknownError;
+      error = e;
+    }
+
+    return UpdateHealthResult(status: status, user: updatedUser, error: error);
+  }
+
 }

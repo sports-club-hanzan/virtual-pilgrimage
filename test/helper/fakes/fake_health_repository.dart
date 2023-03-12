@@ -20,4 +20,12 @@ class FakeHealthRepository extends HealthRepository {
   }) {
     return Future.value(healthInfo);
   }
+
+  @override
+  Future<RecentlyHealthInfo> getRecentlyHealthInfo({
+    required DateTime targetDateTime,
+    required DateTime createdAt,
+  }) {
+    throw UnimplementedError();
+  }
 }

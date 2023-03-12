@@ -37,20 +37,15 @@ class HealthRepositoryImpl implements HealthRepository {
     required DateTime createdAt,
   }) async {
     final types = _healthTypes[defaultTargetPlatform.name.toLowerCase()]!;
-    // Health 情報を取得できるか権限チェック
-    final requested = await _healthFactory.requestAuthorization(types);
-    if (!requested) {
-      const message = 'get health information error because don\'t have health permission';
-      _logger.e(message);
-      throw GetHealthException(message: message, status: GetHealthExceptionStatus.notAuthorized);
-    }
+    await _validateUsableHealthTypes(types);
 
     // createdAt より前の時刻は使わないように補正をかけるメソッドを定義
     // アプリを登録した時点をヘルスケア情報の集計起点とする
     DateTime fixDt(DateTime dt) => dt.compareTo(createdAt) == 1 ? dt : createdAt;
 
     _logger.d('collect health info start [targetDateTime][$targetDateTime]');
-    try {
+
+    return _execute(() async {
       // 今日、昨日1日、過去一週間、過去一ヶ月間、過去全ての3パターンでヘルスケア情報を取得
       // 今日のデータは今日の00:00:00 ~ 現在時刻までを取得
       final healthOfToday = await _getHealthData(
@@ -72,7 +67,6 @@ class HealthRepositoryImpl implements HealthRepository {
       // この処理が必要となる
       List<HealthDataPoint> healthOfWeek = [];
       List<HealthDataPoint> healthOfMonth = [];
-      List<HealthDataPoint> healthOfTotal = [];
       if (targetDateTime.difference(createdAt).compareTo(const Duration(days: 1)) == 1) {
         // 一週間
         final fromLastWeek =
@@ -81,36 +75,22 @@ class HealthRepositoryImpl implements HealthRepository {
         // 一ヶ月
         final fromLastMonth = _getPrevMonth(toDate).add(const Duration(microseconds: 1));
         healthOfMonth = await _getHealthData(fixDt(fromLastMonth), toDate, types);
-        // 過去全て
-        healthOfTotal = await _getHealthData(createdAt, toDate, types);
       }
 
-      final totalHealth = _aggregateHealthInfo(healthOfTotal);
       final health = HealthInfo(
         today: _aggregateHealthInfo(healthOfToday),
         yesterday: _aggregateHealthInfo(healthOfYesterday),
         week: _aggregateHealthInfo(healthOfWeek),
         month: _aggregateHealthInfo(healthOfMonth),
         updatedAt: CustomizableDateTime.current,
-        totalSteps: totalHealth.steps,
-        totalDistance: totalHealth.distance,
+        // 利用していない値はダミー値を詰める
+        totalSteps: 0,
+        totalDistance: 0,
       );
-      _aggregateHealthInfo(healthOfToday);
       _logger.d(health);
+
       return health;
-    } on HealthException catch (e) {
-      throw GetHealthException(
-        message: e.cause,
-        status: GetHealthExceptionStatus.unknown,
-        cause: e,
-      );
-    } on Exception catch (e) {
-      throw GetHealthException(
-        message: 'cause unknown error when update health info',
-        status: GetHealthExceptionStatus.unknown,
-        cause: e,
-      );
-    }
+    });
   }
 
   /// 指定した期間のみのヘルスケア情報を各OSの仕組みから取得
@@ -123,31 +103,54 @@ class HealthRepositoryImpl implements HealthRepository {
     required DateTime to,
   }) async {
     final types = _healthTypes[defaultTargetPlatform.name.toLowerCase()]!;
-    // Health 情報を取得できるか権限チェック
-    final requested = await _healthFactory.requestAuthorization(types);
-    if (!requested) {
-      const message = 'get health information error because don\'t have health permission';
-      _logger.e(message);
-      throw GetHealthException(message: message, status: GetHealthExceptionStatus.notAuthorized);
-    }
+    await _validateUsableHealthTypes(types);
 
-    try {
+    return _execute(() async {
       final health = await _getHealthData(from, to, types);
-      final aggregatedHealth = _aggregateHealthInfo(health);
-      return aggregatedHealth;
-    } on HealthException catch (e) {
-      throw GetHealthException(
-        message: e.cause,
-        status: GetHealthExceptionStatus.unknown,
-        cause: e,
+      return _aggregateHealthInfo(health);
+    });
+  }
+
+  /// 昨日、今日のヘルスケア情報を各OSの仕組みから取得
+  /// home page で利用
+  ///
+  /// [targetDateTime] ヘルスケア情報を取得する起点となる時間
+  /// [createdAt] ユーザの作成時刻。アプリケーションに登録されてからの情報を取得するために利用
+  @override
+  Future<RecentlyHealthInfo> getRecentlyHealthInfo({
+    required DateTime targetDateTime,
+    required DateTime createdAt,
+  }) async {
+    final types = _healthTypes[defaultTargetPlatform.name.toLowerCase()]!;
+    await _validateUsableHealthTypes(types);
+
+    _logger.d('collect recently health info start [targetDateTime][$targetDateTime]');
+
+    return _execute(() async {
+      // 今日、昨日1日のヘルスケア情報を取得
+      // 今日のデータは今日の00:00:00 ~ 現在時刻までを取得
+      final healthOfToday = await _getHealthData(
+        DateTime(targetDateTime.year, targetDateTime.month, targetDateTime.day),
+        targetDateTime,
+        types,
       );
-    } on Exception catch (e) {
-      throw GetHealthException(
-        message: 'cause unknown error when update health info',
-        status: GetHealthExceptionStatus.unknown,
-        cause: e,
+
+      // 昨日
+      final toDate = _lastTime(targetDateTime.subtract(const Duration(days: 1)));
+      final healthOfYesterday = await _getHealthData(
+        DateTime(toDate.year, toDate.month, toDate.day),
+        toDate,
+        types,
       );
-    }
+
+      final result = RecentlyHealthInfo(
+        today: _aggregateHealthInfo(healthOfToday),
+        yesterday: _aggregateHealthInfo(healthOfYesterday),
+      );
+      _logger.d(result);
+
+      return result;
+    });
   }
 
   /// 各OSごとの仕組みでヘルスケア情報を取得
@@ -232,5 +235,33 @@ class HealthRepositoryImpl implements HealthRepository {
     // 3/30 の場合: 28(2/28) < 30(3/30) => 30(target.day)
     final prevDiff = target.day < prevMonthLastDay.day ? prevMonthLastDay.day : target.day;
     return target.subtract(Duration(days: prevDiff));
+  }
+
+  /// Health 情報を取得できるか権限チェック
+  Future<void> _validateUsableHealthTypes(List<HealthDataType> types) async {
+    final requested = await _healthFactory.requestAuthorization(types);
+    if (!requested) {
+      const message = 'get health information error because don\'t have health permission';
+      _logger.e(message);
+      throw GetHealthException(message: message, status: GetHealthExceptionStatus.notAuthorized);
+    }
+  }
+
+  Future<T> _execute<T>(Future<T> Function() func) async {
+    try {
+      return func();
+    } on HealthException catch (e) {
+      throw GetHealthException(
+        message: e.cause,
+        status: GetHealthExceptionStatus.unknown,
+        cause: e,
+      );
+    } on Exception catch (e) {
+      throw GetHealthException(
+        message: 'cause unknown error when update health info',
+        status: GetHealthExceptionStatus.unknown,
+        cause: e,
+      );
+    }
   }
 }
