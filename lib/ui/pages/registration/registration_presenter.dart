@@ -14,7 +14,6 @@ import 'package:virtualpilgrimage/ui/components/bottom_navigation.dart';
 import 'package:virtualpilgrimage/ui/model/form_model.codegen.dart';
 import 'package:virtualpilgrimage/ui/model/radio_button_model.codegen.dart';
 import 'package:virtualpilgrimage/ui/pages/registration/registration_state.codegen.dart';
-import 'package:virtualpilgrimage/ui/style/color.dart';
 
 final registrationPresenterProvider =
     StateNotifierProvider.autoDispose<RegistrationPresenter, RegistrationState>(
@@ -34,14 +33,6 @@ class RegistrationPresenter extends StateNotifier<RegistrationState> {
               ['未設定', '男性', '女性'],
               Gender.values,
               selectedValue: user?.gender,
-              colors: [
-                ColorModel(
-                  lightColor: ColorStyle.unknownGenderLight,
-                  darkColor: ColorStyle.unknownGenderDark,
-                ),
-                ColorModel(lightColor: ColorStyle.manLight, darkColor: ColorStyle.manDark),
-                ColorModel(lightColor: ColorStyle.womanLight, darkColor: ColorStyle.womanDark),
-              ],
             ),
           ),
         ) {
