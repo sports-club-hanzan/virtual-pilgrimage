@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/ui/components/bottom_navigation.dart';
 import 'package:virtualpilgrimage/ui/components/molecules/pilgrimage_progress_card.dart';
 import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
@@ -30,6 +31,7 @@ class HomePageBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final homeState = _ref.watch(homeProvider);
+    final userState = _ref.watch(userStateProvider);
 
     return ColoredBox(
       color: Theme.of(context).colorScheme.background,
@@ -39,7 +41,7 @@ class HomePageBody extends StatelessWidget {
             ListView(
               children: [
                 GoogleMapView(height: MediaQuery.of(context).size.height / 5 * 2),
-                pilgrimageProgressCardProvider(context, _ref),
+                pilgrimageProgressCardProvider(context, userState, _ref),
                 const HealthCards()
               ],
             ),

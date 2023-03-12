@@ -11,14 +11,14 @@ import 'package:virtualpilgrimage/ui/wording_helper.dart';
 
 Widget pilgrimageProgressCardProvider(
   BuildContext context,
+  VirtualPilgrimageUser? user,
   WidgetRef ref,
 ) {
-  const maxTempleNumber = 88;
-  final templeRepository = ref.read(templeRepositoryProvider);
-  final user = ref.watch(userStateProvider);
   if (user == null) {
     return Container();
   }
+  const maxTempleNumber = 88;
+  final templeRepository = ref.read(templeRepositoryProvider);
 
   /// 次の札所の番号を返す
   /// 88箇所目に到達していたら 1 を返す

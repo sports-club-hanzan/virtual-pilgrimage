@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
-import 'package:virtualpilgrimage/router.dart';
 import 'package:virtualpilgrimage/ui/components/bottom_navigation.dart';
 import 'package:virtualpilgrimage/ui/components/molecules/pilgrimage_progress_card.dart';
 import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
@@ -25,11 +24,6 @@ class ProfilePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userState = ref.watch(userStateProvider);
-    // ユーザ情報が null の場合、何も描画できないのでログインページに遷移させる
-    if (userState == null) {
-      ref.read(routerProvider).go(RouterPath.signIn);
-    }
     final user = ref.watch(profileUserProvider(userId));
 
     return Scaffold(
@@ -51,7 +45,7 @@ class ProfilePage extends ConsumerWidget {
               return const Text('ユーザのヘルスケア情報の取得に失敗しました');
             },
             loading: () {
-              return ProfilePageLoadingBody(user: userState!);
+              return const ProfilePageLoadingBody();
             },
           ),
         ),
@@ -79,7 +73,7 @@ class _ProfilePageBody extends ConsumerWidget {
         ProfileIcon(user: user, canEdit: canEdit, context: context, notifier: notifier),
         ProfileText(user: user, context: context, notifier: notifier),
         HealthCards(user: user),
-        pilgrimageProgressCardProvider(context, ref),
+        pilgrimageProgressCardProvider(context, user, ref),
       ],
     );
   }
@@ -89,32 +83,23 @@ class _ProfilePageBody extends ConsumerWidget {
 // お遍路の進捗やヘルスケア情報をローディングで埋めている
 // MEMO: 実際はヘルスケア情報だけを取得してきているが、UIのわかりやすさ的にお遍路進捗もローディングで隠している
 class ProfilePageLoadingBody extends ConsumerWidget {
-  const ProfilePageLoadingBody({required this.user, super.key});
-
-  final VirtualPilgrimageUser user;
+  const ProfilePageLoadingBody({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final notifier = ref.read(profileProvider.notifier);
-    return ListView(
-      children: [
-        ProfileIcon(user: user, canEdit: false, context: context, notifier: notifier),
-        ProfileText(user: user, context: context, notifier: notifier),
-        Padding(
-          padding: const EdgeInsets.only(top: 32),
-          child: Center(
-            child: SizedBox(
-              height: 120,
-              width: 120,
-              child: CircularProgressIndicator(
-                strokeWidth: 16,
-                color: Theme.of(context).colorScheme.primary,
-                backgroundColor: Theme.of(context).colorScheme.onPrimary,
-              ),
-            ),
+    return Padding(
+      padding: const EdgeInsets.only(top: 32),
+      child: Center(
+        child: SizedBox(
+          height: 120,
+          width: 120,
+          child: CircularProgressIndicator(
+            strokeWidth: 16,
+            color: Theme.of(context).colorScheme.primary,
+            backgroundColor: Theme.of(context).colorScheme.onPrimary,
           ),
         ),
-      ],
+      ),
     );
   }
 }
