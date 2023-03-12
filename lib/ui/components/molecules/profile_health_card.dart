@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:virtualpilgrimage/ui/style/font.dart';
 
 class ProfileHealthCard extends StatelessWidget {
@@ -6,8 +7,6 @@ class ProfileHealthCard extends StatelessWidget {
     required this.title,
     required this.value,
     required this.unit,
-    required this.backgroundColor,
-    this.textColor = Colors.white,
     required this.icon,
     super.key,
   });
@@ -15,8 +14,6 @@ class ProfileHealthCard extends StatelessWidget {
   final String title;
   final String value;
   final String unit;
-  final Color backgroundColor;
-  final Color textColor;
   final IconData icon;
 
   @override
@@ -25,8 +22,8 @@ class ProfileHealthCard extends StatelessWidget {
       child: Stack(
         children: [
           Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            color: backgroundColor,
+            elevation: 0,
+            color: Theme.of(context).colorScheme.surfaceVariant,
             child: Padding(
               padding: const EdgeInsetsDirectional.only(top: 8, bottom: 8, start: 12, end: 12),
               child: Column(
@@ -37,9 +34,9 @@ class ProfileHealthCard extends StatelessWidget {
                     child: Text(
                       title,
                       style: TextStyle(
-                        color: textColor,
-                        fontSize: FontSize.mediumSize,
-                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: GoogleFonts.kosugiMaru().fontFamily,
                       ),
                       textAlign: TextAlign.center,
                     ),
@@ -47,9 +44,9 @@ class ProfileHealthCard extends StatelessWidget {
                   Text(
                     value,
                     style: TextStyle(
-                      color: textColor,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
                       fontSize: FontSize.mediumLargeSize,
-                      fontWeight: FontWeight.w900,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   Container(
@@ -57,9 +54,8 @@ class ProfileHealthCard extends StatelessWidget {
                     child: Text(
                       unit,
                       style: TextStyle(
-                        fontSize: FontSize.mediumSize,
-                        color: textColor,
-                        fontWeight: FontWeight.w900,
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                        fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.right,
                     ),
@@ -68,7 +64,15 @@ class ProfileHealthCard extends StatelessWidget {
               ),
             ),
           ),
-          Positioned(top: 12, right: 8, child: Icon(icon, color: textColor, size: 20))
+          Positioned(
+            top: 12,
+            right: 8,
+            child: Icon(
+              icon,
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
+              size: 20,
+            ),
+          )
         ],
       ),
     );
