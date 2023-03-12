@@ -69,7 +69,8 @@ dependencies:
   flutter_toggle_tab: ^1.2.0
   percent_indicator: ^4.2.2
   settings_ui: ^2.0.2
-
+  google_fonts: any
+  
   # health
   health: ^4.4.0
   permission_handler: ^9.2.0 # Firebaseと同じSDKをターゲットにできるよう最新ではないバージョンを利用

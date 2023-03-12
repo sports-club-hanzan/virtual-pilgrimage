@@ -114,7 +114,6 @@ class _TemplePageBody extends StatelessWidget {
               style: const TextStyle(
                 color: Colors.black38,
                 fontSize: FontSize.mediumSize,
-                fontFamily: 'Poppins',
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -125,7 +124,6 @@ class _TemplePageBody extends StatelessWidget {
                     ? Theme.of(context).colorScheme.primary
                     : Theme.of(context).colorScheme.primaryContainer,
                 fontSize: FontSize.mediumLargeSize,
-                fontFamily: 'Poppins',
                 fontWeight: FontWeight.bold,
               ),
             ),

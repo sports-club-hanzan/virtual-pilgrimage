@@ -31,7 +31,6 @@ class TempleDetailDialog extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: FontSize.mediumLargeSize,
                   fontWeight: FontWeight.w500,
-                  fontFamily: 'Poppins',
                 ),
               ),
             ),
