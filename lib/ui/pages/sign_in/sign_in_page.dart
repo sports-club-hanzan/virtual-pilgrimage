@@ -1,8 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:virtualpilgrimage/analytics.dart';
+import 'package:virtualpilgrimage/application/user/user_repository.dart';
+import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
+import 'package:virtualpilgrimage/infrastructure/firebase/firebase_auth_provider.dart';
 import 'package:virtualpilgrimage/ui/components/atoms/primary_button.dart';
 import 'package:virtualpilgrimage/ui/components/atoms/secondary_button.dart';
 import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
@@ -12,43 +17,91 @@ import 'package:virtualpilgrimage/ui/pages/sign_in/sign_in_presenter.dart';
 import 'package:virtualpilgrimage/ui/pages/sign_in/sign_in_state.codegen.dart';
 import 'package:virtualpilgrimage/ui/style/font.dart';
 
-class SignInPage extends ConsumerWidget {
+class SignInPage extends ConsumerStatefulWidget {
   const SignInPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _SignInPageState();
+}
+
+class _SignInPageState extends ConsumerState<SignInPage> {
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    // サインイン画面表示前にすでにユーザ情報が端末に存在するか確認
+    // ユーザ情報が存在する場合、ログイン処理を実施
+    Future(() async {
+      final firebaseAuth = ref.watch(firebaseAuthProvider);
+      final analytics = ref.read(analyticsProvider);
+      final userState = ref.read(userStateProvider.notifier);
+      final loginState = ref.read(loginStateProvider.notifier);
+
+      // FirebaseへのログインがキャッシュされていればFirestoreからユーザ情報を詰める
+      if (firebaseAuth.currentUser != null && userState.state == null) {
+        await ref.read(userRepositoryProvider).get(firebaseAuth.currentUser!.uid).then((value) {
+          if (value != null) {
+            analytics.setUserProperties(user: value);
+            userState.state = value;
+            loginState.state = value.userStatus;
+          }
+        });
+      }
+
+      // 最後にスプラッシュ画面の表示を終わる
+      setState(() {
+        FlutterNativeSplash.remove();
+        _isLoading = false;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: const MyAppBar(isLogin: false),
-      body: _SignInPageBody(ref),
+      body: _SignInPageBody(ref: ref, isLoading: _isLoading),
     );
   }
 }
 
 class _SignInPageBody extends StatelessWidget {
-  const _SignInPageBody(this.ref);
+  const _SignInPageBody({required this.ref, required this.isLoading});
 
   final WidgetRef ref;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
     final notifier = ref.read(signInPresenterProvider.notifier);
     final state = ref.watch(signInPresenterProvider);
 
-    return Builder(
-      builder: (context) {
-        return ColoredBox(
-          color: Theme.of(context).colorScheme.background,
-          child: SafeArea(
-            child: Column(
-              children: <Widget>[
-                _emailOrNicknameForm(state, notifier),
-                _passwordForm(state, notifier),
-                _signInButtons(context, notifier),
-              ],
-            ),
+    if (isLoading) {
+      return Center(
+        child: SizedBox(
+          height: 120,
+          width: 120,
+          child: CircularProgressIndicator(
+            strokeWidth: 16,
+            color: Theme.of(context).colorScheme.primary,
+            backgroundColor: Theme.of(context).colorScheme.onPrimary,
           ),
-        );
-      },
+        ),
+      );
+    }
+
+    return ColoredBox(
+      color: Theme.of(context).colorScheme.background,
+      child: SafeArea(
+        child: Column(
+          children: <Widget>[
+            _emailOrNicknameForm(state, notifier),
+            _passwordForm(state, notifier),
+            _signInButtons(context, notifier),
+          ],
+        ),
+      ),
     );
   }
 

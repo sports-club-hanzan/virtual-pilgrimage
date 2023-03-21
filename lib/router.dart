@@ -2,6 +2,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:virtualpilgrimage/application/auth/sign_in_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_analytics_provider.dart';
 import 'package:virtualpilgrimage/logger.dart';
@@ -138,11 +139,9 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>(
           return RouterPath.registration;
         // 削除済みの時
         case UserStatus.deleted:
-          // TODO(s14t284): Handle this case.
-          break;
+          ref.read(signInUsecaseProvider).logout();
+          return RouterPath.signIn;
       }
-
-      return null;
     },
   ),
 );
