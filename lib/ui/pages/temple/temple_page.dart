@@ -37,7 +37,6 @@ class _TemplePageBody extends StatelessWidget {
     final isLoading = state.loading;
     final scrollController = ref.read(templeProvider).scrollController;
     final user = ref.watch(userStateProvider);
-    print(state);
 
     return ColoredBox(
       color: Theme.of(context).colorScheme.background,
@@ -51,15 +50,18 @@ class _TemplePageBody extends StatelessWidget {
               opacity: isLoading ? 0.25 : 1,
               child: SizedBox(
                 height: double.maxFinite,
-                child: ListView.builder(
-                  addAutomaticKeepAlives: true,
-                  shrinkWrap: true,
-                  physics: const ClampingScrollPhysics(),
+                child: Scrollbar(
+                  thumbVisibility: true,
                   controller: scrollController,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Temple(templeInfo: templeState[index], user: user);
-                  },
-                  itemCount: templeState.length,
+                  child: ListView.builder(
+                    addAutomaticKeepAlives: true,
+                    shrinkWrap: true,
+                    controller: scrollController,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Temple(templeInfo: templeState[index], user: user);
+                    },
+                    itemCount: templeState.length,
+                  ),
                 ),
               ),
             ),
