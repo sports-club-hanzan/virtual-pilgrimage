@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:network_image_mock/network_image_mock.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/temple_info.codegen.dart';
-import 'package:virtualpilgrimage/ui/pages/temple/temple_detail_dialog.dart';
+import 'package:virtualpilgrimage/ui/pages/temple/components/temple_detail_dialog.dart';
 
 import '../../../helper/provider_container.dart';
 import '../../../helper/wrap_material_app.dart';

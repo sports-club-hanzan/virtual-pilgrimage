@@ -32,7 +32,7 @@ class TemplePresenter extends StateNotifier<TempleState> {
   int loadedTempleImageIdSnapshot = 0;
 
   // 一度に読み込む情報の数
-  final int fetchOnceLoadingNumber = 8;
+  final int fetchOnceLoadingNumber = 16;
 
   // 札所情報の上限数
   final int maxTempleNumber = 88;
