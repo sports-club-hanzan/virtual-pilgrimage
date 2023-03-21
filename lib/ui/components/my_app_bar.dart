@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MyAppBar extends ConsumerWidget with PreferredSizeWidget {
   const MyAppBar({this.isLogin = true, this.tabBar, super.key});
@@ -11,7 +12,7 @@ class MyAppBar extends ConsumerWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final color = Theme.of(context).colorScheme.onPrimaryContainer;
-    final textStyle = TextStyle(color: color);
+    final textStyle = TextStyle(color: color, fontFamily: GoogleFonts.kosugiMaru().fontFamily);
     return AppBar(
       title: Text(appTitle, style: textStyle),
       bottom: tabBar,

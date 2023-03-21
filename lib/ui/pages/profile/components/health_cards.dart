@@ -27,21 +27,18 @@ class HealthCards extends ConsumerWidget {
             title: '歩数',
             value: h.steps.toString(),
             unit: '歩',
-            backgroundColor: Colors.lightGreen,
             icon: Icons.directions_run_rounded,
           ),
           ProfileHealthCard(
             title: '移動距離',
             value: WordingHelper.meterToKilometerString(h.distance),
             unit: 'km',
-            backgroundColor: Colors.lightBlue,
             icon: Icons.map_outlined,
           ),
           ProfileHealthCard(
             title: 'カロリー',
             value: h.burnedCalorie.toString(),
             unit: 'kcal',
-            backgroundColor: Colors.orangeAccent,
             icon: Icons.local_fire_department_outlined,
           ),
         ]);

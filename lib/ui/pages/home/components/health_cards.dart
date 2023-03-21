@@ -23,16 +23,12 @@ class HealthCards extends ConsumerWidget {
           value: health.today.steps.toString(),
           unit: '歩',
           icon: Icons.directions_run_rounded,
-          backgroundColor: Theme.of(context).colorScheme.onSecondary,
-          textColor: Theme.of(context).colorScheme.onSecondaryContainer,
         ),
         ProfileHealthCard(
           title: '今日の移動距離',
           value: WordingHelper.meterToKilometerString(health.today.distance),
           unit: 'km',
           icon: Icons.map_outlined,
-          backgroundColor: Theme.of(context).colorScheme.onSecondary,
-          textColor: Theme.of(context).colorScheme.onSecondaryContainer,
         ),
       ]);
     }

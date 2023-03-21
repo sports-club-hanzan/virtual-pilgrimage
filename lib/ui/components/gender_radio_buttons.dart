@@ -43,12 +43,14 @@ class _GenderRadioButtonsState<T> extends State<GenderRadioButtons> {
         (index) {
           final isSelected =
               widget.radioButtonModel.selectedValue == widget.radioButtonModel.values[index];
-          final colors = widget.radioButtonModel.colors;
-          Color selectedColor = Theme.of(context).primaryColor;
-          Color unselectedColor = Colors.white;
-          if (colors.length > index) {
-            selectedColor = colors[index].darkColor;
-            unselectedColor = colors[index].lightColor;
+          Color selectedColor = Theme.of(context).colorScheme.secondary;
+          Color unselectedColor = Theme.of(context).colorScheme.secondaryContainer;
+          if (widget.radioButtonModel.titles[index] == '男性') {
+            selectedColor = Theme.of(context).colorScheme.primary;
+            unselectedColor = Theme.of(context).colorScheme.primaryContainer;
+          } else if (widget.radioButtonModel.titles[index] == '女性') {
+            selectedColor = Theme.of(context).colorScheme.error;
+            unselectedColor = Theme.of(context).colorScheme.tertiaryContainer;
           }
 
           return InkWell(

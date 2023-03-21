@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'color.dart';
 
 extension AppTheme on ThemeData {
   static final theme = ThemeData(
     useMaterial3: true,
-    colorSchemeSeed: ColorStyle.primary,
+    colorScheme: ColorScheme.fromSeed(seedColor: ColorStyle.primary),
     unselectedWidgetColor: ColorStyle.grey,
     iconTheme: const IconThemeData(color: ColorStyle.primary),
     // ref. https://zenn.dev/pressedkonbu/articles/copy-paste-text-form-field
@@ -28,5 +29,6 @@ extension AppTheme on ThemeData {
         ),
       ),
     ),
+    fontFamily: GoogleFonts.notoSans().fontFamily,
   );
 }

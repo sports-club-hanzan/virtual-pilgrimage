@@ -14,11 +14,15 @@ final templeProvider = StateNotifierProvider<TemplePresenter, TempleState>(Templ
 class TemplePresenter extends StateNotifier<TempleState> {
   TemplePresenter(this._ref) : super(TempleState(scrollController: ScrollController())) {
     _templeRepository = _ref.read(templeRepositoryProvider);
-    // 1番端までスクロールしたら表示するお寺情報数を増やす
-    // 徐々に表示する情報を増やすことで、画像の読み込みを1度に最大8件までに抑えることができる
     state.addListener(() {
+      // 1番端までスクロールしたら表示するお寺情報数を増やす
+      // 徐々に表示する情報を増やすことで、画像の読み込みを1度に最大8件までに抑えることができる
       if (state.scrollController.offset == state.scrollController.position.maxScrollExtent) {
         fetchTempleInfo();
+      }
+      //スクロール範囲を強制的に戻す
+      if (state.scrollController.offset > state.scrollController.position.maxScrollExtent) {
+        state.scrollController.jumpTo(state.scrollController.position.maxScrollExtent);
       }
     });
 
@@ -32,7 +36,7 @@ class TemplePresenter extends StateNotifier<TempleState> {
   int loadedTempleImageIdSnapshot = 0;
 
   // 一度に読み込む情報の数
-  final int fetchOnceLoadingNumber = 8;
+  final int fetchOnceLoadingNumber = 22;
 
   // 札所情報の上限数
   final int maxTempleNumber = 88;

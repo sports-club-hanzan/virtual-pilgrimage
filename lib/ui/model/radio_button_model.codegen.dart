@@ -4,16 +4,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'radio_button_model.codegen.freezed.dart';
 
 @freezed
-class ColorModel with _$ColorModel {
-  factory ColorModel({
-    required Color lightColor,
-    required Color darkColor,
-  }) = _ColorModel;
-
-  ColorModel._();
-}
-
-@freezed
 class RadioButtonModel<T> with _$RadioButtonModel<T> {
   factory RadioButtonModel({
     // TODO(s14t284): focusNode がラジオボタンにおいて複数必要なのか調べる
@@ -21,7 +11,6 @@ class RadioButtonModel<T> with _$RadioButtonModel<T> {
     required List<String> titles,
     required List<T> values,
     required T selectedValue,
-    @Default([]) List<ColorModel> colors,
   }) = _RadioButtonModel<T>;
 
   RadioButtonModel._();
@@ -32,7 +21,6 @@ class RadioButtonModel<T> with _$RadioButtonModel<T> {
     List<String> titles,
     List<T> values, {
     T? selectedValue,
-    List<ColorModel>? colors,
   }) {
     if (titles.length != values.length) {
       throw ArgumentError(
@@ -48,7 +36,6 @@ class RadioButtonModel<T> with _$RadioButtonModel<T> {
       titles: titles,
       values: values,
       selectedValue: selectedValue ?? values[0],
-      colors: colors ?? [],
     );
   }
 }
