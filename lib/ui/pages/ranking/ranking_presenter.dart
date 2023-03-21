@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:virtualpilgrimage/application/ranking/ranking_repository.dart';
@@ -25,7 +26,14 @@ final rankingPresenterProvider =
     StateNotifierProvider.autoDispose<RankingPresenter, RankingState>(RankingPresenter.new);
 
 class RankingPresenter extends StateNotifier<RankingState> {
-  RankingPresenter(this._ref) : super(RankingState());
+  RankingPresenter(this._ref) : super(RankingState(scrollController: ScrollController())) {
+    state.addListener(() {
+      //スクロール範囲を強制的に戻す
+      if (state.scrollController.offset > state.scrollController.position.maxScrollExtent) {
+        state.scrollController.jumpTo(state.scrollController.position.maxScrollExtent);
+      }
+    });
+  }
 
   final Ref _ref;
 

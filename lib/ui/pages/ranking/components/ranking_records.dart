@@ -21,6 +21,7 @@ class RankingRecords extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final notifier = ref.read(rankingPresenterProvider.notifier);
+    final scrollController = ref.read(rankingPresenterProvider).scrollController;
     final loginUserState = ref.watch(userStateProvider);
     final targetRanking = notifier.selectRanking(ranking, kind, period);
 
@@ -28,14 +29,18 @@ class RankingRecords extends ConsumerWidget {
       child: SizedBox(
         height: MediaQuery.of(context).size.height / 10 * 6,
         child: SingleChildScrollView(
-          child: ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemBuilder: (BuildContext context, int index) {
-              final target = targetRanking.users[index];
-              return _buildRecord(context, notifier, target, loginUserState, index, kind);
-            },
-            itemCount: targetRanking.users.length,
+          child: Scrollbar(
+            thumbVisibility: true,
+            controller: scrollController,
+            child: ListView.builder(
+              shrinkWrap: true,
+              controller: scrollController,
+              itemBuilder: (BuildContext context, int index) {
+                final target = targetRanking.users[index];
+                return _buildRecord(context, notifier, target, loginUserState, index, kind);
+              },
+              itemCount: targetRanking.users.length,
+            ),
           ),
         ),
       ),
