@@ -29,4 +29,12 @@ class HealthByPeriod with _$HealthByPeriod {
   bool validate() {
     return steps > 0 && distance > 0 && burnedCalorie > 0;
   }
+
+  static const HealthByPeriod _default = HealthByPeriod(
+      steps: 0,
+      distance: 0,
+      burnedCalorie: 0,
+    );
+
+  static HealthByPeriod getDefault() => _default;
 }
