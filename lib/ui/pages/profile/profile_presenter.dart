@@ -25,7 +25,7 @@ final profileUserProvider =
   final user = await ref.read(userRepositoryProvider).get(userId);
   // ログインユーザ以外を指定していた場合
   if (loginUser.id != userId) {
-    return user;
+    return user?.convertForProfile();
   }
   // ログインユーザ自身を指定していた場合、ヘルスケア情報をとりにいく
   final result = await ref.read(updateHealthUsecaseProvider).execute(user!);

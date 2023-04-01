@@ -8,6 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/helper/firestore_timestamp_converter.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/pilgrimage_info.codegen.dart';
+import 'package:virtualpilgrimage/domain/user/health/health_by_period.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_info.codegen.dart';
 
 part 'virtual_pilgrimage_user.codegen.freezed.dart';
@@ -224,4 +225,35 @@ class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
       );
 
   VirtualPilgrimageUser toDelete() => copyWith(userStatus: UserStatus.deleted);
+
+  /// プロフィール表示用の情報に変換
+  VirtualPilgrimageUser convertForProfile() {
+    final now = CustomizableDateTime.current;
+    final currentDate = DateTime(now.year, now.month, now.day);
+    final updatedDate = DateTime(updatedAt.year, updatedAt.month, updatedAt.day);
+    // 更新日が今日より前の場合
+    if (updatedDate.isBefore(currentDate)) {
+      /// 更新日が昨日の場合
+      /// - 今日（更新した時点の今日）のヘルスケア情報を昨日の情報に
+      /// - 昨日のヘルスケア情報を初期値に
+      if (currentDate.subtract(const Duration(days: 1)).compareTo(updatedDate) == 0) {
+        return copyWith(
+          health: health?.copyWith(
+            today: HealthByPeriod.getDefault(),
+            yesterday: health?.today ?? HealthByPeriod.getDefault(),
+          ),
+        );
+      }
+
+      /// 更新日が昨日の場合
+      /// - 今日・昨日のヘルスケア情報を初期値に
+      return copyWith(
+        health: health?.copyWith(
+          today: HealthByPeriod.getDefault(),
+          yesterday: HealthByPeriod.getDefault(),
+        ),
+      );
+    }
+    return this;
+  }
 }
