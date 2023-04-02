@@ -31,17 +31,44 @@ class PilgrimageProgressCard extends StatelessWidget {
       color: Theme.of(context).colorScheme.surfaceVariant, // .onSecondary,
       child: Padding(
         padding: const EdgeInsets.only(left: 8, right: 8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+        child: Stack(
           children: [
-            const Text(
-              '次は',
-              style: TextStyle(fontSize: FontSize.largeSize, fontWeight: FontWeight.bold),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                const Text(
+                  '次は',
+                  style: TextStyle(fontSize: FontSize.largeSize, fontWeight: FontWeight.bold),
+                ),
+                // n札所・〇〇寺
+                _nextTempleInfo(context),
+                // 進捗率の表示
+                progressCircularPercentIndicator(context),
+              ],
             ),
-            // n札所・〇〇寺
-            _nextTempleInfo(context),
-            // 進捗率の表示
-            progressCircularPercentIndicator(context)
+            // 周回回数の表示
+            Positioned(
+              top: 4,
+              left: 4,
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.loop,
+                    size: FontSize.mediumSize,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    '${pilgrimageInfo.lap}巡目',
+                    style: TextStyle(
+                      fontSize: FontSize.mediumSize,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
