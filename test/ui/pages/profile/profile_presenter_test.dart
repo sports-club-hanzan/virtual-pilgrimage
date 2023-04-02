@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:virtualpilgrimage/application/user/health/health_repository.dart';
+import 'package:virtualpilgrimage/application/user/health/user_health_repository.dart';
 import 'package:virtualpilgrimage/application/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/pilgrimage_info.codegen.dart';
@@ -11,6 +12,7 @@ import 'package:virtualpilgrimage/ui/pages/profile/profile_presenter.dart';
 import 'package:virtualpilgrimage/ui/pages/profile/profile_state.codegen.dart';
 
 import '../../../helper/fakes/fake_health_repository.dart';
+import '../../../helper/fakes/fake_user_health_repository.dart';
 import '../../../helper/fakes/fake_user_repository.dart';
 import '../../../helper/provider_container.dart';
 
@@ -76,6 +78,7 @@ void main() {
       container = mockedProviderContainer(
         overrides: [
           userRepositoryProvider.overrideWithValue(FakeUserRepository(loginUser)),
+          userHealthRepositoryProvider.overrideWithValue(FakeUserHealthRepository()),
           healthRepositoryProvider.overrideWithValue(healthRepository),
         ],
       );
@@ -83,7 +86,8 @@ void main() {
       final actualLoading = container.read(profileUserProvider('dummyLoginUserId'));
       expect(actualLoading, const AsyncValue<VirtualPilgrimageUser?>.loading());
 
-      // UseCaseでの更新処理と取得処理の2つをawaitするため、2回記述
+      // UseCaseでの更新処理と取得処理の3つをawaitするため、3回 + UseCase の async 待ちの4回 await
+      await Future<void>.value();
       await Future<void>.value();
       await Future<void>.value();
       await Future<void>.value();
