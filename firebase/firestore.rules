@@ -54,5 +54,27 @@ service cloud.firestore {
         match /rankings/{document=**} {
             allow list: if true;
         }
+
+        match /health/{document=**} {
+            // 認証済み
+            allow read, write: if request.auth.uid != null;
+            // ユーザーは自分のデータのみアクセスを許可
+            allow read, write: if request.auth.uid == resource.data.user_id;
+            allow create, update: if (
+                isContainKeyInResourceData('userId')
+                && isContainKeyInResourceData('steps')
+                && isContainKeyInResourceData('distance')
+                && isContainKeyInResourceData('burnedCalorie')
+                && isContainKeyInResourceData('date')
+                && isContainKeyInResourceData('expiredAt')
+            );
+
+            // データの更新時、user_id が変更されていないことを確認
+            allow update: if request.resource.data.user_id == resource.data.user_id;
+
+            // expireAtを参照して削除できるように
+            allow delete: if true;
+        }
+
     }
 }

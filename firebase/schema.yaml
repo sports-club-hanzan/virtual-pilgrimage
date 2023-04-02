@@ -30,15 +30,17 @@ users:
     totalSteps: int # アプリを利用し始めてからの合計歩数
     totalDistance: int # アプリを利用し始めてからの合計距離
   # 以下はお遍路に関する情報
-  pilgrimage: Map<string, dynamic>?
-    temple: ref<temples> # temples/:id
+  pilgrimage: Map<string, dynamic>
+    id: string # Firestoreのコレクションに付与するID。ユーザIDと同じ値
     lap: int # 何周目か
-    walkingDistance: int # 現在
+    movingDistance: int # 現在地点で歩行している距離。次の札所についたら0にリセットしてカウントし直す
+    nowPilgrimageId: int # 現在到達している札所の番号（1-88）
+    updatedAt: timestamp # 更新時刻
 
 ## お遍路の情報
 temples:
   documentId: int # お寺のID。お遍路の順路の番号を振る
-  templeName: string（お寺の名前）
+  templeName: string # お寺の名前
   prefecture: string # お寺の所在地の県
   address: string # 住所
   images: [string] # お寺の画像のURl一覧
@@ -47,16 +49,42 @@ temples:
     geohash: string
     geopoint: [double]
   distance: int # 次のお寺までに必要な距離
-  knowledge: string
+  knowledge: string # うんちく
   # そのほかお寺に必要な情報（TODO）
 
 ## ランキング情報
 rankings:
   documentId: string # daily, weekly, monthly のいずれか
-  users: List
-    rank: int # 順位
-    user: ref<users>
-    # 集計の都合上、ref<users> を利用するのが難しかったら以下を追加
-    # userId: string # uidで表現されたユーザID
-    # nickname: string # ニックネーム
-    # userIconUrl: string # ユーザアイコンのURL
+  distance: List<List<Map<string, int>>>
+    users: List<Map<string, int>>
+      rank: int # 順位
+      nickname: string # ニックネーム
+      userIconUrl: string # ユーザアイコンのURL
+      userId: string # ユーザID
+      value: int # 歩行距離
+  step: List<List<Map<string, int>>>
+    users: List<Map<string, int>>
+      rank: int # 順位
+      nickname: string # ニックネーム
+      userIconUrl: string # ユーザアイコンのURL
+      userId: string # ユーザID
+      value: int # 歩数
+  updatedTime: timestamp # 更新時刻(unixTime[ms])
+
+## 削除済みユーザ情報
+deleted_users:
+  documentId: string # 削除されたユーザのID
+  id: string # 削除されたユーザのID
+  deletedAt: timestamp # 削除日
+
+## ヘルスケア情報
+### TTL機能を利用して、90日後に自動的に削除される
+### iOS, Android の Health 情報から取得する歩数情報を保存する
+health:
+  documentId: string # 自動生成されたID
+  userId: string # ユーザID
+  steps: int # 歩数
+  distance: int # 歩行距離
+  burnedCalorie: int # 消費カロリー
+  date: timestamp # ヘルスケア情報の日付
+  expiredAt: timestamp # ヘルスケア情報の有効期限(FirestoreのTTL機能を利用。dateの90日後)

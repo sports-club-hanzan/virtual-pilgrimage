@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:virtualpilgrimage/analytics.dart';
 import 'package:virtualpilgrimage/application/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_auth_provider.dart';
+import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/ui/components/atoms/primary_button.dart';
 import 'package:virtualpilgrimage/ui/components/atoms/secondary_button.dart';
 import 'package:virtualpilgrimage/ui/components/my_app_bar.dart';
@@ -37,6 +39,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
       final analytics = ref.read(analyticsProvider);
       final userState = ref.read(userStateProvider.notifier);
       final loginState = ref.read(loginStateProvider.notifier);
+      final crashlytics = ref.read(firebaseCrashlyticsProvider);
 
       // FirebaseへのログインがキャッシュされていればFirestoreからユーザ情報を詰める
       if (firebaseAuth.currentUser != null && userState.state == null) {
@@ -46,6 +49,8 @@ class _SignInPageState extends ConsumerState<SignInPage> {
             userState.state = value;
             loginState.state = value.userStatus;
           }
+        }).onError((error, stackTrace) {
+          unawaited(crashlytics.recordError(error, stackTrace));
         });
       }
 

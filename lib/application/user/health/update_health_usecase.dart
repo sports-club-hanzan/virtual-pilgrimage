@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtualpilgrimage/application/user/health/health_repository.dart';
 import 'package:virtualpilgrimage/application/user/health/update_health_interactor.dart';
 import 'package:virtualpilgrimage/application/user/health/update_health_result.codegen.dart';
+import 'package:virtualpilgrimage/application/user/health/user_health_repository.dart';
 import 'package:virtualpilgrimage/application/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
@@ -11,6 +12,7 @@ final updateHealthUsecaseProvider = Provider.autoDispose<UpdateHealthUsecase>(
   (ref) => UpdateHealthInteractor(
     ref.read(healthRepositoryProvider),
     ref.read(userRepositoryProvider),
+    ref.read(userHealthRepositoryProvider),
     ref.read(loggerProvider),
     ref.read(firebaseCrashlyticsProvider),
   ),

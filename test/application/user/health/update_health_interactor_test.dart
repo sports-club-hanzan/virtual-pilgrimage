@@ -20,6 +20,7 @@ import '../../../helper/provider_container.dart';
 void main() {
   late MockHealthRepository mockHealthRepository;
   late MockUserRepository mockUserRepository;
+  late MockUserHealthRepository mockUserHealthRepository;
   late MockFirebaseCrashlytics mockFirebaseCrashlytics;
   final logger = Logger(level: Level.nothing);
 
@@ -28,10 +29,12 @@ void main() {
   setUp(() {
     mockHealthRepository = MockHealthRepository();
     mockUserRepository = MockUserRepository();
+    mockUserHealthRepository = MockUserHealthRepository();
     mockFirebaseCrashlytics = MockFirebaseCrashlytics();
     target = UpdateHealthInteractor(
       mockHealthRepository,
       mockUserRepository,
+      mockUserHealthRepository,
       logger,
       mockFirebaseCrashlytics,
     );
