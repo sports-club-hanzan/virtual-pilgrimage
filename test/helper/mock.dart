@@ -13,6 +13,7 @@ import 'package:package_info/package_info.dart';
 import 'package:virtualpilgrimage/application/auth/reset_password_usecase.dart';
 import 'package:virtualpilgrimage/application/ranking/ranking_repository.dart';
 import 'package:virtualpilgrimage/application/user/health/health_repository.dart';
+import 'package:virtualpilgrimage/application/user/health/user_health_repository.dart';
 import 'package:virtualpilgrimage/application/user/profile/user_profile_image_repository.dart';
 import 'package:virtualpilgrimage/application/user/user_repository.dart';
 import 'package:virtualpilgrimage/infrastructure/auth/apple_auth_repository.dart';
@@ -63,6 +64,7 @@ import 'package:virtualpilgrimage/infrastructure/auth/google_auth_repository.dar
   HealthRepository,
   UserProfileImageRepository,
   RankingRepository,
+  UserHealthRepository,
 
   /// UseCases
   ResetUserPasswordUsecase,
