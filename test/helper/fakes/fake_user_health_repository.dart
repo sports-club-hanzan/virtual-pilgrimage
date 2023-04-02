@@ -4,7 +4,7 @@ import 'package:virtualpilgrimage/domain/health/user_health.codegen.dart';
 class FakeUserHealthRepository extends UserHealthRepository {
   @override
   Future<List<UserHealth>> findHealthByPeriod(String userId, DateTime from, DateTime to) {
-    // TODO: implement findHealthByPeriod
+    // FIXME: implement findHealthByPeriod
     throw UnimplementedError();
   }
 
