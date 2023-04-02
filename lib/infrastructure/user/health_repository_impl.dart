@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:health/health.dart';
 import 'package:logger/logger.dart';
@@ -176,17 +178,17 @@ class HealthRepositoryImpl implements HealthRepository {
   ///
   /// [rawPoints] 各OSごとの仕組みで取得したヘルスケア情報の生データ
   HealthByPeriod _aggregateHealthInfo(List<HealthDataPoint> rawPoints) {
-    num steps = 0;
-    num distance = 0;
-    num burnedCalorie = 0;
+    // 取得対象ごとに集計
+    final Map<String, Map<String, num>> aggregateResult = {};
     for (final p in rawPoints) {
+      final result = aggregateResult[p.sourceId] ?? {'steps': 0, 'distance': 0, 'burnedCalorie': 0};
       // アプリで取り扱うヘルスケア情報はいずれも数値型なので、値を先に取得しておく
       final val = (p.value as NumericHealthValue).numericValue;
       // ignore: missing_enum_constant_in_switch
       switch (p.type) {
         // 歩数
         case HealthDataType.STEPS:
-          steps += val;
+          result['steps'] = (result['steps'] ?? 0) + val;
           break;
         // 歩行距離[m]
         // Android: DISTANCE_DELTA
@@ -194,11 +196,11 @@ class HealthRepositoryImpl implements HealthRepository {
         // ref.  https://pub.dev/packages/health
         case HealthDataType.DISTANCE_DELTA:
         case HealthDataType.DISTANCE_WALKING_RUNNING:
-          distance += val;
+          result['distance'] = (result['distance'] ?? 0) + val;
           break;
         // 消費カロリー[kcal]
         case HealthDataType.ACTIVE_ENERGY_BURNED:
-          burnedCalorie += val;
+          result['burnedCalorie'] = (result['burnedCalorie'] ?? 0) + val;
           break;
         // ignore: no_default_cases
         default:
@@ -206,6 +208,17 @@ class HealthRepositoryImpl implements HealthRepository {
           _logger.w('got unexpected Health Data Type [type][$p.type]');
           break;
       }
+      // 上書き
+      aggregateResult[p.sourceId] = result;
+    }
+    // sourceId ごとに集計した結果からもっとも大きい値を参照
+    num steps = 0;
+    num distance = 0;
+    num burnedCalorie = 0;
+    for (final r in aggregateResult.values) {
+      steps = max(steps, r['steps'] ?? 0);
+      distance = max(distance, r['distance'] ?? 0);
+      burnedCalorie = max(burnedCalorie, r['burnedCalorie'] ?? 0);
     }
     // アプリの性質上、カロリーや距離の精度は気にしなくていいため、小数点第一位で切り上げした値を利用
     // 最初から切り上げした値を加算すると誤差が大きくなるため、足し合わせる間は小数を持った状態で計算する実装としている
