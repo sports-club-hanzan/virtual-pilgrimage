@@ -7,10 +7,10 @@ import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_p
 import 'package:virtualpilgrimage/ui/components/molecules/pilgrimage_progress_card.dart';
 
 Widget pilgrimageProgressCardProvider(
-    BuildContext context,
-    VirtualPilgrimageUser? user,
-    WidgetRef ref,
-    ) {
+  BuildContext context,
+  VirtualPilgrimageUser? user,
+  WidgetRef ref,
+) {
   if (user == null) {
     return Container();
   }
@@ -70,4 +70,3 @@ Widget pilgrimageProgressCardProvider(
     },
   );
 }
-
