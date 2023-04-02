@@ -50,7 +50,7 @@ class UpdateHealthInteractor implements UpdateHealthUsecase {
       }
       await _userRepository.update(updatedUser);
       // 仮でここで更新している
-      // TODO: 日毎にヘルスケア情報を記録するように修正したら更新ロジック自体を見直す
+      // FIXME: 日毎にヘルスケア情報を記録するように修正したら更新ロジック自体を見直す
       await _userHealthRepository.update(
         UserHealth.createFromHealthByPeriod(
           user.id,
