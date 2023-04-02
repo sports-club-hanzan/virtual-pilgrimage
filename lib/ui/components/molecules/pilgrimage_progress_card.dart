@@ -1,78 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:virtualpilgrimage/application/pilgrimage/temple_repository.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/pilgrimage_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/temple_info.codegen.dart';
-import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
-import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/ui/style/font.dart';
 import 'package:virtualpilgrimage/ui/wording_helper.dart';
-
-Widget pilgrimageProgressCardProvider(
-  BuildContext context,
-  VirtualPilgrimageUser? user,
-  WidgetRef ref,
-) {
-  if (user == null) {
-    return Container();
-  }
-  const maxTempleNumber = 88;
-  final templeRepository = ref.read(templeRepositoryProvider);
-
-  /// 次の札所の番号を返す
-  /// 88箇所目に到達していたら 1 を返す
-  /// [pilgrimageId] 現在の札所の番号
-  int nextPilgrimageNumber(int pilgrimageId) {
-    if (pilgrimageId < maxTempleNumber) {
-      return pilgrimageId + 1;
-    }
-    return 1;
-  }
-
-  return FutureBuilder<List<TempleInfo>>(
-    // 次の札所への距離は到達している札所が持っているデータ構造となっているため、2つ取得する必要がある
-    // 実態はキャッシュしてあるmapからデータを引っ張ってきているだけ
-    future: () async {
-      // ユーザの現在到達している地点のお寺の情報
-      final now = await templeRepository.getTempleInfo(user.pilgrimage.nowPilgrimageId);
-      // ユーザが向かっているのお寺の情報
-      final next = await templeRepository
-          .getTempleInfo(nextPilgrimageNumber(user.pilgrimage.nowPilgrimageId));
-      return [now, next];
-    }(),
-    builder: (BuildContext context, AsyncSnapshot<List<TempleInfo>> snapshot) {
-      // loading中のwidget
-      Widget childWidget = Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [SizedBox(height: 50, width: 50, child: CircularProgressIndicator())],
-      );
-
-      if (snapshot.hasData) {
-        final data = snapshot.requireData;
-        childWidget = PilgrimageProgressCard(
-          pilgrimageInfo: user.pilgrimage,
-          templeInfo: data[1],
-          nextDistance: data[0].distance,
-        );
-      } else if (snapshot.hasError) {
-        ref.read(firebaseCrashlyticsProvider).recordError(snapshot.error, null);
-        // TODO(s14t284): 取得できなかった場合のUIを改善する
-        childWidget = Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Text('お遍路の進捗状況が取得できませんでした', style: TextStyle(fontWeight: FontWeight.bold))
-          ],
-        );
-      }
-      return SizedBox(
-        height: 140,
-        width: MediaQuery.of(context).size.width / 10 * 9.5,
-        child: childWidget,
-      );
-    },
-  );
-}
 
 class PilgrimageProgressCard extends StatelessWidget {
   const PilgrimageProgressCard({
@@ -97,20 +28,47 @@ class PilgrimageProgressCard extends StatelessWidget {
           width: 0.5,
         ),
       ),
-      color: Theme.of(context).colorScheme.surfaceVariant,// .onSecondary,
+      color: Theme.of(context).colorScheme.surfaceVariant, // .onSecondary,
       child: Padding(
         padding: const EdgeInsets.only(left: 8, right: 8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+        child: Stack(
           children: [
-            const Text(
-              '次は',
-              style: TextStyle(fontSize: FontSize.largeSize, fontWeight: FontWeight.bold),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                const Text(
+                  '次は',
+                  style: TextStyle(fontSize: FontSize.largeSize, fontWeight: FontWeight.bold),
+                ),
+                // n札所・〇〇寺
+                _nextTempleInfo(context),
+                // 進捗率の表示
+                progressCircularPercentIndicator(context),
+              ],
             ),
-            // n札所・〇〇寺
-            _nextTempleInfo(context),
-            // 進捗率の表示
-            progressCircularPercentIndicator(context)
+            // 周回回数の表示
+            Positioned(
+              top: 4,
+              left: 4,
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.loop,
+                    size: FontSize.mediumSize,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    '${pilgrimageInfo.lap}巡目',
+                    style: TextStyle(
+                      fontSize: FontSize.mediumSize,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

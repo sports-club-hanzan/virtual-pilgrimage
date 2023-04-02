@@ -1,5 +1,6 @@
 # virtual_pilgrimage
-[![codecov](https://codecov.io/gh/s14t284/virtual-pilgrimage/branch/main/graph/badge.svg?token=9ZNLJWR9D9)](https://codecov.io/gh/s14t284/virtual-pilgrimage)
+[![codecov](https://codecov.io/gh/sports-club-hanzan/virtual-pilgrimage/branch/main/graph/badge.svg?token=9ZNLJWR9D9)](https://codecov.io/gh/sports-club-hanzan/virtual-pilgrimage)
+[![Codemagic build status](https://api.codemagic.io/apps/631ebacbaa5e7102e12106fb/631ebacbaa5e7102e12106fa/status_badge.svg)](https://codemagic.io/apps/631ebacbaa5e7102e12106fb/631ebacbaa5e7102e12106fa/latest_build)
 
 仮想的に四国八十八ヶ所お遍路を体験することができる歩数系アプリ
 
