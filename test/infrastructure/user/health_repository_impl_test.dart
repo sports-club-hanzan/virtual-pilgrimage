@@ -67,7 +67,11 @@ void main() {
 
       /// 昨日
       when(mockHealthFactory.getHealthDataFromTypes(yesterday, targetToDate, types))
-          .thenAnswer((_) => Future.value(defaultHealthDataPoint()));
+          .thenAnswer((_) => Future.value([
+            ...defaultHealthDataPoint(),
+            // 同一時間帯に別のsourceIdでデータが登録されている
+            HealthDataPoint(NumericHealthValue(6000), HealthDataType.STEPS, HealthDataUnit.COUNT, DateTime(2022, 9, 18), DateTime(2022, 9, 18, 21, 40, 31, 986), PlatformType.ANDROID, defaultDeviceId, 'source', defaultSourceName),
+      ]));
 
       /// 1週間単位
       when(mockHealthFactory.getHealthDataFromTypes(lastWeek, targetToDate, types)).thenAnswer(
@@ -108,7 +112,9 @@ void main() {
           final createdAt = DateTime(2022, 4, 1);
           final expected = HealthInfo(
             today: const HealthByPeriod(steps: 427, distance: 670, burnedCalorie: 468),
-            yesterday: const HealthByPeriod(steps: 5427, distance: 4679, burnedCalorie: 1468),
+            // 複数のsourceIdのデータが含まれていたため、stepsの集計結果としては大きい値を採用
+            // defaultのsourceIdだと、5427 になるはず
+            yesterday: const HealthByPeriod(steps: 6000, distance: 4679, burnedCalorie: 1468),
             week: const HealthByPeriod(steps: 15427, distance: 14679, burnedCalorie: 11468),
             month: const HealthByPeriod(steps: 105427, distance: 104679, burnedCalorie: 101468),
             updatedAt: CustomizableDateTime.current,
@@ -135,7 +141,9 @@ void main() {
           final createdAt = targetDateTime.subtract(const Duration(hours: 12));
           final expected = HealthInfo(
             today: const HealthByPeriod(steps: 427, distance: 670, burnedCalorie: 468),
-            yesterday: const HealthByPeriod(steps: 5427, distance: 4679, burnedCalorie: 1468),
+            // 複数のsourceIdのデータが含まれていたため、stepsの集計結果としては大きい値を採用
+            // defaultのsourceIdだと、5427 になるはず
+            yesterday: const HealthByPeriod(steps: 6000, distance: 4679, burnedCalorie: 1468),
             week: const HealthByPeriod(steps: 0, distance: 0, burnedCalorie: 0),
             month: const HealthByPeriod(steps: 0, distance: 0, burnedCalorie: 0),
             updatedAt: CustomizableDateTime.current,
