@@ -76,3 +76,15 @@ deleted_users:
   documentId: string # 削除されたユーザのID
   id: string # 削除されたユーザのID
   deletedAt: timestamp # 削除日
+
+## ヘルスケア情報
+### TTL機能を利用して、90日後に自動的に削除される
+### iOS, Android の Health 情報から取得する歩数情報を保存する
+health:
+  documentId: string # 自動生成されたID
+  userId: string # ユーザID
+  steps: int # 歩数
+  distance: int # 歩行距離
+  burnedCalorie: int # 消費カロリー
+  date: timestamp # ヘルスケア情報の日付
+  expiredAt: timestamp # ヘルスケア情報の有効期限(FirestoreのTTL機能を利用。dateの90日後)
