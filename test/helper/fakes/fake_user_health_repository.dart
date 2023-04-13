@@ -12,4 +12,9 @@ class FakeUserHealthRepository extends UserHealthRepository {
   Future<void> update(UserHealth userHealth) {
     return Future.value();
   }
+
+  @override
+  Future<UserHealth?> find(String userId, DateTime now) {
+    throw UnimplementedError();
+  }
 }

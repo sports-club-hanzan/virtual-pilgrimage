@@ -71,9 +71,10 @@ dependencies:
   settings_ui: ^2.0.2
   flutter_native_splash: ^2.2.19
   google_fonts: any
+  fl_chart: ^0.61.0
   
   # health
-  health: ^4.4.0
+  health: ^5.0.0
   permission_handler: ^9.2.0 # Firebaseと同じSDKをターゲットにできるよう最新ではないバージョンを利用
 
 dev_dependencies:

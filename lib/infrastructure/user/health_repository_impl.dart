@@ -6,6 +6,7 @@ import 'package:logger/logger.dart';
 import 'package:virtualpilgrimage/application/user/health/health_repository.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/exception/get_health_exception.dart';
+import 'package:virtualpilgrimage/domain/health/health_aggregation_result.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_by_period.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_info.codegen.dart';
 
@@ -100,7 +101,7 @@ class HealthRepositoryImpl implements HealthRepository {
   /// [from] ヘルスケア情報を取得する起点となる時間
   /// [to] ヘルスケア情報を取得する終点となる時間
   @override
-  Future<HealthByPeriod> getHealthByPeriod({
+  Future<HealthAggregationResult> aggregateHealthByPeriod({
     required DateTime from,
     required DateTime to,
   }) async {
@@ -109,7 +110,38 @@ class HealthRepositoryImpl implements HealthRepository {
 
     return _execute(() async {
       final health = await _getHealthData(from, to, types);
-      return _aggregateHealthInfo(health);
+      final eachDay = _aggregateHealthInfoEachDay(health);
+      var total = HealthByPeriod.getDefault();
+      // 各日の合計値を集計
+      eachDay.forEach((key, value) {
+        total = total.merge(value);
+      });
+      print("=======");
+      print(from);
+      print(to);
+      print(health);
+      print(eachDay);
+      print(total);
+      print("=======");
+      return HealthAggregationResult(
+        eachDay: eachDay,
+        total: total,
+      );
+    });
+  }
+
+  @override
+  Future<Map<DateTime, HealthByPeriod>> getHealthEachPeriod({
+    required DateTime from,
+    required DateTime to,
+  }) async {
+    final types = _healthTypes[defaultTargetPlatform.name.toLowerCase()]!;
+    await _validateUsableHealthTypes(types);
+
+    _logger.d('collect health info start [from][$from][to][$to]');
+    return _execute(() async {
+      final health = await _getHealthData(from, to, types);
+      return _aggregateHealthInfoEachDay(health);
     });
   }
 
@@ -229,6 +261,110 @@ class HealthRepositoryImpl implements HealthRepository {
     );
   }
 
+  /// 取得したヘルスケア情報をカテゴリごと集計して返す
+  ///
+  /// [rawPoints] 各OSごとの仕組みで取得したヘルスケア情報の生データ
+  Map<DateTime, HealthByPeriod> _aggregateHealthInfoEachDay(List<HealthDataPoint> rawPoints) {
+    final List<HealthPoint> stepPoints = [];
+    final List<HealthPoint> distancePoints = [];
+    final List<HealthPoint> burnedCaloriePoints = [];
+    print(rawPoints);
+    for (final p in rawPoints) {
+      final point = HealthPoint(
+        // アプリで取り扱うヘルスケア情報はいずれも数値型なので、値を先に取得しておく
+        value: (p.value as NumericHealthValue).numericValue,
+        from: p.dateFrom,
+        to: p.dateTo,
+      );
+      // ignore: missing_enum_constant_in_switch
+      switch (p.type) {
+        // 歩数
+        case HealthDataType.STEPS:
+          stepPoints.add(point);
+          break;
+        // 歩行距離[m]
+        // Android: DISTANCE_DELTA
+        // iOS: DISTANCE_WALKING_RUNNING
+        // ref.  https://pub.dev/packages/health
+        case HealthDataType.DISTANCE_DELTA:
+        case HealthDataType.DISTANCE_WALKING_RUNNING:
+          distancePoints.add(point);
+          break;
+        // 消費カロリー[kcal]
+        case HealthDataType.ACTIVE_ENERGY_BURNED:
+          burnedCaloriePoints.add(point);
+          break;
+        // ignore: no_default_cases
+        default:
+          // 想定していない値が入ってきたときは開発中に気づけるようにログに出力する
+          _logger.w('got unexpected Health Data Type [type][$p.type]');
+          break;
+      }
+    }
+
+    // 同じ期間のポイントを集計
+    final stepAggregationPoints = _aggregatePoints(stepPoints);
+    final distanceAggregationPoints = _aggregatePoints(distancePoints);
+    final burnedCalorieAggregationPoints = _aggregatePoints(burnedCaloriePoints);
+
+    _logger
+      ..d(stepAggregationPoints.length)
+      ..d(distanceAggregationPoints.length)
+      ..d(burnedCalorieAggregationPoints.length);
+    // 日毎にヘルスケア情報を集約
+    final Map<DateTime, HealthByPeriod> results = {};
+    for (final date in stepAggregationPoints.keys) {
+      final step = stepAggregationPoints[date];
+      final distance = distanceAggregationPoints[date];
+      final burnedCalorie = burnedCalorieAggregationPoints[date];
+      final result = HealthByPeriod(
+        steps: step?.value.ceil() ?? 0,
+        distance: distance?.value.ceil() ?? 0,
+        burnedCalorie: burnedCalorie?.value.ceil() ?? 0,
+      );
+      results[date] = result;
+    }
+    print(results);
+    return results;
+  }
+
+  Map<DateTime, HealthAggregationPoint> _aggregatePoints(List<HealthPoint> points) {
+    final newPoints = <HealthPoint>[];
+    for (final p1 in points) {
+      var newPoint = p1;
+      for (final p2 in points) {
+        // 同じポイントの場合はスキップ
+        if (p1.equals(p2)) {
+          continue;
+        }
+        // 違うポイント かつ 期間が重複している場合
+        if (p1.duplicate(p2)) {
+          // 比較対象のポイント > 現在参照しているポイントの時、ポイントを0に上書き
+          if (p2.value > p1.value) {
+            newPoint = HealthPoint(
+              value: 0,
+              from: p1.from,
+              to: p1.to,
+            );
+            break;
+          }
+        }
+      }
+      newPoints.add(newPoint);
+    }
+
+    // 日毎にポイントを集約して加算
+    final Map<DateTime, HealthAggregationPoint> aggregateResult = {};
+    for (final p in newPoints) {
+      final target = DateTime(p.from.year, p.from.month, p.from.day);
+      final result =
+          aggregateResult[target] ?? HealthAggregationPoint(value: 0, targetDate: target);
+      aggregateResult[target] = result.add(p.value);
+    }
+
+    return aggregateResult;
+  }
+
   /// 指定日の最終時間を microsecond 単位で導出
   /// 指定日の次の日 - 1microseconds で 1microseconds だけ次の日より前の時間を取得できる
   ///
@@ -276,5 +412,51 @@ class HealthRepositoryImpl implements HealthRepository {
         cause: e,
       );
     }
+  }
+}
+
+class HealthPoint {
+  HealthPoint({
+    required this.value,
+    required this.from,
+    required this.to,
+  });
+
+  final num value;
+  final DateTime from;
+  final DateTime to;
+
+  bool duplicate(HealthPoint point) {
+    // どちらかの機関の開始時刻が、もう一方の機関の終了時刻よりも後の場合は重複しない
+    if (from.isAfter(point.to) || point.from.isAfter(to)) {
+      return false;
+    }
+    return true;
+  }
+
+  bool equals(HealthPoint point) {
+    return value == point.value && from == point.from && to == point.to;
+  }
+
+  @override
+  String toString() {
+    return 'HealthPoint{value: $value, from: $from, to: $to}';
+  }
+}
+
+class HealthAggregationPoint {
+  HealthAggregationPoint({
+    required this.value,
+    required this.targetDate,
+  });
+
+  final num value;
+  final DateTime targetDate;
+
+  HealthAggregationPoint add(num value) {
+    return HealthAggregationPoint(
+      value: this.value + value,
+      targetDate: targetDate,
+    );
   }
 }

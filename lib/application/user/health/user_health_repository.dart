@@ -13,6 +13,9 @@ abstract class UserHealthRepository {
   /// ヘルスケア情報を作成・更新
   Future<void> update(UserHealth userHealth);
 
+  // 指定した日のヘルスケア情報を取得
+  Future<UserHealth?> find(String userId, DateTime now);
+
   /// 期間内のヘルスケア情報を取得
   Future<List<UserHealth>> findHealthByPeriod(String userId, DateTime from, DateTime to);
 }

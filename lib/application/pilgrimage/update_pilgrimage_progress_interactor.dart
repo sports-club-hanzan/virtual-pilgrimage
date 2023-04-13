@@ -1,13 +1,18 @@
+import 'dart:async';
+
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:logger/logger.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/temple_repository.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_result.codegen.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_usecase.dart';
 import 'package:virtualpilgrimage/application/user/health/health_repository.dart';
+import 'package:virtualpilgrimage/application/user/health/user_health_repository.dart';
 import 'package:virtualpilgrimage/application/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
+import 'package:virtualpilgrimage/domain/health/health_aggregation_result.codegen.dart';
+import 'package:virtualpilgrimage/domain/health/user_health.codegen.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/temple_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/virtual_position_calculator.dart';
-import 'package:virtualpilgrimage/domain/user/health/health_by_period.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 
 // お遍路の進捗を更新するUseCaseの実装
@@ -16,15 +21,19 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
     this._templeRepository,
     this._healthRepository,
     this._userRepository,
+    this._userHealthRepository,
     this._virtualPositionCalculator,
     this._logger,
+    this._crashlytics,
   );
 
   final TempleRepository _templeRepository;
   final HealthRepository _healthRepository;
   final UserRepository _userRepository;
+  final UserHealthRepository _userHealthRepository;
   final VirtualPositionCalculator _virtualPositionCalculator;
   final Logger _logger;
+  final FirebaseCrashlytics _crashlytics;
 
   // 札所の数
   static const maxTempleNumber = 88;
@@ -86,7 +95,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
     DateTime now,
     List<int> reachedPilgrimageIdList,
   ) async {
-    final lastProgressUpdatedAt = user.pilgrimage.updatedAt;
+    final lastProgressUpdatedAt = user.updatedAt; // user.pilgrimage.updatedAt;
     int lap = user.pilgrimage.lap;
     int nextPilgrimageId = user.pilgrimage.nowPilgrimageId;
 
@@ -101,25 +110,46 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
     // 最大で2回外部通信する必要があるため、並列でまとめて実行
     // 現在、ユーザが目指している札所の情報と最終更新時間からのユーザのヘルスケア情報を取得
     late TempleInfo nowTempleInfo;
-    late final HealthByPeriod healthFromLastUpdatedAt;
+    late final HealthAggregationResult healthAggregationResult;
     {
       await Future.wait(<Future<void>>[
         _templeRepository.getTempleInfo(nextPilgrimageId).then((value) => nowTempleInfo = value),
         _healthRepository
-            .getHealthByPeriod(from: lastProgressUpdatedAt, to: now)
-            .then((value) => healthFromLastUpdatedAt = value),
+            .aggregateHealthByPeriod(from: lastProgressUpdatedAt, to: now)
+            .then((value) => healthAggregationResult = value),
       ]);
       _logger.d(
         'got info for updating pilgrimage progress '
-        '[health][$healthFromLastUpdatedAt]'
+        '[health][$healthAggregationResult]'
         '[nowTempleInfo][$nowTempleInfo]',
       );
+      // バリデーションで更新する必要がない場合は早期終了
+      if (!healthAggregationResult.total.validate()) {
+        final msg = 'no health data [userId][${user.id}][from][$lastProgressUpdatedAt][to][$now]';
+        _logger.i(msg);
+        unawaited(_crashlytics.log(msg));
+        return user;
+      }
     }
+    /// 2. 非同期でユーザのヘルスケア情報を更新
+    healthAggregationResult.eachDay.forEach((key, value) async {
+      var target = UserHealth.createFromHealthByPeriod(user.id, value);
+      // 既にユーザのヘルスケア情報が存在する場合はマージする
+      final existsHealth = await _userHealthRepository.find(user.id, now);
+      if (existsHealth != null) {
+        target = target.merge(existsHealth);
+      }
+      unawaited(
+        _userHealthRepository
+            .update(target)
+            .onError(_crashlytics.recordError),
+      );
+    });
 
-    /// 2. 移動距離 > 次の札所までの距離 の間、で移動距離を減らしながら次に目指すべき札所を導出する
+    /// 3. 移動距離 > 次の札所までの距離 の間、で移動距離を減らしながら次に目指すべき札所を導出する
     // 次の札所に向かうまでの移動距離を格納する変数
     // お遍路の進捗の更新のために利用
-    int movingDistance = user.pilgrimage.movingDistance + healthFromLastUpdatedAt.distance;
+    int movingDistance = user.pilgrimage.movingDistance + healthAggregationResult.total.distance;
     {
       _logger.d(
         'calc pilgrimage progress '
@@ -149,7 +179,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
       }
     }
 
-    /// 3. 導出した進捗状況でユーザ情報を更新
+    /// 4. 導出した進捗状況でユーザ情報を更新
     return user.updatePilgrimageProgress(nextPilgrimageId, lap, movingDistance, now);
   }
 

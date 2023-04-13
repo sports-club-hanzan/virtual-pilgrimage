@@ -49,14 +49,21 @@ class UpdateHealthInteractor implements UpdateHealthUsecase {
         );
       }
       await _userRepository.update(updatedUser);
-      // 仮でここで更新している
-      // FIXME: 日毎にヘルスケア情報を記録するように修正したら更新ロジック自体を見直す
-      await _userHealthRepository.update(
-        UserHealth.createFromHealthByPeriod(
-          user.id,
-          (user.health != null && health.today.validate()) ? user.health!.today : health.today,
-        ),
+      // FIXME: 各種ページで参照するヘルスケア情報を見直す
+      // 最終更新日の00:00:00 ~ 現在時刻までのヘルスケア情報を取得
+      final healthEachPeriod = await _healthRepository.getHealthEachPeriod(
+        from: user.updatedAt.copyWith(hour: 0, minute: 0, second: 0),
+        to: now,
       );
+      for (final e in healthEachPeriod.entries) {
+        final targetHealth = UserHealth.createFromHealthByPeriod(user.id, e.value);
+        final userHealth = await _userHealthRepository.find(user.id, e.key);
+        // すでに情報が存在する && 取得した情報が不正の場合は更新しない
+        if (userHealth != null && !targetHealth.valid()) {
+          break;
+        }
+        await _userHealthRepository.update(targetHealth);
+      }
     } on GetHealthException catch (e) {
       final message = 'get user health information error [user][$user][error][$e]';
       _logger.e(message);

@@ -7,10 +7,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:health/health.dart';
 import 'package:logger/logger.dart';
 import 'package:mockito/mockito.dart';
+import 'package:virtualpilgrimage/application/user/health/health_repository.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
+import 'package:virtualpilgrimage/domain/health/health_aggregation_result.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_by_period.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_info.codegen.dart';
-import 'package:virtualpilgrimage/application/user/health/health_repository.dart';
 import 'package:virtualpilgrimage/infrastructure/user/health_repository_impl.dart';
 
 import '../../helper/mock.mocks.dart';
@@ -68,10 +69,19 @@ void main() {
       /// 昨日
       when(mockHealthFactory.getHealthDataFromTypes(yesterday, targetToDate, types))
           .thenAnswer((_) => Future.value([
-            ...defaultHealthDataPoint(),
-            // 同一時間帯に別のsourceIdでデータが登録されている
-            HealthDataPoint(NumericHealthValue(6000), HealthDataType.STEPS, HealthDataUnit.COUNT, DateTime(2022, 9, 18), DateTime(2022, 9, 18, 21, 40, 31, 986), PlatformType.ANDROID, defaultDeviceId, 'source', defaultSourceName),
-      ]));
+                ...defaultHealthDataPoint(),
+                // 同一時間帯に別のsourceIdでデータが登録されている
+                HealthDataPoint(
+                    NumericHealthValue(6000),
+                    HealthDataType.STEPS,
+                    HealthDataUnit.COUNT,
+                    DateTime(2022, 9, 18),
+                    DateTime(2022, 9, 18, 21, 40, 31, 986),
+                    PlatformType.ANDROID,
+                    defaultDeviceId,
+                    'source',
+                    defaultSourceName),
+              ]));
 
       /// 1週間単位
       when(mockHealthFactory.getHealthDataFromTypes(lastWeek, targetToDate, types)).thenAnswer(
@@ -251,8 +261,6 @@ void main() {
     group('getHealthByPeriod', () {
       test('正常系', () async {
         // given
-        const expected = HealthByPeriod(steps: 427, distance: 670, burnedCalorie: 468);
-
         /// 今日
         when(
           mockHealthFactory.getHealthDataFromTypes(
@@ -266,17 +274,30 @@ void main() {
             HealthDataPoint(NumericHealthValue(468), HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataUnit.KILOCALORIE, DateTime(2022, 9, 12), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
             HealthDataPoint(NumericHealthValue(427), HealthDataType.STEPS, HealthDataUnit.COUNT, DateTime(2022, 9, 12), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
             HealthDataPoint(NumericHealthValue(670), HealthDataType.DISTANCE_DELTA, HealthDataUnit.METER, DateTime(2022, 9, 12), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
+            HealthDataPoint(NumericHealthValue(1000), HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataUnit.KILOCALORIE, DateTime(2022, 9, 19), DateTime(2022, 9, 20), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
+            HealthDataPoint(NumericHealthValue(1000), HealthDataType.STEPS, HealthDataUnit.COUNT, DateTime(2022, 9, 19), DateTime(2022, 9, 20), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
+            HealthDataPoint(NumericHealthValue(1000), HealthDataType.DISTANCE_DELTA, HealthDataUnit.METER, DateTime(2022, 9, 19), DateTime(2022, 9, 20), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
+            HealthDataPoint(NumericHealthValue(2000), HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataUnit.KILOCALORIE, DateTime(2022, 9, 19), DateTime(2022, 9, 20), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
+            HealthDataPoint(NumericHealthValue(2000), HealthDataType.STEPS, HealthDataUnit.COUNT, DateTime(2022, 9, 19), DateTime(2022, 9, 20), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
+            HealthDataPoint(NumericHealthValue(2000), HealthDataType.DISTANCE_DELTA, HealthDataUnit.METER, DateTime(2022, 9, 19), DateTime(2022, 9, 20), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
             // @formatter:on
           ]),
         );
 
         // when
-        final actual = await target.getHealthByPeriod(
+        final actual = await target.aggregateHealthByPeriod(
           from: targetDateTime,
           to: targetToDate.add(const Duration(days: 1)),
         );
 
         // then
+        final expected = HealthAggregationResult(
+          eachDay: {
+            DateTime(2022, 9, 12): HealthByPeriod(steps: 427, distance: 670, burnedCalorie: 468),
+            DateTime(2022, 9, 19): HealthByPeriod(steps: 2000, distance: 2000, burnedCalorie: 2000),
+          },
+          total: HealthByPeriod(steps: 2427, distance: 2670, burnedCalorie: 2468),
+        );
         expect(actual, expected);
         verify(mockHealthFactory.requestAuthorization(any)).called(1);
         verify(
