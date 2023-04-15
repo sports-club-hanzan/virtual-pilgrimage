@@ -10,8 +10,6 @@ import 'package:virtualpilgrimage/analytics.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/temple_repository.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_result.codegen.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_usecase.dart';
-import 'package:virtualpilgrimage/application/user/health/update_health_result.codegen.dart';
-import 'package:virtualpilgrimage/application/user/health/update_health_usecase.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/logger.dart';
@@ -25,7 +23,6 @@ final homeProvider = StateNotifierProvider.autoDispose<HomePresenter, HomeState>
 class HomePresenter extends StateNotifier<HomeState> {
   HomePresenter(this._ref) : super(HomeState.initialize()) {
     _updatePilgrimageProgressUsecase = _ref.read(updatePilgrimageProgressUsecaseProvider);
-    _updateHealthUsecase = _ref.read(updateHealthUsecaseProvider);
     _analytics = _ref.read(analyticsProvider);
     _crashlytics = _ref.read(firebaseCrashlyticsProvider);
     _templeRepository = _ref.read(templeRepositoryProvider);
@@ -35,7 +32,6 @@ class HomePresenter extends StateNotifier<HomeState> {
 
   final Ref _ref;
   late final UpdatePilgrimageProgressUsecase _updatePilgrimageProgressUsecase;
-  late final UpdateHealthUsecase _updateHealthUsecase;
   late final Analytics _analytics;
   late final FirebaseCrashlytics _crashlytics;
   late final TempleRepository _templeRepository;
@@ -64,7 +60,7 @@ class HomePresenter extends StateNotifier<HomeState> {
     // TODO(s14t284): ヘルスケア情報を取得するダイアログで許可を押す旨をUIに表示した方が良いか検討
     if (defaultTargetPlatform.name.toLowerCase() == 'android') {
       final activityPermission = await Permission.activityRecognition.request();
-      _ref.read(loggerProvider).d(activityPermission);
+      _ref.read(loggerProvider).d('activityPermission: $activityPermission');
       if (activityPermission.isDenied) {
         await _crashlytics.recordError(
           'now allowed to get health information [userId][${user.id}]',
@@ -96,17 +92,6 @@ class HomePresenter extends StateNotifier<HomeState> {
         );
         user = updatedUser;
         _userStateNotifier.state = updatedUser;
-      }
-
-      // 描画を更新しながら、必要なヘルスケア情報だけ更新する
-      // 先にmapの描画を更新してバックグラウンドでヘルスケア情報を更新しておくことで、UIの変更の反映を早める
-      final updateHealthResult = await _updateHealthUsecase.executeForRecentlyInfo(user);
-      if (updateHealthResult.status == UpdateHealthStatus.success) {
-        if (updateHealthResult.user != null) {
-          _userStateNotifier.state = updateHealthResult.user;
-        }
-      } else {
-        unawaited(_crashlytics.recordError(updateHealthResult.error, null));
       }
 
       // 到達した札所があったら御朱印アニメーションを描画

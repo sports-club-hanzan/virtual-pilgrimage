@@ -48,6 +48,14 @@ class UserHealth with _$UserHealth {
     return steps > 0 && distance > 0 && burnedCalorie > 0;
   }
 
+  HealthByPeriod toHealthByPeriod() {
+    return HealthByPeriod(
+      steps: steps,
+      distance: distance,
+      burnedCalorie: burnedCalorie,
+    );
+  }
+
   /// 2つの UserHealth をマージした値を返す
   UserHealth merge(UserHealth userHealth) {
     if (userId != userHealth.userId) {

@@ -198,7 +198,7 @@ class HealthRepositoryImpl implements HealthRepository {
   ) async {
     DateTime trueFrom = from;
     DateTime trueTo = to;
-    if (trueFrom.compareTo(trueTo) != -1) {
+    if (trueFrom.isAfter(trueTo)) {
       trueFrom = to;
       trueTo = from;
     }
