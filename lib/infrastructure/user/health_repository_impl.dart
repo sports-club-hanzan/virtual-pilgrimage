@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:health/health.dart';
 import 'package:logger/logger.dart';
-import 'package:virtualpilgrimage/application/user/health/health_repository.dart';
+import 'package:virtualpilgrimage/application/health/health_repository.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/exception/get_health_exception.dart';
 import 'package:virtualpilgrimage/domain/health/health_aggregation_result.codegen.dart';

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
-import 'package:virtualpilgrimage/application/user/health/user_health_repository.dart';
+import 'package:virtualpilgrimage/application/health/user_health_repository.dart';
 import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
 import 'package:virtualpilgrimage/domain/health/user_health.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firestore_collection_path.dart';

@@ -1,4 +1,4 @@
-import 'package:virtualpilgrimage/application/user/health/health_repository.dart';
+import 'package:virtualpilgrimage/application/health/health_repository.dart';
 import 'package:virtualpilgrimage/domain/health/health_aggregation_result.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_by_period.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_info.codegen.dart';

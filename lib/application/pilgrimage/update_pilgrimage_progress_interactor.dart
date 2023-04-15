@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:logger/logger.dart';
+import 'package:virtualpilgrimage/application/health/health_repository.dart';
+import 'package:virtualpilgrimage/application/health/user_health_repository.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/temple_repository.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_result.codegen.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_usecase.dart';
-import 'package:virtualpilgrimage/application/user/health/health_repository.dart';
-import 'package:virtualpilgrimage/application/user/health/user_health_repository.dart';
 import 'package:virtualpilgrimage/application/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/health/health_aggregation_result.codegen.dart';

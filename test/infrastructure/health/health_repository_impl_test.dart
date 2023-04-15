@@ -7,7 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:health/health.dart';
 import 'package:logger/logger.dart';
 import 'package:mockito/mockito.dart';
-import 'package:virtualpilgrimage/application/user/health/health_repository.dart';
+import 'package:virtualpilgrimage/application/health/health_repository.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/health/health_aggregation_result.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_by_period.codegen.dart';

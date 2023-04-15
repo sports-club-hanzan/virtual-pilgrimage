@@ -1,4 +1,4 @@
-import 'package:virtualpilgrimage/application/user/health/user_health_repository.dart';
+import 'package:virtualpilgrimage/application/health/user_health_repository.dart';
 import 'package:virtualpilgrimage/domain/health/user_health.codegen.dart';
 
 class FakeUserHealthRepository extends UserHealthRepository {

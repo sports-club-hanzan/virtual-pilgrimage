@@ -5,12 +5,12 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:virtualpilgrimage/application/health/health_repository.dart';
+import 'package:virtualpilgrimage/application/health/user_health_repository.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/temple_repository.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_interactor.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_result.codegen.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_usecase.dart';
-import 'package:virtualpilgrimage/application/user/health/health_repository.dart';
-import 'package:virtualpilgrimage/application/user/health/user_health_repository.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/health/health_aggregation_result.codegen.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/pilgrimage_info.codegen.dart';
@@ -25,7 +25,6 @@ import '../../helper/fakes/fake_user_health_repository.dart';
 import '../../helper/fakes/fake_user_repository.dart';
 import '../../helper/mock.mocks.dart';
 import '../../helper/provider_container.dart';
-import '../user/health/update_health_interactor_test.dart';
 import 'update_pilgrimage_progress_interactor_test.mocks.dart';
 
 @GenerateMocks([TempleRepository, HealthRepository])
@@ -47,10 +46,10 @@ void main() {
     healthRepository = FakeHealthRepository(
       healthByPeriod: const HealthByPeriod(steps: 0, distance: 27000, burnedCalorie: 0),
       healthInfo: HealthInfo(
-        today: defaultHealthByPeriod(),
-        yesterday: defaultHealthByPeriod(),
-        week: defaultHealthByPeriod(),
-        month: defaultHealthByPeriod(),
+        today: HealthByPeriod.getDefault(),
+        yesterday: HealthByPeriod.getDefault(),
+        week: HealthByPeriod.getDefault(),
+        month: HealthByPeriod.getDefault(),
         updatedAt: CustomizableDateTime.current,
         totalSteps: 10000,
         totalDistance: 2000,
@@ -84,7 +83,8 @@ void main() {
             HealthAggregationResult(
               total: const HealthByPeriod(steps: 0, distance: 27000, burnedCalorie: 0),
               eachDay: {
-                DateTime(2022, 4, 1): const HealthByPeriod(steps: 0, distance: 27000, burnedCalorie: 0)
+                DateTime(2022, 4, 1):
+                    const HealthByPeriod(steps: 0, distance: 27000, burnedCalorie: 0)
               },
             ),
           ),
