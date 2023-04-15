@@ -10,8 +10,10 @@ class FakeHealthRepository extends HealthRepository {
   final HealthInfo healthInfo;
 
   @override
-  Future<HealthAggregationResult> aggregateHealthByPeriod(
-      {required DateTime from, required DateTime to}) {
+  Future<HealthAggregationResult> aggregateHealthByPeriod({
+    required DateTime from,
+    required DateTime to,
+  }) {
     return Future.value(
       HealthAggregationResult(
         eachDay: {from: healthByPeriod},

@@ -57,8 +57,15 @@ void main() {
     );
     userHealthRepository = FakeUserHealthRepository();
     crashlytics = MockFirebaseCrashlytics();
-    target = UpdatePilgrimageProgressInteractor(templeRepository, healthRepository, userRepository,
-        userHealthRepository, virtualPositionCalculator, logger, crashlytics);
+    target = UpdatePilgrimageProgressInteractor(
+      templeRepository,
+      healthRepository,
+      userRepository,
+      userHealthRepository,
+      virtualPositionCalculator,
+      logger,
+      crashlytics,
+    );
 
     CustomizableDateTime.customTime = DateTime.now();
   });

@@ -116,13 +116,6 @@ class HealthRepositoryImpl implements HealthRepository {
       eachDay.forEach((key, value) {
         total = total.merge(value);
       });
-      print("=======");
-      print(from);
-      print(to);
-      print(health);
-      print(eachDay);
-      print(total);
-      print("=======");
       return HealthAggregationResult(
         eachDay: eachDay,
         total: total,
@@ -268,7 +261,6 @@ class HealthRepositoryImpl implements HealthRepository {
     final List<HealthPoint> stepPoints = [];
     final List<HealthPoint> distancePoints = [];
     final List<HealthPoint> burnedCaloriePoints = [];
-    print(rawPoints);
     for (final p in rawPoints) {
       final point = HealthPoint(
         // アプリで取り扱うヘルスケア情報はいずれも数値型なので、値を先に取得しておく
@@ -324,7 +316,6 @@ class HealthRepositoryImpl implements HealthRepository {
       );
       results[date] = result;
     }
-    print(results);
     return results;
   }
 
