@@ -1,4 +1,3 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
@@ -75,27 +74,6 @@ class _ProfilePageBody extends ConsumerWidget {
         ProfileText(user: user, context: context, notifier: notifier),
         HealthCards(user: user),
         pilgrimageProgressCardProvider(context, user, ref),
-        SizedBox(
-          height: 200,
-          child: LineChart(
-            LineChartData(
-              lineBarsData: [
-                LineChartBarData(
-                  spots: const [
-                    FlSpot(1, 400),
-                    FlSpot(2, 300),
-                    FlSpot(3, 200),
-                    FlSpot(4, 100),
-                    FlSpot(5, 0),
-                  ],
-                )
-              ],
-              titlesData: FlTitlesData(
-                bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: true, interval: 1)),
-              ),
-            ),
-          ),
-        ),
       ],
     );
   }
