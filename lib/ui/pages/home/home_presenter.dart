@@ -91,7 +91,7 @@ class HomePresenter extends StateNotifier<HomeState> {
           updatePastPolylines: false,
         );
         user = updatedUser;
-        _userStateNotifier.state = updatedUser;
+        _userStateNotifier.state = updatedUser.convertForProfile();
       }
 
       // 到達した札所があったら御朱印アニメーションを描画

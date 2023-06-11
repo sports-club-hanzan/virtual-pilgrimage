@@ -57,7 +57,8 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
     // 到達した札所のID一覧
     final List<int> reachedPilgrimageIdList = [];
     try {
-      final updatedProgressUser = await _calcPilgrimageProgress(user, now, reachedPilgrimageIdList);
+      final updatedProgressUser =
+          await _calcPilgrimageProgressAndUpdateHealth(user, now, reachedPilgrimageIdList);
 
       // 現在経路の緯度経度を取得
       final nextTargetTempleInfo =
@@ -69,6 +70,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
       );
       // 念の為、レスポンスに使う全ての情報が出揃ってからユーザ情報を更新
       await _userRepository.update(updatedProgressUser);
+      _logger.i('updated user: $updatedProgressUser');
 
       return UpdatePilgrimageProgressResult(
         status: UpdatePilgrimageProgressResultStatus.success,
@@ -92,7 +94,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
   /// [user] ユーザ情報
   /// [now] 進捗状況を更新する時間
   /// [reachedPilgrimageIdList] 到達した札所の番号を格納するリスト
-  Future<VirtualPilgrimageUser> _calcPilgrimageProgress(
+  Future<VirtualPilgrimageUser> _calcPilgrimageProgressAndUpdateHealth(
     VirtualPilgrimageUser user,
     DateTime now,
     List<int> reachedPilgrimageIdList,
