@@ -83,7 +83,7 @@ void main() {
             ),
           ),
         );
-        when(userHealthRepository.find('dummyId', CustomizableDateTime.current))
+        when(userHealthRepository.find('dummyId', DateTime(2022, 4, 1)))
             .thenAnswer((_) => Future.value(null));
 
         final expected = UpdatePilgrimageProgressResult(
