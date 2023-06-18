@@ -36,10 +36,6 @@ type HealthEachDay = {
   userId: string;
 }
 
-const toTimestamp = (date: Date): Timestamp => {
-  return Timestamp.fromDate(date);
-}
-
 const toStartTime = (targetDate: Date): Date => {
     targetDate.setHours(0);
     targetDate.setMinutes(0);
@@ -81,20 +77,35 @@ const updateHealthHandler = async () => {
   await Promise.all(userSnapshot.docs.map(async (userDoc) => {
     const userId = userDoc.id;
     const user = userDoc.data() as User;
-    if (user.health == undefined || userId != "EQzrejcSTPXOUEGf6qlDmYqdYUr2") {
+    // if (user.health == undefined || userId != "EQzrejcSTPXOUEGf6qlDmYqdYUr2") {
+    //   return;
+    // }
+    if (user.health == undefined) {
       return;
     }
-    // healthテーブルの id は {user_id}_{date} 形式となっているため、where で id の prefix と date を使って絞り込める
+
+    // healthテーブルの id は {user_id}_{date} 形式となっているため、where で user_id の prefix と date を使って絞り込める
     const healthSnapshot = await db.collection("health")
-      // 本日分をのぞいて1ヶ月分のデータを取得
-      .where("date", ">=", toTimestamp(oneMonthAgo))
-      .where("date", "<", toTimestamp(today))
       // LIKE っぽい検索
       .orderBy("userId")
       .startAt(userId)
       .endAt(userId + "\uf8ff")
       .get();
-    const healths = healthSnapshot.docs.map((doc) => doc.data() as HealthEachDay);
+
+    // 本日分をのぞいて1ヶ月分のデータを取得
+    // Firebase では where と orderby で指定するデータが同じでないといけないため、
+    // このような絞り込みしかできない
+    const healths = healthSnapshot.docs
+      .filter(doc => {
+        const data = doc.data() as HealthEachDay;
+        const date = data.date.toDate(); // assuming date is stored as a Firestore Timestamp
+        return date >= oneMonthAgo && date < today;
+      })
+      .map((doc) => doc.data() as HealthEachDay);
+    if (healths.length == 0) {
+      console.debug(`no health data [userId][${userId}]`);
+      return;
+    }
     // 昨日
     const targetDateYesterday = new Date();
     targetDateYesterday.setDate(targetDateYesterday.getDate() - 1);
@@ -106,15 +117,21 @@ const updateHealthHandler = async () => {
     // 1ヶ月
     const month = aggregateHealthByPeriod(healths, oneMonthAgo);
 
+    console.log(`old health [${JSON.stringify(user.health)}]`);
     // ユーザ情報を上書きしてDBに保存
-    user.health = {
-      ...user.health,
-      yesterday: yesterday,
-      week: week,
-      month: month,
+    const updatedUser: User = {
+      ...user,
+      health: {
+        ...user.health,
+        yesterday: yesterday,
+        week: week,
+        month: month,
+      }
     }
-    const result = await db.collection("users").doc(userId).set(user);
-    console.log(`updated user health [userId][${userId}][time][${result.writeTime.seconds}]`);
+    console.log(`update health [userId][${userId}][old][${JSON.stringify(user.health)}][new][${JSON.stringify(updatedUser.health)}][healths][${JSON.stringify(healths)}]`);
+    // const result = await db.collection("users").doc(userId).set(user);
+    // console.log(`success to update user health [userId][${userId}][time][${result.writeTime.seconds}]`);
+    console.log(`success to update user health [userId][${userId}]`);
   }));
 }
 
