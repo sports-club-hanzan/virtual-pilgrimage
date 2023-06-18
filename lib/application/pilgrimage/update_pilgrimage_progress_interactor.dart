@@ -128,7 +128,8 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
       );
       // バリデーションで更新する必要がない場合は早期終了
       if (!healthAggregationResult.total.validate()) {
-        final msg = 'no health data [userId][${user.id}][from][$lastProgressUpdatedAt][to][$now]';
+        final msg =
+            'no health data [userId][${user.id}][from][$lastProgressUpdatedAt][to][$now][result][$healthAggregationResult]';
         _logger.i(msg);
         unawaited(_crashlytics.log(msg));
         return user;
@@ -173,6 +174,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
   }) {
     var updatedUser = user;
     // 取得できた日毎のヘルスケア情報を更新
+    _logger.d('aggregation health result: $healthAggregationResult');
     healthAggregationResult.eachDay.forEach((key, value) async {
       var target = UserHealth.createFromHealthByPeriod(user.id, value);
       // 既にユーザのヘルスケア情報が存在する場合はマージする

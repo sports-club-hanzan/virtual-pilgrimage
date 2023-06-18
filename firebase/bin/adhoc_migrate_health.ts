@@ -69,30 +69,6 @@ async function main(keyPath: string): Promise<void> {
       return;
     }
 
-    // healthテーブルの id は {user_id}_{date} 形式となっているため、where で user_id の prefix と date を使って絞り込める
-    const healthSnapshot = await db.collection("health")
-      // LIKE っぽい検索
-      .orderBy("userId")
-      .startAt(userId)
-      .endAt(userId + "\uf8ff")
-      .get();
-
-    // 本日分をのぞいて1ヶ月分のデータを取得
-    // Firebase では where と orderby で指定するデータが同じでないといけないため、
-    // このような絞り込みしかできない
-    const healths = healthSnapshot.docs
-      .filter(doc => {
-        const data = doc.data() as HealthEachDay;
-        const date = data.date.toDate(); // assuming date is stored as a Firestore Timestamp
-        return date >= eightDayAgo && date < today;
-      })
-      .map((doc) => doc.data() as HealthEachDay)
-      .sort((a, b) => a.date.toDate().getTime() - b.date.toDate().getTime());
-    if (healths.length == 0) {
-      console.debug(`no health data [userId][${userId}]`);
-      return;
-    }
-
     // 2日前の日付をyyyyMMdd形式の文字列に変換
     const twoDayAgoStr = `${twoDayAgo.getFullYear()}${("0" + (twoDayAgo.getMonth() + 1)).slice(-2)}${("0" + twoDayAgo.getDate()).slice(-2)}`;
     // 8日前の日付をyyyyMMdd形式の文字列に変換
@@ -134,10 +110,10 @@ async function main(keyPath: string): Promise<void> {
     }
 
     // 利用する場合はコメントアウトを外す
-    // await Promise.all([
-    //   db.collection("health").doc(`${userId}_${twoDayAgoStr}`).set(twoDayAgoHealth),
-    //   db.collection("health").doc(`${userId}_${eightDayAgoStr}`).set(eightDayAgoHealth),
-    // ]);
+    await Promise.all([
+      db.collection("health").doc(`${userId}_${twoDayAgoStr}`).set(twoDayAgoHealth),
+      db.collection("health").doc(`${userId}_${eightDayAgoStr}`).set(eightDayAgoHealth),
+    ]);
   }));
 }
 

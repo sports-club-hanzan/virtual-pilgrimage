@@ -7,7 +7,7 @@ import 'package:virtualpilgrimage/infrastructure/user/health_repository_impl.dar
 import 'package:virtualpilgrimage/logger.dart';
 
 final healthFactoryProvider = Provider<HealthFactory>(
-  (_) => HealthFactory(useHealthConnectIfAvailable: true),
+  (_) => HealthFactory(),
 );
 
 final healthRepositoryProvider = Provider<HealthRepository>(

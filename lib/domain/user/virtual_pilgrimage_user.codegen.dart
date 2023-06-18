@@ -187,6 +187,7 @@ class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
   VirtualPilgrimageUser toRegistration() => copyWith(userStatus: UserStatus.created);
 
   /// ヘルスケア情報を更新
+  @Deprecated('unused')
   VirtualPilgrimageUser updateHealth(HealthInfo health) {
     final nowHealth = this.health;
     if (nowHealth == null) {
