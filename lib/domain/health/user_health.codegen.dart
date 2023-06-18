@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
-import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/helper/firestore_timestamp_converter.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_by_period.codegen.dart';
 
@@ -75,17 +74,23 @@ class UserHealth with _$UserHealth {
   }
 
   /// HealthByPeriod から UserHealth を作成する
+  /// [userId] ユーザID
+  /// [day] ヘルスケア情報の日付
+  /// [healthByPeriod] ヘルスケア情報
   // ignore: prefer_constructors_over_static_methods
-  static UserHealth createFromHealthByPeriod(String userId, HealthByPeriod healthByPeriod) {
-    final now = CustomizableDateTime.current;
+  static UserHealth createFromHealthByPeriod({
+    required String userId,
+    required DateTime day,
+    required HealthByPeriod healthByPeriod,
+  }) {
     return UserHealth(
       userId: userId,
       steps: healthByPeriod.steps,
       distance: healthByPeriod.distance,
       burnedCalorie: healthByPeriod.burnedCalorie,
-      date: DateTime(now.year, now.month, now.day),
+      date: day,
       // 90日間有効
-      expiredAt: DateTime(now.year, now.month, now.day).add(const Duration(days: 90)),
+      expiredAt: day.add(const Duration(days: 90)),
     );
   }
 }

@@ -176,7 +176,11 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
     // 取得できた日毎のヘルスケア情報を更新
     _logger.d('aggregation health result: $healthAggregationResult');
     healthAggregationResult.eachDay.forEach((key, value) async {
-      var target = UserHealth.createFromHealthByPeriod(user.id, value);
+      var target = UserHealth.createFromHealthByPeriod(
+        userId: user.id,
+        day: key,
+        healthByPeriod: value,
+      );
       // 既にユーザのヘルスケア情報が存在する場合はマージする
       final existsHealth = await _userHealthRepository.find(user.id, now);
       if (existsHealth != null) {
