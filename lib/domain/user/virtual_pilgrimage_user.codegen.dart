@@ -186,26 +186,6 @@ class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
   /// ユーザ登録が完了したため作成済みステータスに変更
   VirtualPilgrimageUser toRegistration() => copyWith(userStatus: UserStatus.created);
 
-  /// ヘルスケア情報を更新
-  @Deprecated('unused')
-  VirtualPilgrimageUser updateHealth(HealthInfo health) {
-    final nowHealth = this.health;
-    if (nowHealth == null) {
-      return copyWith(health: health);
-    }
-    // うまく取得できなかったデータは除外して更新する
-    final updatedHealth = HealthInfo(
-      today: health.today.validate() ? health.today : nowHealth.today,
-      yesterday: health.yesterday.validate() ? health.yesterday : nowHealth.yesterday,
-      week: health.week.validate() ? health.week : nowHealth.week,
-      month: health.month.validate() ? health.month : nowHealth.month,
-      updatedAt: health.updatedAt,
-      totalSteps: health.totalSteps > 0 ? health.totalSteps : nowHealth.totalSteps,
-      totalDistance: health.totalDistance > 0 ? health.totalDistance : nowHealth.totalDistance,
-    );
-    return copyWith(health: updatedHealth);
-  }
-
   /// お遍路の進捗を更新
   VirtualPilgrimageUser updatePilgrimageProgress(
     int pilgrimageId,
