@@ -43,6 +43,14 @@ $ npm install
 
 __TODO: github actions で CI/CD を構築して機能追加の Firebase の反映を自動化する__
 
+### デプロイ
+
+```shell
+# 開発環境であれば `default`, 本番環境であれば `production` を引数に与える
+firebase use (default|production)
+firebase deploy
+```
+
 ### ユーザ側がデータを追加しないケースについて
 
 お寺の画像についてはユーザ側がデータを追加するユースケースはない。
