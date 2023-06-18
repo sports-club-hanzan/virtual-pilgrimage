@@ -5,6 +5,7 @@
     "scripts": {
         "csv_append_temple_points": "node bin/csv_append_temple_points.js",
         "upload_temple_images": "ts-node bin/upload_temple_images.ts",
+        "adhoc_migrate_health": "ts-node bin/adhoc_migrate_health.ts",
         "test": "firebase emulators:exec --only firestore 'jest --detectOpenHandles'",
         "deploy": "firebase deploy"
     },

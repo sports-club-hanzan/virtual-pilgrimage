@@ -37,4 +37,13 @@ class HealthByPeriod with _$HealthByPeriod {
     );
 
   static HealthByPeriod getDefault() => _default;
+
+  /// 2つの HealthByPeriod をマージした値を返す
+  HealthByPeriod merge(HealthByPeriod healthByPeriod) {
+    return HealthByPeriod(
+      steps: steps + healthByPeriod.steps,
+      distance: distance + healthByPeriod.distance,
+      burnedCalorie: burnedCalorie + healthByPeriod.burnedCalorie,
+    );
+  }
 }

@@ -1,10 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:virtualpilgrimage/application/health/health_repository.dart';
+import 'package:virtualpilgrimage/application/health/user_health_repository.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/temple_repository.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_interactor.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_result.codegen.dart';
-import 'package:virtualpilgrimage/application/user/health/health_repository.dart';
 import 'package:virtualpilgrimage/application/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/virtual_position_calculator.dart';
+import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/logger.dart';
 
 final updatePilgrimageProgressUsecaseProvider = Provider<UpdatePilgrimageProgressUsecase>(
@@ -12,8 +14,10 @@ final updatePilgrimageProgressUsecaseProvider = Provider<UpdatePilgrimageProgres
     ref.read(templeRepositoryProvider),
     ref.read(healthRepositoryProvider),
     ref.read(userRepositoryProvider),
+    ref.read(userHealthRepositoryProvider),
     ref.read(virtualPositionCalculatorProvider),
     ref.read(loggerProvider),
+    ref.read(firebaseCrashlyticsProvider),
   ),
 );
 

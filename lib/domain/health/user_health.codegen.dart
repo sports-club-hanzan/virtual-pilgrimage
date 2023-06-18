@@ -43,6 +43,37 @@ class UserHealth with _$UserHealth {
     return '${userId}_${DateFormat('yyyyMMdd').format(date)}';
   }
 
+  /// 値が正しいかどうか
+  bool valid() {
+    return steps > 0 && distance > 0 && burnedCalorie > 0;
+  }
+
+  HealthByPeriod toHealthByPeriod() {
+    return HealthByPeriod(
+      steps: steps,
+      distance: distance,
+      burnedCalorie: burnedCalorie,
+    );
+  }
+
+  /// 2つの UserHealth をマージした値を返す
+  UserHealth merge(UserHealth userHealth) {
+    if (userId != userHealth.userId) {
+      throw Exception('userId must be same value between two UserHealth');
+    }
+    if (date != userHealth.date) {
+      throw Exception('date must be same value between two UserHealth');
+    }
+    return UserHealth(
+      userId: userId,
+      steps: steps + userHealth.steps,
+      distance: distance + userHealth.distance,
+      burnedCalorie: burnedCalorie + userHealth.burnedCalorie,
+      date: date,
+      expiredAt: expiredAt,
+    );
+  }
+
   /// HealthByPeriod から UserHealth を作成する
   // ignore: prefer_constructors_over_static_methods
   static UserHealth createFromHealthByPeriod(String userId, HealthByPeriod healthByPeriod) {

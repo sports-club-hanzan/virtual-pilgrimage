@@ -6,43 +6,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:virtualpilgrimage/analytics.dart';
-import 'package:virtualpilgrimage/application/user/health/update_health_result.codegen.dart';
-import 'package:virtualpilgrimage/application/user/health/update_health_usecase.dart';
 import 'package:virtualpilgrimage/application/user/profile/update_user_profile_image_usecase.dart';
 import 'package:virtualpilgrimage/application/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
-import 'package:virtualpilgrimage/logger.dart';
 import 'package:virtualpilgrimage/ui/pages/profile/profile_state.codegen.dart';
 
 final profileUserProvider =
     FutureProvider.family<VirtualPilgrimageUser?, String>((ref, userId) async {
-  // ログイン状態でしか呼ばれないため、nullable を想定していない
-  final loginUser = ref.watch(userStateProvider)!;
   // 常に最新の値を取りに行くため、DBに問い合わせる
   final user = await ref.read(userRepositoryProvider).get(userId);
   // ログインユーザ以外を指定していた場合
-  if (loginUser.id != userId) {
-    return user?.convertForProfile();
-  }
-  // ログインユーザ自身を指定していた場合、ヘルスケア情報をとりにいく
-  final result = await ref.read(updateHealthUsecaseProvider).execute(user!);
-  if (result.status == UpdateHealthStatus.success) {
-    // ヘルスケア情報が上手く取れた場合は更新後のユーザ情報を返す
-    // ユーザstateの更新は行わない
-    ref.read(loggerProvider).d(result);
-    return result.user;
-  } else {
-    ref.read(loggerProvider).e(result);
-    await ref.read(firebaseCrashlyticsProvider).recordError(
-          result.error,
-          null,
-          reason: 'failed to record health information [status][${result.status}][userId][$userId]',
-        );
-  }
-  return loginUser;
+  return user?.convertForProfile();
 });
 
 final profileProvider =

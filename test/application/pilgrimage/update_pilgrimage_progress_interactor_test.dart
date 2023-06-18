@@ -1,30 +1,37 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:virtualpilgrimage/application/health/health_repository.dart';
+import 'package:virtualpilgrimage/application/health/user_health_repository.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/temple_repository.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_interactor.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_result.codegen.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_usecase.dart';
-import 'package:virtualpilgrimage/application/user/health/health_repository.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
+import 'package:virtualpilgrimage/domain/health/health_aggregation_result.codegen.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/pilgrimage_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/temple_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/virtual_position_calculator.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_by_period.codegen.dart';
+import 'package:virtualpilgrimage/domain/user/health/health_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
 
 import '../../helper/fakes/fake_user_repository.dart';
+import '../../helper/mock.mocks.dart';
 import '../../helper/provider_container.dart';
 import 'update_pilgrimage_progress_interactor_test.mocks.dart';
 
-@GenerateMocks([TempleRepository, HealthRepository])
+@GenerateMocks([TempleRepository])
 void main() {
   late UpdatePilgrimageProgressInteractor target;
   late TempleRepository templeRepository;
   late HealthRepository healthRepository;
+  late UserHealthRepository userHealthRepository;
+  late FirebaseCrashlytics crashlytics;
   final user = defaultUser();
   final userRepository = FakeUserRepository(user);
   final virtualPositionCalculator = VirtualPositionCalculator();
@@ -35,12 +42,16 @@ void main() {
   setUp(() {
     templeRepository = MockTempleRepository();
     healthRepository = MockHealthRepository();
+    userHealthRepository = MockUserHealthRepository();
+    crashlytics = MockFirebaseCrashlytics();
     target = UpdatePilgrimageProgressInteractor(
       templeRepository,
       healthRepository,
       userRepository,
+      userHealthRepository,
       virtualPositionCalculator,
       logger,
+      crashlytics,
     );
 
     CustomizableDateTime.customTime = DateTime.now();
@@ -57,18 +68,29 @@ void main() {
         // given
         setupTempleRepositoryMock(templeRepository);
         when(
-          healthRepository.getHealthByPeriod(
+          healthRepository.aggregateHealthByPeriod(
             from: DateTime.utc(2022),
             to: CustomizableDateTime.current,
           ),
         ).thenAnswer(
-          (_) => Future.value(const HealthByPeriod(steps: 0, distance: 27000, burnedCalorie: 0)),
+          (_) => Future.value(
+            HealthAggregationResult(
+              total: const HealthByPeriod(steps: 27000, distance: 27000, burnedCalorie: 1000),
+              eachDay: {
+                DateTime(2022, 4, 1):
+                    const HealthByPeriod(steps: 27000, distance: 27000, burnedCalorie: 1000)
+              },
+            ),
+          ),
         );
+        when(userHealthRepository.find('dummyId', CustomizableDateTime.current))
+            .thenAnswer((_) => Future.value(null));
 
         final expected = UpdatePilgrimageProgressResult(
           status: UpdatePilgrimageProgressResultStatus.success,
           reachedPilgrimageIdList: [87, 88, 2],
           updatedUser: user.copyWith(
+            health: user.health!.copyWith(),
             updatedAt: CustomizableDateTime.current,
             pilgrimage: user.pilgrimage.copyWith(
               nowPilgrimageId: 2, // 87 -> 88(スタート地点がリセットされて1) -> 2
@@ -85,6 +107,9 @@ void main() {
         final actual = await target.execute(user.id);
 
         // then
+        expect(actual.updatedUser, expected.updatedUser);
+        expect(actual.reachedPilgrimageIdList, expected.reachedPilgrimageIdList);
+        expect(actual.virtualPosition, expected.virtualPosition);
         expect(actual, expected);
         // call される順に verify
         // 1. 現在たどり着いている86番札所の情報（87までの距離）とヘルスケア情報を取得
@@ -94,7 +119,7 @@ void main() {
         // 4. 01番札所の歩数 < 移動距離 であったため、2番札所の情報を取得
         verify(templeRepository.getTempleInfo(86)).called(1);
         verify(
-          healthRepository.getHealthByPeriod(
+          healthRepository.aggregateHealthByPeriod(
             from: user.updatedAt,
             to: CustomizableDateTime.current,
           ),
@@ -123,6 +148,15 @@ VirtualPilgrimageUser defaultUser() {
       nowPilgrimageId: 86,
       updatedAt: DateTime.utc(2022),
       movingDistance: 100,
+    ),
+    health: HealthInfo(
+      today: HealthByPeriod.getDefault(),
+      yesterday: HealthByPeriod.getDefault(),
+      week: HealthByPeriod.getDefault(),
+      month: HealthByPeriod.getDefault(),
+      updatedAt: DateTime.utc(2022),
+      totalSteps: 10000,
+      totalDistance: 2000,
     ),
   );
 }
