@@ -81,6 +81,7 @@ const updateHealthHandler = async () => {
     //   return;
     // }
     if (user.health == undefined) {
+      console.debug(`this user has no health data(don't initialize to use health care). [userId][${userId}]`)
       return;
     }
 
@@ -117,7 +118,6 @@ const updateHealthHandler = async () => {
     // 1ヶ月
     const month = aggregateHealthByPeriod(healths, oneMonthAgo);
 
-    console.log(`old health [${JSON.stringify(user.health)}]`);
     // ユーザ情報を上書きしてDBに保存
     const updatedUser: User = {
       ...user,
@@ -128,16 +128,17 @@ const updateHealthHandler = async () => {
         month: month,
       }
     }
-    console.log(`update health [userId][${userId}][old][${JSON.stringify(user.health)}][new][${JSON.stringify(updatedUser.health)}][healths][${JSON.stringify(healths)}]`);
-    // const result = await db.collection("users").doc(userId).set(user);
-    // console.log(`success to update user health [userId][${userId}][time][${result.writeTime.seconds}]`);
-    console.log(`success to update user health [userId][${userId}]`);
+    const result = await db.collection("users").doc(userId).set(user);
+    console.log(`success to update user health [userId][${userId}][time][${result.writeTime.seconds}][old][${JSON.stringify(user.health)}][new][${JSON.stringify(updatedUser.health)}]`);
   }));
+  console.log("complete to update user health");
 }
+
+process.env.TZ = "Asia/Tokyo";
 
 export const updateUserHealth = defaultFunctions()
   .runWith({ memory: "512MB", timeoutSeconds: 9 * 60 })
-  .pubsub.schedule("1 * * * *")
+  .pubsub.schedule("1 5,11,17,17,21 * * *")
   .timeZone("Asia/Tokyo")
   .onRun(updateHealthHandler)
   ;
