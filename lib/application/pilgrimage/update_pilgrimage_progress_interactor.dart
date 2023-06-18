@@ -182,7 +182,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
         healthByPeriod: value,
       );
       // 既にユーザのヘルスケア情報が存在する場合はマージする
-      final existsHealth = await _userHealthRepository.find(user.id, now);
+      final existsHealth = await _userHealthRepository.find(user.id, key);
       if (existsHealth != null) {
         target = target.merge(existsHealth);
       }
