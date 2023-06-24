@@ -366,8 +366,6 @@ class HealthRepositoryImpl implements HealthRepository {
       aggregateResult[target] = result.add(p.value);
     }
 
-    print(points);
-    print(aggregateResult);
     return aggregateResult;
   }
 
