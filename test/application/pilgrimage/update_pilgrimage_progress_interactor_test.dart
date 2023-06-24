@@ -13,6 +13,7 @@ import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progr
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_usecase.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/health/health_aggregation_result.codegen.dart';
+import 'package:virtualpilgrimage/domain/health/user_health.codegen.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/pilgrimage_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/temple_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/virtual_position_calculator.dart';
@@ -54,7 +55,7 @@ void main() {
       crashlytics,
     );
 
-    CustomizableDateTime.customTime = DateTime.now();
+    CustomizableDateTime.customTime = DateTime(2022, 4, 3);
   });
 
   group('UpdatePilgrimageProgressInteractor', () {
@@ -64,9 +65,11 @@ void main() {
     });
 
     group('execute', () {
-      test('正常系', () async {
-        // given
+      setUp(() {
+        // temple
         setupTempleRepositoryMock(templeRepository);
+
+        // healthのスタブ
         when(
           healthRepository.aggregateHealthByPeriod(
             from: DateTime.utc(2022),
@@ -77,20 +80,174 @@ void main() {
             HealthAggregationResult(
               total: const HealthByPeriod(steps: 27000, distance: 27000, burnedCalorie: 1000),
               eachDay: {
+                DateTime(2022, 3, 31):
+                    const HealthByPeriod(steps: 10000, distance: 10000, burnedCalorie: 500),
                 DateTime(2022, 4, 1):
-                    const HealthByPeriod(steps: 27000, distance: 27000, burnedCalorie: 1000)
+                    const HealthByPeriod(steps: 10000, distance: 10000, burnedCalorie: 300),
+                DateTime(2022, 4, 2):
+                    const HealthByPeriod(steps: 4000, distance: 4000, burnedCalorie: 100),
+                DateTime(2022, 4, 3):
+                    const HealthByPeriod(steps: 3000, distance: 3000, burnedCalorie: 100),
               },
+            ),
+          ),
+        );
+
+        // 日毎のhealthを更新するときのモック
+        when(userHealthRepository.find('dummyId', DateTime(2022, 3, 31))).thenAnswer(
+          (_) => Future.value(
+            UserHealth(
+              userId: 'dummyId',
+              date: DateTime(2022, 3, 31),
+              steps: 1000,
+              distance: 500,
+              burnedCalorie: 100,
+              expiredAt: DateTime(2022, 6, 29),
             ),
           ),
         );
         when(userHealthRepository.find('dummyId', DateTime(2022, 4, 1)))
             .thenAnswer((_) => Future.value(null));
+        when(userHealthRepository.find('dummyId', DateTime(2022, 4, 2)))
+            .thenAnswer((_) => Future.value(null));
+        when(userHealthRepository.find('dummyId', DateTime(2022, 4, 3)))
+            .thenAnswer((_) => Future.value(null));
+      });
 
+      test('正常系', () async {
+        // when
+        final actual = await target.execute(user.id);
+
+        // then
         final expected = UpdatePilgrimageProgressResult(
           status: UpdatePilgrimageProgressResultStatus.success,
           reachedPilgrimageIdList: [87, 88, 2],
           updatedUser: user.copyWith(
-            health: user.health!.copyWith(),
+            health: user.health!.copyWith(
+              today: const HealthByPeriod(steps: 3000, distance: 3000, burnedCalorie: 100),
+              updatedAt: CustomizableDateTime.current,
+            ),
+            updatedAt: CustomizableDateTime.current,
+            pilgrimage: user.pilgrimage.copyWith(
+              nowPilgrimageId: 2, // 87 -> 88(スタート地点がリセットされて1) -> 2
+              lap: 2, // 88にたどり着いたのでlap++
+              movingDistance: 1600 + 100, // (27000 - (7000 + 17000 + 1400)) + 100(元々ユーザ情報に保持していた距離)
+              updatedAt: CustomizableDateTime.current,
+            ),
+          ),
+          virtualPolylineLatLngs: virtualPolylineLatLngs(),
+          virtualPosition: virtualUserPosition(),
+        );
+        {
+          expect(actual.updatedUser, expected.updatedUser);
+          expect(actual.reachedPilgrimageIdList, expected.reachedPilgrimageIdList);
+          expect(actual.virtualPosition, expected.virtualPosition);
+          expect(actual, expected);
+        }
+        // call される順に verify
+        // 1. 現在たどり着いている86番札所の情報（87までの距離）とヘルスケア情報を取得
+        // 2. 86番札所の歩数 < 移動距離 であったため、87番札所の情報を取得
+        // 3. 87番札所の歩数 < 移動距離 であったため、1番札所の情報を取得
+        //    (88 -> 1 へは移動せず、1番札所からリスタートするため)
+        // 4. 01番札所の歩数 < 移動距離 であったため、2番札所の情報を取得
+        {
+          verify(templeRepository.getTempleInfo(86)).called(1);
+          verify(
+            healthRepository.aggregateHealthByPeriod(
+              from: user.updatedAt,
+              to: CustomizableDateTime.current,
+            ),
+          );
+          verify(templeRepository.getTempleInfo(87)).called(1);
+          verify(templeRepository.getTempleInfo(1)).called(1);
+          // お遍路の進捗計算・仮想的な移動経路の取得で2度呼ばれるはず
+          verify(templeRepository.getTempleInfo(2)).called(2);
+        }
+        // 日毎の歩数・歩行距離を加算
+        {
+          verify(
+            userHealthRepository.update(
+              UserHealth(
+                userId: 'dummyId',
+                date: DateTime(2022, 3, 31),
+                steps: 11000,
+                distance: 10500,
+                burnedCalorie: 600,
+                expiredAt: DateTime(2022, 6, 29),
+              ),
+            ),
+          ).called(1);
+          verify(
+            userHealthRepository.update(
+              UserHealth(
+                userId: 'dummyId',
+                date: DateTime(2022, 4, 1),
+                steps: 10000,
+                distance: 10000,
+                burnedCalorie: 300,
+                expiredAt: DateTime(2022, 6, 30),
+              ),
+            ),
+          ).called(1);
+          verify(
+            userHealthRepository.update(
+              UserHealth(
+                userId: 'dummyId',
+                date: DateTime(2022, 4, 2),
+                steps: 4000,
+                distance: 4000,
+                burnedCalorie: 100,
+                expiredAt: DateTime(2022, 7, 1),
+              ),
+            ),
+          ).called(1);
+          verify(
+            userHealthRepository.update(
+              UserHealth(
+                userId: 'dummyId',
+                date: DateTime(2022, 4, 3),
+                steps: 3000,
+                distance: 3000,
+                burnedCalorie: 100,
+                expiredAt: DateTime(2022, 7, 2),
+              ),
+            ),
+          ).called(1);
+        }
+      });
+
+      test('正常系_healthがnullの場合', () async {
+        // given
+        final user = defaultUser().copyWith(health: null);
+        final userRepository = FakeUserRepository(user);
+        final target = UpdatePilgrimageProgressInteractor(
+          templeRepository,
+          healthRepository,
+          userRepository,
+          userHealthRepository,
+          virtualPositionCalculator,
+          logger,
+          crashlytics,
+        );
+
+        // when
+        final actual = await target.execute(user.id);
+
+        // then
+        /// healthの初期化ができていることだけ確認する
+        final expected = UpdatePilgrimageProgressResult(
+          status: UpdatePilgrimageProgressResultStatus.success,
+          reachedPilgrimageIdList: [87, 88, 2],
+          updatedUser: user.copyWith(
+            health: HealthInfo(
+              today: const HealthByPeriod(steps: 3000, distance: 3000, burnedCalorie: 100),
+              yesterday: HealthByPeriod.getDefault(),
+              week: HealthByPeriod.getDefault(),
+              month: HealthByPeriod.getDefault(),
+              updatedAt: CustomizableDateTime.current,
+              totalDistance: 3000,
+              totalSteps: 3000,
+            ),
             updatedAt: CustomizableDateTime.current,
             pilgrimage: user.pilgrimage.copyWith(
               nowPilgrimageId: 2, // 87 -> 88(スタート地点がリセットされて1) -> 2
@@ -103,31 +260,12 @@ void main() {
           virtualPosition: virtualUserPosition(),
         );
 
-        // when
-        final actual = await target.execute(user.id);
-
-        // then
-        expect(actual.updatedUser, expected.updatedUser);
-        expect(actual.reachedPilgrimageIdList, expected.reachedPilgrimageIdList);
-        expect(actual.virtualPosition, expected.virtualPosition);
-        expect(actual, expected);
-        // call される順に verify
-        // 1. 現在たどり着いている86番札所の情報（87までの距離）とヘルスケア情報を取得
-        // 2. 86番札所の歩数 < 移動距離 であったため、87番札所の情報を取得
-        // 3. 87番札所の歩数 < 移動距離 であったため、1番札所の情報を取得
-        //    (88 -> 1 へは移動せず、1番札所からリスタートするため)
-        // 4. 01番札所の歩数 < 移動距離 であったため、2番札所の情報を取得
-        verify(templeRepository.getTempleInfo(86)).called(1);
-        verify(
-          healthRepository.aggregateHealthByPeriod(
-            from: user.updatedAt,
-            to: CustomizableDateTime.current,
-          ),
-        );
-        verify(templeRepository.getTempleInfo(87)).called(1);
-        verify(templeRepository.getTempleInfo(1)).called(1);
-        // お遍路の進捗計算・仮想的な移動経路の取得で2度呼ばれるはず
-        verify(templeRepository.getTempleInfo(2)).called(2);
+        {
+          expect(actual.updatedUser, expected.updatedUser);
+          expect(actual.reachedPilgrimageIdList, expected.reachedPilgrimageIdList);
+          expect(actual.virtualPosition, expected.virtualPosition);
+          expect(actual, expected);
+        }
       });
     });
   });

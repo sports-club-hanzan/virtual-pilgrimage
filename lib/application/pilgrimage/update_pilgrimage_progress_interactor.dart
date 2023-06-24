@@ -137,14 +137,14 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
     }
 
     /// 2. 非同期でユーザのヘルスケア情報を更新
-    final updatedUser = updateUserHealth(
+    final updatedUser = await _updateUserHealth(
       user: user,
       healthAggregationResult: healthAggregationResult,
       now: now,
     );
 
     /// 3. 移動距離 > 次の札所までの距離 の間、で移動距離を減らしながら次に目指すべき札所を導出する
-    return updateUserPilgrimageProgress(
+    return _updateUserPilgrimageProgress(
       user: updatedUser,
       healthAggregationResult: healthAggregationResult,
       nowTargetTemple: nowTargetTemple,
@@ -167,15 +167,17 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
   /// [user] ユーザ情報
   /// [healthAggregationResult] 集計したヘルスケア情報
   /// [now] 現在時刻
-  VirtualPilgrimageUser updateUserHealth({
+  Future<VirtualPilgrimageUser> _updateUserHealth({
     required VirtualPilgrimageUser user,
     required HealthAggregationResult healthAggregationResult,
     required DateTime now,
-  }) {
+  }) async {
     var updatedUser = user;
     // 取得できた日毎のヘルスケア情報を更新
     _logger.d('aggregation health result: $healthAggregationResult');
-    healthAggregationResult.eachDay.forEach((key, value) async {
+    for (final e in healthAggregationResult.eachDay.entries) {
+      final key = e.key;
+      final value = e.value;
       var target = UserHealth.createFromHealthByPeriod(
         userId: user.id,
         day: key,
@@ -186,7 +188,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
       if (existsHealth != null) {
         target = target.merge(existsHealth);
       }
-      _logger.d('save health [target][$target]');
+      _logger.d('save health [target][$target][date][$key]');
       unawaited(
         _userHealthRepository.update(target).onError(_crashlytics.recordError),
       );
@@ -209,7 +211,8 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
               );
         updatedUser = user.copyWith(health: newHealthByPeriod);
       }
-    });
+    }
+
     return updatedUser;
   }
 
@@ -219,7 +222,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
   /// [nowTargetTemple] 現在目標にしている札所の情報
   /// [reachedPilgrimageIdList] 到達した札所の番号一覧
   /// [now] 現在時刻
-  Future<VirtualPilgrimageUser> updateUserPilgrimageProgress({
+  Future<VirtualPilgrimageUser> _updateUserPilgrimageProgress({
     required VirtualPilgrimageUser user,
     required HealthAggregationResult healthAggregationResult,
     required TempleInfo nowTargetTemple,
