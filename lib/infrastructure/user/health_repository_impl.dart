@@ -109,8 +109,23 @@ class HealthRepositoryImpl implements HealthRepository {
     await _validateUsableHealthTypes(types);
 
     return _execute(() async {
-      final health = await _getHealthData(from, to, types);
-      final eachDay = _aggregateHealthInfoEachDay(health);
+      final Map<DateTime, HealthByPeriod> eachDay = {};
+      // dt の日付 <= to の日付の間、ループを回して、日毎のヘルスケア情報を取得する
+      for (var dt = from; to.isAfter(dt); dt = dt.add(const Duration(days: 1))) {
+        final dtStartTime = DateTime(dt.year, dt.month, dt.day);
+        if (dt.year != from.year || dt.month != from.month || dt.day != from.day) {
+          dt = dtStartTime;
+        }
+        final health = await _getHealthData(
+            dt,
+            dtStartTime
+                .add(const Duration(days: 1))
+                .subtract(const Duration(microseconds: 1)),
+            types,
+        );
+        eachDay[dtStartTime] = _aggregateHealthInfo(health);
+      }
+
       var total = HealthByPeriod.getDefault();
       // 各日の合計値を集計
       eachDay.forEach((key, value) {
@@ -353,6 +368,8 @@ class HealthRepositoryImpl implements HealthRepository {
       aggregateResult[target] = result.add(p.value);
     }
 
+    print(points);
+    print(aggregateResult);
     return aggregateResult;
   }
 
@@ -449,5 +466,10 @@ class HealthAggregationPoint {
       value: this.value + value,
       targetDate: targetDate,
     );
+  }
+
+  @override
+  String toString() {
+    return 'HealthAggregationPoint{value: $value, targetDate: $targetDate}';
   }
 }

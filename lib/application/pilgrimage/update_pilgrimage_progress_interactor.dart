@@ -118,7 +118,15 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
       await Future.wait(<Future<void>>[
         _templeRepository.getTempleInfo(nextPilgrimageId).then((value) => nowTargetTemple = value),
         _healthRepository
-            .aggregateHealthByPeriod(from: lastProgressUpdatedAt, to: now)
+            .aggregateHealthByPeriod(
+              // 前回更新した時刻の開始地点 ~ 現在時刻で集計
+              from: DateTime(
+                lastProgressUpdatedAt.year,
+                lastProgressUpdatedAt.month,
+                lastProgressUpdatedAt.day,
+              ),
+              to: now,
+            )
             .then((value) => healthAggregationResult = value),
       ]);
       _logger.d(
@@ -136,6 +144,9 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
       }
     }
 
+    /// 2. 最後に保存した日毎のヘルスケア情報を取得
+    final lastHealth = await _userHealthRepository.find(user.id, lastProgressUpdatedAt);
+
     /// 2. 非同期でユーザのヘルスケア情報を更新
     final updatedUser = await _updateUserHealth(
       user: user,
@@ -149,6 +160,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
       healthAggregationResult: healthAggregationResult,
       nowTargetTemple: nowTargetTemple,
       reachedPilgrimageIdList: reachedPilgrimageIdList,
+      lastHealth: lastHealth,
       now: now,
     );
   }
@@ -178,16 +190,14 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
     for (final e in healthAggregationResult.eachDay.entries) {
       final key = e.key;
       final value = e.value;
-      var target = UserHealth.createFromHealthByPeriod(
+
+      // 日毎のヘルスケア情報を書き込む
+      // 仮に情報が存在する場合も上書きする
+      final target = UserHealth.createFromHealthByPeriod(
         userId: user.id,
         day: key,
         healthByPeriod: value,
       );
-      // 既にユーザのヘルスケア情報が存在する場合はマージする
-      final existsHealth = await _userHealthRepository.find(user.id, key);
-      if (existsHealth != null) {
-        target = target.merge(existsHealth);
-      }
       _logger.d('save health [target][$target][date][$key]');
       unawaited(
         _userHealthRepository.update(target).onError(_crashlytics.recordError),
@@ -221,19 +231,26 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
   /// [healthAggregationResult] 集計したヘルスケア情報
   /// [nowTargetTemple] 現在目標にしている札所の情報
   /// [reachedPilgrimageIdList] 到達した札所の番号一覧
+  /// [lastHealth] 最後に保存を実行した日の日毎のヘルスケア情報
   /// [now] 現在時刻
   Future<VirtualPilgrimageUser> _updateUserPilgrimageProgress({
     required VirtualPilgrimageUser user,
     required HealthAggregationResult healthAggregationResult,
     required TempleInfo nowTargetTemple,
     required List<int> reachedPilgrimageIdList,
+    required UserHealth? lastHealth,
     required DateTime now,
   }) async {
     int lap = user.pilgrimage.lap;
     int nextPilgrimageId = user.pilgrimage.nowPilgrimageId;
     // 次の札所に向かうまでの移動距離を格納する変数
     // お遍路の進捗の更新のために利用
-    int movingDistance = user.pilgrimage.movingDistance + healthAggregationResult.total.distance;
+    /// 現在までに移動した距離 + 集計によって得られた合計移動距離 - 最後に実行した日の移動距離
+    /// 集計は最後に実行した日の 00:00 地点から現在時刻までで距離を取得する
+    /// 最後に実行した時刻の距離を引くことで、「現在までに移動した距離 + 最後に実行した時刻 ~ 現在時刻までの移動距離」という計算になる
+    int movingDistance = user.pilgrimage.movingDistance +
+        healthAggregationResult.total.distance -
+        (lastHealth != null ? lastHealth.distance : 0);
     {
       _logger.d(
         'calc pilgrimage progress '

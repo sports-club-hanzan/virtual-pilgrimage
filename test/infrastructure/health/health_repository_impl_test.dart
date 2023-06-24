@@ -258,55 +258,54 @@ void main() {
       });
     });
 
-    group('getHealthByPeriod', () {
+    group('aggregateHealthByPeriod', () {
       test('正常系', () async {
         // given
         /// 今日
         when(
           mockHealthFactory.getHealthDataFromTypes(
-            targetDateTime,
-            DateTime(2022, 9, 19, 23, 59, 59, 999, 999),
+            DateTime(2022, 9, 18, 11, 0, 0, 0, 0),
+            DateTime(2022, 9, 18, 23, 59, 59, 999, 999),
             types,
           ),
         ).thenAnswer(
           (_) => Future.value([
                 // @formatter:off
-            HealthDataPoint(NumericHealthValue(468), HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataUnit.KILOCALORIE, DateTime(2022, 9, 12), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
-            HealthDataPoint(NumericHealthValue(427), HealthDataType.STEPS, HealthDataUnit.COUNT, DateTime(2022, 9, 12), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
-            HealthDataPoint(NumericHealthValue(670), HealthDataType.DISTANCE_DELTA, HealthDataUnit.METER, DateTime(2022, 9, 12), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
-            HealthDataPoint(NumericHealthValue(1000), HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataUnit.KILOCALORIE, DateTime(2022, 9, 19), DateTime(2022, 9, 20), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
-            HealthDataPoint(NumericHealthValue(1000), HealthDataType.STEPS, HealthDataUnit.COUNT, DateTime(2022, 9, 19), DateTime(2022, 9, 20), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
-            HealthDataPoint(NumericHealthValue(1000), HealthDataType.DISTANCE_DELTA, HealthDataUnit.METER, DateTime(2022, 9, 19), DateTime(2022, 9, 20), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
-            HealthDataPoint(NumericHealthValue(2000), HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataUnit.KILOCALORIE, DateTime(2022, 9, 19), DateTime(2022, 9, 20), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
-            HealthDataPoint(NumericHealthValue(2000), HealthDataType.STEPS, HealthDataUnit.COUNT, DateTime(2022, 9, 19), DateTime(2022, 9, 20), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
-            HealthDataPoint(NumericHealthValue(2000), HealthDataType.DISTANCE_DELTA, HealthDataUnit.METER, DateTime(2022, 9, 19), DateTime(2022, 9, 20), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
+            HealthDataPoint(NumericHealthValue(468), HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataUnit.KILOCALORIE, DateTime(2022, 9, 18), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
+            HealthDataPoint(NumericHealthValue(427), HealthDataType.STEPS, HealthDataUnit.COUNT, DateTime(2022, 9, 18), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
+            HealthDataPoint(NumericHealthValue(670), HealthDataType.DISTANCE_DELTA, HealthDataUnit.METER, DateTime(2022, 9, 18), DateTime(2022, 9, 18), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
             // @formatter:on
           ]),
         );
+        when(mockHealthFactory.getHealthDataFromTypes(
+                DateTime(2022, 9, 19), DateTime(2022, 9, 19, 23, 59, 59, 999, 999), types))
+            .thenAnswer((realInvocation) => Future.value([
+              // @formatter:off
+          HealthDataPoint(NumericHealthValue(1000), HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataUnit.KILOCALORIE, DateTime(2022, 9, 19), DateTime(2022, 9, 20), PlatformType.ANDROID, defaultDeviceId, defaultSourceId + "_dummy", defaultSourceName),
+          HealthDataPoint(NumericHealthValue(1000), HealthDataType.STEPS, HealthDataUnit.COUNT, DateTime(2022, 9, 19), DateTime(2022, 9, 20), PlatformType.ANDROID, defaultDeviceId, defaultSourceId + "_dummy", defaultSourceName),
+          HealthDataPoint(NumericHealthValue(1000), HealthDataType.DISTANCE_DELTA, HealthDataUnit.METER, DateTime(2022, 9, 19), DateTime(2022, 9, 20), PlatformType.ANDROID, defaultDeviceId, defaultSourceId + "_dummy", defaultSourceName),
+          HealthDataPoint(NumericHealthValue(2000), HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataUnit.KILOCALORIE, DateTime(2022, 9, 19), DateTime(2022, 9, 20), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
+          HealthDataPoint(NumericHealthValue(2000), HealthDataType.STEPS, HealthDataUnit.COUNT, DateTime(2022, 9, 19), DateTime(2022, 9, 20), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
+          HealthDataPoint(NumericHealthValue(2000), HealthDataType.DISTANCE_DELTA, HealthDataUnit.METER, DateTime(2022, 9, 19), DateTime(2022, 9, 20), PlatformType.ANDROID, defaultDeviceId, defaultSourceId, defaultSourceName),
+                  // @formatter:on
+                ]));
 
         // when
         final actual = await target.aggregateHealthByPeriod(
-          from: targetDateTime,
-          to: targetToDate.add(const Duration(days: 1)),
+          from: DateTime(2022, 9, 18, 11),
+          to: DateTime(2022, 9, 19, 23, 59, 59, 999, 999),
         );
 
         // then
         final expected = HealthAggregationResult(
           eachDay: {
-            DateTime(2022, 9, 12): HealthByPeriod(steps: 427, distance: 670, burnedCalorie: 468),
+            DateTime(2022, 9, 18): HealthByPeriod(steps: 427, distance: 670, burnedCalorie: 468),
             DateTime(2022, 9, 19): HealthByPeriod(steps: 2000, distance: 2000, burnedCalorie: 2000),
           },
           total: HealthByPeriod(steps: 2427, distance: 2670, burnedCalorie: 2468),
         );
         expect(actual, expected);
         verify(mockHealthFactory.requestAuthorization(any)).called(1);
-        verify(
-          mockHealthFactory.getHealthDataFromTypes(
-            targetDateTime,
-            targetToDate.add(const Duration(days: 1)),
-            types,
-          ),
-        ).called(1);
       });
     });
   });
