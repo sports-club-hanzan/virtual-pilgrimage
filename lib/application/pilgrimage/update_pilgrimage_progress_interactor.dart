@@ -99,7 +99,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
     DateTime now,
     List<int> reachedPilgrimageIdList,
   ) async {
-    final lastProgressUpdatedAt = user.updatedAt; // user.pilgrimage.updatedAt;
+    final lastProgressUpdatedAt = user.updatedAt;
     final int nextPilgrimageId = user.pilgrimage.nowPilgrimageId;
 
     _logger.d(
@@ -145,16 +145,17 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
     }
 
     /// 2. 最後に保存した日毎のヘルスケア情報を取得
+    /// 3 で上書きされるので、この時点で保持しておく
     final lastHealth = await _userHealthRepository.find(user.id, lastProgressUpdatedAt);
 
-    /// 2. 非同期でユーザのヘルスケア情報を更新
+    /// 3. 非同期でユーザのヘルスケア情報を更新
     final updatedUser = await _updateUserHealth(
       user: user,
       healthAggregationResult: healthAggregationResult,
       now: now,
     );
 
-    /// 3. 移動距離 > 次の札所までの距離 の間、で移動距離を減らしながら次に目指すべき札所を導出する
+    /// 4. 移動距離 > 次の札所までの距離 の間、で移動距離を減らしながら次に目指すべき札所を導出する
     return _updateUserPilgrimageProgress(
       user: updatedUser,
       healthAggregationResult: healthAggregationResult,
@@ -195,7 +196,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
       // 仮に情報が存在する場合も上書きする
       final target = UserHealth.createFromHealthByPeriod(
         userId: user.id,
-        day: key,
+        day: DateTime(key.year, key.month, key.day),
         healthByPeriod: value,
       );
       _logger.d('save health [target][$target][date][$key]');

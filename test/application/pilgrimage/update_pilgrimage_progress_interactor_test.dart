@@ -72,7 +72,7 @@ void main() {
         // healthのスタブ
         when(
           healthRepository.aggregateHealthByPeriod(
-            from: DateTime.utc(2022),
+            from: DateTime(2022, 3, 31),
             to: CustomizableDateTime.current,
           ),
         ).thenAnswer(
@@ -93,25 +93,19 @@ void main() {
           ),
         );
 
-        // 日毎のhealthを更新するときのモック
-        when(userHealthRepository.find('dummyId', DateTime(2022, 3, 31))).thenAnswer(
+        // 最後に保存したhealthを取得するstub
+        when(userHealthRepository.find('dummyId', DateTime(2022, 3, 31, 22))).thenAnswer(
           (_) => Future.value(
             UserHealth(
               userId: 'dummyId',
-              date: DateTime(2022, 3, 31),
-              steps: 1000,
-              distance: 500,
-              burnedCalorie: 100,
-              expiredAt: DateTime(2022, 6, 29),
+              date: DateTime(2022, 1, 1),
+              steps: 10,
+              distance: 10,
+              burnedCalorie: 10,
+              expiredAt: DateTime(2022, 4, 1),
             ),
           ),
         );
-        when(userHealthRepository.find('dummyId', DateTime(2022, 4, 1)))
-            .thenAnswer((_) => Future.value(null));
-        when(userHealthRepository.find('dummyId', DateTime(2022, 4, 2)))
-            .thenAnswer((_) => Future.value(null));
-        when(userHealthRepository.find('dummyId', DateTime(2022, 4, 3)))
-            .thenAnswer((_) => Future.value(null));
       });
 
       test('正常系', () async {
@@ -129,9 +123,12 @@ void main() {
             ),
             updatedAt: CustomizableDateTime.current,
             pilgrimage: user.pilgrimage.copyWith(
-              nowPilgrimageId: 2, // 87 -> 88(スタート地点がリセットされて1) -> 2
-              lap: 2, // 88にたどり着いたのでlap++
-              movingDistance: 1600 + 100, // (27000 - (7000 + 17000 + 1400)) + 100(元々ユーザ情報に保持していた距離)
+              nowPilgrimageId: 2,
+              // 87 -> 88(スタート地点がリセットされて1) -> 2
+              lap: 2,
+              // 88にたどり着いたのでlap++
+              movingDistance: 1600 + 110 - 10,
+              // (27000 - (7000 + 17000 + 1400)) + 110(元々ユーザ情報に保持していた距離) - 10(最後に保存した日毎の歩行距離)
               updatedAt: CustomizableDateTime.current,
             ),
           ),
@@ -154,7 +151,7 @@ void main() {
           verify(templeRepository.getTempleInfo(86)).called(1);
           verify(
             healthRepository.aggregateHealthByPeriod(
-              from: user.updatedAt,
+              from: DateTime(2022, 3, 31),
               to: CustomizableDateTime.current,
             ),
           );
@@ -170,9 +167,9 @@ void main() {
               UserHealth(
                 userId: 'dummyId',
                 date: DateTime(2022, 3, 31),
-                steps: 11000,
-                distance: 10500,
-                burnedCalorie: 600,
+                steps: 10000,
+                distance: 10000,
+                burnedCalorie: 500,
                 expiredAt: DateTime(2022, 6, 29),
               ),
             ),
@@ -250,9 +247,12 @@ void main() {
             ),
             updatedAt: CustomizableDateTime.current,
             pilgrimage: user.pilgrimage.copyWith(
-              nowPilgrimageId: 2, // 87 -> 88(スタート地点がリセットされて1) -> 2
-              lap: 2, // 88にたどり着いたのでlap++
-              movingDistance: 1600 + 100, // (27000 - (7000 + 17000 + 1400)) + 100(元々ユーザ情報に保持していた距離)
+              nowPilgrimageId: 2,
+              // 87 -> 88(スタート地点がリセットされて1) -> 2
+              lap: 2,
+              // 88にたどり着いたのでlap++
+              movingDistance: 1600 + 110 - 10,
+              // (27000 - (7000 + 17000 + 1400)) + 110(元々ユーザ情報に保持していた距離) - 10(最後に保存した日毎の歩行距離)
               updatedAt: CustomizableDateTime.current,
             ),
           ),
@@ -280,12 +280,12 @@ VirtualPilgrimageUser defaultUser() {
     userIconUrl: '',
     userStatus: UserStatus.created,
     createdAt: DateTime.utc(2022),
-    updatedAt: DateTime.utc(2022),
+    updatedAt: DateTime(2022, 3, 31, 22),
     pilgrimage: PilgrimageInfo(
       id: 'dummyId',
       nowPilgrimageId: 86,
       updatedAt: DateTime.utc(2022),
-      movingDistance: 100,
+      movingDistance: 110,
     ),
     health: HealthInfo(
       today: HealthByPeriod.getDefault(),

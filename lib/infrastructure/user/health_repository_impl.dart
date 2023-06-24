@@ -117,11 +117,9 @@ class HealthRepositoryImpl implements HealthRepository {
           dt = dtStartTime;
         }
         final health = await _getHealthData(
-            dt,
-            dtStartTime
-                .add(const Duration(days: 1))
-                .subtract(const Duration(microseconds: 1)),
-            types,
+          dt,
+          dtStartTime.add(const Duration(days: 1)).subtract(const Duration(microseconds: 1)),
+          types,
         );
         eachDay[dtStartTime] = _aggregateHealthInfo(health);
       }
