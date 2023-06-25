@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class RankingTabBars extends StatelessWidget with PreferredSizeWidget {
+class RankingTabBars extends StatelessWidget implements PreferredSizeWidget {
   const RankingTabBars({required this.tabBars, super.key});
 
   final List<TabBar> tabBars;
