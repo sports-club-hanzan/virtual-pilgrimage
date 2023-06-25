@@ -11,7 +11,7 @@ final dailyHealthLogRepositoryProvider = Provider<DailyHealthLogRepository>(
 /// 日毎のヘルスケア情報を取得するリポジトリ
 abstract class DailyHealthLogRepository {
   /// ヘルスケア情報を作成・更新
-  Future<void> update(DailyHealthLog userHealth);
+  Future<void> update(DailyHealthLog dailyHealthLog);
 
   /// 指定した日のヘルスケア情報を取得
   Future<DailyHealthLog?> find(String userId, DateTime now);
