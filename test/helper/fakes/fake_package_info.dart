@@ -9,7 +9,7 @@ void initializeFakePackageInfo({
 }) {
   TestWidgetsFlutterBinding.ensureInitialized();
   const MethodChannel('plugins.flutter.io/package_info')
-      .setMockMethodCallHandler((MethodCall methodCall) async {
+      .setMethodCallHandler((MethodCall methodCall) async {
     if (methodCall.method == 'getAll') {
       return <String, dynamic>{
         'appName': appName,

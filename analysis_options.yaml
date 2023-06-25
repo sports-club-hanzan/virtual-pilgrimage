@@ -82,9 +82,6 @@ linter:
     - use_to_and_as_if_applicable
 
 analyzer:
-  strong-mode:
-    implicit-casts: true
-    implicit-dynamic: true
   errors:
     prefer_contains: warning
     missing_required_param: error
@@ -93,6 +90,7 @@ analyzer:
   language:
     strict-inference: true
     strict-raw-types: true
+    strict-casts: true
   exclude:
     - lib/gen/**
     - lib/**/*.codegen.g.dart

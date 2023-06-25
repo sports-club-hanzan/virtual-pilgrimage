@@ -40,9 +40,9 @@ Widget pilgrimageProgressCardProvider(
     }(),
     builder: (BuildContext context, AsyncSnapshot<List<TempleInfo>> snapshot) {
       // loading中のwidget
-      Widget childWidget = Column(
+      Widget childWidget = const Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [SizedBox(height: 50, width: 50, child: CircularProgressIndicator())],
+        children: [SizedBox(height: 50, width: 50, child: CircularProgressIndicator())],
       );
 
       if (snapshot.hasData) {
@@ -55,9 +55,9 @@ Widget pilgrimageProgressCardProvider(
       } else if (snapshot.hasError) {
         ref.read(firebaseCrashlyticsProvider).recordError(snapshot.error, null);
         // TODO(s14t284): 取得できなかった場合のUIを改善する
-        childWidget = Column(
+        childWidget = const Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
             Text('お遍路の進捗状況が取得できませんでした', style: TextStyle(fontWeight: FontWeight.bold))
           ],
         );

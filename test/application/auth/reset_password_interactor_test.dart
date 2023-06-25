@@ -28,7 +28,7 @@ void main() {
   });
 
   tearDown(() {
-    const MethodChannel('plugins.flutter.io/package_info').setMockMethodCallHandler(null);
+    const MethodChannel('plugins.flutter.io/package_info').setMethodCallHandler(null);
   });
 
   group('ResetPasswordInteractor', () {
