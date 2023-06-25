@@ -28,7 +28,9 @@ void main() {
   });
 
   tearDown(() {
-    const MethodChannel('plugins.flutter.io/package_info').setMethodCallHandler(null);
+    const channel = MethodChannel('plugins.flutter.io/package_info');
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (call) => null);
   });
 
   group('ResetPasswordInteractor', () {

@@ -8,8 +8,9 @@ void initializeFakePackageInfo({
   String buildNumber = '1',
 }) {
   TestWidgetsFlutterBinding.ensureInitialized();
-  const MethodChannel('plugins.flutter.io/package_info')
-      .setMethodCallHandler((MethodCall methodCall) async {
+  const channel = MethodChannel('plugins.flutter.io/package_info');
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
     if (methodCall.method == 'getAll') {
       return <String, dynamic>{
         'appName': appName,
