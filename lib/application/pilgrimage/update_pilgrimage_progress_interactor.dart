@@ -2,15 +2,15 @@ import 'dart:async';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:logger/logger.dart';
+import 'package:virtualpilgrimage/application/health/daily_health_log_repository.dart';
 import 'package:virtualpilgrimage/application/health/health_gateway.dart';
-import 'package:virtualpilgrimage/application/health/user_health_repository.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/temple_repository.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_result.codegen.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_usecase.dart';
 import 'package:virtualpilgrimage/application/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
+import 'package:virtualpilgrimage/domain/health/daily_health_log.codegen.dart';
 import 'package:virtualpilgrimage/domain/health/health_aggregation_result.codegen.dart';
-import 'package:virtualpilgrimage/domain/health/user_health.codegen.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/temple_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/virtual_position_calculator.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_by_period.codegen.dart';
@@ -23,7 +23,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
     this._templeRepository,
     this._healthRepository,
     this._userRepository,
-    this._userHealthRepository,
+    this._dailyHealthLogRepository,
     this._virtualPositionCalculator,
     this._logger,
     this._crashlytics,
@@ -32,7 +32,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
   final TempleRepository _templeRepository;
   final HealthGateway _healthRepository;
   final UserRepository _userRepository;
-  final UserHealthRepository _userHealthRepository;
+  final DailyHealthLogRepository _dailyHealthLogRepository;
   final VirtualPositionCalculator _virtualPositionCalculator;
   final Logger _logger;
   final FirebaseCrashlytics _crashlytics;
@@ -146,7 +146,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
 
     /// 2. 最後に保存した日毎のヘルスケア情報を取得
     /// 3 で上書きされるので、この時点で保持しておく
-    final lastHealth = await _userHealthRepository.find(user.id, lastProgressUpdatedAt);
+    final lastHealth = await _dailyHealthLogRepository.find(user.id, lastProgressUpdatedAt);
 
     /// 3. 非同期でユーザのヘルスケア情報を更新
     final updatedUser = await _updateUserHealth(
@@ -194,14 +194,14 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
 
       // 日毎のヘルスケア情報を書き込む
       // 仮に情報が存在する場合も上書きする
-      final target = UserHealth.createFromHealthByPeriod(
+      final target = DailyHealthLog.createFromHealthByPeriod(
         userId: user.id,
         day: DateTime(key.year, key.month, key.day),
         healthByPeriod: value,
       );
       _logger.d('save health [target][$target][date][$key]');
       unawaited(
-        _userHealthRepository.update(target).onError(_crashlytics.recordError),
+        _dailyHealthLogRepository.update(target).onError(_crashlytics.recordError),
       );
       // 今日の日付なら、health のなかに情報を入れておく
       if (key.year == now.year && key.month == now.month && key.day == now.day) {
@@ -239,7 +239,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
     required HealthAggregationResult healthAggregationResult,
     required TempleInfo nowTargetTemple,
     required List<int> reachedPilgrimageIdList,
-    required UserHealth? lastHealth,
+    required DailyHealthLog? lastHealth,
     required DateTime now,
   }) async {
     int lap = user.pilgrimage.lap;

@@ -10,7 +10,7 @@ import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.da
 import 'package:virtualpilgrimage/ui/pages/profile/profile_presenter.dart';
 import 'package:virtualpilgrimage/ui/pages/profile/profile_state.codegen.dart';
 
-import '../../../helper/fakes/fake_health_repository.dart';
+import '../../../helper/fakes/fake_health_gateway.dart';
 import '../../../helper/fakes/fake_user_repository.dart';
 import '../../../helper/provider_container.dart';
 

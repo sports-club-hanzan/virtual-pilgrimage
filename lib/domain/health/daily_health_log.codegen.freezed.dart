@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'user_health.codegen.dart';
+part of 'daily_health_log.codegen.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,12 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-UserHealth _$UserHealthFromJson(Map<String, dynamic> json) {
-  return _UserHealth.fromJson(json);
+DailyHealthLog _$DailyHealthLogFromJson(Map<String, dynamic> json) {
+  return _DailyHealthLog.fromJson(json);
 }
 
 /// @nodoc
-mixin _$UserHealth {
+mixin _$DailyHealthLog {
 // ユーザID
   String get userId => throw _privateConstructorUsedError; // 歩数
   int get steps => throw _privateConstructorUsedError; // 歩行距離
@@ -36,15 +36,15 @@ mixin _$UserHealth {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $UserHealthCopyWith<UserHealth> get copyWith =>
+  $DailyHealthLogCopyWith<DailyHealthLog> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $UserHealthCopyWith<$Res> {
-  factory $UserHealthCopyWith(
-          UserHealth value, $Res Function(UserHealth) then) =
-      _$UserHealthCopyWithImpl<$Res, UserHealth>;
+abstract class $DailyHealthLogCopyWith<$Res> {
+  factory $DailyHealthLogCopyWith(
+          DailyHealthLog value, $Res Function(DailyHealthLog) then) =
+      _$DailyHealthLogCopyWithImpl<$Res, DailyHealthLog>;
   @useResult
   $Res call(
       {String userId,
@@ -58,9 +58,9 @@ abstract class $UserHealthCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$UserHealthCopyWithImpl<$Res, $Val extends UserHealth>
-    implements $UserHealthCopyWith<$Res> {
-  _$UserHealthCopyWithImpl(this._value, this._then);
+class _$DailyHealthLogCopyWithImpl<$Res, $Val extends DailyHealthLog>
+    implements $DailyHealthLogCopyWith<$Res> {
+  _$DailyHealthLogCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -107,11 +107,11 @@ class _$UserHealthCopyWithImpl<$Res, $Val extends UserHealth>
 }
 
 /// @nodoc
-abstract class _$$_UserHealthCopyWith<$Res>
-    implements $UserHealthCopyWith<$Res> {
-  factory _$$_UserHealthCopyWith(
-          _$_UserHealth value, $Res Function(_$_UserHealth) then) =
-      __$$_UserHealthCopyWithImpl<$Res>;
+abstract class _$$_DailyHealthLogCopyWith<$Res>
+    implements $DailyHealthLogCopyWith<$Res> {
+  factory _$$_DailyHealthLogCopyWith(
+          _$_DailyHealthLog value, $Res Function(_$_DailyHealthLog) then) =
+      __$$_DailyHealthLogCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -126,11 +126,11 @@ abstract class _$$_UserHealthCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_UserHealthCopyWithImpl<$Res>
-    extends _$UserHealthCopyWithImpl<$Res, _$_UserHealth>
-    implements _$$_UserHealthCopyWith<$Res> {
-  __$$_UserHealthCopyWithImpl(
-      _$_UserHealth _value, $Res Function(_$_UserHealth) _then)
+class __$$_DailyHealthLogCopyWithImpl<$Res>
+    extends _$DailyHealthLogCopyWithImpl<$Res, _$_DailyHealthLog>
+    implements _$$_DailyHealthLogCopyWith<$Res> {
+  __$$_DailyHealthLogCopyWithImpl(
+      _$_DailyHealthLog _value, $Res Function(_$_DailyHealthLog) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -143,7 +143,7 @@ class __$$_UserHealthCopyWithImpl<$Res>
     Object? date = null,
     Object? expiredAt = null,
   }) {
-    return _then(_$_UserHealth(
+    return _then(_$_DailyHealthLog(
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
@@ -175,8 +175,8 @@ class __$$_UserHealthCopyWithImpl<$Res>
 /// @nodoc
 
 @JsonSerializable()
-class _$_UserHealth extends _UserHealth {
-  const _$_UserHealth(
+class _$_DailyHealthLog extends _DailyHealthLog {
+  const _$_DailyHealthLog(
       {required this.userId,
       required this.steps,
       required this.distance,
@@ -187,8 +187,8 @@ class _$_UserHealth extends _UserHealth {
           required this.expiredAt})
       : super._();
 
-  factory _$_UserHealth.fromJson(Map<String, dynamic> json) =>
-      _$$_UserHealthFromJson(json);
+  factory _$_DailyHealthLog.fromJson(Map<String, dynamic> json) =>
+      _$$_DailyHealthLogFromJson(json);
 
 // ユーザID
   @override
@@ -217,14 +217,14 @@ class _$_UserHealth extends _UserHealth {
 
   @override
   String toString() {
-    return 'UserHealth(userId: $userId, steps: $steps, distance: $distance, burnedCalorie: $burnedCalorie, date: $date, expiredAt: $expiredAt)';
+    return 'DailyHealthLog(userId: $userId, steps: $steps, distance: $distance, burnedCalorie: $burnedCalorie, date: $date, expiredAt: $expiredAt)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_UserHealth &&
+            other is _$_DailyHealthLog &&
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.steps, steps) || other.steps == steps) &&
             (identical(other.distance, distance) ||
@@ -244,19 +244,19 @@ class _$_UserHealth extends _UserHealth {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_UserHealthCopyWith<_$_UserHealth> get copyWith =>
-      __$$_UserHealthCopyWithImpl<_$_UserHealth>(this, _$identity);
+  _$$_DailyHealthLogCopyWith<_$_DailyHealthLog> get copyWith =>
+      __$$_DailyHealthLogCopyWithImpl<_$_DailyHealthLog>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_UserHealthToJson(
+    return _$$_DailyHealthLogToJson(
       this,
     );
   }
 }
 
-abstract class _UserHealth extends UserHealth {
-  const factory _UserHealth(
+abstract class _DailyHealthLog extends DailyHealthLog {
+  const factory _DailyHealthLog(
       {required final String userId,
       required final int steps,
       required final int distance,
@@ -264,11 +264,11 @@ abstract class _UserHealth extends UserHealth {
       @JsonKey(fromJson: FirestoreTimestampConverter.timestampToDateTime, toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
           required final DateTime date,
       @JsonKey(fromJson: FirestoreTimestampConverter.timestampToDateTime, toJson: FirestoreTimestampConverter.dateTimeToTimestamp)
-          required final DateTime expiredAt}) = _$_UserHealth;
-  const _UserHealth._() : super._();
+          required final DateTime expiredAt}) = _$_DailyHealthLog;
+  const _DailyHealthLog._() : super._();
 
-  factory _UserHealth.fromJson(Map<String, dynamic> json) =
-      _$_UserHealth.fromJson;
+  factory _DailyHealthLog.fromJson(Map<String, dynamic> json) =
+      _$_DailyHealthLog.fromJson;
 
   @override // ユーザID
   String get userId;
@@ -290,6 +290,6 @@ abstract class _UserHealth extends UserHealth {
   DateTime get expiredAt;
   @override
   @JsonKey(ignore: true)
-  _$$_UserHealthCopyWith<_$_UserHealth> get copyWith =>
+  _$$_DailyHealthLogCopyWith<_$_DailyHealthLog> get copyWith =>
       throw _privateConstructorUsedError;
 }
