@@ -7,10 +7,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:health/health.dart';
 import 'package:logger/logger.dart';
 import 'package:mockito/mockito.dart';
-import 'package:virtualpilgrimage/application/health/health_repository.dart';
+import 'package:virtualpilgrimage/application/health/health_gateway.dart';
 import 'package:virtualpilgrimage/domain/health/health_aggregation_result.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_by_period.codegen.dart';
-import 'package:virtualpilgrimage/infrastructure/user/health_repository_impl.dart';
+import 'package:virtualpilgrimage/infrastructure/user/flutter_health_gateway.dart';
 
 import '../../helper/mock.mocks.dart';
 import '../../helper/provider_container.dart';
@@ -22,11 +22,11 @@ const defaultSourceName = 'dummySourceName';
 void main() {
   MockHealthFactory mockHealthFactory = MockHealthFactory();
   final logger = Logger(level: Level.nothing);
-  HealthRepositoryImpl target = HealthRepositoryImpl(mockHealthFactory, logger);
+  FlutterHealthGateway target = FlutterHealthGateway(mockHealthFactory, logger);
 
   setUp(() {
     mockHealthFactory = MockHealthFactory();
-    target = HealthRepositoryImpl(mockHealthFactory, logger);
+    target = FlutterHealthGateway(mockHealthFactory, logger);
   });
 
   group('HealthRepositoryImpl', () {
@@ -108,7 +108,7 @@ void main() {
 
     test('DI', () {
       final container = mockedProviderContainer();
-      final repository = container.read(healthRepositoryProvider);
+      final repository = container.read(healthGatewayProvider);
       expect(repository, isNotNull);
     });
 

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:logger/logger.dart';
-import 'package:virtualpilgrimage/application/health/health_repository.dart';
+import 'package:virtualpilgrimage/application/health/health_gateway.dart';
 import 'package:virtualpilgrimage/application/health/user_health_repository.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/temple_repository.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_result.codegen.dart';
@@ -30,7 +30,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
   );
 
   final TempleRepository _templeRepository;
-  final HealthRepository _healthRepository;
+  final HealthGateway _healthRepository;
   final UserRepository _userRepository;
   final UserHealthRepository _userHealthRepository;
   final VirtualPositionCalculator _virtualPositionCalculator;

@@ -5,7 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:virtualpilgrimage/application/health/health_repository.dart';
+import 'package:virtualpilgrimage/application/health/health_gateway.dart';
 import 'package:virtualpilgrimage/application/health/user_health_repository.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/temple_repository.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_interactor.dart';
@@ -30,7 +30,7 @@ import 'update_pilgrimage_progress_interactor_test.mocks.dart';
 void main() {
   late UpdatePilgrimageProgressInteractor target;
   late TempleRepository templeRepository;
-  late HealthRepository healthRepository;
+  late HealthGateway healthGateway;
   late UserHealthRepository userHealthRepository;
   late FirebaseCrashlytics crashlytics;
   final user = defaultUser();
@@ -42,12 +42,12 @@ void main() {
 
   setUp(() {
     templeRepository = MockTempleRepository();
-    healthRepository = MockHealthRepository();
+    healthGateway = MockHealthGateway();
     userHealthRepository = MockUserHealthRepository();
     crashlytics = MockFirebaseCrashlytics();
     target = UpdatePilgrimageProgressInteractor(
       templeRepository,
-      healthRepository,
+      healthGateway,
       userRepository,
       userHealthRepository,
       virtualPositionCalculator,
@@ -71,7 +71,7 @@ void main() {
 
         // healthのスタブ
         when(
-          healthRepository.aggregateHealthByPeriod(
+          healthGateway.aggregateHealthByPeriod(
             from: DateTime(2022, 3, 31),
             to: CustomizableDateTime.current,
           ),
@@ -150,7 +150,7 @@ void main() {
         {
           verify(templeRepository.getTempleInfo(86)).called(1);
           verify(
-            healthRepository.aggregateHealthByPeriod(
+            healthGateway.aggregateHealthByPeriod(
               from: DateTime(2022, 3, 31),
               to: CustomizableDateTime.current,
             ),
@@ -219,7 +219,7 @@ void main() {
         final userRepository = FakeUserRepository(user);
         final target = UpdatePilgrimageProgressInteractor(
           templeRepository,
-          healthRepository,
+          healthGateway,
           userRepository,
           userHealthRepository,
           virtualPositionCalculator,

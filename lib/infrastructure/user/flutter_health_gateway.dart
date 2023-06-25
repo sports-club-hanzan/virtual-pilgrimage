@@ -3,13 +3,14 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:health/health.dart';
 import 'package:logger/logger.dart';
-import 'package:virtualpilgrimage/application/health/health_repository.dart';
+import 'package:virtualpilgrimage/application/health/health_gateway.dart';
 import 'package:virtualpilgrimage/domain/exception/get_health_exception.dart';
 import 'package:virtualpilgrimage/domain/health/health_aggregation_result.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_by_period.codegen.dart';
 
-class HealthRepositoryImpl implements HealthRepository {
-  HealthRepositoryImpl(this._healthFactory, this._logger);
+/// health パッケージを利用してヘルスケア情報を集計する gateway の実装
+class FlutterHealthGateway implements HealthGateway {
+  FlutterHealthGateway(this._healthFactory, this._logger);
 
   final HealthFactory _healthFactory;
   final Logger _logger;
