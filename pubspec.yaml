@@ -18,7 +18,8 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 0.1.5+8
 
 environment:
-  sdk: ">=2.17.6 <3.0.0"
+  sdk: '>=2.18.0 <4.0.0'
+  flutter: '>=3.3.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -35,10 +36,8 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.5
   # firebase
-  # core以外のバージョンを指定しないことでcoreに依存したバージョンがインストールされる
-  # 2022/11現在、coreの2系は安定していないらしいので、1系の最新を導入
-  firebase_core: ^1.24.0
-  firebase_core_platform_interface: 4.5.1
+  firebase_core: ^2.14.0
+  firebase_core_platform_interface: 4.8.0
   firebase_analytics:
   firebase_auth:
   cloud_firestore:
@@ -49,8 +48,8 @@ dependencies:
   flutter_riverpod: ^2.1.1
   go_router: ^5.1.5
   flutter_signin_button: ^2.0.0
-  google_sign_in: ^5.4.1
-  sign_in_with_apple: ^4.2.0
+  google_sign_in: ^6.1.4
+  sign_in_with_apple: ^5.0.0
   logger: ^1.1.0
   freezed_annotation: ^2.2.0
   json_serializable: ^6.5.4
@@ -74,7 +73,7 @@ dependencies:
   
   # health
   health: ^4.4.0
-  permission_handler: ^9.2.0 # Firebaseと同じSDKをターゲットにできるよう最新ではないバージョンを利用
+  permission_handler: ^10.3.0 # Firebaseと同じSDKをターゲットにできるようなバージョンを利用
 
 dev_dependencies:
   flutter_test:

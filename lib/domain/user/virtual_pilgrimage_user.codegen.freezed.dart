@@ -54,7 +54,10 @@ mixin _$VirtualPilgrimageUser {
 // DB で管理されずアプリ上で値がセットされる
 // 設定する場合は @JsonKey(ignore: true) のようなアノテーションをつける
 // map上のアイコン。ログイン時に userIconUrl から GoogleMap に描画できる形式に変換される
-  @JsonKey(ignore: true, fromJson: _BitmapConverter.stringToBitmap)
+  @JsonKey(
+      includeToJson: false,
+      includeFromJson: false,
+      fromJson: _BitmapConverter.stringToBitmap)
   BitmapDescriptor get mapIcon => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -86,7 +89,7 @@ abstract class $VirtualPilgrimageUserCopyWith<$Res> {
           DateTime updatedAt,
       HealthInfo? health,
       PilgrimageInfo pilgrimage,
-      @JsonKey(ignore: true, fromJson: _BitmapConverter.stringToBitmap)
+      @JsonKey(includeToJson: false, includeFromJson: false, fromJson: _BitmapConverter.stringToBitmap)
           BitmapDescriptor mapIcon});
 
   $HealthInfoCopyWith<$Res>? get health;
@@ -218,7 +221,7 @@ abstract class _$$_VirtualPilgrimageUserCopyWith<$Res>
           DateTime updatedAt,
       HealthInfo? health,
       PilgrimageInfo pilgrimage,
-      @JsonKey(ignore: true, fromJson: _BitmapConverter.stringToBitmap)
+      @JsonKey(includeToJson: false, includeFromJson: false, fromJson: _BitmapConverter.stringToBitmap)
           BitmapDescriptor mapIcon});
 
   @override
@@ -325,7 +328,7 @@ class _$_VirtualPilgrimageUser extends _VirtualPilgrimageUser {
           required this.updatedAt,
       this.health,
       required this.pilgrimage,
-      @JsonKey(ignore: true, fromJson: _BitmapConverter.stringToBitmap)
+      @JsonKey(includeToJson: false, includeFromJson: false, fromJson: _BitmapConverter.stringToBitmap)
           this.mapIcon = BitmapDescriptor.defaultMarker})
       : super._();
 
@@ -388,7 +391,10 @@ class _$_VirtualPilgrimageUser extends _VirtualPilgrimageUser {
 // 設定する場合は @JsonKey(ignore: true) のようなアノテーションをつける
 // map上のアイコン。ログイン時に userIconUrl から GoogleMap に描画できる形式に変換される
   @override
-  @JsonKey(ignore: true, fromJson: _BitmapConverter.stringToBitmap)
+  @JsonKey(
+      includeToJson: false,
+      includeFromJson: false,
+      fromJson: _BitmapConverter.stringToBitmap)
   final BitmapDescriptor mapIcon;
 
   @override
@@ -472,7 +478,7 @@ abstract class _VirtualPilgrimageUser extends VirtualPilgrimageUser {
           required final DateTime updatedAt,
       final HealthInfo? health,
       required final PilgrimageInfo pilgrimage,
-      @JsonKey(ignore: true, fromJson: _BitmapConverter.stringToBitmap)
+      @JsonKey(includeToJson: false, includeFromJson: false, fromJson: _BitmapConverter.stringToBitmap)
           final BitmapDescriptor mapIcon}) = _$_VirtualPilgrimageUser;
   const _VirtualPilgrimageUser._() : super._();
 
@@ -520,7 +526,10 @@ abstract class _VirtualPilgrimageUser extends VirtualPilgrimageUser {
 // DB で管理されずアプリ上で値がセットされる
 // 設定する場合は @JsonKey(ignore: true) のようなアノテーションをつける
 // map上のアイコン。ログイン時に userIconUrl から GoogleMap に描画できる形式に変換される
-  @JsonKey(ignore: true, fromJson: _BitmapConverter.stringToBitmap)
+  @JsonKey(
+      includeToJson: false,
+      includeFromJson: false,
+      fromJson: _BitmapConverter.stringToBitmap)
   BitmapDescriptor get mapIcon;
   @override
   @JsonKey(ignore: true)
