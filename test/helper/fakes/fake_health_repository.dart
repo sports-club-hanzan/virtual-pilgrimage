@@ -21,28 +21,4 @@ class FakeHealthRepository extends HealthRepository {
       ),
     );
   }
-
-  @override
-  Future<HealthInfo> getHealthInfo({
-    required DateTime targetDateTime,
-    required DateTime createdAt,
-  }) {
-    return Future.value(healthInfo);
-  }
-
-  @override
-  Future<RecentlyHealthInfo> getRecentlyHealthInfo({
-    required DateTime targetDateTime,
-    required DateTime createdAt,
-  }) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Map<DateTime, HealthByPeriod>> getHealthEachPeriod({
-    required DateTime from,
-    required DateTime to,
-  }) {
-    throw UnimplementedError();
-  }
 }
