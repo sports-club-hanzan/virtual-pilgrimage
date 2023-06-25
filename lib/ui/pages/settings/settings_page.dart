@@ -22,7 +22,7 @@ class SettingsPage extends ConsumerWidget {
 class _SettingsPageBody extends StatelessWidget {
   const _SettingsPageBody(this._ref);
 
-  static const policyUrl = 'https://courageous-gumption-d7fd12.netlify.app/policy/';
+  static const policyUrl = 'https://hanzansports.com/policy/';
 
   final WidgetRef _ref;
 
