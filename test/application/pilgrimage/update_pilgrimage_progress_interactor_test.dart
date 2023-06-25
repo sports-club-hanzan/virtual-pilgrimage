@@ -5,15 +5,15 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:virtualpilgrimage/application/health/health_repository.dart';
-import 'package:virtualpilgrimage/application/health/user_health_repository.dart';
+import 'package:virtualpilgrimage/application/health/daily_health_log_repository.dart';
+import 'package:virtualpilgrimage/application/health/health_gateway.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/temple_repository.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_interactor.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_result.codegen.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/update_pilgrimage_progress_usecase.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
+import 'package:virtualpilgrimage/domain/health/daily_health_log.codegen.dart';
 import 'package:virtualpilgrimage/domain/health/health_aggregation_result.codegen.dart';
-import 'package:virtualpilgrimage/domain/health/user_health.codegen.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/pilgrimage_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/temple_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/virtual_position_calculator.dart';
@@ -30,8 +30,8 @@ import 'update_pilgrimage_progress_interactor_test.mocks.dart';
 void main() {
   late UpdatePilgrimageProgressInteractor target;
   late TempleRepository templeRepository;
-  late HealthRepository healthRepository;
-  late UserHealthRepository userHealthRepository;
+  late HealthGateway healthGateway;
+  late DailyHealthLogRepository dailyHealthLogRepository;
   late FirebaseCrashlytics crashlytics;
   final user = defaultUser();
   final userRepository = FakeUserRepository(user);
@@ -42,14 +42,14 @@ void main() {
 
   setUp(() {
     templeRepository = MockTempleRepository();
-    healthRepository = MockHealthRepository();
-    userHealthRepository = MockUserHealthRepository();
+    healthGateway = MockHealthGateway();
+    dailyHealthLogRepository = MockDailyHealthLogRepository();
     crashlytics = MockFirebaseCrashlytics();
     target = UpdatePilgrimageProgressInteractor(
       templeRepository,
-      healthRepository,
+      healthGateway,
       userRepository,
-      userHealthRepository,
+      dailyHealthLogRepository,
       virtualPositionCalculator,
       logger,
       crashlytics,
@@ -71,7 +71,7 @@ void main() {
 
         // healthのスタブ
         when(
-          healthRepository.aggregateHealthByPeriod(
+          healthGateway.aggregateHealthByPeriod(
             from: DateTime(2022, 3, 31),
             to: CustomizableDateTime.current,
           ),
@@ -94,9 +94,9 @@ void main() {
         );
 
         // 最後に保存したhealthを取得するstub
-        when(userHealthRepository.find('dummyId', DateTime(2022, 3, 31, 22))).thenAnswer(
+        when(dailyHealthLogRepository.find('dummyId', DateTime(2022, 3, 31, 22))).thenAnswer(
           (_) => Future.value(
-            UserHealth(
+            DailyHealthLog(
               userId: 'dummyId',
               date: DateTime(2022, 1, 1),
               steps: 10,
@@ -150,7 +150,7 @@ void main() {
         {
           verify(templeRepository.getTempleInfo(86)).called(1);
           verify(
-            healthRepository.aggregateHealthByPeriod(
+            healthGateway.aggregateHealthByPeriod(
               from: DateTime(2022, 3, 31),
               to: CustomizableDateTime.current,
             ),
@@ -163,8 +163,8 @@ void main() {
         // 日毎の歩数・歩行距離を加算
         {
           verify(
-            userHealthRepository.update(
-              UserHealth(
+            dailyHealthLogRepository.update(
+              DailyHealthLog(
                 userId: 'dummyId',
                 date: DateTime(2022, 3, 31),
                 steps: 10000,
@@ -175,8 +175,8 @@ void main() {
             ),
           ).called(1);
           verify(
-            userHealthRepository.update(
-              UserHealth(
+            dailyHealthLogRepository.update(
+              DailyHealthLog(
                 userId: 'dummyId',
                 date: DateTime(2022, 4, 1),
                 steps: 10000,
@@ -187,8 +187,8 @@ void main() {
             ),
           ).called(1);
           verify(
-            userHealthRepository.update(
-              UserHealth(
+            dailyHealthLogRepository.update(
+              DailyHealthLog(
                 userId: 'dummyId',
                 date: DateTime(2022, 4, 2),
                 steps: 4000,
@@ -199,8 +199,8 @@ void main() {
             ),
           ).called(1);
           verify(
-            userHealthRepository.update(
-              UserHealth(
+            dailyHealthLogRepository.update(
+              DailyHealthLog(
                 userId: 'dummyId',
                 date: DateTime(2022, 4, 3),
                 steps: 3000,
@@ -219,9 +219,9 @@ void main() {
         final userRepository = FakeUserRepository(user);
         final target = UpdatePilgrimageProgressInteractor(
           templeRepository,
-          healthRepository,
+          healthGateway,
           userRepository,
-          userHealthRepository,
+          dailyHealthLogRepository,
           virtualPositionCalculator,
           logger,
           crashlytics,

@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:virtualpilgrimage/application/health/health_repository.dart';
+import 'package:virtualpilgrimage/application/health/health_gateway.dart';
 import 'package:virtualpilgrimage/application/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/pilgrimage_info.codegen.dart';
@@ -10,14 +10,14 @@ import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.da
 import 'package:virtualpilgrimage/ui/pages/profile/profile_presenter.dart';
 import 'package:virtualpilgrimage/ui/pages/profile/profile_state.codegen.dart';
 
-import '../../../helper/fakes/fake_health_repository.dart';
+import '../../../helper/fakes/fake_health_gateway.dart';
 import '../../../helper/fakes/fake_user_repository.dart';
 import '../../../helper/provider_container.dart';
 
 void main() {
   late ProfilePresenter target;
   late UserRepository userRepository;
-  late HealthRepository healthRepository;
+  late HealthGateway healthGateway;
   const id = 'dummyId';
   late VirtualPilgrimageUser user;
   late HealthByPeriod healthByPeriod;
@@ -50,7 +50,7 @@ void main() {
       totalSteps: 100000,
       totalDistance: 80000,
     );
-    healthRepository = FakeHealthRepository(healthByPeriod: healthByPeriod, healthInfo: healthInfo);
+    healthGateway = FakeHealthGateway(healthByPeriod: healthByPeriod, healthInfo: healthInfo);
   });
 
   group('profileUserProvider', () {
@@ -66,7 +66,7 @@ void main() {
       container = mockedProviderContainer(
         overrides: [
           userRepositoryProvider.overrideWithValue(userRepository),
-          healthRepositoryProvider.overrideWithValue(healthRepository),
+          healthGatewayProvider.overrideWithValue(healthGateway),
         ],
       );
       container.read(userStateProvider.notifier).state = loginUser;

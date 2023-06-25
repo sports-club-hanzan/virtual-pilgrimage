@@ -4,13 +4,14 @@ import 'package:intl/intl.dart';
 import 'package:virtualpilgrimage/domain/helper/firestore_timestamp_converter.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_by_period.codegen.dart';
 
-part 'user_health.codegen.freezed.dart';
-part 'user_health.codegen.g.dart';
+part 'daily_health_log.codegen.freezed.dart';
+part 'daily_health_log.codegen.g.dart';
 
+/// 日毎のヘルスケア情報ログ
 @freezed
-class UserHealth with _$UserHealth {
+class DailyHealthLog with _$DailyHealthLog {
   @JsonSerializable()
-  const factory UserHealth({
+  const factory DailyHealthLog({
     // ユーザID
     required String userId,
     // 歩数
@@ -31,11 +32,11 @@ class UserHealth with _$UserHealth {
       toJson: FirestoreTimestampConverter.dateTimeToTimestamp,
     )
         required DateTime expiredAt,
-  }) = _UserHealth;
+  }) = _DailyHealthLog;
 
-  const UserHealth._();
+  const DailyHealthLog._();
 
-  factory UserHealth.fromJson(Map<String, dynamic> json) => _$UserHealthFromJson(json);
+  factory DailyHealthLog.fromJson(Map<String, dynamic> json) => _$DailyHealthLogFromJson(json);
 
   /// Firestore に保存する際のドキュメントID
   String documentId() {
@@ -55,35 +56,35 @@ class UserHealth with _$UserHealth {
     );
   }
 
-  /// 2つの UserHealth をマージした値を返す
-  UserHealth merge(UserHealth userHealth) {
-    if (userId != userHealth.userId) {
-      throw Exception('userId must be same value between two UserHealth');
+  /// 2つの DailyHealthLog をマージした値を返す
+  DailyHealthLog merge(DailyHealthLog dailyHealthLog) {
+    if (userId != dailyHealthLog.userId) {
+      throw Exception('userId must be same value between two DailyHealthLog');
     }
-    if (date != userHealth.date) {
-      throw Exception('date must be same value between two UserHealth');
+    if (date != dailyHealthLog.date) {
+      throw Exception('date must be same value between two DailyHealthLog');
     }
-    return UserHealth(
+    return DailyHealthLog(
       userId: userId,
-      steps: steps + userHealth.steps,
-      distance: distance + userHealth.distance,
-      burnedCalorie: burnedCalorie + userHealth.burnedCalorie,
+      steps: steps + dailyHealthLog.steps,
+      distance: distance + dailyHealthLog.distance,
+      burnedCalorie: burnedCalorie + dailyHealthLog.burnedCalorie,
       date: date,
       expiredAt: expiredAt,
     );
   }
 
-  /// HealthByPeriod から UserHealth を作成する
+  /// HealthByPeriod から DailyHealthLog を作成する
   /// [userId] ユーザID
   /// [day] ヘルスケア情報の日付
   /// [healthByPeriod] ヘルスケア情報
   // ignore: prefer_constructors_over_static_methods
-  static UserHealth createFromHealthByPeriod({
+  static DailyHealthLog createFromHealthByPeriod({
     required String userId,
     required DateTime day,
     required HealthByPeriod healthByPeriod,
   }) {
-    return UserHealth(
+    return DailyHealthLog(
       userId: userId,
       steps: healthByPeriod.steps,
       distance: healthByPeriod.distance,

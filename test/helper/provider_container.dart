@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:virtualpilgrimage/application/auth/auth_repository.dart';
-import 'package:virtualpilgrimage/application/health/health_repository.dart';
+import 'package:virtualpilgrimage/application/health/health_gateway.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_analytics_provider.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_auth_provider.dart';
 import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';

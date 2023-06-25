@@ -1,13 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'user_health.codegen.dart';
+part of 'daily_health_log.codegen.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$_UserHealth _$$_UserHealthFromJson(Map<String, dynamic> json) =>
-    _$_UserHealth(
+_$_DailyHealthLog _$$_DailyHealthLogFromJson(Map<String, dynamic> json) =>
+    _$_DailyHealthLog(
       userId: json['userId'] as String,
       steps: json['steps'] as int,
       distance: json['distance'] as int,
@@ -18,7 +18,7 @@ _$_UserHealth _$$_UserHealthFromJson(Map<String, dynamic> json) =>
           json['expiredAt'] as Timestamp),
     );
 
-Map<String, dynamic> _$$_UserHealthToJson(_$_UserHealth instance) =>
+Map<String, dynamic> _$$_DailyHealthLogToJson(_$_DailyHealthLog instance) =>
     <String, dynamic>{
       'userId': instance.userId,
       'steps': instance.steps,

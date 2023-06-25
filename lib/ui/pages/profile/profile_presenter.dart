@@ -15,7 +15,7 @@ import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_p
 import 'package:virtualpilgrimage/ui/pages/profile/profile_state.codegen.dart';
 
 final profileUserProvider =
-    FutureProvider.family<VirtualPilgrimageUser?, String>((ref, userId) async {
+    FutureProvider.family.autoDispose<VirtualPilgrimageUser?, String>((ref, userId) async {
   // 常に最新の値を取りに行くため、DBに問い合わせる
   final user = await ref.read(userRepositoryProvider).get(userId);
   // ログインユーザ以外を指定していた場合
