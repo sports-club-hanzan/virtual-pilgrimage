@@ -28,7 +28,7 @@ type User = {
 }
 
 // 1日ごとに計測しているヘルスケア情報
-type HealthEachDay = {
+type DailyHealth = {
   burnedCalorie: number;
   distance: number;
   steps: number;
@@ -37,32 +37,32 @@ type HealthEachDay = {
 }
 
 const toStartTime = (targetDate: Date): Date => {
-    targetDate.setHours(0);
-    targetDate.setMinutes(0);
-    targetDate.setSeconds(0);
-    return targetDate;
+  targetDate.setHours(0);
+  targetDate.setMinutes(0);
+  targetDate.setSeconds(0);
+  return targetDate;
 }
 
 const isOverTargetDate = (userUpdatedAt: Timestamp, targetDate: Date): boolean => {
   const targetDateStartTime = toStartTime(targetDate);
-      return userUpdatedAt.seconds > Math.floor(targetDateStartTime.getTime() / 1000);
+  return userUpdatedAt.seconds >= Math.floor(targetDateStartTime.getTime() / 1000);
 }
 
 // 期間ごとのヘルスケア情報を集計する
-const aggregateHealthByPeriod = (healths: HealthEachDay[], startWith: Date): HealthByPeriod => {
-    const filtered = healths.filter((health) => {
-      return isOverTargetDate(health.date, startWith);
-    });
-    const steps = filtered.reduce((sum, elem) => {
-      return sum + elem.steps;
-    }, 0);
-    const distance = filtered.reduce((sum, elem) => {
-      return sum + elem.distance;
-    }, 0);
-    const burnedCalorie = filtered.reduce((sum, elem) => {
-      return sum + elem.burnedCalorie;
-    }, 0);
-    return {steps, distance, burnedCalorie};
+const aggregateHealthByPeriod = (healths: DailyHealth[], startWith: Date): HealthByPeriod => {
+  const filtered = healths.filter((health) => {
+    return isOverTargetDate(health.date, startWith);
+  });
+  const steps = filtered.reduce((sum, elem) => {
+    return sum + elem.steps;
+  }, 0);
+  const distance = filtered.reduce((sum, elem) => {
+    return sum + elem.distance;
+  }, 0);
+  const burnedCalorie = filtered.reduce((sum, elem) => {
+    return sum + elem.burnedCalorie;
+  }, 0);
+  return {steps, distance, burnedCalorie};
 }
 
 const updateHealthHandler = async () => {
@@ -77,9 +77,6 @@ const updateHealthHandler = async () => {
   await Promise.all(userSnapshot.docs.map(async (userDoc) => {
     const userId = userDoc.id;
     const user = userDoc.data() as User;
-    // if (user.health == undefined || userId != "EQzrejcSTPXOUEGf6qlDmYqdYUr2") {
-    //   return;
-    // }
     if (user.health == undefined) {
       console.debug(`this user has no health data(don't initialize to use health care). [userId][${userId}]`)
       return;
@@ -98,11 +95,12 @@ const updateHealthHandler = async () => {
     // このような絞り込みしかできない
     const healths = healthSnapshot.docs
       .filter(doc => {
-        const data = doc.data() as HealthEachDay;
-        const date = data.date.toDate(); // assuming date is stored as a Firestore Timestamp
+        const data = doc.data() as DailyHealth;
+        const date = data.date.toDate();
+        date.setTime(date.getTime() + 1000 * 60 * 60 * 9); // JSTに変換
         return date >= oneMonthAgo && date < today;
       })
-      .map((doc) => doc.data() as HealthEachDay);
+      .map((doc) => doc.data() as DailyHealth);
     if (healths.length == 0) {
       console.debug(`no health data [userId][${userId}]`);
       return;
