@@ -128,7 +128,7 @@ const updateHealthHandler = async () => {
         month: month,
       }
     }
-    const result = await db.collection("users").doc(userId).set(user);
+    const result = await db.collection("users").doc(userId).set(updatedUser);
     console.log(`success to update user health [userId][${userId}][time][${result.writeTime.seconds}][old][${JSON.stringify(user.health)}][new][${JSON.stringify(updatedUser.health)}]`);
   }));
   console.log("complete to update user health");
@@ -138,7 +138,7 @@ process.env.TZ = "Asia/Tokyo";
 
 export const updateUserHealth = defaultFunctions()
   .runWith({ memory: "512MB", timeoutSeconds: 9 * 60 })
-  .pubsub.schedule("1 5,11,17,17,21 * * *")
+  .pubsub.schedule("1 1,5,9,13,17,21 * * *")
   .timeZone("Asia/Tokyo")
   .onRun(updateHealthHandler)
   ;

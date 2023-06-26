@@ -190,7 +190,7 @@ const updateRankingHandler = async () => {
 
 export const updateRanking = defaultFunctions()
   .runWith({ memory: "512MB", timeoutSeconds: 9 * 60 })
-  .pubsub.schedule("31 5,11,17,23 * * *")
+  .pubsub.schedule("31 1,5,9,13,17,21 * * *")
   .timeZone("Asia/Tokyo")
   .onRun(updateRankingHandler)
   ;
