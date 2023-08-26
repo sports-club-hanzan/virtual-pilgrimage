@@ -1,5 +1,7 @@
 import 'dart:core';
 
+import 'package:timezone/timezone.dart' as tz;
+
 // Testable な DateTime
 // DateTime.now() のテスト時に固定した時刻を返せるようにするために利用
 // プロダクションコードでは CustomizableDateTime.current を呼び出す
@@ -9,10 +11,10 @@ extension CustomizableDateTime on DateTime {
   static DateTime? _customTime;
 
   static DateTime get current {
-    return _customTime ?? DateTime.now();
+    return _customTime ?? tz.TZDateTime.now(tz.getLocation('Asia/Tokyo'));
   }
 
   static set customTime(DateTime customTime) {
-    _customTime = customTime;
+    _customTime = tz.TZDateTime.from(customTime, tz.getLocation('Asia/Tokyo'));
   }
 }

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:timezone/timezone.dart' as tz;
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/helper/firestore_timestamp_converter.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/pilgrimage_info.codegen.dart';
@@ -130,7 +131,8 @@ class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
     // 設定する場合は @JsonKey(ignore: true) のようなアノテーションをつける
 
     // map上のアイコン。ログイン時に userIconUrl から GoogleMap に描画できる形式に変換される
-    @JsonKey(includeToJson: false, includeFromJson: false, fromJson: _BitmapConverter.stringToBitmap)
+    @JsonKey(
+        includeToJson: false, includeFromJson: false, fromJson: _BitmapConverter.stringToBitmap)
     @Default(BitmapDescriptor.defaultMarker)
         BitmapDescriptor mapIcon,
   }) = _VirtualPilgrimageUser;
@@ -210,8 +212,9 @@ class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
   /// プロフィール表示用の情報に変換
   VirtualPilgrimageUser convertForProfile() {
     final now = CustomizableDateTime.current;
-    final currentDate = DateTime(now.year, now.month, now.day);
-    final updatedDate = DateTime(updatedAt.year, updatedAt.month, updatedAt.day);
+    final location = tz.getLocation('Asia/Tokyo');
+    final currentDate = tz.TZDateTime(location, now.year, now.month, now.day);
+    final updatedDate = tz.TZDateTime(location, updatedAt.year, updatedAt.month, updatedAt.day);
     // 更新日が今日より前の場合
     if (updatedDate.isBefore(currentDate)) {
       /// 更新日が昨日の場合
