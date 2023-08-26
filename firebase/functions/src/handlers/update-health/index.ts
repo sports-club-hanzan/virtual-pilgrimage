@@ -136,7 +136,7 @@ process.env.TZ = "Asia/Tokyo";
 
 export const updateUserHealth = defaultFunctions()
   .runWith({ memory: "512MB", timeoutSeconds: 9 * 60 })
-  .pubsub.schedule("1 1,5,9,13,17,21 * * *")
+  .pubsub.schedule("1 * * * *")
   .timeZone("Asia/Tokyo")
   .onRun(updateHealthHandler)
   ;
