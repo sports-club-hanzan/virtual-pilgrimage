@@ -114,23 +114,30 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
     // 最大で2回外部通信する必要があるため、並列でまとめて実行
     // 現在、ユーザが目指している札所の情報と最終更新時間からのユーザのヘルスケア情報を取得
     late TempleInfo nowTargetTemple;
-    late final HealthAggregationResult healthAggregationResult;
+    late HealthAggregationResult healthAggregationResult;
+    late final HealthByPeriod? todayHealth;
     {
+      final today = tz.TZDateTime(tz.getLocation('Asia/Tokyo'), now.year, now.month, now.day);
       await Future.wait(<Future<void>>[
         _templeRepository.getTempleInfo(nextPilgrimageId).then((value) => nowTargetTemple = value),
+        // 今日のヘルスケア情報を取得
         _healthRepository
             .aggregateHealthByPeriod(
-              // 前回更新した時刻の開始地点 ~ 現在時刻で集計
-              from: tz.TZDateTime(
-                tz.getLocation('Asia/Tokyo'),
-                lastProgressUpdatedAt.year,
-                lastProgressUpdatedAt.month,
-                lastProgressUpdatedAt.day,
-              ),
+              from: today,
+              to: today.add(const Duration(days: 1)).subtract(const Duration(microseconds: 1)),
+            )
+            .then((value) => todayHealth = value.eachDay[today]),
+        // 前回更新した時刻の開始地点 ~ 現在時刻で集計
+        _healthRepository
+            .aggregateHealthByPeriod(
+              from: lastProgressUpdatedAt,
               to: now,
             )
             .then((value) => healthAggregationResult = value),
       ]);
+      final updatedMap = Map.of(healthAggregationResult.eachDay);
+      updatedMap[today] = (todayHealth ?? healthAggregationResult.eachDay[today])!;
+      healthAggregationResult = healthAggregationResult.copyWith(eachDay: updatedMap);
       _logger.d(
         'got info for updating pilgrimage progress '
         '[health][$healthAggregationResult]'
@@ -160,7 +167,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
     /// 4. 移動距離 > 次の札所までの距離 の間、で移動距離を減らしながら次に目指すべき札所を導出する
     return _updateUserPilgrimageProgress(
       user: updatedUser,
-      healthAggregationResult: healthAggregationResult,
+      totalDistance: healthAggregationResult.total.distance,
       nowTargetTemple: nowTargetTemple,
       reachedPilgrimageIdList: reachedPilgrimageIdList,
       lastHealth: lastHealth,
@@ -231,14 +238,14 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
 
   /// お遍路の進捗を更新する
   /// [user] ユーザ情報
-  /// [healthAggregationResult] 集計したヘルスケア情報
+  /// [totalDistance] 集計した合計の移動距離
   /// [nowTargetTemple] 現在目標にしている札所の情報
   /// [reachedPilgrimageIdList] 到達した札所の番号一覧
   /// [lastHealth] 最後に保存を実行した日の日毎のヘルスケア情報
   /// [now] 現在時刻
   Future<VirtualPilgrimageUser> _updateUserPilgrimageProgress({
     required VirtualPilgrimageUser user,
-    required HealthAggregationResult healthAggregationResult,
+    required int totalDistance,
     required TempleInfo nowTargetTemple,
     required List<int> reachedPilgrimageIdList,
     required DailyHealthLog? lastHealth,
@@ -252,7 +259,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
     /// 集計は最後に実行した日の 00:00 地点から現在時刻までで距離を取得する
     /// 最後に実行した時刻の距離を引くことで、「現在までに移動した距離 + 最後に実行した時刻 ~ 現在時刻までの移動距離」という計算になる
     int movingDistance = user.pilgrimage.movingDistance +
-        healthAggregationResult.total.distance -
+        totalDistance -
         (lastHealth != null ? lastHealth.distance : 0);
     {
       _logger.d(

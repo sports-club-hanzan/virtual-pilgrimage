@@ -35,7 +35,9 @@ void main() {
   late HealthGateway healthGateway;
   late DailyHealthLogRepository dailyHealthLogRepository;
   late FirebaseCrashlytics crashlytics;
-  final user = defaultUser();
+  tz.initializeTimeZones();
+  final location = tz.getLocation('Asia/Tokyo');
+  final user = defaultUser(location);
   final userRepository = FakeUserRepository(user);
   final virtualPositionCalculator = VirtualPositionCalculator();
   final logger = Logger(level: Level.nothing);
@@ -43,7 +45,6 @@ void main() {
   final container = mockedProviderContainer();
 
   setUp(() {
-    tz.initializeTimeZones();
     templeRepository = MockTempleRepository();
     healthGateway = MockHealthGateway();
     dailyHealthLogRepository = MockDailyHealthLogRepository();
@@ -76,7 +77,7 @@ void main() {
         final location = tz.getLocation('Asia/Tokyo');
         when(
           healthGateway.aggregateHealthByPeriod(
-            from: tz.TZDateTime(location, 2022, 3, 31),
+            from: tz.TZDateTime(location, 2022, 3, 31, 22),
             to: CustomizableDateTime.current,
           ),
         ).thenAnswer(
@@ -92,6 +93,22 @@ void main() {
                     const HealthByPeriod(steps: 4000, distance: 4000, burnedCalorie: 100),
                 tz.TZDateTime(location, 2022, 4, 3):
                     const HealthByPeriod(steps: 3000, distance: 3000, burnedCalorie: 100),
+              },
+            ),
+          ),
+        );
+        when(
+          healthGateway.aggregateHealthByPeriod(
+            from: tz.TZDateTime(location, 2022, 4, 3),
+            to: tz.TZDateTime(location, 2022, 4, 4).subtract(const Duration(microseconds: 1)),
+          ),
+        ).thenAnswer(
+              (_) => Future.value(
+            HealthAggregationResult(
+              total: const HealthByPeriod(steps: 5000, distance: 5000, burnedCalorie: 500),
+              eachDay: {
+                tz.TZDateTime(location, 2022, 4, 3):
+                const HealthByPeriod(steps: 5000, distance: 5000, burnedCalorie: 500),
               },
             ),
           ),
@@ -122,7 +139,7 @@ void main() {
           reachedPilgrimageIdList: [87, 88, 2],
           updatedUser: user.copyWith(
             health: user.health!.copyWith(
-              today: const HealthByPeriod(steps: 3000, distance: 3000, burnedCalorie: 100),
+              today: const HealthByPeriod(steps: 5000, distance: 5000, burnedCalorie: 500),
               updatedAt: CustomizableDateTime.current,
             ),
             updatedAt: CustomizableDateTime.current,
@@ -156,7 +173,7 @@ void main() {
           verify(templeRepository.getTempleInfo(86)).called(1);
           verify(
             healthGateway.aggregateHealthByPeriod(
-              from: tz.TZDateTime(location, 2022, 3, 31),
+              from: tz.TZDateTime(location, 2022, 3, 31, 22),
               to: CustomizableDateTime.current,
             ),
           );
@@ -208,9 +225,9 @@ void main() {
               DailyHealthLog(
                 userId: 'dummyId',
                 date: tz.TZDateTime(location, 2022, 4, 3),
-                steps: 3000,
-                distance: 3000,
-                burnedCalorie: 100,
+                steps: 5000,
+                distance: 5000,
+                burnedCalorie: 500,
                 expiredAt: tz.TZDateTime(location, 2022, 7, 2),
               ),
             ),
@@ -220,7 +237,7 @@ void main() {
 
       test('正常系_healthがnullの場合', () async {
         // given
-        final user = defaultUser().copyWith(health: null);
+        final user = defaultUser(location).copyWith(health: null);
         final userRepository = FakeUserRepository(user);
         final target = UpdatePilgrimageProgressInteractor(
           templeRepository,
@@ -242,13 +259,13 @@ void main() {
           reachedPilgrimageIdList: [87, 88, 2],
           updatedUser: user.copyWith(
             health: HealthInfo(
-              today: const HealthByPeriod(steps: 3000, distance: 3000, burnedCalorie: 100),
+              today: const HealthByPeriod(steps: 5000, distance: 5000, burnedCalorie: 500),
               yesterday: HealthByPeriod.getDefault(),
               week: HealthByPeriod.getDefault(),
               month: HealthByPeriod.getDefault(),
               updatedAt: CustomizableDateTime.current,
-              totalDistance: 3000,
-              totalSteps: 3000,
+              totalDistance: 5000,
+              totalSteps: 5000,
             ),
             updatedAt: CustomizableDateTime.current,
             pilgrimage: user.pilgrimage.copyWith(
@@ -276,7 +293,7 @@ void main() {
   });
 }
 
-VirtualPilgrimageUser defaultUser() {
+VirtualPilgrimageUser defaultUser(tz.Location location) {
   return VirtualPilgrimageUser(
     id: 'dummyId',
     nickname: 'dummyName',
@@ -285,7 +302,7 @@ VirtualPilgrimageUser defaultUser() {
     userIconUrl: '',
     userStatus: UserStatus.created,
     createdAt: DateTime.utc(2022),
-    updatedAt: DateTime(2022, 3, 31, 22),
+    updatedAt: tz.TZDateTime(location, 2022, 3, 31, 22),
     pilgrimage: PilgrimageInfo(
       id: 'dummyId',
       nowPilgrimageId: 86,
