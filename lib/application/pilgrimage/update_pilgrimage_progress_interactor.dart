@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:logger/logger.dart';
+import 'package:timezone/timezone.dart' as tz;
 import 'package:virtualpilgrimage/application/health/daily_health_log_repository.dart';
 import 'package:virtualpilgrimage/application/health/health_gateway.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/temple_repository.dart';
@@ -120,7 +121,8 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
         _healthRepository
             .aggregateHealthByPeriod(
               // 前回更新した時刻の開始地点 ~ 現在時刻で集計
-              from: DateTime(
+              from: tz.TZDateTime(
+                tz.getLocation('Asia/Tokyo'),
                 lastProgressUpdatedAt.year,
                 lastProgressUpdatedAt.month,
                 lastProgressUpdatedAt.day,
@@ -196,7 +198,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
       // 仮に情報が存在する場合も上書きする
       final target = DailyHealthLog.createFromHealthByPeriod(
         userId: user.id,
-        day: DateTime(key.year, key.month, key.day),
+        day: tz.TZDateTime(tz.getLocation('Asia/Tokyo'), key.year, key.month, key.day),
         healthByPeriod: value,
       );
       _logger.d('save health [target][$target][date][$key]');

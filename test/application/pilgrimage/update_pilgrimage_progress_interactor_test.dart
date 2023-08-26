@@ -5,6 +5,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:logger/logger.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 import 'package:virtualpilgrimage/application/health/daily_health_log_repository.dart';
 import 'package:virtualpilgrimage/application/health/health_gateway.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/temple_repository.dart';
@@ -41,6 +43,7 @@ void main() {
   final container = mockedProviderContainer();
 
   setUp(() {
+    tz.initializeTimeZones();
     templeRepository = MockTempleRepository();
     healthGateway = MockHealthGateway();
     dailyHealthLogRepository = MockDailyHealthLogRepository();
@@ -70,9 +73,10 @@ void main() {
         setupTempleRepositoryMock(templeRepository);
 
         // healthのスタブ
+        final location = tz.getLocation('Asia/Tokyo');
         when(
           healthGateway.aggregateHealthByPeriod(
-            from: DateTime(2022, 3, 31),
+            from: tz.TZDateTime(location, 2022, 3, 31),
             to: CustomizableDateTime.current,
           ),
         ).thenAnswer(
@@ -80,13 +84,13 @@ void main() {
             HealthAggregationResult(
               total: const HealthByPeriod(steps: 27000, distance: 27000, burnedCalorie: 1000),
               eachDay: {
-                DateTime(2022, 3, 31):
+                tz.TZDateTime(location, 2022, 3, 31):
                     const HealthByPeriod(steps: 10000, distance: 10000, burnedCalorie: 500),
-                DateTime(2022, 4, 1):
+                tz.TZDateTime(location, 2022, 4, 1):
                     const HealthByPeriod(steps: 10000, distance: 10000, burnedCalorie: 300),
-                DateTime(2022, 4, 2):
+                tz.TZDateTime(location, 2022, 4, 2):
                     const HealthByPeriod(steps: 4000, distance: 4000, burnedCalorie: 100),
-                DateTime(2022, 4, 3):
+                tz.TZDateTime(location, 2022, 4, 3):
                     const HealthByPeriod(steps: 3000, distance: 3000, burnedCalorie: 100),
               },
             ),
@@ -147,11 +151,12 @@ void main() {
         // 3. 87番札所の歩数 < 移動距離 であったため、1番札所の情報を取得
         //    (88 -> 1 へは移動せず、1番札所からリスタートするため)
         // 4. 01番札所の歩数 < 移動距離 であったため、2番札所の情報を取得
+        final location = tz.getLocation('Asia/Tokyo');
         {
           verify(templeRepository.getTempleInfo(86)).called(1);
           verify(
             healthGateway.aggregateHealthByPeriod(
-              from: DateTime(2022, 3, 31),
+              from: tz.TZDateTime(location, 2022, 3, 31),
               to: CustomizableDateTime.current,
             ),
           );
@@ -166,11 +171,11 @@ void main() {
             dailyHealthLogRepository.update(
               DailyHealthLog(
                 userId: 'dummyId',
-                date: DateTime(2022, 3, 31),
+                date: tz.TZDateTime(location, 2022, 3, 31),
                 steps: 10000,
                 distance: 10000,
                 burnedCalorie: 500,
-                expiredAt: DateTime(2022, 6, 29),
+                expiredAt: tz.TZDateTime(location, 2022, 6, 29),
               ),
             ),
           ).called(1);
@@ -178,11 +183,11 @@ void main() {
             dailyHealthLogRepository.update(
               DailyHealthLog(
                 userId: 'dummyId',
-                date: DateTime(2022, 4, 1),
+                date: tz.TZDateTime(location, 2022, 4, 1),
                 steps: 10000,
                 distance: 10000,
                 burnedCalorie: 300,
-                expiredAt: DateTime(2022, 6, 30),
+                expiredAt: tz.TZDateTime(location, 2022, 6, 30),
               ),
             ),
           ).called(1);
@@ -190,11 +195,11 @@ void main() {
             dailyHealthLogRepository.update(
               DailyHealthLog(
                 userId: 'dummyId',
-                date: DateTime(2022, 4, 2),
+                date: tz.TZDateTime(location, 2022, 4, 2),
                 steps: 4000,
                 distance: 4000,
                 burnedCalorie: 100,
-                expiredAt: DateTime(2022, 7, 1),
+                expiredAt: tz.TZDateTime(location, 2022, 7, 1),
               ),
             ),
           ).called(1);
@@ -202,11 +207,11 @@ void main() {
             dailyHealthLogRepository.update(
               DailyHealthLog(
                 userId: 'dummyId',
-                date: DateTime(2022, 4, 3),
+                date: tz.TZDateTime(location, 2022, 4, 3),
                 steps: 3000,
                 distance: 3000,
                 burnedCalorie: 100,
-                expiredAt: DateTime(2022, 7, 2),
+                expiredAt: tz.TZDateTime(location, 2022, 7, 2),
               ),
             ),
           ).called(1);
