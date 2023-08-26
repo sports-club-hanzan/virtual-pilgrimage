@@ -47,7 +47,8 @@ class FlutterHealthGateway implements HealthGateway {
       // dt の日付 <= to の日付の間、ループを回して、日毎のヘルスケア情報を取得する
       for (var dt = from; to.isAfter(dt); dt = dt.add(const Duration(days: 1))) {
         final dtStartTime = tz.TZDateTime(tz.getLocation('Asia/Tokyo'), dt.year, dt.month, dt.day);
-        if (dt.year != from.year || dt.month != from.month || dt.day != from.day) {
+        // dt == from の時は時間を 00:00:00 とする
+        if (dt != from) {
           dt = dtStartTime;
         }
         final health = await _getHealthData(
