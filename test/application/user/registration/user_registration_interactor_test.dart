@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logger/logger.dart';
 import 'package:mockito/mockito.dart';
+import 'package:timezone/data/latest.dart' as tz;
 import 'package:virtualpilgrimage/application/user/registration/registration_result.dart';
 import 'package:virtualpilgrimage/application/user/registration/user_registration_interactor.dart';
 import 'package:virtualpilgrimage/application/user/registration/user_registration_usecase.dart';
@@ -19,6 +20,8 @@ void main() {
   final logger = Logger(level: Level.nothing);
 
   late UserRegistrationInteractor target;
+
+  tz.initializeTimeZones();
 
   setUp(() {
     mockUserRepository = MockUserRepository();

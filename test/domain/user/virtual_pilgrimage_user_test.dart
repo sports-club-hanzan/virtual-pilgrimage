@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:timezone/data/latest.dart' as tz;
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/pilgrimage_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_by_period.codegen.dart';
@@ -9,6 +10,7 @@ import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.da
 import '../../helper/mock.mocks.dart';
 
 void main() {
+  tz.initializeTimeZones();
   CustomizableDateTime.customTime = DateTime.utc(2023, 1, 1, 0, 0, 0);
 
   group('VirtualPilgrimageUser', () {

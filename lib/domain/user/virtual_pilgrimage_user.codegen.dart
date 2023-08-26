@@ -132,7 +132,10 @@ class VirtualPilgrimageUser with _$VirtualPilgrimageUser {
 
     // map上のアイコン。ログイン時に userIconUrl から GoogleMap に描画できる形式に変換される
     @JsonKey(
-        includeToJson: false, includeFromJson: false, fromJson: _BitmapConverter.stringToBitmap)
+      includeToJson: false,
+      includeFromJson: false,
+      fromJson: _BitmapConverter.stringToBitmap,
+    )
     @Default(BitmapDescriptor.defaultMarker)
         BitmapDescriptor mapIcon,
   }) = _VirtualPilgrimageUser;

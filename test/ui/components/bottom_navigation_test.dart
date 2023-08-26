@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:timezone/data/latest.dart' as tz;
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/pilgrimage_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/virtual_pilgrimage_user.codegen.dart';
@@ -20,7 +21,7 @@ void main() {
       expect(find.byTooltip('profile'), findsOneWidget);
     });
 
-    setUp(() {});
+    setUp(tz.initializeTimeZones);
 
     testWidgets('タップしてPageTypeのstateが変更される', (widgetTester) async {
       /// PageTypeのstateが更新されると参照しているindexも変わり描画も変更される

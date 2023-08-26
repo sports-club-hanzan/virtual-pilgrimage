@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:timezone/data/latest.dart' as tz;
 import 'package:virtualpilgrimage/application/user/profile/update_user_profile_image_interactor.dart';
 import 'package:virtualpilgrimage/application/user/profile/update_user_profile_image_usecase.dart';
 import 'package:virtualpilgrimage/application/user/profile/user_profile_image_repository.dart';
@@ -17,6 +18,7 @@ void main() {
   late UserProfileImageRepository userProfileImageRepository;
 
   setUp(() {
+    tz.initializeTimeZones();
     userRepository = MockUserRepository();
     userProfileImageRepository = MockUserProfileImageRepository();
     target = UpdateUserProfileImageInteractor(userRepository, userProfileImageRepository);

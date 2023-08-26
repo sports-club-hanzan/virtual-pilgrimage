@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:timezone/data/latest.dart' as tz;
 import 'package:virtualpilgrimage/application/health/health_gateway.dart';
 import 'package:virtualpilgrimage/application/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
@@ -22,6 +23,8 @@ void main() {
   late VirtualPilgrimageUser user;
   late HealthByPeriod healthByPeriod;
   late HealthInfo healthInfo;
+
+  tz.initializeTimeZones();
 
   setUpAll(() {
     CustomizableDateTime.customTime = DateTime.now();
