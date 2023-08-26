@@ -115,7 +115,7 @@ void main() {
         );
 
         // 最後に保存したhealthを取得するstub
-        when(dailyHealthLogRepository.find('dummyId', DateTime(2022, 3, 31, 22))).thenAnswer(
+        when(dailyHealthLogRepository.find('dummyId', tz.TZDateTime(location, 2022, 3, 31, 22))).thenAnswer(
           (_) => Future.value(
             DailyHealthLog(
               userId: 'dummyId',
