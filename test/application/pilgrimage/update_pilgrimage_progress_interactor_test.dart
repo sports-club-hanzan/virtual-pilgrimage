@@ -100,7 +100,7 @@ void main() {
         when(
           healthGateway.aggregateHealthByPeriod(
             from: tz.TZDateTime(location, 2022, 4, 3),
-            to: tz.TZDateTime(location, 2022, 4, 4).subtract(const Duration(microseconds: 1)),
+            to: CustomizableDateTime.current,
           ),
         ).thenAnswer(
               (_) => Future.value(

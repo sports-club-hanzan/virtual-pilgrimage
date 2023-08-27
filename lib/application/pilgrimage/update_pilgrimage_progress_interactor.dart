@@ -124,7 +124,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
         _healthRepository
             .aggregateHealthByPeriod(
               from: today,
-              to: today.add(const Duration(days: 1)).subtract(const Duration(microseconds: 1)),
+              to: now,
             )
             .then((value) => todayHealth = value.eachDay[today]),
         // 前回更新した時刻の開始地点 ~ 現在時刻で集計
