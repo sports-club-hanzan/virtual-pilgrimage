@@ -23,13 +23,15 @@ const defaultSourceName = 'dummySourceName';
 
 void main() {
   MockHealthFactory mockHealthFactory = MockHealthFactory();
+  MockFirebaseCrashlytics mockFirebaseCrashlytics = MockFirebaseCrashlytics();
   final logger = Logger(level: Level.nothing);
-  FlutterHealthGateway target = FlutterHealthGateway(mockHealthFactory, logger);
+  FlutterHealthGateway target =
+      FlutterHealthGateway(mockHealthFactory, logger, mockFirebaseCrashlytics);
   tz.initializeTimeZones();
 
   setUp(() {
     mockHealthFactory = MockHealthFactory();
-    target = FlutterHealthGateway(mockHealthFactory, logger);
+    target = FlutterHealthGateway(mockHealthFactory, logger, mockFirebaseCrashlytics);
   });
 
   group('HealthRepositoryImpl', () {
