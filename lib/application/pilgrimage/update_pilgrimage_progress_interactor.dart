@@ -136,7 +136,8 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
             .then((value) => healthAggregationResult = value),
       ]);
       final updatedMap = Map.of(healthAggregationResult.eachDay);
-      updatedMap[today] = (todayHealth ?? healthAggregationResult.eachDay[today])!;
+      updatedMap[today] =
+          todayHealth ?? healthAggregationResult.eachDay[today] ?? HealthByPeriod.getDefault();
       healthAggregationResult = healthAggregationResult.copyWith(eachDay: updatedMap);
       _logger.d(
         'got info for updating pilgrimage progress '

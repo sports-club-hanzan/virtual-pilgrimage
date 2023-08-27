@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:health/health.dart';
 import 'package:virtualpilgrimage/domain/health/health_aggregation_result.codegen.dart';
+import 'package:virtualpilgrimage/infrastructure/firebase/firebase_crashlytics_provider.dart';
 import 'package:virtualpilgrimage/infrastructure/user/flutter_health_gateway.dart';
 import 'package:virtualpilgrimage/logger.dart';
 
@@ -12,6 +13,7 @@ final healthGatewayProvider = Provider<HealthGateway>(
   (ref) => FlutterHealthGateway(
     ref.read(healthFactoryProvider),
     ref.read(loggerProvider),
+    ref.read(firebaseCrashlyticsProvider),
   ),
 );
 

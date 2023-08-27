@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:health/health.dart';
 import 'package:logger/logger.dart';
@@ -11,10 +12,11 @@ import 'package:virtualpilgrimage/domain/user/health/health_by_period.codegen.da
 
 /// health パッケージを利用してヘルスケア情報を集計する gateway の実装
 class FlutterHealthGateway implements HealthGateway {
-  FlutterHealthGateway(this._healthFactory, this._logger);
+  FlutterHealthGateway(this._healthFactory, this._logger, this._crashlytics);
 
   final HealthFactory _healthFactory;
   final Logger _logger;
+  final FirebaseCrashlytics _crashlytics;
 
   // 利用するHealth情報のタイプ
   final _healthTypes = {
@@ -96,8 +98,19 @@ class FlutterHealthGateway implements HealthGateway {
   HealthByPeriod _aggregateHealthInfo(List<HealthDataPoint> rawPoints) {
     // 取得対象ごとに集計
     final Map<String, Map<String, num>> aggregateResult = {};
+    final Map<String, DateTime> lastAggregationPair = {};
+    rawPoints.sort((a, b) => b.dateFrom.compareTo(a.dateFrom));
     for (final p in rawPoints) {
-      final result = aggregateResult[p.sourceId] ?? {'steps': 0, 'distance': 0, 'burnedCalorie': 0};
+      final key = '${p.sourceName}(${p.sourceId})';
+      if (lastAggregationPair[key] != null) {
+        // keyと最後に集計した時間が被っていたら集計をスキップ
+        if (lastAggregationPair[key]!.isBefore(p.dateFrom)) {
+          continue;
+        }
+      }
+      // 集計終わりの時刻を格納
+      lastAggregationPair[key] = p.dateFrom;
+      final result = aggregateResult[key] ?? {'steps': 0, 'distance': 0, 'burnedCalorie': 0};
       // アプリで取り扱うヘルスケア情報はいずれも数値型なので、値を先に取得しておく
       final val = (p.value as NumericHealthValue).numericValue;
       // ignore: missing_enum_constant_in_switch
@@ -125,7 +138,7 @@ class FlutterHealthGateway implements HealthGateway {
           break;
       }
       // 上書き
-      aggregateResult[p.sourceId] = result;
+      aggregateResult[key] = result;
     }
     // sourceId ごとに集計した結果からもっとも大きい値を参照
     num steps = 0;
@@ -136,6 +149,11 @@ class FlutterHealthGateway implements HealthGateway {
       distance = max(distance, r['distance'] ?? 0);
       burnedCalorie = max(burnedCalorie, r['burnedCalorie'] ?? 0);
     }
+
+    final msg =
+        'health aggregation result: [steps][$steps][distance][$distance][burnedCalorie][$burnedCalorie][result][$aggregateResult]';
+    _logger.i(msg);
+    _crashlytics.log(msg);
     // アプリの性質上、カロリーや距離の精度は気にしなくていいため、小数点第一位で切り上げした値を利用
     // 最初から切り上げした値を加算すると誤差が大きくなるため、足し合わせる間は小数を持った状態で計算する実装としている
     return HealthByPeriod(
