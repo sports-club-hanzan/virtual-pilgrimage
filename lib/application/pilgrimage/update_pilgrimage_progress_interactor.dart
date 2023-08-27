@@ -115,7 +115,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
     // 最大で2回外部通信する必要があるため、並列でまとめて実行
     // 現在、ユーザが目指している札所の情報と最終更新時間からのユーザのヘルスケア情報を取得
     late TempleInfo nowTargetTemple;
-    late HealthAggregationResult healthAggregationResult;
+    late final HealthAggregationResult healthAggregationResult;
     late final HealthByPeriod? todayHealth;
     {
       final today = tz.TZDateTime(tz.getLocation('Asia/Tokyo'), now.year, now.month, now.day);
@@ -136,10 +136,6 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
             )
             .then((value) => healthAggregationResult = value),
       ]);
-      final updatedMap = Map.of(healthAggregationResult.eachDay);
-      updatedMap[today] =
-          todayHealth ?? healthAggregationResult.eachDay[today] ?? HealthByPeriod.getDefault();
-      healthAggregationResult = healthAggregationResult.copyWith(eachDay: updatedMap);
       _logger.d(
         'got info for updating pilgrimage progress '
         '[health][$healthAggregationResult]'
@@ -163,6 +159,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
     final updatedUser = await _updateUserHealth(
       user: user,
       healthAggregationResult: healthAggregationResult,
+      todayHealth: todayHealth,
       now: now,
     );
 
@@ -194,6 +191,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
   Future<VirtualPilgrimageUser> _updateUserHealth({
     required VirtualPilgrimageUser user,
     required HealthAggregationResult healthAggregationResult,
+    required HealthByPeriod? todayHealth,
     required DateTime now,
   }) async {
     var updatedUser = user;
@@ -202,21 +200,22 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
     for (final e in healthAggregationResult.eachDay.entries) {
       final key = e.key;
       final value = e.value;
+      final isToday = key.year == now.year && key.month == now.month && key.day == now.day;
 
       // 日毎のヘルスケア情報を書き込む
       // 仮に情報が存在する場合も上書きする
       final target = DailyHealthLog.createFromHealthByPeriod(
         userId: user.id,
         day: tz.TZDateTime(tz.getLocation('Asia/Tokyo'), key.year, key.month, key.day),
-        healthByPeriod: value,
+        healthByPeriod: isToday ? todayHealth ?? value : value,
       );
       _logger.d('save health [target][$target][date][$key]');
       unawaited(
         _dailyHealthLogRepository.update(target).onError(_crashlytics.recordError),
       );
-      // 今日の日付なら、health のなかに情報を入れておく
-      if (key.year == now.year && key.month == now.month && key.day == now.day) {
+      if (isToday) {
         final userHealth = user.health;
+        // 今日の日付なら、health のなかに情報を入れておく
         final HealthInfo newHealthByPeriod = userHealth != null
             ? userHealth.copyWith(
                 today: target.toHealthByPeriod(),
