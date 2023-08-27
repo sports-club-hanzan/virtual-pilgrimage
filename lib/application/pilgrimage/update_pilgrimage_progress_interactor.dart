@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:logger/logger.dart';
@@ -262,6 +263,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
     int movingDistance = user.pilgrimage.movingDistance +
         totalDistance -
         (lastHealth != null ? lastHealth.distance : 0);
+    movingDistance = max(movingDistance, 0);
     {
       _logger.d(
         'calc pilgrimage progress '
