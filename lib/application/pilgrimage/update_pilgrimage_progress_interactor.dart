@@ -128,10 +128,10 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
               to: now,
             )
             .then((value) => todayHealth = value.eachDay[today]),
-        // 前回更新した時刻の開始地点 ~ 現在時刻で集計
+        // 「前回更新した時刻の開始地点 or 今日の00:00」 ~ 現在時刻で集計
         _healthRepository
             .aggregateHealthByPeriod(
-              from: lastProgressUpdatedAt,
+              from: lastProgressUpdatedAt.isBefore(today) ? lastProgressUpdatedAt : today,
               to: now,
             )
             .then((value) => healthAggregationResult = value),
