@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:timezone/data/latest.dart' as tz;
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/pilgrimage_info.codegen.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/temple_info.codegen.dart';
@@ -10,7 +9,6 @@ import 'package:virtualpilgrimage/ui/components/molecules/pilgrimage_progress_ca
 import '../../../helper/wrap_material_app.dart';
 
 void main() {
-  tz.initializeTimeZones();
 
   group('PilgrimageProgressCardTest', () {
     const key = Key('key');

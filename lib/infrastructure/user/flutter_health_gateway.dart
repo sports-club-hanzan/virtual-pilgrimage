@@ -4,7 +4,6 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:health/health.dart';
 import 'package:logger/logger.dart';
-import 'package:timezone/timezone.dart' as tz;
 import 'package:virtualpilgrimage/application/health/health_gateway.dart';
 import 'package:virtualpilgrimage/domain/exception/get_health_exception.dart';
 import 'package:virtualpilgrimage/domain/health/health_aggregation_result.codegen.dart';
@@ -48,7 +47,7 @@ class FlutterHealthGateway implements HealthGateway {
       final Map<DateTime, HealthByPeriod> eachDay = {};
       // dt の日付 <= to の日付の間、ループを回して、日毎のヘルスケア情報を取得する
       for (var dt = from; to.isAfter(dt); dt = dt.add(const Duration(days: 1))) {
-        final dtStartTime = tz.TZDateTime(tz.getLocation('Asia/Tokyo'), dt.year, dt.month, dt.day);
+        final dtStartTime = DateTime(dt.year, dt.month, dt.day);
         // dt == from の時は時間を 00:00:00 とする
         if (dt != from) {
           dt = dtStartTime;

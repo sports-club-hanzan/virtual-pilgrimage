@@ -3,7 +3,6 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:timezone/data/latest.dart' as tz;
 import 'package:virtualpilgrimage/gen/firebase_options_dev.dart' as dev;
 import 'package:virtualpilgrimage/gen/firebase_options_prod.dart' as prod;
 import 'package:virtualpilgrimage/router.dart';
@@ -18,7 +17,6 @@ Future<void> main() async {
   // flutter側で検知されるエラーをCrashlyticsに送信
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   // タイムゾーン情報を初期化
-  tz.initializeTimeZones();
   runApp(const ProviderScope(child: _App(flavor: flavor)));
 }
 

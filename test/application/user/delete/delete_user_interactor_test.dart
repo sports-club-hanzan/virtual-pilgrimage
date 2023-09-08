@@ -2,7 +2,6 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logger/logger.dart';
 import 'package:mockito/mockito.dart';
-import 'package:timezone/data/latest.dart' as tz;
 import 'package:virtualpilgrimage/application/user/delete/delete_user_interactor.dart';
 import 'package:virtualpilgrimage/application/user/delete/delete_user_result.codegen.dart';
 import 'package:virtualpilgrimage/application/user/delete/delete_user_usecase.dart';
@@ -20,8 +19,6 @@ void main() {
   late DeleteUserInteractor target;
   final Logger logger = Logger(level: Level.nothing);
   late FirebaseCrashlytics firebaseCrashlytics;
-
-  tz.initializeTimeZones();
 
   final user = VirtualPilgrimageUser(
     birthDay: DateTime(1990),

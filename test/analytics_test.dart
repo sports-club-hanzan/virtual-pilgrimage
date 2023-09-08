@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logger/logger.dart';
 import 'package:mockito/mockito.dart';
-import 'package:timezone/data/latest.dart' as tz;
 import 'package:virtualpilgrimage/analytics.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/pilgrimage/pilgrimage_info.codegen.dart';
@@ -19,7 +18,6 @@ void main() {
   );
 
   setUp(() {
-    tz.initializeTimeZones();
     mockFirebaseAnalytics = MockFirebaseAnalytics();
     analytics = Analytics(
       mockFirebaseAnalytics,

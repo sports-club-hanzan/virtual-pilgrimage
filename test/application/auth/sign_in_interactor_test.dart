@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logger/logger.dart';
 import 'package:mockito/mockito.dart';
-import 'package:timezone/data/latest.dart' as tz;
 import 'package:virtualpilgrimage/application/auth/sign_in_interactor.dart';
 import 'package:virtualpilgrimage/application/auth/sign_in_usecase.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
@@ -30,8 +29,6 @@ void main() {
   late MockUser mockUser;
 
   const userId = 'dummyId';
-
-  tz.initializeTimeZones();
 
   setUp(() {
     mockEmailAndPasswordAuthRepository = MockEmailAndPasswordAuthRepository();

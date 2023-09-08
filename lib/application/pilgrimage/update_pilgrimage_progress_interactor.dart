@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:logger/logger.dart';
-import 'package:timezone/timezone.dart' as tz;
 import 'package:virtualpilgrimage/application/health/daily_health_log_repository.dart';
 import 'package:virtualpilgrimage/application/health/health_gateway.dart';
 import 'package:virtualpilgrimage/application/pilgrimage/temple_repository.dart';
@@ -118,7 +117,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
     late final HealthAggregationResult healthAggregationResult;
     late final HealthByPeriod? todayHealth;
     {
-      final today = tz.TZDateTime(tz.getLocation('Asia/Tokyo'), now.year, now.month, now.day);
+      final today = DateTime(now.year, now.month, now.day);
       await Future.wait(<Future<void>>[
         _templeRepository.getTempleInfo(nextPilgrimageId).then((value) => nowTargetTemple = value),
         // 今日のヘルスケア情報を取得
@@ -206,7 +205,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
       // 仮に情報が存在する場合も上書きする
       final target = DailyHealthLog.createFromHealthByPeriod(
         userId: user.id,
-        day: tz.TZDateTime(tz.getLocation('Asia/Tokyo'), key.year, key.month, key.day),
+        day: DateTime(key.year, key.month, key.day),
         healthByPeriod: isToday ? todayHealth ?? value : value,
       );
       _logger.d('save health [target][$target][date][$key]');
