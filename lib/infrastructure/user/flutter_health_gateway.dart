@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:health/health.dart';
@@ -95,62 +93,17 @@ class FlutterHealthGateway implements HealthGateway {
   ///
   /// [rawPoints] 各OSごとの仕組みで取得したヘルスケア情報の生データ
   HealthByPeriod _aggregateHealthInfo(List<HealthDataPoint> rawPoints) {
+    final points = _splitHealthDataPointsWithType(rawPoints);
     // 取得対象ごとに集計
-    final Map<String, Map<String, num>> aggregateResult = {};
-    final Map<String, DateTime> lastAggregationPair = {};
-    rawPoints.sort((a, b) => b.dateFrom.compareTo(a.dateFrom));
-    for (final p in rawPoints) {
-      final key = '${p.sourceName}(${p.sourceId})';
-      if (lastAggregationPair[key] != null) {
-        // keyと最後に集計した時間が被っていたら集計をスキップ
-        if (lastAggregationPair[key]!.isBefore(p.dateFrom)) {
-          continue;
-        }
-      }
-      // 集計終わりの時刻を格納
-      lastAggregationPair[key] = p.dateFrom;
-      final result = aggregateResult[key] ?? {'steps': 0, 'distance': 0, 'burnedCalorie': 0};
-      // アプリで取り扱うヘルスケア情報はいずれも数値型なので、値を先に取得しておく
-      final val = (p.value as NumericHealthValue).numericValue;
-      // ignore: missing_enum_constant_in_switch
-      switch (p.type) {
-        // 歩数
-        case HealthDataType.STEPS:
-          result['steps'] = (result['steps'] ?? 0) + val;
-          break;
-        // 歩行距離[m]
-        // Android: DISTANCE_DELTA
-        // iOS: DISTANCE_WALKING_RUNNING
-        // ref.  https://pub.dev/packages/health
-        case HealthDataType.DISTANCE_DELTA:
-        case HealthDataType.DISTANCE_WALKING_RUNNING:
-          result['distance'] = (result['distance'] ?? 0) + val;
-          break;
-        // 消費カロリー[kcal]
-        case HealthDataType.ACTIVE_ENERGY_BURNED:
-          result['burnedCalorie'] = (result['burnedCalorie'] ?? 0) + val;
-          break;
-        // ignore: no_default_cases
-        default:
-          // 想定していない値が入ってきたときは開発中に気づけるようにログに出力する
-          _logger.w('got unexpected Health Data Type [type][$p.type]');
-          break;
-      }
-      // 上書き
-      aggregateResult[key] = result;
-    }
-    // sourceId ごとに集計した結果からもっとも大きい値を参照
-    num steps = 0;
-    num distance = 0;
-    num burnedCalorie = 0;
-    for (final r in aggregateResult.values) {
-      steps = max(steps, r['steps'] ?? 0);
-      distance = max(distance, r['distance'] ?? 0);
-      burnedCalorie = max(burnedCalorie, r['burnedCalorie'] ?? 0);
-    }
+    // ignore: prefer_int_literals
+    final steps = points.$1.fold(0.0, _sumHealthPointValue);
+    // ignore: prefer_int_literals
+    final distance = points.$2.fold(0.0, _sumHealthPointValue);
+    // ignore: prefer_int_literals
+    final burnedCalorie = points.$3.fold(0.0, _sumHealthPointValue);
 
     final msg =
-        'health aggregation result: [steps][$steps][distance][$distance][burnedCalorie][$burnedCalorie][result][$aggregateResult]';
+        'health aggregation result: [steps][$steps][distance][$distance][burnedCalorie][$burnedCalorie]';
     _logger.i(msg);
     _crashlytics.log(msg);
     // アプリの性質上、カロリーや距離の精度は気にしなくていいため、小数点第一位で切り上げした値を利用
@@ -162,14 +115,104 @@ class FlutterHealthGateway implements HealthGateway {
     );
   }
 
+  (List<HealthDataPoint>, List<HealthDataPoint>, List<HealthDataPoint>)
+      _splitHealthDataPointsWithType(List<HealthDataPoint> rawPoints) {
+    final List<HealthDataPoint> steps = [];
+    final List<HealthDataPoint> distances = [];
+    final List<HealthDataPoint> calories = [];
+    for (final p in rawPoints) {
+      switch (p.type) {
+        case HealthDataType.STEPS:
+          steps.add(p);
+          break;
+        case HealthDataType.DISTANCE_DELTA:
+        case HealthDataType.DISTANCE_WALKING_RUNNING:
+          distances.add(p);
+          break;
+        case HealthDataType.ACTIVE_ENERGY_BURNED:
+          calories.add(p);
+          break;
+        // ignore: no_default_cases
+        default:
+          // 想定していない値が入ってきたときは開発中に気づけるようにログに出力する
+          _logger.w('got unexpected Health Data Type [type][$p.type]');
+          break;
+      }
+    }
+    return (
+      _getMaxSourceIdData(steps),
+      _getMaxSourceIdData(distances),
+      _getMaxSourceIdData(calories),
+    );
+  }
+
+  /// もっとも値が大きいsourceIdに絞って値を取得する
+  List<HealthDataPoint> _getMaxSourceIdData(List<HealthDataPoint> rawPoints) {
+    /// 空だったら処理せず返す
+    if (rawPoints.isEmpty) {
+      return [];
+    }
+    final groupedBySourceId = <String, List<HealthDataPoint>>{};
+    for (final point in rawPoints) {
+      if (!groupedBySourceId.containsKey(point.sourceId)) {
+        groupedBySourceId[point.sourceId] = [];
+      }
+      groupedBySourceId[point.sourceId]!.add(point);
+    }
+
+    final sourceIdTotals = groupedBySourceId.map((sourceId, points) {
+      final cleanedPoints = _removeDuplicateDuration(points);
+      // ignore: prefer_int_literals
+      final totalValue = cleanedPoints.fold(0.0, _sumHealthPointValue);
+      return MapEntry(sourceId, totalValue);
+    });
+
+    final maxSourceId = sourceIdTotals.entries.reduce((a, b) => a.value > b.value ? a : b).key;
+    return _removeDuplicateDuration(groupedBySourceId[maxSourceId]!);
+  }
+
+  /// 期間の値が大きくなるよう重複を排除する
+  List<HealthDataPoint> _removeDuplicateDuration(List<HealthDataPoint> rawPoints) {
+    rawPoints.sort((a, b) => a.dateFrom.compareTo(b.dateFrom));
+    return rawPoints.fold<List<HealthDataPoint>>([], (acc, currentPoint) {
+      if (acc.isEmpty) {
+        acc.add(currentPoint);
+        return acc;
+      }
+
+      final lastPoint = acc.last;
+
+      if (lastPoint.dateTo.isAfter(currentPoint.dateFrom)) {
+        if ((lastPoint.value as NumericHealthValue).numericValue <
+            (currentPoint.value as NumericHealthValue).numericValue) {
+          acc
+            ..removeLast()
+            ..add(currentPoint);
+        }
+      } else {
+        acc.add(currentPoint);
+      }
+
+      return acc;
+    });
+  }
+
   /// Health 情報を取得できるか権限チェック
   Future<void> _validateUsableHealthTypes(List<HealthDataType> types) async {
-    final requested = await _healthFactory.requestAuthorization(types);
-    if (!requested) {
-      const message = 'get health information error because don\'t have health permission';
-      _logger.e(message);
-      throw GetHealthException(message: message, status: GetHealthExceptionStatus.notAuthorized);
-    }
+    final permissions = types.map((e) => HealthDataAccess.READ).toList();
+      final hasPermissions = await _healthFactory.hasPermissions(types, permissions: permissions);
+      if (hasPermissions == null || !hasPermissions) {
+        final requested = await _healthFactory.requestAuthorization(types, permissions: permissions);
+        if (!requested) {
+          const message = 'get health information error because don\'t have health permission';
+          _logger.e(message);
+          throw GetHealthException(message: message, status: GetHealthExceptionStatus.notAuthorized);
+        }
+      }
+  }
+
+  double _sumHealthPointValue(double sum, HealthDataPoint point) {
+    return sum + (point.value as NumericHealthValue).numericValue;
   }
 
   Future<T> _execute<T>(Future<T> Function() func) async {
