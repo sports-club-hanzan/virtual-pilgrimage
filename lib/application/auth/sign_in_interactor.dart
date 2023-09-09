@@ -60,7 +60,7 @@ class SignInInteractor extends SignInUsecase {
 
   @override
   Future<void> logout() async {
-    // TODO(s14t284): firebase を直参照ではなく、もっといい方法を考える
+    // TODO(rikeda71): firebase を直参照ではなく、もっといい方法を考える
     await _firebaseAuth.signOut();
   }
 

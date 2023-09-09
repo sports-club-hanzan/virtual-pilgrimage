@@ -134,7 +134,7 @@ class _RankingPageBody extends StatelessWidget {
       children: [
         ranking.when(
           data: (ranking) => RankingRecords(ranking: ranking, kind: kind, period: period),
-          // TODO(s14t284): error 時のUIを整理する
+          // TODO(rikeda71): error 時のUIを整理する
           error: (Object error, StackTrace stackTrace) {
             ref.read(firebaseCrashlyticsProvider).recordError(error, stackTrace);
             return const Text('ランキング情報が取得できませんでした');

@@ -115,7 +115,7 @@ class EmailAndPasswordAuthRepository extends AuthRepository {
         handleCodeInApp: false,
         androidInstallApp: true,
         androidPackageName: packageName,
-        // TODO(s14t284): iOSでのテストを実施する
+        // TODO(rikeda71): iOSでのテストを実施する
         iOSBundleId: packageName,
       ),
     );

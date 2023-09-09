@@ -54,7 +54,7 @@ Widget pilgrimageProgressCardProvider(
         );
       } else if (snapshot.hasError) {
         ref.read(firebaseCrashlyticsProvider).recordError(snapshot.error, null);
-        // TODO(s14t284): 取得できなかった場合のUIを改善する
+        // TODO(rikeda71): 取得できなかった場合のUIを改善する
         childWidget = const Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

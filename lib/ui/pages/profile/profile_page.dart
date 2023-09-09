@@ -29,7 +29,7 @@ class ProfilePage extends ConsumerWidget {
     return Scaffold(
       appBar: const MyAppBar(),
       body: SafeArea(
-        // TODO(s14t284): error 時のUIを整理する
+        // TODO(rikeda71): error 時のUIを整理する
         child: ColoredBox(
           color: Theme.of(context).colorScheme.background,
           child: user.when(
@@ -37,7 +37,7 @@ class ProfilePage extends ConsumerWidget {
               if (data != null) {
                 return _ProfilePageBody(user: data, canEdit: canEdit);
               }
-              // TODO(s14t284): 他ユーザの情報を参照できるようになったら　null の場合の UI も実装する
+              // TODO(rikeda71): 他ユーザの情報を参照できるようになったら　null の場合の UI も実装する
               return const Text('そのユーザは存在しませんでした');
             },
             error: (e, s) {
