@@ -57,7 +57,7 @@ class HomePresenter extends StateNotifier<HomeState> {
     }
 
     // androidの場合、ヘルスケア情報取得の権限が付与されていない場合、許可を得るダイアログを開く
-    // TODO(s14t284): ヘルスケア情報を取得するダイアログで許可を押す旨をUIに表示した方が良いか検討
+    // TODO(rikeda71): ヘルスケア情報を取得するダイアログで許可を押す旨をUIに表示した方が良いか検討
     if (defaultTargetPlatform.name.toLowerCase() == 'android') {
       final activityPermission = await Permission.activityRecognition.request();
       _ref.read(loggerProvider).d('activityPermission: $activityPermission');

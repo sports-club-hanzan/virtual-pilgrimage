@@ -2,6 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.virtualpilgrimage">
 
+    <!-- permissions -->
+    <uses-permission android:name="android.permission.INTERNET" tools:ignore="ManifestOrder" />
+    <!-- health 用-->
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="android.permission.health.READ_HEART_RATE"/>
+    <uses-permission android:name="android.permission.health.WRITE_HEART_RATE"/>
+
     <application
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
@@ -27,6 +34,14 @@
                 <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".PermissionsRationaleActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+            </intent-filter>
+        </activity>
+
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
@@ -46,13 +61,6 @@
             <data android:scheme="mailto" />
         </intent>
     </queries>
-
-    <!-- permissions -->
-    <uses-permission android:name="android.permission.INTERNET" tools:ignore="ManifestOrder" />
-    <!-- health 用-->
-    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
-    <uses-permission android:name="android.permission.health.READ_HEART_RATE"/>
-    <uses-permission android:name="android.permission.health.WRITE_HEART_RATE"/>
 
     <!-- タブレットでは利用できない -->
     <supports-screens

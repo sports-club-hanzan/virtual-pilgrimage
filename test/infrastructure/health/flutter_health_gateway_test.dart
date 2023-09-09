@@ -7,8 +7,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:health/health.dart';
 import 'package:logger/logger.dart';
 import 'package:mockito/mockito.dart';
-import 'package:timezone/data/latest.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
 import 'package:virtualpilgrimage/application/health/health_gateway.dart';
 import 'package:virtualpilgrimage/domain/health/health_aggregation_result.codegen.dart';
 import 'package:virtualpilgrimage/domain/user/health/health_by_period.codegen.dart';
@@ -27,7 +25,6 @@ void main() {
   final logger = Logger(level: Level.nothing);
   FlutterHealthGateway target =
       FlutterHealthGateway(mockHealthFactory, logger, mockFirebaseCrashlytics);
-  tz.initializeTimeZones();
 
   setUp(() {
     mockHealthFactory = MockHealthFactory();
@@ -35,12 +32,11 @@ void main() {
   });
 
   group('HealthRepositoryImpl', () {
-    final location = tz.getLocation('Asia/Tokyo');
-    final targetDateTime = tz.TZDateTime(location, 2022, 9, 19, 11, 0);
-    final targetToDate = tz.TZDateTime(location, 2022, 9, 18, 23, 59, 59, 999, 999);
-    final yesterday = tz.TZDateTime(location, 2022, 9, 18);
-    final lastWeek = tz.TZDateTime(location, 2022, 9, 12);
-    final lastMonth = tz.TZDateTime(location, 2022, 8, 19);
+    final targetDateTime = DateTime(2022, 9, 19, 11, 0);
+    final targetToDate = DateTime(2022, 9, 18, 23, 59, 59, 999, 999);
+    final yesterday = DateTime(2022, 9, 18);
+    final lastWeek = DateTime(2022, 9, 12);
+    final lastMonth = DateTime(2022, 8, 19);
     final types = [
       HealthDataType.STEPS,
       HealthDataType.DISTANCE_DELTA,
@@ -50,13 +46,16 @@ void main() {
       // android 端末を想定
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
 
-      when(mockHealthFactory.requestAuthorization(any)).thenAnswer((_) => Future.value(true));
+      when(mockHealthFactory.hasPermissions(any, permissions: anyNamed('permissions')))
+          .thenAnswer((_) => Future.value(false));
+      when(mockHealthFactory.requestAuthorization(any, permissions: anyNamed('permissions')))
+          .thenAnswer((_) => Future.value(true));
 
       /// 今日
       /// 今日の集計だけ対象時間からではなく、当日の00:00:00-現在時刻まで集計
       when(
         mockHealthFactory.getHealthDataFromTypes(
-          tz.TZDateTime(location, 2022, 9, 19),
+          DateTime(2022, 9, 19),
           targetDateTime,
           types,
         ),
@@ -119,14 +118,13 @@ void main() {
     });
 
     group('aggregateHealthByPeriod', () {
-      final location = tz.getLocation('Asia/Tokyo');
       test('正常系', () async {
         // given
         /// 今日
         when(
           mockHealthFactory.getHealthDataFromTypes(
-            tz.TZDateTime(location, 2022, 9, 18, 11, 0, 0, 0, 0),
-            tz.TZDateTime(location, 2022, 9, 18, 23, 59, 59, 999, 999),
+            DateTime(2022, 9, 18, 11, 0, 0, 0, 0),
+            DateTime(2022, 9, 18, 23, 59, 59, 999, 999),
             types,
           ),
         ).thenAnswer(
@@ -138,8 +136,8 @@ void main() {
             // @formatter:on
           ]),
         );
-        when(mockHealthFactory.getHealthDataFromTypes(tz.TZDateTime(location, 2022, 9, 19),
-                tz.TZDateTime(location, 2022, 9, 19, 23, 59, 59, 999, 999), types))
+        when(mockHealthFactory.getHealthDataFromTypes(
+                DateTime(2022, 9, 19), DateTime(2022, 9, 19, 23, 59, 59, 999, 999), types))
             .thenAnswer((realInvocation) => Future.value([
               // @formatter:off
           HealthDataPoint(NumericHealthValue(1000), HealthDataType.ACTIVE_ENERGY_BURNED, HealthDataUnit.KILOCALORIE, DateTime(2022, 9, 19), DateTime(2022, 9, 20), PlatformType.ANDROID, defaultDeviceId, defaultSourceId + "_dummy", defaultSourceName),
@@ -153,22 +151,21 @@ void main() {
 
         // when
         final actual = await target.aggregateHealthByPeriod(
-          from: tz.TZDateTime(location, 2022, 9, 18, 11),
-          to: tz.TZDateTime(location, 2022, 9, 19, 23, 59, 59, 999, 999),
+          from: DateTime(2022, 9, 18, 11),
+          to: DateTime(2022, 9, 19, 23, 59, 59, 999, 999),
         );
 
         // then
         final expected = HealthAggregationResult(
           eachDay: {
-            tz.TZDateTime(location, 2022, 9, 18):
-                HealthByPeriod(steps: 427, distance: 670, burnedCalorie: 468),
-            tz.TZDateTime(location, 2022, 9, 19):
-                HealthByPeriod(steps: 2000, distance: 2000, burnedCalorie: 2000),
+            DateTime(2022, 9, 18): HealthByPeriod(steps: 427, distance: 670, burnedCalorie: 468),
+            DateTime(2022, 9, 19): HealthByPeriod(steps: 2000, distance: 2000, burnedCalorie: 2000),
           },
           total: HealthByPeriod(steps: 2427, distance: 2670, burnedCalorie: 2468),
         );
         expect(actual, expected);
-        verify(mockHealthFactory.requestAuthorization(any)).called(1);
+        verify(mockHealthFactory.requestAuthorization(any, permissions: anyNamed('permissions')))
+            .called(1);
       });
     });
   });

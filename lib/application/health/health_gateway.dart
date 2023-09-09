@@ -6,7 +6,8 @@ import 'package:virtualpilgrimage/infrastructure/user/flutter_health_gateway.dar
 import 'package:virtualpilgrimage/logger.dart';
 
 final healthFactoryProvider = Provider<HealthFactory>(
-  (_) => HealthFactory(),
+  // TODO(rikeda71): いずれは health connect に対応する必要がある
+  (_) => HealthFactory(useHealthConnectIfAvailable: false),
 );
 
 final healthGatewayProvider = Provider<HealthGateway>(

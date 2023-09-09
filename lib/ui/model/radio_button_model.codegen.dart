@@ -6,7 +6,7 @@ part 'radio_button_model.codegen.freezed.dart';
 @freezed
 class RadioButtonModel<T> with _$RadioButtonModel<T> {
   factory RadioButtonModel({
-    // TODO(s14t284): focusNode がラジオボタンにおいて複数必要なのか調べる
+    // TODO(rikeda71): focusNode がラジオボタンにおいて複数必要なのか調べる
     required List<FocusNode> focusNodes,
     required List<String> titles,
     required List<T> values,

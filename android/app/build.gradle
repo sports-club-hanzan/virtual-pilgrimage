@@ -67,7 +67,7 @@ if (keystorePropertiesFile.exists()) {
 android {
     // https://firebase.google.com/docs/android/setup?hl=ja#register-app => 31
     // 2022/10現在、最新のバージョン（Android13）
-    compileSdkVersion 33
+    compileSdkVersion 34
     ndkVersion "25.2.9519653"
 
     compileOptions {
@@ -88,10 +88,10 @@ android {
         // ref. https://firebase.google.com/docs/android/setup?hl=ja#register-app => minSdkVersion: 19
         // ref. https://pub.dev/packages/google_maps_flutter => minSdkVersion: 20
         // ref. https://twitter.com/_mono/status/1509452309398695936
-        // GoogleFit が Android5以降（sdkVersion = 21）対応なので、HealthConnect が sdkVersion = 26 対応なので
-        minSdkVersion 26
+        // GoogleFit が Android5以降（sdkVersion = 21）対応なので、HealthConnect が sdkVersion = 28 対応なので
+        minSdkVersion 28
         // 2022/10現在、最新のバージョン（Android13）
-        targetSdkVersion 33
+        targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         // 環境ごとにパッケージ名を修正

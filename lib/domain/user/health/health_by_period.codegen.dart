@@ -27,7 +27,7 @@ class HealthByPeriod with _$HealthByPeriod {
       _$HealthByPeriodFromJson(json);
 
   bool validate() {
-    return steps > 0 && distance > 0 && burnedCalorie > 0;
+    return steps > 0 && distance > 0;
   }
 
   static const HealthByPeriod _default = HealthByPeriod(

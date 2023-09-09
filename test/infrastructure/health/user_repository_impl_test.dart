@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:logger/logger.dart';
 import 'package:mockito/mockito.dart';
-import 'package:timezone/data/latest.dart' as tz;
 import 'package:virtualpilgrimage/application/user/user_repository.dart';
 import 'package:virtualpilgrimage/domain/customizable_date_time.dart';
 import 'package:virtualpilgrimage/domain/exception/database_exception.dart';
@@ -30,7 +29,6 @@ void main() {
   late MockQuery<VirtualPilgrimageUser> mockQueryDomainUser;
   late MockQuerySnapshot<VirtualPilgrimageUser> mockQuerySnapshot;
 
-  tz.initializeTimeZones();
 
   setUp(() {
     mockFirebaseFirestore = MockFirebaseFirestore();
