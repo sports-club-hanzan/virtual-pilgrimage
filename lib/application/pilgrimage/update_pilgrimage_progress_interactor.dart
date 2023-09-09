@@ -118,6 +118,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
     late final HealthByPeriod? yesterdayHealth;
     {
       final today = DateTime(now.year, now.month, now.day);
+      final yesterday = today.subtract(const Duration(days: 1));
       // 通信時間短縮のため、並列でまとめて実行
       await Future.wait(<Future<void>>[
         _templeRepository.getTempleInfo(nextPilgrimageId).then((value) => nowTargetTemple = value),
@@ -127,8 +128,11 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
             .then((value) => todayHealth = value.eachDay[today]),
         // 昨日のヘルスケア情報を取得
         _healthRepository
-            .aggregateHealthByPeriod(from: today, to: now)
-            .then((value) => yesterdayHealth = value.eachDay[today]),
+            .aggregateHealthByPeriod(
+              from: yesterday,
+              to: today.subtract(const Duration(microseconds: 1)),
+            )
+            .then((value) => yesterdayHealth = value.eachDay[yesterday]),
         // 前回更新した時刻の開始地点 ~ 現在時刻で集計
         _healthRepository
             .aggregateHealthByPeriod(from: lastProgressUpdatedAt, to: now)
@@ -138,6 +142,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
         'got info for updating pilgrimage progress '
         '[health][$healthAggregationResult]'
         '[todayHealth][$todayHealth]'
+        '[yesterdayHealth][$yesterdayHealth]'
         '[nowTempleInfo][$nowTargetTemple]',
       );
       // バリデーションで更新する必要がない場合は早期終了
@@ -145,8 +150,9 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
         final msg = 'no health data [userId][${user.id}]'
             '[from][$lastProgressUpdatedAt]'
             '[to][$now]'
-            '[result][$healthAggregationResult]'
-            '[todayHealth][$todayHealth]';
+            '[todayHealth][$todayHealth]'
+            '[yesterdayHealth][$yesterdayHealth]'
+            '[result][$healthAggregationResult]';
         _logger.i(msg);
         unawaited(_crashlytics.log(msg));
         return user;
@@ -225,7 +231,7 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
         _dailyHealthLogRepository.update(target).onError(_crashlytics.recordError),
       );
       if (isToday) {
-        final userHealth = user.health;
+        final userHealth = updatedUser.health;
         // 今日の日付なら、health のなかに情報を入れておく
         final HealthInfo newHealthByPeriod = userHealth != null
             ? userHealth.copyWith(
@@ -238,12 +244,12 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
                 week: HealthByPeriod.getDefault(),
                 month: HealthByPeriod.getDefault(),
                 updatedAt: now,
-                totalSteps: target.steps,
-                totalDistance: target.distance,
+                totalSteps: healthAggregationResult.total.steps,
+                totalDistance: healthAggregationResult.total.distance,
               );
         updatedUser = user.copyWith(health: newHealthByPeriod);
       } else if (isYesterday) {
-        final userHealth = user.health;
+        final userHealth = updatedUser.health;
         // 昨日の日付なら、health のなかに情報を入れておく
         final HealthInfo newHealthByPeriod = userHealth != null
             ? userHealth.copyWith(
@@ -256,8 +262,8 @@ class UpdatePilgrimageProgressInteractor extends UpdatePilgrimageProgressUsecase
                 week: HealthByPeriod.getDefault(),
                 month: HealthByPeriod.getDefault(),
                 updatedAt: now,
-                totalSteps: target.steps,
-                totalDistance: target.distance,
+                totalSteps: healthAggregationResult.total.steps,
+                totalDistance: healthAggregationResult.total.distance,
               );
         updatedUser = user.copyWith(health: newHealthByPeriod);
       }

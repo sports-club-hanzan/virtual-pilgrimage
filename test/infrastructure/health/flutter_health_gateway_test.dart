@@ -46,7 +46,10 @@ void main() {
       // android 端末を想定
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
 
-      when(mockHealthFactory.requestAuthorization(any)).thenAnswer((_) => Future.value(true));
+      when(mockHealthFactory.hasPermissions(any, permissions: anyNamed('permissions')))
+          .thenAnswer((_) => Future.value(false));
+      when(mockHealthFactory.requestAuthorization(any, permissions: anyNamed('permissions')))
+          .thenAnswer((_) => Future.value(true));
 
       /// 今日
       /// 今日の集計だけ対象時間からではなく、当日の00:00:00-現在時刻まで集計
@@ -161,7 +164,8 @@ void main() {
           total: HealthByPeriod(steps: 2427, distance: 2670, burnedCalorie: 2468),
         );
         expect(actual, expected);
-        verify(mockHealthFactory.requestAuthorization(any)).called(1);
+        verify(mockHealthFactory.requestAuthorization(any, permissions: anyNamed('permissions')))
+            .called(1);
       });
     });
   });
